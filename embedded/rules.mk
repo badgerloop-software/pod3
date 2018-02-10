@@ -15,9 +15,9 @@ $(OBJ_DIR):
 
 # From https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html
 %.d: %.c
-	+@echo "generating '$(notdir $@)'"
+	+@echo "generating '$(notdir $@)' $* $@"
 	@set -e; rm -f $@; \
-	$(TOOLCHAIN)gcc -MM $(CFLAGS) $< > $@.$$$$; \
+	$(TOOLCHAIN)gcc -MM -MT '$*.o' $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
