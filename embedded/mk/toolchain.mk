@@ -5,7 +5,7 @@ CFLAGS += -Wall -Wextra -ffunction-sections -fdata-sections
 CFLAGS += -fno-builtin -Os
 CXXFLAGS=$(CFLAGS) -std=gnu++14
 
-LFLAGS = --specs=nosys.specs -Wl,--gc-sections -Wl,-Map=$(PROJECT).map
+LFLAGS = --specs=nosys.specs -Wl,--gc-sections
 LFLAGS += -Tproc/link.ld
 
 OBJ_DIR = bin

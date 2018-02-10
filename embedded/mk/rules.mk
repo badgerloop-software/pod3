@@ -32,15 +32,15 @@ clean:
 # Target-Specific Recipes
 
 $(OBJ_DIR)/pv.elf: $(OBJECTS) $(PV_DEPS)
-	@$(TOOLCHAIN)gcc $(CFLAGS) $(LFLAGS) $^ -o $@
+	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -Wl,-Map=$(OBJ_DIR)/pv.map -o $@
 	+@echo "linking '$(notdir $@)'"
 
 $(OBJ_DIR)/nav.elf: $(OBJECTS) $(NAV_DEPS)
-	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -o $@
+	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -Wl,-Map=$(OBJ_DIR)/nav.map -o $@
 	+@echo "linking '$(notdir $@)'"
 
 $(OBJ_DIR)/dash.elf: $(OBJECTS) $(DASH_DEPS)
-	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -o $@
+	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -Wl,-Map=$(OBJ_DIR)/dash.map -o $@
 	+@echo "linking '$(notdir $@)'"
 
 ALL_TARGETS += $(OBJ_DIR)/pv.bin
