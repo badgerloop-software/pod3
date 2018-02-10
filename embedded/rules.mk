@@ -1,6 +1,6 @@
 # Generic Recipes
 
-$(OBJECTS): | $(OBJ_DIR)
+$(OBJECTS): $(DEPS) | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	@[ ! -d $(OBJ_DIR) ] && mkdir $(OBJ_DIR) 
@@ -13,12 +13,21 @@ $(OBJ_DIR):
 	+@echo "building '$(notdir $<)'"
 	@$(TOOLCHAIN)gcc $(CFLAGS) -c -o $@ $<
 
+# From https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html
+%.d: %.c
+	+@echo "generating '$(notdir $@)'"
+	@set -e; rm -f $@; \
+	$(TOOLCHAIN)gcc -MM $(CFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
 %.bin: %.elf
 	@$(TOOLCHAIN)objcopy -O binary $< $@
 
 clean:
-	find . -name '*.o' -delete
-	rm -rf $(OBJ_DIR)
+	@find . -name '*.o' -delete
+	@find . -name '*.d' -delete
+	@rm -rf $(OBJ_DIR)
 
 # Target-Specific Recipes
 

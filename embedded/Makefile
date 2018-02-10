@@ -10,6 +10,15 @@ include app/conf.mk
 include drivers/conf.mk
 include common/conf.mk
 
+OBJECTS = $(SRCS:.c=.o)
+
+# Dependency generation
+DEPS += $(SRCS:.c=.d)
+DEPS += $(DASH_DEPS:.o=.d)
+DEPS += $(PV_DEPS:.o=.d)
+DEPS += $(NAV_DEPS:.o=.d)
+-include $(DEPS)
+
 ALL_TARGETS += pi
 pi: $(PI_DEPS)
 	+@echo "" && echo "--- Raspberry Pi assets built ---" && echo ""
