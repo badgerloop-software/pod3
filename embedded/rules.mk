@@ -1,6 +1,6 @@
 # Generic Recipes
 
-$(OBJECTS): $(DEPS) | $(OBJ_DIR)
+$(OBJECTS): | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	@[ ! -d $(OBJ_DIR) ] && mkdir $(OBJ_DIR) 
@@ -42,3 +42,9 @@ $(OBJ_DIR)/nav.elf: $(OBJECTS) $(NAV_DEPS)
 $(OBJ_DIR)/dash.elf: $(OBJECTS) $(DASH_DEPS)
 	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -o $@
 	+@echo "linking '$(notdir $@)'"
+
+ALL_TARGETS += $(OBJ_DIR)/pv.bin
+ALL_TARGETS += $(OBJ_DIR)/nav.bin
+ALL_TARGETS += $(OBJ_DIR)/dash.bin
+
+all: $(ALL_TARGETS)
