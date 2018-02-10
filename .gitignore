@@ -1,2 +1,6 @@
 *.sw[op]
 *.o
+bin
+*.elf
+*.bin
+*.map

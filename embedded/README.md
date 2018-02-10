@@ -7,4 +7,6 @@ Includes:
 
 ## System Architecture
 
+*Targets: Nucleo-32 L432KC, Raspberry Pi 3*
+
 Discuss modules and the Pi
