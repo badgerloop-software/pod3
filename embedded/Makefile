@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := all
 
 # Toolchain configurations
-include toolchain.mk
+include mk/toolchain.mk
 
 # Objects and target dependencies
 include proc/conf.mk
@@ -19,4 +19,4 @@ DEPS += $(PV_DEPS:.o=.d)
 DEPS += $(NAV_DEPS:.o=.d)
 -include $(DEPS)
 
-include rules.mk
+include mk/rules.mk
