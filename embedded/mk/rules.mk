@@ -14,8 +14,13 @@ $(OBJ_DIR):
 	@$(TOOLCHAIN)gcc $(CFLAGS) -c -o $@ $<
 
 # From https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html
+# 
+# The following line was removed:
+# +@echo "generating '$(notdir $@)' $* $@"
+#
+# It may be confusing to the uninitiated why this step is taking place,
+# so obfuscate it for now
 %.d: %.c
-	+@echo "generating '$(notdir $@)' $* $@"
 	@set -e; rm -f $@; \
 	$(TOOLCHAIN)gcc -MM -MT '$*.o' $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
@@ -43,8 +48,13 @@ $(OBJ_DIR)/dash.elf: $(OBJECTS) $(DASH_DEPS)
 	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -Wl,-Map=$(OBJ_DIR)/dash.map -o $@
 	+@echo "linking '$(notdir $@)'"
 
-ALL_TARGETS += $(OBJ_DIR)/pv.bin
-ALL_TARGETS += $(OBJ_DIR)/nav.bin
-ALL_TARGETS += $(OBJ_DIR)/dash.bin
+$(OBJ_DIR)/dev.elf: $(OBJECTS) $(DEV_DEPS)
+	@$(TOOLCHAIN)gcc $(CFLAGS) $^ $(LFLAGS) -Wl,-Map=$(OBJ_DIR)/dev.map -o $@
+	+@echo "linking '$(notdir $@)'"
 
-all: $(ALL_TARGETS)
+pv: $(OBJ_DIR)/pv.bin
+nav: $(OBJ_DIR)/nav.bin
+dash: $(OBJ_DIR)/dash.bin
+dev: $(OBJ_DIR)/dev.bin
+
+all: pv nav dash dev

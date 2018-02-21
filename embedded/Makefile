@@ -1,4 +1,4 @@
-.PHONY: clean pv nav pi dash all
+.PHONY: clean pv nav pi dash dev all
 .DEFAULT_GOAL := all
 
 # Toolchain configurations
@@ -17,6 +17,7 @@ DEPS += $(SRCS:.c=.d)
 DEPS += $(DASH_DEPS:.o=.d)
 DEPS += $(PV_DEPS:.o=.d)
 DEPS += $(NAV_DEPS:.o=.d)
+DEPS += $(DEV_DEPS:.o=.d)
 -include $(DEPS)
 
 include mk/rules.mk
