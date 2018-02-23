@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-
-def main(argv):
-    print "Hello, world!"
-    print argv
+import py.entry as ent
 
 if __name__ == "__main__":
-    main(sys.argv)
+    sys.exit(ent.main(sys.argv))

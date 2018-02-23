@@ -57,7 +57,4 @@ nav: $(OBJ_DIR)/nav.bin
 dash: $(OBJ_DIR)/dash.bin
 dev: $(OBJ_DIR)/dev.bin
 
-install:
-	@./build.py
-
 all: pv nav dash dev

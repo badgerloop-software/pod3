@@ -1,4 +1,4 @@
-.PHONY: clean pv nav pi dash dev all
+.PHONY: clean pv nav pi dash dev all install board-present
 .DEFAULT_GOAL := all
 
 # Toolchain configurations
@@ -21,3 +21,4 @@ DEPS += $(DEV_DEPS:.o=.d)
 -include $(DEPS)
 
 include mk/rules.mk
+include mk/install.mk
