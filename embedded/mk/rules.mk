@@ -32,6 +32,7 @@ $(OBJ_DIR):
 clean:
 	@find . -name '*.o' -delete
 	@find . -name '*.d' -delete
+	@find ./py -name '*.pyc' -delete
 	@rm -rf $(OBJ_DIR)
 
 # Target-Specific Recipes
