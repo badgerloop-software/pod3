@@ -7,7 +7,6 @@ Badgerloop - Build Interface Entry (main)
 import argparse
 
 # internal
-from . import shell
 from . import boards
 from . import flash
 from . import mount
@@ -31,7 +30,6 @@ def main(argv):
     subparser = parser.add_subparsers()
 
     # Add sub-commands
-    shell.init_args(subparser)
     boards.init_args(subparser)
     flash.init_args(subparser)
     mount.init_args(subparser)
