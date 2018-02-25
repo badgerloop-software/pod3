@@ -1,20 +1,20 @@
 
 """
-Badgerloop - File System Mounting
+Badgerloop - Shell Execution API
 """
 
-# figure out permission problems
+# simple use of the shell exec utilities
 
 def run(args):
     """ """
 
-    print "mount"
+    print "shell"
     return 0
 
 def init_args(parser):
     """ """
 
-    subp = parser.add_parser("mount")
+    subp = parser.add_parser("shell")
     subp.set_defaults(handler=run)
 
     return 0
