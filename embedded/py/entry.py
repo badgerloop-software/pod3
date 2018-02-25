@@ -12,6 +12,8 @@ from . import boards
 from . import flash
 from . import mount
 
+DESC = "Badgerloop Firmware Flashing Utility"
+
 def main(argv):
     """ build.py entry """
 
@@ -22,7 +24,7 @@ def main(argv):
 
     # Initialize argparse
     parser = argparse.ArgumentParser(
-        description="Badgerloop Firmware Flashing Utility",
+        description=DESC,
         epilog="University of Wisconsin-Madison Undergraduates\n",
         prog="build.py"
     )
@@ -40,6 +42,7 @@ def main(argv):
         return args.handler(args)
 
     # Continuously run in interactive mode
+    print "{} ('-h' for commands)".format(DESC)
     command = raw_input("=> ")
     while command != "exit":
 

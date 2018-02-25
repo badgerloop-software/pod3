@@ -28,7 +28,10 @@ def run(args):
     boards = get_boards()
     print ""
     for board in boards:
-        print "{}: {}".format(board["name"], board["mountpoint"])
+        mnt_point = board["mountpoint"]
+        if mnt_point is None:
+           mnt_point = "(not mounted)"
+        print "{}: {}".format(board["name"], mnt_point)
     print "\nBoards found: {}\n".format(len(boards))
 
     return 0

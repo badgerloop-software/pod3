@@ -1,4 +1,4 @@
-.PHONY: clean pv nav pi dash dev all install board-present
+.PHONY: clean pv nav pi dash dev all install board-present unmount
 .DEFAULT_GOAL := all
 
 # Toolchain configurations

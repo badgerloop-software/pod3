@@ -29,7 +29,10 @@ $(OBJ_DIR):
 %.bin: %.elf
 	@$(TOOLCHAIN)objcopy -O binary $< $@
 
-clean:
+unmount:
+	@./build.py mount -u
+
+clean: unmount
 	@find . -name '*.o' -delete
 	@find . -name '*.d' -delete
 	@find ./py -name '*.pyc' -delete
