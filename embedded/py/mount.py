@@ -12,7 +12,7 @@ def run(args):
     return 0
 
 def init_args(parser):
-    """ """
+    """ initialize arguments for 'mount' sub-command """
 
     subp = parser.add_parser("mount")
     subp.set_defaults(handler=run)

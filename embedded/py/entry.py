@@ -47,7 +47,9 @@ def main(argv):
         if len(args) and args[0] != "":
             try:
                 args = parser.parse_args(args)
-                print args.handler(args)
+                result = args.handler(args)
+                if result:
+                    print result
             except SystemExit as exc:
                 pass
 
