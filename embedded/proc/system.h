@@ -7,6 +7,9 @@
 #define MSI_VALUE	4000000U  /* Value of the Internal oscillator in Hz */
 #define HSI_VALUE	16000000U /* Value of the Internal oscillator in Hz */
 
+#define APB1_F	(SystemCoreClock >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE1) >> RCC_CFGR_PPRE1_Pos])
+#define APB2_F	(SystemCoreClock >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2) >> RCC_CFGR_PPRE2_Pos])
+
 #define LED3_PIN	3
 #define LED_PORT	GPIOB
 

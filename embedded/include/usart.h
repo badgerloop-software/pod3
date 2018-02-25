@@ -8,10 +8,8 @@
 
 #define USART_BUF	128
 
-extern volatile bool upArrowFlag, downArrowFlag;
-
 typedef enum {
-	APB1 =		0,
+	APBX =		0,
 	SYSCLK =	1,
 	HSI_SRC =	2,
 	LSE_SRC =	3

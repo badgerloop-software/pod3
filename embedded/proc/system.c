@@ -66,11 +66,11 @@ void SystemCoreClockUpdate(void) {
 
 			switch (pllsource) {
 				/* HSI used as PLL clock source */
-				case 0x02: pllvco = (HSI_VALUE / pllm); break;
+				case 0x02:	pllvco = (HSI_VALUE / pllm); break;
 				/* HSE used as PLL clock source */
-				case 0x03: pllvco = (HSE_VALUE / pllm); break;
+				case 0x03:	pllvco = (HSE_VALUE / pllm); break;
 				/* MSI used as PLL clock source */
-				default: pllvco = (msirange / pllm); break;
+				default:	pllvco = (msirange / pllm); break;
 			}
 			pllvco = pllvco * ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> 8U);
 			pllr = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLR) >> 25U) + 1U) * 2U;
