@@ -4,3 +4,9 @@ board-present:
 
 install: board-present all
 	@./build.py
+
+flash: board-present all
+	@./build.py flash
+
+mount: board-present all
+	@./build.py mount

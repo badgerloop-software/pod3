@@ -17,5 +17,6 @@
                                  This value must be a multiple of 0x200. */
 
 void SystemCoreClockUpdate(void);
+extern volatile unsigned int ticks;
 
 #endif

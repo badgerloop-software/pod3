@@ -31,6 +31,7 @@ int gpio_setClock(GPIO_TypeDef* port, bool state) {
 		case GPIOA_BASE: bit_num = RCC_AHB2ENR_GPIOAEN_Pos; break;
 		case GPIOB_BASE: bit_num = RCC_AHB2ENR_GPIOBEN_Pos; break;
 		case GPIOC_BASE: bit_num = RCC_AHB2ENR_GPIOCEN_Pos; break;
+		case GPIOH_BASE: bit_num = RCC_AHB2ENR_GPIOHEN_Pos; break;
 		default: return -1;
 	}
 	
