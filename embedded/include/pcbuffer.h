@@ -1,8 +1,13 @@
 #ifndef __PC_BUFFER_H__
 #define __PC_BUFFER_H__
 
-#define NEWLINE_GUARD   (curr == '\n' && prev != '\r') || \
-						(curr == '\r' && prev != '\n')
+#include <stdint.h>
+#include <stdbool.h>
+
+#define NEWLINE_GUARD(curr, prev)	(\
+	(curr == '\n' && prev != '\r') || \
+	(curr == '\r' && prev != '\n')\
+)
 
 typedef struct {
 	uint32_t produce_count, consume_count;

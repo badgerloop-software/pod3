@@ -50,6 +50,9 @@ def run(args):
                 print "flashing {} to {}".format(firmware, board["mountpoint"])
                 subprocess.call(["cp", "bin/" + firmware, board["mountpoint"]])
 
+            # ask OS to flush this write immediately
+            subprocess.call(["sync"])
+
         else:
             print "board at '/dev/{}' ({}) not mounted, skipping".format(
                 board["name"], board["label"][5:]

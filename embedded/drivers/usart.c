@@ -1,4 +1,5 @@
 #include "usart.h"
+#include "rcc.h"
 #include "pcbuffer.h"
 
 PC_Buffer *tx_buf[3], *rx_buf[3];
@@ -8,7 +9,8 @@ static IRQn_Type uart_get_irq_num(USART_TypeDef* usart) {
 		case USART1_BASE:	return USART1_IRQn;
 		case USART2_BASE:	return USART2_IRQn;
 		case LPUART1_BASE:	return LPUART1_IRQn;
-		default:			return SysTick_IRQn; /* -1 */
+		/* don't tamper with a random IRQ */
+		default:			return USART1_IRQn;
 	}
 }
 
@@ -30,7 +32,7 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 			return -1;
 		break;
 
-	case USART3_BASE:
+	case LPUART1_BASE:
 		if (!pc_buffer_init(tx_buf[2], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[2], USART_BUF))
@@ -70,15 +72,13 @@ static int usart_setClock(USART_TypeDef* usart, bool state) {
 
 	}
 	
-	if (state)
-		*reg |= 0x1 << bit;
-	else
-		*reg &= ~(0x1 << bit);
+	if (state) *reg |= 0x1 << bit;
+	else *reg &= ~(0x1 << bit);
 	
 	return 0;
 }
 
-static int usart_setClockSource(USART_TypeDef* usart, USART_CLK_SRC src) {
+static int usart_setClockSource(USART_TypeDef* usart, usart_clk_src_t src) {
 	
 	uint8_t pin_num = 0;
 	
@@ -95,11 +95,11 @@ static int usart_setClockSource(USART_TypeDef* usart, USART_CLK_SRC src) {
 }
 
 int usart_config(
-	USART_TypeDef* usart, USART_CLK_SRC src, uint32_t control[3],
+	USART_TypeDef* usart, usart_clk_src_t src, uint32_t control[3],
 	uint32_t baud, bool ie
 ) {
 	
-	uint32_t usartDiv, fck, remainder;
+	uint32_t usartDiv, fck = 0, remainder;
 	
 	/* turn this USART off if it's on */
 	if (usart->CR1 & USART_CR1_UE) {
@@ -112,7 +112,7 @@ int usart_config(
 	
 	usart_setClock(usart, true);
 	
-	usart->ICR |= 0x21Bf5;	/* clear any pending interrupts */
+	usart->ICR |= 0x121BDF;	/* clear any pending interrupts */
 	
 	if (control) {
 		/* don't set TE, RE, UE yet */
@@ -122,16 +122,16 @@ int usart_config(
 	}
 	
 	if (ie) {
-		NVIC_SetPriority(uart_get_irq_num(usart), 4);
+		NVIC_SetPriority(uart_get_irq_num(usart), USART_INT_PRIO);
 		NVIC_EnableIRQ(uart_get_irq_num(usart));
 	}
 	
 	/* setup baud, fck / USARTDIV */
 	switch (src) {
 		case APBX:		
-			fck = APB1_F; 
+			fck = rcc_get_APB1();
 			if (usart == USART1)
-				fck = APB2_F;
+				fck = rcc_get_APB2();
 			break;
 		case SYSCLK:	
 			fck = SystemCoreClock;
@@ -145,6 +145,9 @@ int usart_config(
 			fck = LSE_VALUE;
 			break;
 	}
+
+	if (!fck)
+		return -1;
 
 	if (usart->CR1 & USART_CR1_OVER8)
 		fck *= 2;
@@ -190,8 +193,8 @@ inline void USART_Handler(
 		}
 		
 		/* otherwise add the character, don't allow arrow keys or other escaped characters */
-        else if ((*prev1 != 0x5B && *prev2 != 0x1B) && curr != 0x1B && curr != 0x5B) {
-            if (NEWLINE_GUARD) rx->message_available++;
+        else if ((*prev != 0x5B && *prev2 != 0x1B) && curr != 0x1B && curr != 0x5B) {
+            if (NEWLINE_GUARD(curr, *prev)) rx->message_available++;
             if (!pc_buffer_full(rx)) pc_buffer_add(rx, curr);
 			if (!pc_buffer_full(tx)) {
 				pc_buffer_add(tx, curr);
@@ -200,14 +203,14 @@ inline void USART_Handler(
 			}
         }
 
-		*prev2 = *prev1;
-		*prev1 = curr;
+		*prev2 = *prev;
+		*prev = curr;
 	}
 	
 	/* character ready to be sent */
 	if (usart->ISR & USART_ISR_TXE) {
 		if (!pc_buffer_empty(tx))
-			pc_buffer_remove(tx, &usart->TDR);
+			pc_buffer_remove(tx, (char *) &usart->TDR);
 		else
 			usart->CR1 &= ~USART_CR1_TXEIE;
 	}

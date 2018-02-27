@@ -1,7 +1,12 @@
 #ifndef _BOARD__H__
 #define _BOARD__H__
 
-void io_init(void);
+#include <stdbool.h>
+
+int io_init(void);
+int periph_init(void);
+inline void fault(void);
 void blink_handler(unsigned int blink_int);
+void set_led(bool state);
 
 #endif

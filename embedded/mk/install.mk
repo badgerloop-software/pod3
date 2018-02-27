@@ -10,3 +10,7 @@ flash: board-present all
 
 mount: board-present all
 	@./build.py mount
+
+# lsof /dev/port to see if something is using it
+serial: board-present all
+	@screen /dev/ttyACM0 115200,cs8,-parenb,-cstopb,-hupcl

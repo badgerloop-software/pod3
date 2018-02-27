@@ -11,8 +11,10 @@ extern const char *clk_src_strings[];
 
 #define NUM_CLK_SRCS 5
 typedef enum clk_src {
-	HSI = 0, HSE = 1, PLL = 2,
-	LSI = 5, LSE = 6
+	MSI = 0, HSI = 1, HSE = 2, PLL = 3,
+	PLLSAI1 = 4,
+	LSI = 5, LSE = 6,
+	UNKNOWN = 7, NONE = 8
 } clk_src_t;
 
 /* Setting */
@@ -25,5 +27,7 @@ clk_src_t rcc_get_SysClockSrc(void);
 clk_src_t rcc_get_PLLClockSrc(void);
 int rcc_getHSEBYP(void);
 int rcc_getLSEBYP(void);
+uint32_t rcc_get_APB1(void);
+uint32_t rcc_get_APB2(void);
 
 #endif

@@ -44,8 +44,8 @@ bool pc_buffer_getMessage(PC_Buffer *buffer, char *message, int maxLength) {
 	while (index < maxLength && !pc_buffer_empty(buffer)) {
 		prev = curr;
 		pc_buffer_remove(buffer, &curr);
-		message[index++] = (NEWLINE_GUARD) ? '\0' : curr;
-		if (NEWLINE_GUARD) {
+		message[index++] = NEWLINE_GUARD(curr, prev) ? '\0' : curr;
+		if (NEWLINE_GUARD(curr, prev)) {
 			buffer->message_available--;
 			return true;
 		}

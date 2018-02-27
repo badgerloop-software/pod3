@@ -6,12 +6,12 @@
 #define HSE_VALUE	8000000U  /* Value of the External oscillator in Hz */
 #define MSI_VALUE	4000000U  /* Value of the Internal oscillator in Hz */
 #define HSI_VALUE	16000000U /* Value of the Internal oscillator in Hz */
-
-#define APB1_F	(SystemCoreClock >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE1) >> RCC_CFGR_PPRE1_Pos])
-#define APB2_F	(SystemCoreClock >> APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2) >> RCC_CFGR_PPRE2_Pos])
+#define LSE_VALUE	32768U
 
 #define LED3_PIN	3
 #define LED_PORT	GPIOB
+
+#define USB_UART	USART2
 
 /* Uncomment the following line if you need to relocate your vector Table in
    Internal SRAM. */
@@ -20,6 +20,13 @@
                                  This value must be a multiple of 0x200. */
 
 void SystemCoreClockUpdate(void);
+void delay_ms(unsigned int period);
+
 extern volatile unsigned int ticks;
+extern uint32_t SystemCoreClock;
+
+extern const uint8_t AHBPrescTable[16];
+extern const uint8_t APBPrescTable[8];
+extern const uint32_t MSIRangeTable[12];
 
 #endif
