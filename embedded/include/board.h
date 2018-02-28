@@ -5,7 +5,7 @@
 
 int io_init(void);
 int periph_init(void);
-inline void fault(void);
+void fault(void);
 void blink_handler(unsigned int blink_int);
 void set_led(bool state);
 
