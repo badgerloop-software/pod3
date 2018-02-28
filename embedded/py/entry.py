@@ -10,8 +10,11 @@ import argparse
 from . import boards
 from . import flash
 from . import mount
+from . import serial
+from . import dump
+from . import debug
 
-DESC = "Badgerloop Firmware Flashing Utility"
+DESC = "Badgerloop Embedded Development Utility"
 
 def main(argv):
     """ build.py entry """
@@ -24,7 +27,6 @@ def main(argv):
     # Initialize argparse
     parser = argparse.ArgumentParser(
         description=DESC,
-        epilog="University of Wisconsin-Madison Undergraduates\n",
         prog="build.py"
     )
     subparser = parser.add_subparsers()
@@ -33,6 +35,9 @@ def main(argv):
     boards.init_args(subparser)
     flash.init_args(subparser)
     mount.init_args(subparser)
+    serial.init_args(subparser)
+    dump.init_args(subparser)
+    debug.init_args(subparser)
 
     # Run once in 'batch' mode
     if not interactive:
@@ -40,12 +45,14 @@ def main(argv):
         return args.handler(args)
 
     # Continuously run in interactive mode
-    print "{} ('-h' for commands)".format(DESC)
+    print "{} ('help' for commands)".format(DESC)
     command = raw_input("=> ")
     while command != "exit":
 
         args = command.split()
         if len(args) and args[0] != "":
+            if args[0] == "help":
+                args[0] = "-h"
             try:
                 args = parser.parse_args(args)
                 result = args.handler(args)

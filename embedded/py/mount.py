@@ -73,7 +73,8 @@ def init_args(parser):
     """ initialize arguments for 'mount' sub-command """
 
     subp = parser.add_parser(
-        "mount", description="mount and umount nucleos"
+        "mount", description="mount and umount nucleos",
+        help="attemp to mount nucleos to filesystem based on /etc/fstab entries"
     )
     subp.add_argument(
         "-u", "--nmount", action="store_true", required=False,

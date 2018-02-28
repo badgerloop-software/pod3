@@ -39,7 +39,10 @@ def run(args):
 def init_args(parser):
     """ initialize arguments for 'boards' sub-command """
 
-    subp = parser.add_parser("boards")
+    desc = "prints information about connected boards"
+    subp = parser.add_parser(
+        "boards", help=desc, description=desc
+    )
     subp.set_defaults(handler=run)
 
     return 0

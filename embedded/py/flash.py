@@ -11,7 +11,7 @@ import os
 from .boards import get_boards
 
 def run(args):
-    """ """
+    """ prompt user to flash firmware to mounted boards """
 
     # check for 'bin' directory
     if not os.path.exists("bin"):
@@ -64,7 +64,10 @@ def run(args):
 def init_args(parser):
     """ initialize arguments for 'flash' sub-command """
 
-    subp = parser.add_parser("flash")
+    desc = "prompt user to flash firmware to mounted boards"
+    subp = parser.add_parser(
+        "flash", help=desc, description=desc
+    )
     subp.set_defaults(handler=run)
 
-    return 1
+    return 0
