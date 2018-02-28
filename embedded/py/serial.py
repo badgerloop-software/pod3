@@ -6,12 +6,25 @@ Badgerloop - Serial Port Interaction
 # built-in
 import subprocess
 import os
+from time import time
 
 def open_connection(port, baud=115200):
+    """ use 'screen' to open serial connection to nucleo """
+
     serial_args = str(baud) + ",cs8,-parenb,-cstopb,-hupcl"
-    subprocess.call(
-        ["screen", port, serial_args], stdout=open(os.devnull, 'wb')
-    )
+    start_time = time()
+    with open(os.devnull, 'wb') as outfile:
+        result = subprocess.call(
+            ["screen", port, serial_args], stdout=outfile,
+            stderr=outfile
+        )
+
+    # check if the user was able to connect
+    end_time = time()
+    if (end_time - start_time) < 1.0:
+        print ("\nThis port may be in use. Try 'sudo lsof {}' "
+            "to know for sure.\n".format(port)
+        )
 
 def get_available_ports():
     """ find all /dev/ttyACM* and /dev/ttyUSB* """

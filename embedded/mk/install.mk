@@ -17,6 +17,7 @@ dump: all
 debug: board-present
 	@./build.py debug
 
-# lsof /dev/port to see if something is using it
+# lsof /dev/port to see if something is using it,
+# but requires root
 serial: board-present
 	@./build.py serial
