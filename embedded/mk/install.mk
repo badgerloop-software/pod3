@@ -18,7 +18,5 @@ debug: board-present
 	@./build.py debug
 
 # lsof /dev/port to see if something is using it
-SERIAL_BAUD = 115200
-SERIAL_ARGS = $(SERIAL_ARGS),cs8,-parenb,-cstopb,-hupcl
 serial: board-present
-	@screen /dev/ttyACM0 $(SERIAL_ARGS)
+	@./build.py serial
