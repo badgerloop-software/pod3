@@ -13,6 +13,7 @@ from . import mount
 from . import serial
 from . import dump
 from . import debug
+from . import claim
 
 DESC = "Badgerloop Embedded Development Utility"
 
@@ -38,6 +39,7 @@ def main(argv):
     serial.init_args(subparser)
     dump.init_args(subparser)
     debug.init_args(subparser)
+    claim.init_args(subparser)
 
     # Run once in 'batch' mode
     if not interactive:

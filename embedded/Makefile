@@ -1,5 +1,5 @@
 .PHONY: clean pv nav pi dash dev all install board-present unmount flash mount serial dump debug
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := install
 
 # Toolchain configurations
 include mk/toolchain.mk

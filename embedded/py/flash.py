@@ -8,7 +8,7 @@ import subprocess
 import os
 
 # interal
-from .boards import get_boards
+from .boards import get_boards, get_mounted_boards
 
 def firmware_available(ext=".bin", _dir="bin"):
     """ find all available firmware binaries """
@@ -96,7 +96,8 @@ def run(args):
     print""
 
     # print number of boards available
-    boards = get_boards()
+    # TODO: check claimed boards
+    boards = get_mounted_boards()
     print "{} boards available for flashing\n".format(len(boards))
 
     # prompt user for firmware selections per mounted board
