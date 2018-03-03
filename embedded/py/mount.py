@@ -12,6 +12,7 @@ from time import sleep
 from . import MNT_POINTS
 from .boards import get_boards, get_unmounted_boards, get_mounted_boards
 from .boards import print_boards
+from .claim import claim, unclaim, check_claimed_by_me
 
 def mount(link, mnt_point):
     """ run 'mount' on given mount point and create symbolic link """
@@ -23,15 +24,19 @@ def mount(link, mnt_point):
     sleep(0.25)
     return subprocess.call(["mount", link])
 
-def mount_handler(link, brd_mnt_point, mnt_point, name):
+def mount_handler(board, brd_mnt_point, mnt_point, claim_board=True):
     """ Perform path checking and printing based on result of mount """
 
-    if not os.path.exists(link) and not brd_mnt_point:
-        result = mount(link, mnt_point)
+    if not os.path.exists(board["link"]) and not brd_mnt_point:
+        result = mount(board["link"], mnt_point)
         if result != 0:
             print "mount failed"
             return result
-        print "mounted /dev/{} to {}".format(name, link)
+        print "mounted /dev/{} to {}".format(board["name"], board["link"])
+        board["mountpoint"] = mnt_point
+        if claim_board:
+            sleep(0.25)
+            claim(board)
     return None
 
 def unmount(link, mnt_point):
@@ -43,11 +48,14 @@ def unmount(link, mnt_point):
         os.rmdir(mnt_point)
     return result
 
-def unmount_handler(link, mnt_point, name):
+def unmount_handler(board, mnt_point):
     """ Perform path checking and printing based on result of unmount """
 
-    if os.path.exists(link) and unmount(link, mnt_point) == 0:
-        print "umounted /dev/{}".format(name)
+    if os.path.exists(board["link"]) and unmount(board["link"], mnt_point) == 0:
+        print "umounted /dev/{}".format(board["name"])
+        if check_claimed_by_me(board):
+            unclaim(board)
+        print ""
 
 def run(args):
     """
@@ -70,10 +78,7 @@ def run(args):
             choice = raw_input("Unmount which board (i.e. 'sda' or 'a')? ")
             for board in boards:
                 if choice in board["name"]:
-                    unmount_handler(
-                        board["link"], board["mountpoint"], board["name"]
-                    )
-                    # TODO: unclaim?
+                    unmount_handler(board, board["mountpoint"])
             return 0
 
         if not len(boards):
@@ -89,8 +94,7 @@ def run(args):
             if choice in board["name"]:
                 # mount board if allowed
                 result = mount_handler(
-                    board["link"], board["mountpoint"],
-                    MNT_POINTS[board["idx"]], board["name"]
+                    board, board["mountpoint"], MNT_POINTS[board["idx"]]
                 )
                 if result:
                     return result
@@ -107,15 +111,12 @@ def run(args):
 
         # umount
         if args.nmount:
-            unmount_handler(
-                board["link"], MNT_POINTS[board["idx"]], board["name"]
-            )
+            unmount_handler(board, MNT_POINTS[board["idx"]])
             continue
 
         # mount
         result = mount_handler(
-            board["link"], board["mountpoint"],
-            MNT_POINTS[board["idx"]], board["name"]
+            board, board["mountpoint"], MNT_POINTS[board["idx"]]
         )
         if result:
             return result
