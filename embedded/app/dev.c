@@ -7,32 +7,33 @@
 
 #define BLINK_INTERVAL	100
 
-//extern int _write(int fd, const void *buf, size_t count);
+char buffer[USART_BUF];
+
+inline void printPrompt(void) {
+	printf("=> ");
+	fflush(stdout);
+}
+
+void check_input(void) {
+	if (pc_buffer_messageAvailable(USB_RX)) {
+		pc_buffer_getMessage(USB_RX, buffer, USART_BUF);
+		if (buffer[0] != '\0')
+			printf("%s\r\n", buffer);
+		printPrompt();
+	}
+}
 
 int main(void) {
-
-	//char temp[1] = {'a'};
 
 	if (io_init() || periph_init())
 		fault();
 
+	printf("Program start\r\n");
+	printPrompt();
+
 	while (1) {
-
-		//blink_handler(BLINK_INTERVAL);
-		//printf("hello\r\n");
-		//_write(0, temp, 1);
-
-		//__disable_irq();
-		//pc_buffer_add(USB_TX, 'a');
-		//__enable_irq();
-		//USB_UART->CR1 |= USART_CR1_TXEIE;
-
-		if (USB_UART)
-
-		set_led(true);
-		delay_ms(100);
-		set_led(false);
-		delay_ms(100);
+		check_input();
+		blink_handler(BLINK_INTERVAL);
 	}
 
 	return 0;

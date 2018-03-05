@@ -21,6 +21,6 @@ int usart_config(USART_TypeDef* usart, usart_clk_src_t src, uint32_t control[3],
 extern PC_Buffer *tx_buf[3], *rx_buf[3];
 #define USB_BUF_IND	1
 #define USB_TX		tx_buf[USB_BUF_IND]
-#define USB_RX		tx_buf[USB_BUF_IND]
+#define USB_RX		rx_buf[USB_BUF_IND]
 
 #endif

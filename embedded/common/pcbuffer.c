@@ -4,6 +4,9 @@
 #include "pcbuffer.h"
 
 bool pc_buffer_init(PC_Buffer *buffer, uint16_t buffer_size) {
+
+	if (!buffer) return false;
+
 	void *temp = malloc(sizeof(char)*buffer_size);
 	if (!temp) return false;
 	buffer->array = temp;

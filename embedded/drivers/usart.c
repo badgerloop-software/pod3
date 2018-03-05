@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "usart.h"
 #include "rcc.h"
 #include "pcbuffer.h"
@@ -19,6 +20,10 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 	switch ((uint32_t) usart) {
 
 	case USART1_BASE:
+		tx_buf[0] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		rx_buf[0] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		if (!tx_buf[0] || !rx_buf[0])
+			return -1;
 		if (!pc_buffer_init(tx_buf[0], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[0], USART_BUF))
@@ -26,6 +31,10 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 		break;
 
 	case USART2_BASE:
+		tx_buf[1] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		rx_buf[1] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		if (!tx_buf[1] || !rx_buf[1])
+			return -1;
 		if (!pc_buffer_init(tx_buf[1], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[1], USART_BUF))
@@ -33,6 +42,10 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 		break;
 
 	case LPUART1_BASE:
+		tx_buf[2] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		rx_buf[2] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		if (!tx_buf[2] || !rx_buf[2])
+			return -1;
 		if (!pc_buffer_init(tx_buf[2], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[2], USART_BUF))
@@ -182,12 +195,9 @@ inline void USART_Handler(
 				rx->produce_count--;
 
 				/* delete the character in console */
-				if (!pc_buffer_full(tx))
-					pc_buffer_add(tx, curr);
-				if (!pc_buffer_full(tx))
-					pc_buffer_add(tx, ' ');
-				if (!pc_buffer_full(tx))
-					pc_buffer_add(tx, curr);
+				if (!pc_buffer_full(tx)) pc_buffer_add(tx, 0x08);
+				if (!pc_buffer_full(tx)) pc_buffer_add(tx, ' ');
+				if (!pc_buffer_full(tx)) pc_buffer_add(tx, 0x08);
 				usart->CR1 |= USART_CR1_TXEIE;
 			}
 		}
