@@ -1,0 +1,29 @@
+nav.nav-features {
+    -webkit-app-region: drag;
+    background-color: #c5050c;
+}
+
+.brand-features {
+    color: #f7f7f7
+}
+
+.brand-features:hover {
+    color: #f7f7f7
+}
+
+.header-btn {
+    color: #f7f7f7;
+    background-color: #c5050c;
+}
+
+.header-btn:hover {
+    color: #f7f7f7;
+    background-color: #9b0000;
+}
+
+.header-btn:focus {
+    text-decoration: none;
+    outline:none;
+    border: none;
+    box-shadow: none;
+}

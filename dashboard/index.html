@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="Flight-Software">
+
+
+	<title>Badgerloop Dashboard</title>
+
+	<!-- Bootstrap core CSS -->
+      <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom style -->
+      <link href="dashboard.css" rel="stylesheet">
+      <link href="scrollbar.css" rel="stylesheet">
+      <link href="header.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav id="nav_header" class="navbar navbar-expand-md fixed-top justify-content-between nav-features">
+        <a class="navbar-brand not-draggable brand-features" href="#" id="brand">
+            <img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">
+            Badgerloop
+        </a>
+        <form class="form-inline">
+            <div class="btn-group" role="group" aria-label="Toolbar">
+                <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="minimize">
+                    &#128469;  <!--minimize window character-->
+                </button>
+                <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="maximize">
+                    &#128470;   <!--maximize window character-->
+                </button>
+                <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="close">
+                    &#10005;    <!--Exit X character-->
+                </button>
+            </div>
+        </form>
+	</nav>
+
+	<div class="container-fluid">
+	  <div class="row">
+
+		<main class="col" role="main">
+            <br>
+
+
+		  <section class="d-flex text-center placeholders flex-row">
+
+              <div class="d-flex flex-column">
+                  <h4 class="card-title">Microcontroller Data</h4>
+                  <div class="d-flex align-content-start">
+                          <div class="col">
+                              <div class="col">
+                                  <div class="card bg-light mb-3">
+                                      <div class="card-body">
+                                          <div class="row text-left">
+                                              <div class="col btn-">
+
+                                                  <table class="table table-sm table-hover">
+                                                      <h5 class="text-center font-weight-bold">MOTION</h5>
+                                                      <tbody>
+                                                          <tr>
+                                                              <th scope="row">Stopping Distance</th>
+                                                              <td class="data">x</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th scope="row">Strip Count</th>
+                                                              <td class="data">x</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th scope="row">Position</th>
+                                                              <td class="data">x</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th scope="row">Acceleration</th>
+                                                              <td class="data">x</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th scope="row">Velocity</th>
+                                                              <td class="data">x</td>
+                                                          </tr>
+
+                                                      </tbody>
+                                                  </table>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col">
+                                  <div class="card bg-light mb-3">
+                                      <div class="card-body">
+                                          <div class="row text-left">
+                                              <div class="col btn-">
+                                                  <table class="table table-sm table-hover">
+                                                      <h5 class="text-center font-weight-bold">PROPULSION</h5>
+                                                      <tbody>
+                                                      <tr>
+                                                          <th scope="row">Prop. Sirocco</th>
+                                                          <td>x</td>
+                                                      </tr>
+                                                      <tr>
+                                                          <th scope="row">Prop. LTE</th>
+                                                          <td>x</td>
+                                                      </tr>
+                                                      <tr>
+                                                          <th scope="row">Ambient Pressure</th>
+                                                          <td>x</td>
+                                                      </tr>
+                                                      <tr>
+                                                          <th scope="row">Ambient Temperature</th>
+                                                          <td>x</td>
+                                                      </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="col">
+                              <div class="card bg-light mb-3">
+                                  <div class="card-body">
+                                      <div class="row text-left">
+                                          <div class="col btn-">
+                                              <table class="table table-sm table-hover">
+                                                  <h5 class="text-center font-weight-bold">BATTERY</h5>
+                                                  <tbody>
+                                                  <tr>
+                                                      <th scope="row">Percent Charge</th>
+                                                      <td class="data">x</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th scope="row">Charge Remaining</th>
+                                                      <td class="data">x</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th scope="row">Current</th>
+                                                      <td class="data">x</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th scope="row">Battery Temperature</th>
+                                                      <td class="data">x</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th scope="row">Voltage</th>
+                                                      <td class="data">x</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <th scope="row"><p></p></th>
+                                                  </tr>
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col">
+                                  <div class="card bg-light mb-3">
+                                      <div class="card-body">
+                                          <div class="row text-left">
+                                              <div class="col btn-">
+                                                  <table class="table table-sm table-hover">
+                                                      <h5 class="text-center font-weight-bold">BRAKING</h5>
+                                                      <tbody>
+                                                          <tr>
+                                                              <th scope="row">Brake Line Secondary</th>
+                                                              <td>x</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th scope="row">Brake Line Primary</th>
+                                                              <td>x</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th scope="row">Brake Pads Primary</th>
+                                                              <td>x</td>
+                                                          </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                  </div>
+              </div>
+			  <div class="d-flex flex-column">
+                  <h4 class="card-title">Manual Overrides</h4>
+                  <div class="card bg-light mb-3">
+                      <div class="card-body">
+
+                          <!--The box on the top right with the state buttons-->
+                          <h4 class="card-title">State Control</h4>
+                          <div id="state_master" class="container state_container">
+                              <div class="row">
+                                  <div class="col-sm">
+                                      <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
+                                  </div>
+                                  <div class="col-sm">
+                                      <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
+                                  </div>
+                                  <div class="col-sm">
+                                      <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <p> </p>
+                              </div>
+                              <div class="row">
+                                  <div class="col-sm">
+                                      <button id="state_pushing" type="button" class="btn btn-secondary btn-sm">Pushing</button>
+                                  </div>
+                                  <div class="col-sm">
+                                      <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
+                                  </div>
+                                  <div class="col-sm">
+                                      <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!--Below the state control box-->
+                          <h4 class="card-title"></h4>
+                          <h4 class="card-title">Actuation Overrides</h4>
+                          <div class="container">
+                              <div class="row">
+                                  <div class="col">
+                                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                          <button type="button" class="btn btn-secondary">Prim. Brake On</button>
+                                          <button type="button" class="btn btn-secondary">Prim. Brake Off</button>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <p> </p>
+                              </div>
+                              <div class="row">
+                                  <div class="col">
+                                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                          <button type="button" class="btn btn-secondary">Sec. Brake On</button>
+                                          <button type="button" class="btn btn-secondary">Sec. Brake Off</button>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <p></p>
+                              </div>
+                              <div class="row">
+                                  <div class="col">
+                                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                          <button type="button" class="btn btn-secondary">Prim. Brake Vent On</button>
+                                          <button type="button" class="btn btn-secondary">Prim. Brake Vent Off</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+		  </section>
+            <section class="row text-center placeholders">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+			<!--
+			<div class="col-6 col-sm-3 placeholder">
+			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+			  <h4>Label</h4>
+			  <div class="text-muted">Something else</div>
+			</div>
+			<div class="col-6 col-sm-3 placeholder">
+			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+			  <h4>Label</h4>
+			  <span class="text-muted">Something else</span>
+			</div>
+			<div class="col-6 col-sm-3 placeholder">
+			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+			  <h4>Label</h4>
+			  <span class="text-muted">Something else</span>
+			</div>
+			<div class="col-6 col-sm-3 placeholder">
+			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+			  <h4>Label</h4>
+			  <span class="text-muted">Something else</span>
+			</div>
+		  </section>
+		  -->
+		</main>
+	  </div>
+	</div>
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="renderer.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script> -->
+	<!-- <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script> -->
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<!-- <script src="../../../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+  </body>
+</html>
