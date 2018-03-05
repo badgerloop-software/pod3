@@ -22,21 +22,17 @@ int main(void) {
 		//printf("hello\r\n");
 		//_write(0, temp, 1);
 
-		__disable_irq();
-		pc_buffer_add(USB_TX, 'h');
-		pc_buffer_add(USB_TX, 'e');
-		pc_buffer_add(USB_TX, 'l');
-		pc_buffer_add(USB_TX, 'l');
-		pc_buffer_add(USB_TX, 'o');
-		pc_buffer_add(USB_TX, '\r');
-		pc_buffer_add(USB_TX, '\n');
-		__enable_irq();
-		USB_UART->CR1 |= USART_CR1_TXEIE;
+		//__disable_irq();
+		//pc_buffer_add(USB_TX, 'a');
+		//__enable_irq();
+		//USB_UART->CR1 |= USART_CR1_TXEIE;
+
+		if (USB_UART)
 
 		set_led(true);
-		delay_ms(500);
+		delay_ms(100);
 		set_led(false);
-		delay_ms(500);
+		delay_ms(100);
 	}
 
 	return 0;
