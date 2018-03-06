@@ -2,5 +2,6 @@
 #define _CONSOLE__H__
 
 void check_input(void);
+void printPrompt(void);
 
 #endif
