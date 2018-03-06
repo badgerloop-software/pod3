@@ -1,34 +1,30 @@
 #include <stdio.h>
+
 #include "system.h"
 #include "board.h"
+#include "console.h"
 
-#include "usart.h"
-#include "pcbuffer.h"
-
+#define APP_NAME		"dev"
 #define BLINK_INTERVAL	100
 
-char buffer[USART_BUF];
-
 inline void printPrompt(void) {
-	printf("=> ");
+	printf("[%s-build] $ ", APP_NAME);
 	fflush(stdout);
 }
 
-void check_input(void) {
-	if (pc_buffer_messageAvailable(USB_RX)) {
-		pc_buffer_getMessage(USB_RX, buffer, USART_BUF);
-		if (buffer[0] != '\0')
-			printf("%s\r\n", buffer);
-		printPrompt();
-	}
+int dev_init(void) {
+
+	/* dev specific initializations */
+
+	return 0;
 }
 
 int main(void) {
 
-	if (io_init() || periph_init())
+	if (io_init() || periph_init() || dev_init())
 		fault();
 
-	printf("Program start\r\n");
+	printf("Program '%s' start\r\n", APP_NAME);
 	printPrompt();
 
 	while (1) {

@@ -30,7 +30,7 @@ $(OBJ_DIR):
 	@$(TOOLCHAIN)objcopy -O binary $< $@
 
 unmount:
-	@./build.py mount -u
+	-@./build.py mount -u --all
 
 clean: unmount
 	@find . -name '*.o' -delete
