@@ -24,7 +24,7 @@ int main(void) {
 	if (io_init() || periph_init() || dev_init())
 		fault();
 
-	printf("Program '%s' start\r\n", APP_NAME);
+	printf("\r\nProgram '%s' start\r\n", APP_NAME);
 	printPrompt();
 
 	while (1) {
