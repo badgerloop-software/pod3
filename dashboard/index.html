@@ -13,17 +13,22 @@
       <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Custom style -->
-      <link href="dashboard.css" rel="stylesheet">
-      <link href="scrollbar.css" rel="stylesheet">
-      <link href="header.css" rel="stylesheet">
+      <link href="style/dashboard.css" rel="stylesheet">
+      <link href="style/scrollbar.css" rel="stylesheet">
+      <link href="style/header.css" rel="stylesheet">
+      <link href="style/MicrocontrollerData.css" rel="stylesheet">
 
   </head>
 
   <body>
     <nav id="nav_header" class="navbar navbar-expand-md fixed-top justify-content-between nav-features">
         <a class="navbar-brand not-draggable brand-features" href="#" id="brand">
-            <img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">
-            Badgerloop
+            <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
+            <img class="d-inline-block align-top rounded" src="assets/badgerloopNewLogo.PNG" height="40" alt="logo">
+        </a>
+        <a class="navbar-text" href="terminal.html" id="terminal-page">
+            <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
+            <h3>Terminal</h3>
         </a>
         <form class="form-inline">
             <div class="btn-group" role="group" aria-label="Toolbar">
@@ -49,9 +54,9 @@
 
 		  <section class="d-flex text-center placeholders flex-row">
 
-              <div class="d-flex flex-column">
-                  <h4 class="card-title">Microcontroller Data</h4>
-                  <div class="d-flex align-content-start">
+              <div class="d-flex flex-column micro-data-container  bg-light border">
+                  <h4 class="card-title" style="margin-top: 10px">Microcontroller Data</h4>
+                  <div class="d-flex align-content-start mb-3">
                           <div class="col">
                               <div class="col">
                                   <div class="card bg-light mb-3">
@@ -265,61 +270,6 @@
                   </div>
               </div>
 		  </section>
-            <section class="row text-center placeholders">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-			<!--
-			<div class="col-6 col-sm-3 placeholder">
-			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-			  <h4>Label</h4>
-			  <div class="text-muted">Something else</div>
-			</div>
-			<div class="col-6 col-sm-3 placeholder">
-			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-			  <h4>Label</h4>
-			  <span class="text-muted">Something else</span>
-			</div>
-			<div class="col-6 col-sm-3 placeholder">
-			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-			  <h4>Label</h4>
-			  <span class="text-muted">Something else</span>
-			</div>
-			<div class="col-6 col-sm-3 placeholder">
-			  <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-			  <h4>Label</h4>
-			  <span class="text-muted">Something else</span>
-			</div>
-		  </section>
-		  -->
 		</main>
 	  </div>
 	</div>
