@@ -1,0 +1,33 @@
+.terminal-body {
+    background: #000;
+}
+
+#terminal-body-full {
+    height: 500px;
+}
+
+.terminal-text {
+    color: lawngreen;
+    margin-left: 10px;
+}
+
+.terminal-input {
+    border-radius: 5px;
+    margin-top: 5px;
+    padding-right: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    length: 500px;
+
+
+}
+
+#submit{
+    margin-top: 5px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#terminal-body-embed {
+    background-color: #000000;
+}

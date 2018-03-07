@@ -1,8 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Flight-Software">
+
+
+    <title>Terminal</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom style -->
+    <link href="style/dashboard.css" rel="stylesheet">
+    <link href="style/scrollbar.css" rel="stylesheet">
+    <link href="style/header.css" rel="stylesheet">
+    <link href="style/terminal.css" rel="stylesheet">
 </head>
 <body>
 <nav id="nav_header" class="navbar navbar-expand-md fixed-top justify-content-between nav-features">
@@ -10,9 +24,9 @@
         <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
         <img class="d-inline-block align-top rounded" src="assets/badgerloopNewLogo.PNG" height="40" alt="logo">
     </a>
-    <a class="navbar-text" href="#" id="terminal-page">
+    <a class="not-draggable align-content-start" href="./terminal.html" id="terminal-page">
         <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
-        <h3>Terminal</h3>
+        <button class="btn btn-light not-draggable">Terminal</button>
     </a>
     <form class="form-inline">
         <div class="btn-group" role="group" aria-label="Toolbar">
@@ -28,8 +42,23 @@
         </div>
     </form>
 </nav>
-<h1>
-    WELCOME
-</h1>
+<br>
+<div class="container-fluid" id="terminal-start">
+
+    <div class="terminal-body" id="terminal-body-full">
+        <p class="terminal-text" id="terminal-text">
+            >
+        </p>
+    </div>
+    <div class="container-fluid row">
+        <div class="border-dark">
+            <input class="terminal-input" id="terminal-input" type="text" value="$">
+
+        </div>
+        <button class="btn btn-toolbar" id="submit">Send</button>
+    </div>
+</div>
+
+<script src="terminal.js"></script>
 </body>
 </html>
