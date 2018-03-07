@@ -24,11 +24,11 @@
         <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
         <img class="d-inline-block align-top rounded" src="assets/badgerloopNewLogo.PNG" height="40" alt="logo">
     </a>
-    <a class="not-draggable align-content-start" href="./terminal.html" id="terminal-page">
-        <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
-        <button class="btn btn-light not-draggable">Terminal</button>
-    </a>
     <form class="form-inline">
+        <a class="not-draggable align-content-start" href="./index.html" id="terminal-page">
+            <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
+            <button class="btn btn-light not-draggable header-btn" type="button">Home</button>
+        </a>
         <div class="btn-group" role="group" aria-label="Toolbar">
             <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="minimize">
                 &#128469;  <!--minimize window character-->
@@ -52,13 +52,14 @@
     </div>
     <div class="container-fluid row">
         <div class="border-dark">
-            <input class="terminal-input" id="terminal-input" type="text" value="$">
-
+            <input class="terminal-input" id="terminal-input" type="text" value="">
+            <button class="btn btn-dark btn-sm" id="submit">Send</button>
         </div>
-        <button class="btn btn-toolbar" id="submit">Send</button>
+
     </div>
 </div>
 
 <script src="terminal.js"></script>
+<script src="frameStyle.js"></script>
 </body>
 </html>

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Embedded Terminal</title>
     <link href="style/terminal.css" rel="stylesheet">
+    <link href="style/scrollbar.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid" id="terminal-start-embed">
@@ -15,12 +17,14 @@
     </div>
     <div class="container-fluid row">
         <div class="border-dark">
-            <input class="terminal-input" id="terminal-input" type="text" value="$">
+            <input class="terminal-input" id="terminal-input-embed" type="text" value="">
+            <button class="btn btn-dark btn-sm" id="submit">Send</button>
         </div>
-        <button class="btn btn-toolbar" id="submit">Send</button>
+
     </div>
 </div>
 
 <script src="terminal.js"></script>
+
 </body>
 </html>

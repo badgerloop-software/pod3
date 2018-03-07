@@ -21,30 +21,32 @@
   </head>
 
   <body>
+    <!-- important note about the <nav/>: You need to include the not-draggable class on all of its elements to make sure they can be clicked-->
     <nav id="nav_header" class="navbar navbar-expand-md fixed-top justify-content-between nav-features">
         <div>
             <a class="navbar-brand not-draggable brand-features" href="#" id="brand">
-                <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
                 <img class="d-inline-block align-top rounded" src="assets/badgerloopNewLogo.PNG" height="40" alt="logo">
             </a>
-            <a class="not-draggable align-content-start" href="./terminal.html" id="terminal-page">
-                <!--<img src="assets/icons/png/64x64.png" height="30" width="30" class="d-inline-block align-top rounded" alt="">-->
-                <button class="btn btn-light not-draggable">Terminal</button>
-            </a>
+
         </div>
-        <form class="form-inline">
-            <div class="btn-group" role="group" aria-label="Toolbar">
-                <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="minimize">
-                    &#128469;  <!--minimize window character-->
-                </button>
-                <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="maximize">
-                    &#128470;   <!--maximize window character-->
-                </button>
-                <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="close">
-                    &#10005;    <!--Exit X character-->
-                </button>
-            </div>
-        </form>
+        <div>
+            <form class="form-inline">
+                <div class="btn-group" role="group" aria-label="Toolbar">
+                    <a class="not-draggable" href="./terminal.html" id="terminal-page">
+                        <button class="btn btn-light not-draggable header-btn" type="button">Terminal</button>
+                    </a>
+                    <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="minimize">
+                        &#128469;  <!--minimize window character-->
+                    </button>
+                    <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="maximize">
+                        &#128470;   <!--maximize window character-->
+                    </button>
+                    <button class="btn font-weight-bold my-2 my-sm-0 not-draggable header-btn" type="button" id="close">
+                        &#10005;    <!--Exit X character-->
+                    </button>
+                </div>
+            </form>
+        </div>
 	</nav>
 
 	<div class="container-fluid">
@@ -83,7 +85,7 @@
                                                           </tr>
                                                           <tr>
                                                               <th scope="row">Acceleration</th>
-                                                              <td class="data">x</td>
+                                                              <td class="data"></td>
                                                           </tr>
                                                           <tr>
                                                               <th scope="row">Velocity</th>
@@ -271,8 +273,10 @@
                       </div>
                   </div>
                   <div>
-
-                      <iframe src="terminal_embedded.html" width="400" height="300" style="border-style: none"></iframe>
+                      <h4 class="card-title">Terminal</h4>
+                      <div class="card bg-light mb-3">
+                        <iframe src="terminal_embedded.html" width="400" height="300" style="border-style: none"></iframe>
+                      </div>
                   </div>
               </div>
 		  </section>

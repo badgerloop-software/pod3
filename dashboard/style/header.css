@@ -28,3 +28,7 @@ nav.nav-features {
     border: none;
     box-shadow: none;
 }
+
+#terminal-page {
+    margin-right: 5px;
+}

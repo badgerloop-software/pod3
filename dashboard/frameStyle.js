@@ -6,7 +6,7 @@ const electron = require("electron");
 const closer = document.getElementById("close");
 const minimizer = document.getElementById('minimize');
 const maximizer = document.getElementById('maximize');
-const top = document.getElementById('nav_header');
+//const top = document.getElementById('nav_header');
 
 
 

@@ -1,4 +1,5 @@
 .terminal-body {
+    margin-top: 10px;
     background: #000;
 }
 
@@ -17,17 +18,23 @@
     padding-right: 5px;
     margin-right: 5px;
     border: 1px solid #ccc;
-    length: 500px;
 
 
 }
 
 #submit{
-    margin-top: 5px;
-    height: 30px;
     cursor: pointer;
+    margin-bottom: 5px;
 }
 
 #terminal-body-embed {
     background-color: #000000;
+}
+
+#terminal-input-embed {
+    width: 250px;
+}
+
+#terminal-input {
+    width: 600px;
 }

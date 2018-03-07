@@ -1,18 +1,21 @@
 
-const terminalInput = document.getElementById("terminal-input");
+const terminalInput = document.getElementsByClassName("terminal-input")[0];
 const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
 
 
+//Lets you press enter to submit a key press
 terminalInput.onkeydown = function () {
     if (event.keyCode === 13){
         submit();
     }
 }
 
-
+//submit when the button is pressed
 submitBtn.addEventListener("click", submit);
 
+
+///////Helper Functions///////
 function submit(){
     let input = terminalInput.value;
     //Checking to make sure something  was typed in so there arent invisible line breaks
@@ -32,6 +35,12 @@ function submit(){
 
 function processText(input) {
     input = input.toLowerCase();    //Make it case insensitive
+    if (input === "help") {
+        terminalText.innerHTML += "<br>" +
+            " &emsp; clear : Clears the entire window" +
+            "<br> > ";
+    }
+
     if (input === "clear") {
         //Clears the entire window in case the commands become too numerous
         terminalText.innerHTML = "> ";
@@ -46,4 +55,5 @@ function processText(input) {
         //TODO Save a txt file with all of the contents of the terminal text
         return;
     }
+
 }

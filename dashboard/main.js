@@ -17,7 +17,7 @@ function createWindow() {
         frame: false,
         minHeight:600,
         modal: true,
-        icon: path.join(__dirname,'/assets/icons/png/64x64.png'),
+        icon: path.join(__dirname,'/assets/icons/png/64x64new.png'),
         show: false,
     });
 
