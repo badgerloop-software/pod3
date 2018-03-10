@@ -134,13 +134,13 @@ int gpio_getAlternateFunc(GPIO_TypeDef* port, uint8_t pin) {
 
 void gpio_getPinInfo(GPIO_TypeDef* port, uint8_t pin, GPIO * gpio) {
 	gpio->pin = pin;
-	gpio->state = gpio_readPin( port, pin);
+	gpio->state = gpio_readPin(port, pin);
 	gpio->mode = gpio_getMode(port, pin);
 	gpio->speed = gpio_getSpeed(port, pin);
 	gpio->pullup = gpio_getPullupState(port, pin);
 }
 
-GPIO_TypeDef * gpio_getGpioPort(char portChar){
+GPIO_TypeDef *gpio_getGpioPort(char portChar){
     uint32_t port = (uint32_t) GPIOA;
     portChar -= 'A';
     port += 0x400 * portChar;

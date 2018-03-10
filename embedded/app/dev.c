@@ -3,6 +3,7 @@
 #include "system.h"
 #include "board.h"
 #include "console.h"
+#include "usart.h"
 
 #define APP_NAME		"dev"
 #define BLINK_INTERVAL	100
@@ -21,14 +22,19 @@ int dev_init(void) {
 
 int main(void) {
 
+	PC_Buffer *rx;
+
+	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init() || dev_init())
 		fault();
+
+	rx = get_rx(USB_UART);
 
 	printf("\r\nProgram '%s' start\r\n", APP_NAME);
 	printPrompt();
 
 	while (1) {
-		check_input();
+		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}
 

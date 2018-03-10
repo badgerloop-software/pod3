@@ -5,3 +5,5 @@ SRCS += common/board.c
 SRCS += common/pcbuffer.c
 SRCS += common/retarget.c
 SRCS += common/console.c
+
+include common/commands/conf.mk
