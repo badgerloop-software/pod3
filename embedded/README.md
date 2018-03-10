@@ -12,6 +12,21 @@ Intermittent cleaning is not necessary by leveraging the compiler toolchain's ab
 
 A Python program ([build.py](build.py)) is available to provide useful abstractions for development tasks such as flashing devices and interacting with serial ports.
 
+## Workstation Requirements
+
+This repository supports a remote-server development workflow with multiple simultaneous users. For Badgerloop, instructions to connect to the development server can be provided by Vaughn Kottler, Ryan Castle or Ethan Link.
+
+Local workstation development is currently only supported for Linux-based systems and is only tested on [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/) (server and GNOME desktop).
+
+The following software packages are required for local development:
+
+* `gcc-arm-none-eabi` (Version 4.9.x)
+* `gdb-arm-none-eabi` (Version 7.10)
+* `make` (Version 4.1)
+* `python` (Version 2.7.x)
+
+Some additional configuration may be required to allow non-root access to serial streams and USB devices. For server installations, `/etc/fstab` entries are used to allow the STM32 Nucleo's to be mounted to a known location automatically (required for [build.py](build.py)).
+
 ## Directory Structure
 
 TODO
