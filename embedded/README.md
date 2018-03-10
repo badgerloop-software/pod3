@@ -24,6 +24,9 @@ The following software packages are required for local development:
 * `gdb-arm-none-eabi` (Version 7.10)
 * `make` (Version 4.1)
 * `python` (Version 2.7.x)
+* `screen` (Version 4.x.x)
+* (recommended) `vim` (Version 7.x)
+* (recommended) `tmux` (Version 2.1)
 
 Some additional configuration may be required to allow non-root access to serial streams and USB devices. For server installations, `/etc/fstab` entries are used to allow the STM32 Nucleo's to be mounted to a known location automatically (required for [build.py](build.py)).
 
@@ -72,22 +75,35 @@ Debugging with GDB is possible with help from a [Linux, stlink driver port](http
 Note: try `help` and `<command> [-h|--help]` for equivalent information about command(s) usage and purpose.
 
 * [boards](py/boards.py)
-  TODO
+
+  Prints information about connected boards found by the application (note: leverages `lsblk -fJ`).
+  
 * [claim](py/claim.py)
-  TODO
+
+  Claim or unclaim any boards that the current user has claimed (note: boards must be mounted).
+  
 * [debug](py/debug.py)
-  TODO
+
+  Create and connect to a GDB server hosted on a nucleo (**warning:** only one board should be attached to the macine before attempting to debug) (note: requires `gdb-arm-none-eabi` and the [stlink](https://github.com/texane/stlink) installation instructions to be followed first).
+  
 * [dump](py/dump.py)
-  TODO
+
+  View one of the compiled application's `objdump`ed ELF files in Vim.
+  
 * [flash](py/flash.py)
-  TODO
+
+  Flash one of the compiled application binaries to any number of boards currently mounted and claimed by the user.
+  
 * [mount](py/mount.py)
-  TODO
+
+  Mount or unmount available nucleos for flashing (note: mounting a currently unmounted board automatically claims it).
+  
 * [serial](py/serial.py)
-  TODO
+
+  Switch to a serial console through one of the currently available serial port (note: uses `screen`).
 
 ## Make Targets
 
 **(default, no argument)**
 
-  * TODO
+TODO
