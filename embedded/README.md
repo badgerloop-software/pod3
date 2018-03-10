@@ -69,7 +69,22 @@ Debugging with GDB is possible with help from a [Linux, stlink driver port](http
 
 ## build.py Commands
 
-TODO
+Note: try `help` and `<command> [-h|--help]` for equivalent information about command(s) usage and purpose.
+
+* [boards](py/boards.py)
+  TODO
+* [claim](py/claim.py)
+  TODO
+* [debug](py/debug.py)
+  TODO
+* [dump](py/dump.py)
+  TODO
+* [flash](py/flash.py)
+  TODO
+* [mount](py/mount.py)
+  TODO
+* [serial](py/serial.py)
+  TODO
 
 ## Make Targets
 
