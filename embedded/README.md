@@ -8,13 +8,13 @@ Multiple binary outputs (i.e. separate programs) are produced and are intended t
 [GNU make](https://www.gnu.org/software/make/manual/make.html) is used to
 handle compilation via the
 [GNU Arm Embedded Toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads).
-Intermittent cleaning is not necessary by leveraging the compiler toolchain's ability to produce empty make recipes for each source file that declare the dependencies for each file (`-MM -MT` flags, \*.d files).
+Intermittent cleaning is not necessary by leveraging the compiler toolchain's ability to produce empty make recipes for each source file that declare the dependencies for each file (`-MM -MT` flags, `\*.d` files produced).
 
 A Python program ([build.py](build.py)) is available to provide useful abstractions for development tasks such as flashing devices and interacting with serial ports.
 
 ## Workstation Requirements
 
-This repository supports a remote-server development workflow with multiple simultaneous users. For Badgerloop, instructions to connect to the development server can be provided by Vaughn Kottler, Ryan Castle or Ethan Link.
+This repository supports a remote-server development workflow with multiple simultaneous users. For Badgerloop, instructions to connect to the development server can be provided by *Vaughn Kottler*, *Ryan Castle* or *Ethan Link*.
 
 Local workstation development is currently only supported for Linux-based systems and is only tested on [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/) (server and GNOME desktop).
 
@@ -27,9 +27,41 @@ The following software packages are required for local development:
 
 Some additional configuration may be required to allow non-root access to serial streams and USB devices. For server installations, `/etc/fstab` entries are used to allow the STM32 Nucleo's to be mounted to a known location automatically (required for [build.py](build.py)).
 
+Debugging with GDB is possible with help from a [Linux, stlink driver port](https://github.com/texane/stlink) which has its own set of installation instructions. The `st-util` command is used by this repository to instantiate a local GDB server and [.gdbinit](.gdbinit) is configured to automatically connect to this server (see the `debug` make target section).
+
 ## Directory Structure
 
-TODO
+* app
+
+Application-specific source code. Adding additional applications (separate binary outputs) or additional application-specific source files is possible but requires some knowledge of how make recipes are set up to treat these sources as such.
+
+* common
+
+High-level source code that is used across all applications, typically providing useful abstractions to driver code.
+
+  * commands
+  
+  Individual command declarations available via the configured input and output streams
+
+* drivers
+
+Low-level source code that provides interfaces to the microcontroller's hardware interfaces.
+
+* include
+
+Header files that expose function interfaces and defitions to other source files.
+
+* mk
+
+GNU make rules and recipes.
+
+* proc
+
+Processor-specific initialization code and linker scripts.
+
+* py
+
+Python source code for the [build.py](build.py) commands.
 
 ## build.py Commands
 
