@@ -31,37 +31,41 @@ Debugging with GDB is possible with help from a [Linux, stlink driver port](http
 
 ## Directory Structure
 
-* app
+* `app`
 
-Application-specific source code. Adding additional applications (separate binary outputs) or additional application-specific source files is possible but requires some knowledge of how make recipes are set up to treat these sources as such.
+  Application-specific source code. Adding additional applications (separate binary outputs) or additional application-specific source files is possible but requires some knowledge of how make recipes are set up to treat these sources as such.
 
-* common
+* `common`
 
-High-level source code that is used across all applications, typically providing useful abstractions to driver code.
+  High-level source code that is used across all applications, typically providing useful abstractions to driver code.
 
-  * commands
+* `common/commands`
   
   Individual command declarations available via the configured input and output streams
 
-* drivers
+* `drivers`
 
-Low-level source code that provides interfaces to the microcontroller's hardware interfaces.
+  Low-level source code that provides interfaces to the microcontroller's hardware interfaces.
 
-* include
+* `include`
 
-Header files that expose function interfaces and defitions to other source files.
+  Header files that expose function interfaces and defitions to other source files.
 
-* mk
+* `include/cmsis`
 
-GNU make rules and recipes.
+  Useful macros and inline-function definitions for common tasks with ARM CMX processor family microprocessors.
 
-* proc
+* `mk`
 
-Processor-specific initialization code and linker scripts.
+  GNU make rules and recipes.
 
-* py
+* `proc`
 
-Python source code for the [build.py](build.py) commands.
+  Processor-specific initialization code and linker scripts.
+
+* `py`
+
+  Python source code for the [build.py](build.py) commands.
 
 ## build.py Commands
 
