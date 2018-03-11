@@ -104,6 +104,34 @@ Note: try `help` and `<command> [-h|--help]` for equivalent information about co
 
 ## Make Targets
 
-**(default, no argument)**
+* **(default, no argument)**
+
+  Compiles all sources and links/creates all outputs then runs the shell/interactive version of [build.py](build.py)
+
+* **clean**
+
+  Removes all compiled artifacts, unmounts and unclaims any currently claimed boards
+
+* **flash**
+
+  Runs `./build.py flash` then exits (no [build.py](build.py) shell)
+
+* **mount**
+
+  Runs `./build.py mount` then exits (no [build.py](build.py) shell)
+
+* **dump**
+
+  Runs `./build.py dump` then exits (no [build.py](build.py) shell)
+
+* **debug**
+
+  Runs `./build.py debug` then exits (no [build.py](build.py) shell)
+
+* **serial**
+
+  Runs `./build.py serial` then exits (no [build.py](build.py) shell)
+
+## Development Guide
 
 TODO
