@@ -38,3 +38,9 @@
 #terminal-input {
     width: 600px;
 }
+
+.terminal-input:focus {
+    text-decoration: none;
+    outline:none;
+    box-shadow: none;
+}

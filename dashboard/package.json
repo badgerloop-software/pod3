@@ -9,10 +9,10 @@
     "electron": "^1.8.1"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-beta.2",
-    "d3": "^4.12.0",
+    "bootstrap": "^4.0.0",
+    "d3": "^4.13.0",
     "ijavascript": "^5.0.20",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "popper": "^1.0.1",
     "request": "^2.83.0"
   }

@@ -2,14 +2,14 @@
 const terminalInput = document.getElementsByClassName("terminal-input")[0];
 const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
-
+const communication = require("./communication");
 
 //Lets you press enter to submit a key press
-terminalInput.onkeydown = function () {
-    if (event.keyCode === 13){
+terminalInput.addEventListener('keydown',() => {
+    if (event.keyCode === 13) {
         submit();
     }
-}
+})
 
 //submit when the button is pressed
 submitBtn.addEventListener("click", submit);
@@ -19,19 +19,23 @@ submitBtn.addEventListener("click", submit);
 function submit(){
     let input = terminalInput.value;
     //Checking to make sure something  was typed in so there arent invisible line breaks
-    if (input === "" || input === "$"){
+    if (input === ""){
         return;
     }
-    //$ is just for the fans of Bash
-    if (input.charAt(0) === '$'){
-        input = input.slice(1,input.length);
-    }
+
 
     terminalText.innerHTML += input + "<br>" + "> ";   //Add input to console
     processText(input)
-    terminalInput.value = "$";   //clear submit box
+    terminalInput.value = "";   //clear submit box
 }
 
+//When a message is received from the pi it updates the terminal
+communication.updater.on("messageReceived", (data) => {
+    console.log(communication.data);
+    terminalText.innerHTML += "<br>" +
+        data +
+        "<br> > ";
+})
 
 function processText(input) {
     input = input.toLowerCase();    //Make it case insensitive
@@ -41,6 +45,8 @@ function processText(input) {
             "<br> > ";
     }
 
+
+
     if (input === "clear") {
         //Clears the entire window in case the commands become too numerous
         terminalText.innerHTML = "> ";
@@ -48,6 +54,7 @@ function processText(input) {
 
     if (input === "connect") {
         //TODO Make this command establish a connection with the Pi!
+        communication.sendMessage();
         return;
     }
 
