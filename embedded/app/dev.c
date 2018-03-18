@@ -1,42 +1,41 @@
 #include <stdio.h>
+
 #include "system.h"
 #include "board.h"
-
+#include "console.h"
 #include "usart.h"
-#include "pcbuffer.h"
 
+#define APP_NAME		"dev"
 #define BLINK_INTERVAL	100
 
-//extern int _write(int fd, const void *buf, size_t count);
+inline void printPrompt(void) {
+	printf("[%s-build] $ ", APP_NAME);
+	fflush(stdout);
+}
+
+int dev_init(void) {
+
+	/* dev specific initializations */
+
+	return 0;
+}
 
 int main(void) {
 
-	//char temp[1] = {'a'};
+	PC_Buffer *rx;
 
-	if (io_init() || periph_init())
+	/* initialize pins and internal interfaces */
+	if (io_init() || periph_init() || dev_init())
 		fault();
 
+	rx = get_rx(USB_UART);
+
+	printf("\r\nProgram '%s' start\r\n", APP_NAME);
+	printPrompt();
+
 	while (1) {
-
-		//blink_handler(BLINK_INTERVAL);
-		//printf("hello\r\n");
-		//_write(0, temp, 1);
-
-		__disable_irq();
-		pc_buffer_add(USB_TX, 'h');
-		pc_buffer_add(USB_TX, 'e');
-		pc_buffer_add(USB_TX, 'l');
-		pc_buffer_add(USB_TX, 'l');
-		pc_buffer_add(USB_TX, 'o');
-		pc_buffer_add(USB_TX, '\r');
-		pc_buffer_add(USB_TX, '\n');
-		__enable_irq();
-		USB_UART->CR1 |= USART_CR1_TXEIE;
-
-		set_led(true);
-		delay_ms(500);
-		set_led(false);
-		delay_ms(500);
+		check_input(rx);
+		blink_handler(BLINK_INTERVAL);
 	}
 
 	return 0;

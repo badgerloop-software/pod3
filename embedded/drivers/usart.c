@@ -1,8 +1,66 @@
+#include <stdlib.h>
 #include "usart.h"
 #include "rcc.h"
 #include "pcbuffer.h"
 
 PC_Buffer *tx_buf[3], *rx_buf[3];
+
+inline PC_Buffer *get_tx(USART_TypeDef* usart) {
+	switch ((uint32_t) usart) {
+	case USART1_BASE:  return tx_buf[0];
+	case USART2_BASE:  return tx_buf[1];
+	case LPUART1_BASE: return tx_buf[2];
+	}
+	return NULL;
+}
+
+inline PC_Buffer *get_rx(USART_TypeDef* usart) {
+	switch ((uint32_t) usart) {
+	case USART1_BASE:  return rx_buf[0];
+	case USART2_BASE:  return rx_buf[1];
+	case LPUART1_BASE: return rx_buf[2];
+	}
+	return NULL;
+}
+
+int _getc(USART_TypeDef* usart, bool block, char *c) {
+
+	PC_Buffer *rx = get_rx(usart);
+
+	/* check if a character can be retrieved */
+	if (pc_buffer_empty(rx)) {
+		if (!block) return 1;
+		while (pc_buffer_empty(rx)) {;}
+	}
+
+	/* safely write the retrieved character */
+	__disable_irq();
+	pc_buffer_remove(rx, c);
+	__enable_irq();
+
+	return 0;
+}
+
+int _putc(USART_TypeDef* usart, bool block, char data) {
+
+	PC_Buffer *tx = get_tx(usart);
+
+	/* check if a character can be added */
+	if (pc_buffer_full(tx)) {
+		if (!block) return 1;
+		while (pc_buffer_full(tx)) {;}
+	}
+
+	/* safely add the desired character */
+	__disable_irq();
+	pc_buffer_add(tx, data);
+	__enable_irq();
+
+	/* set TX-empty interrupt enable flag */
+	usart->CR1 |= USART_CR1_TXEIE;
+
+	return 0;
+}
 
 static IRQn_Type uart_get_irq_num(USART_TypeDef* usart) {
 	switch((uint32_t) usart) {
@@ -19,6 +77,10 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 	switch ((uint32_t) usart) {
 
 	case USART1_BASE:
+		tx_buf[0] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		rx_buf[0] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		if (!tx_buf[0] || !rx_buf[0])
+			return -1;
 		if (!pc_buffer_init(tx_buf[0], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[0], USART_BUF))
@@ -26,6 +88,10 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 		break;
 
 	case USART2_BASE:
+		tx_buf[1] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		rx_buf[1] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		if (!tx_buf[1] || !rx_buf[1])
+			return -1;
 		if (!pc_buffer_init(tx_buf[1], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[1], USART_BUF))
@@ -33,6 +99,10 @@ static int usart_bufferInit(USART_TypeDef* usart) {
 		break;
 
 	case LPUART1_BASE:
+		tx_buf[2] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		rx_buf[2] = (PC_Buffer *) malloc(sizeof(PC_Buffer));
+		if (!tx_buf[2] || !rx_buf[2])
+			return -1;
 		if (!pc_buffer_init(tx_buf[2], USART_BUF))
 			return -1;
 		if (!pc_buffer_init(rx_buf[2], USART_BUF))
@@ -182,12 +252,9 @@ inline void USART_Handler(
 				rx->produce_count--;
 
 				/* delete the character in console */
-				if (!pc_buffer_full(tx))
-					pc_buffer_add(tx, curr);
-				if (!pc_buffer_full(tx))
-					pc_buffer_add(tx, ' ');
-				if (!pc_buffer_full(tx))
-					pc_buffer_add(tx, curr);
+				if (!pc_buffer_full(tx)) pc_buffer_add(tx, 0x08);
+				if (!pc_buffer_full(tx)) pc_buffer_add(tx, ' ');
+				if (!pc_buffer_full(tx)) pc_buffer_add(tx, 0x08);
 				usart->CR1 |= USART_CR1_TXEIE;
 			}
 		}

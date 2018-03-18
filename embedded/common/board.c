@@ -29,6 +29,7 @@ int periph_init(void) {
 	int ret = 0;
 	uint32_t init_regs[3] = {0, 0, 0};
 
+	/* USB UART */
 	init_regs[0] = USART_CR1_RXNEIE;
 	ret += usart_config(USB_UART, SYSCLK, init_regs, 115200, true);
 

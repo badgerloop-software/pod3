@@ -4,6 +4,9 @@
 #include "pcbuffer.h"
 
 bool pc_buffer_init(PC_Buffer *buffer, uint16_t buffer_size) {
+
+	if (!buffer) return false;
+
 	void *temp = malloc(sizeof(char)*buffer_size);
 	if (!temp) return false;
 	buffer->array = temp;
@@ -14,24 +17,24 @@ bool pc_buffer_init(PC_Buffer *buffer, uint16_t buffer_size) {
 	return true;
 }
 
-void pc_buffer_add(PC_Buffer *buffer, char data) {
-	buffer->array[buffer->produce_count++ % buffer->buffer_SIZE] = data;
+void pc_buffer_add(PC_Buffer *buf, char data) {
+	buf->array[buf->produce_count++ % buf->buffer_SIZE] = data;
 }
 
-void pc_buffer_remove(PC_Buffer *buffer, char *data) {
-	*data = buffer->array[buffer->consume_count++ % buffer->buffer_SIZE];
+void pc_buffer_remove(PC_Buffer *buf, char *data) {
+	*data = buf->array[buf->consume_count++ % buf->buffer_SIZE];
 }
 
-bool pc_buffer_empty(PC_Buffer *buffer) {
-	return buffer->produce_count == buffer->consume_count;
+bool pc_buffer_empty(PC_Buffer *buf) {
+	return buf->produce_count == buf->consume_count;
 }
 
-bool pc_buffer_full(PC_Buffer *buffer) {
-	return buffer->produce_count - buffer->consume_count == buffer->buffer_SIZE;
+bool pc_buffer_full(PC_Buffer *buf) {
+	return buf->produce_count - buf->consume_count == buf->buffer_SIZE;
 }
 
-bool pc_buffer_messageAvailable(PC_Buffer *buffer) {
-	return buffer->message_available > 0;
+bool pc_buffer_messageAvailable(PC_Buffer *buf) {
+	return buf->message_available > 0;
 }
 
 bool pc_buffer_getMessage(PC_Buffer *buffer, char *message, int maxLength) {
