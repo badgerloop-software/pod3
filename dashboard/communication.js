@@ -4,9 +4,8 @@ const events = require("events");
 
 const ip = "hootl.badgerloop.com";  //Should be different for each person
 const port = "8000";
-const additionalInfo = "REST_Call_Here";
 
-let address = "http://" + ip + ":" + port + "/" + additionalInfo;
+let address = "http://" + ip + ":" + port + "/";
 
 const receivedEmitter = new events.EventEmitter();
 
