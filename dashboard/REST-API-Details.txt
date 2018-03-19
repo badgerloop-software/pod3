@@ -1,0 +1,18 @@
+Details on the structure of our REST API
+
+Issues to consider:
+    - How to choose what to query
+    - return blocks or individual values?
+    - how deep can calls go (level of detail)?
+
+
+current allowed depth = 3;
+
+/data/#CATEGORY
+    - Category can be pressure, temperature
+        - could use label for the entire block in REST call?
+    - If we get data back as a brick then it needs to be broken apart
+    - depth is important
+
+/control/#INDIVIDUAL_MODULE
+    -
