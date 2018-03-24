@@ -2,20 +2,20 @@
 const request = require("request");
 const events = require("events");
 
-const ip = "hootl.badgerloop.com";  //Should be different for each person
-const port = "8000";
+const ip = "10.0.1.87";  //Should be different for each person
+const port = "8008";
 
-let address = "http://" + ip + ":" + port + "/";
 
 const receivedEmitter = new events.EventEmitter();
 
-
-const sendMessage = function (restParams=[]) {
+const sendMessage = function (restParams=[],eventSuffix="") {
+    let address = "http://" + ip + ":" + port + "/";
     for (let i = 0; i < restParams.length; i++){
         address = address + restParams[i] + "/";
     }
+    console.log(address);
     request(address, (err, res, body) => {
-        receivedEmitter.emit("messageReceived", body);
+        receivedEmitter.emit("messageReceived" + eventSuffix, body);
     })
 }
 

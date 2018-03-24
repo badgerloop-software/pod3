@@ -1,52 +1,52 @@
-const canvas = document.getElementById("pressure-graph").getContext('2d');
+
 const charts = require("chart.js");
 
 // Update X as the t value
 // Update Y as value at that t value
-let dt = 0;
-let newChart = new charts.Chart(canvas, {
-    type: 'line',
-    data: {
-        labels: ["Pressure"],
-        datasets: [{
-            label: 'Pressure',
-            data:[{
-                t: dt++,
-                y: 10,
-            }],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-            ],
-            borderWidth: 1,
-            fill: false,
-        }]
-    },
-    options: {
-        scales: {
-            xAxes: [{
-                type: 'time',
-                time:{
-                   unit:"millisecond"
-                },
-                distribution: 'series',
 
-                ticks: {
-                    beginAtZero: true,
-                    stepSize: .5
-                },
-            }],
-            yAxes: [{
-                type: 'linear',
-                ticks: {
-                    beginAtZero:true
-                }
+function makeChart (canvas, data, name) {
+    const chart = new charts.Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: [name],
+            datasets: [{
+                label: name,
+                data:[data],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                ],
+                borderWidth: 1,
+                fill: false,
             }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time:{
+                        unit:"millisecond"
+                    },
+                    distribution: 'series',
+
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: .5
+                    },
+                }],
+                yAxes: [{
+                    type: 'linear',
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
         }
-    }
-});
+    });
+    module.exports.chart = chart;
+}
 
 /**@name addData
  * @purpose Takes in a label for the new data and some new information to
@@ -58,10 +58,10 @@ let newChart = new charts.Chart(canvas, {
  **/
 function addData(chart, label, data) {
     //newChart.data.labels.push(label);
-    newChart.data.datasets.forEach((dataset) => {
+    chart.data.datasets.forEach((dataset) => {
         dataset.data.push(data);
     })
     chart.update();
 }
-
 module.exports.addData = addData;
+module.exports.makeChart = makeChart;

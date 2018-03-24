@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.0.0",
+    "chart.js": "^2.7.2",
     "d3": "^4.13.0",
     "ijavascript": "^5.0.20",
     "jquery": "^3.3.1",
