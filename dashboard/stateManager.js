@@ -8,7 +8,7 @@
 
 //The container of the state buttons, also used as the dispatcher of the event
 const stateMaster = document.getElementById("state_master");
-
+const remoteState = require("./communication");
 //Each of the buttons is a member of this class, used to handle the event binding for button presses
 class State{
     constructor(stateName) {
@@ -25,14 +25,18 @@ class State{
             } else {
                 this.stateButtonTags.remove("btn-secondary");
                 this.stateButtonTags.add("btn-success");
+                this.sendMessage();  // only sends when the button is being selected
             }
 
             //Passes the next state name so it can be the only one lit
             let stateChange = new CustomEvent("stateChange", {detail : stateName});
             stateMaster.dispatchEvent(stateChange);
-
             this.selected = !this.selected;
         });
+
+        remoteState.updater.on("messageReceived" + this.stateName, (data)=>{
+            console.log(this.stateName + " got some data: " + data);
+        })
     }
 
     setInactive(){
@@ -42,6 +46,13 @@ class State{
             this.selected = false;
         }
     }
+
+    sendMessage() {
+        let messageAddr = ["control","state",this.stateName];
+        remoteState.sendMessage(messageAddr, this.stateName);
+    }
+
+
 }
 
 //All the states
@@ -58,9 +69,9 @@ idle.stateButton.dispatchEvent(initialEvent);   //sets idle as the initial defau
 
 //Every time the state changes it sets the other buttons to inactive
 stateMaster.addEventListener("stateChange", (e)=> {
-    for (let i = 0; i < stateList.length; i++) {
-        if (e.detail !== stateList[i].stateName) {
-            stateList[i].setInactive();
-        }
-    }
-})
+    stateList.forEach((state) => {
+       if (e.detail !== state.stateName){
+           state.setInactive();
+       }
+    });
+});
