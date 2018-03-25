@@ -8,9 +8,6 @@
 #define HSI_VALUE	16000000U /* Value of the Internal oscillator in Hz */
 #define LSE_VALUE	32768U
 
-#define LED3_PIN	3
-#define LED_PORT	GPIOB
-
 #define USB_UART	USART2
 
 /* Uncomment the following line if you need to relocate your vector Table in

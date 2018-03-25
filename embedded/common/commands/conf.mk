@@ -5,3 +5,4 @@ SRCS += common/commands/help.c
 SRCS += common/commands/reset.c
 SRCS += common/commands/can.c
 SRCS += common/commands/i2c.c
+SRCS += common/commands/io.c

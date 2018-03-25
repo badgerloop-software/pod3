@@ -1,27 +1,11 @@
 #include "gpio.h"
 #include "board.h"
 #include "usart.h"
+#include "pin_alias.h"
 
 int io_init(void) {
 
-	int ret = 0;
-
-	/* Initialize LED */
-	ret += gpio_setClock(LED_PORT, true);
-	ret += gpio_setMode(LED_PORT, LED3_PIN, OUTPUT);
-	ret += gpio_setSpeed(LED_PORT, LED3_PIN, LOW_SPEED);
-	ret += gpio_writePin(LED_PORT, LED3_PIN, 0);
-
-	/* initialize PA2 and PA15 for USART2 (USB) */
-	ret += gpio_setClock(GPIOA, true);
-	ret += gpio_setMode(GPIOA, 2, ALT);
-	ret += gpio_setSpeed(GPIOA, 2, MEDIUM_SPEED);
-	ret += gpio_setAlternateFunc(GPIOA, 2, 7);
-	ret += gpio_setMode(GPIOA, 15, ALT);
-	ret += gpio_setSpeed(GPIOA, 15, MEDIUM_SPEED);
-	ret += gpio_setAlternateFunc(GPIOA, 15, 3);
-
-	return ret;
+	return gpioAliasInit();
 }
 
 int periph_init(void) {
@@ -35,6 +19,9 @@ int periph_init(void) {
 
 	return ret;
 }
+
+#define LED3_PIN	3
+#define LED_PORT	GPIOB
 
 inline void blink_handler(unsigned int blink_int) {
 
