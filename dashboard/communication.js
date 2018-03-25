@@ -17,7 +17,7 @@ const sendMessage = function (restParams=[],eventSuffix="") {
     request(address, (err, res, body) => {
         receivedEmitter.emit("messageReceived" + eventSuffix, body);
     })
-}
+};
 
 module.exports.sendMessage = sendMessage;
 module.exports.updater = receivedEmitter;
