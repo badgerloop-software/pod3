@@ -9,7 +9,7 @@ import os
 
 # interal
 from .boards import get_boards, get_mounted_boards
-from .claim import get_claimed_boards
+from .claim import get_claimed_boards, get_user
 
 def firmware_available(ext=".bin", _dir="bin"):
     """ find all available firmware binaries """
@@ -27,7 +27,7 @@ def firmware_available(ext=".bin", _dir="bin"):
     return found
 
 def prompt_for_binary(boards, ask_first=True, ext=".bin"):
-    """ """
+    """ Prompt the user to pair an application binary with a board """
 
     matches = {}
 
@@ -86,7 +86,7 @@ def run(args):
     """ prompt user to flash firmware to mounted boards """
 
     # check for claimed boards
-    boards = get_claimed_boards(get_mounted_boards())
+    boards = get_claimed_boards(get_mounted_boards(), user=get_user())
     if not len(boards):
         print "No claimed boards found (try 'claim')"
         return 1

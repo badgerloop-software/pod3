@@ -99,7 +99,6 @@ def run(args):
                 if result:
                     return result
                 print ""
-                # TODO: prompt to claim
                 return 0
 
         print "'{}' couldn't be matched".format(choice)
@@ -120,7 +119,6 @@ def run(args):
         )
         if result:
             return result
-        # TODO: prompt to claim
 
     return 0
 

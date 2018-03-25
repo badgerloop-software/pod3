@@ -81,13 +81,16 @@ def get_claim_user(board):
     with open(get_claim_file(board), "r") as claimfile:
         return claimfile.read()
 
-def get_claimed_boards(boards, unclaimed=False):
+def get_claimed_boards(boards, unclaimed=False, user=None):
     """ Return a list of boards claimed (or unclaimed) by the user """
 
     ret = []
     for board in boards:
         if check_claimed(board) and not unclaimed:
-            ret.append(board)
+            if not user:
+                ret.append(board)
+            elif user and user == get_claim_user(board):
+                ret.append(board)
         elif not check_claimed(board) and unclaimed:
             ret.append(board)
     return ret
@@ -152,9 +155,9 @@ def init_args(parser):
     subp.add_argument(
         "-l", "--list", required=False, action="store_true", help=desc
     )
-    desl = "unclaim boards"
-    subp.add_argument(
-        "-u", "--un-claim", required=False, action="store_true", help=desc
-    )
+    #desc = "unclaim boards"
+    #subp.add_argument(
+    #    "-u", "--un-claim", required=False, action="store_true", help=desc
+    #)
 
     return 0
