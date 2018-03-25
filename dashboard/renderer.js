@@ -4,7 +4,6 @@ const stateControl = require('./stateManager');
 const frameStyle = require('./frameStyle');
 const communication = require("./communication");
 const graphs = require("./dataRepresentation");
-
 const test = document.getElementById("test");
 const myCanvas = document.getElementById("myChart");
 
@@ -19,18 +18,22 @@ for (let i = 0; i < dataBlocks.length; i++){
 labels.forEach((label) => {
    console.log(label);
 });
+
+//TEMP
 var thisChart;
 var newData = 0;
+// /TEMP
+const UPDATE_TIME = 500;
 test.addEventListener("click", () => {
     if (myCanvas.height !== 0) {
         const requestLoop = setInterval(() => {
-            graphs.addData(thisChart, "Ezra", Math.floor(Math.random()*newData++));
-
-        }, 100);
+            graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
+        }, UPDATE_TIME);
     } else {
         myCanvas.height = 100;
         myCanvas.width = 100;
-        graphs.makeChart(myCanvas, {t:1, y:newData++}, labels[0]);
+
+        graphs.makeChart(myCanvas, {t:new Date(), y:newData++}, labels[0]);
         thisChart = graphs.chart;
     }
 });
