@@ -30,7 +30,7 @@ int main(void) {
 
 	rx = get_rx(USB_UART);
 
-	printf("\r\nProgram '%s' start\r\n", APP_NAME);
+	post(APP_NAME);
 	printPrompt();
 
 	while (1) {

@@ -9,4 +9,6 @@ void fault(void);
 void blink_handler(unsigned int blink_int);
 void set_led(bool state);
 
+void post(const char *app_name);
+
 #endif
