@@ -4,8 +4,9 @@ const stateControl = require('./stateManager');
 const frameStyle = require('./frameStyle');
 const communication = require("./communication");
 const graphs = require("./dataRepresentation");
-const test = document.getElementById("test");
-const myCanvas = document.getElementById("myChart");
+const stopper = document.getElementById("stopping distance");
+const counter = document.getElementById("strip count");
+const myCanvas = document.getElementById("canvas");
 
 //Gets each of the categories of data we are currently working with
 let dataBlocks = document.getElementsByClassName('data-category');
@@ -24,18 +25,31 @@ var thisChart;
 var newData = 0;
 // /TEMP
 const UPDATE_TIME = 500;
-test.addEventListener("click", () => {
-    if (myCanvas.height !== 0) {
-        const requestLoop = setInterval(() => {
-            graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
-        }, UPDATE_TIME);
-    } else {
-        myCanvas.height = 100;
-        myCanvas.width = 100;
 
-        graphs.makeChart(myCanvas, {t:new Date(), y:newData++}, labels[0]);
-        thisChart = graphs.chart;
-    }
+let requestLoop;
+//Need some way to switch between them
+counter.addEventListener("click", () => {
+
+    myCanvas.height = 100;
+    myCanvas.width = 100;
+    graphs.makeChart(myCanvas, {t:new Date(), y:newData++}, "strip count");
+    thisChart = graphs.chart;
+    requestLoop = setInterval(() => {
+        graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
+    }, UPDATE_TIME);
+});
+stopper.addEventListener("click", () => {
+    // if (myCanvas.height !== 0) {
+    //     const requestLoop = setInterval(() => {
+    //         graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
+    //     }, UPDATE_TIME);
+    myCanvas.height = 100;
+    myCanvas.width = 100;
+    graphs.makeChart(myCanvas, {t:new Date(), y:newData++}, "stopping distance");
+    thisChart = graphs.chart;
+    requestLoop = setInterval(() => {
+        graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
+    }, UPDATE_TIME);
 });
 
 

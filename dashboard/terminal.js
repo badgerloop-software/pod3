@@ -37,6 +37,8 @@ communication.updater.on("messageReceived", (data) => {
         "<br> > ";
 })
 
+
+
 function processText(input) {
     input = input.toLowerCase();    //Make it case insensitive
     if (input === "help") {
