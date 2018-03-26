@@ -1,7 +1,7 @@
 #include <string.h>
 #include "pin_alias.h"
 
-const char * GROUP_NAMES[] = {
+const char *GROUP_NAMES[] = {
 	"OTHER", "SENSOR", "VALVE", "RETRO", "LED", "I2C", "PRESSURE"
 };
 const uint8_t NUM_GROUPS = sizeof(GROUP_NAMES) / sizeof(char *);
