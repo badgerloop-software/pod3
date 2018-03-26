@@ -9,3 +9,10 @@ LFLAGS = --specs=nosys.specs -Wl,--gc-sections
 LFLAGS += -Tproc/link.ld
 
 OBJ_DIR = bin
+
+GIT_TIME=$(shell git log -n 1 --date=iso --pretty=format:"%cd")
+GIT_VERSION=$(shell git log -n 1 --pretty=format:"%h-%cn")
+SHELL_TIME=$(shell date)
+DEFINES+=-D_GIT_TIME="\"$(GIT_TIME)\"" -D_GIT_VERSION="\"$(GIT_VERSION)\""
+DEFINES+=-D_SHELL_TIME="\"$(SHELL_TIME)\""
+DEFINES+=-D__VERSION='$(REVISION)'

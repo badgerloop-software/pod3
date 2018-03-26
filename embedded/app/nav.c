@@ -5,11 +5,10 @@
 #include "console.h"
 #include "usart.h"
 
-#define APP_NAME		"nav"
 #define BLINK_INTERVAL	250
 
 inline void printPrompt(void) {
-	printf("[%s-build] $ ", APP_NAME);
+	fputs("[nav-build] $ ", stdout);
 	fflush(stdout);
 }
 
@@ -30,7 +29,7 @@ int main(void) {
 
 	rx = get_rx(USB_UART);
 
-	post(APP_NAME);
+	post("Navigation");
 	printPrompt();
 
 	while (1) {
