@@ -54,14 +54,29 @@ command_status do_io(int argc, char *argv[]) {
 
 	GPIO_TypeDef *port;
 	uint8_t pin = -1;
-	int i;
+	int i, idx, count;
 
 	if (argc < 2)
 		return USAGE;
 
+	/* print aliases */
 	if (!strcmp("aliases", argv[1])) {
 		for (i = 0; i < NUM_GROUPS; i++)
 			printf("%s\r\n", GROUP_NAMES[i]);
+		return SUCCESS;
+	}
+
+	/* print all pins related to this alias */
+	if ((idx = getGpioAliasIndex(argv[1])) >= 0) {
+		count = 0;
+		gpio_printPinInfoHeader();
+		for (i = 0; i < NUM_GPIO_ALIAS; i++) {
+			if ((0x1 << idx) & GPIO_TABLE[i].group) {
+				gpio_printPinInfo(GPIO_TABLE[i].port, GPIO_TABLE[i].pin);
+				count++;
+			}
+		}
+		printf("\r\ntotal: %d\r\n\r\n", count);
 		return SUCCESS;
 	}
 
@@ -72,20 +87,25 @@ command_status do_io(int argc, char *argv[]) {
 
 	if (argc >= 3)
 		pin = argv[2][0] - '0';
+	else if (strlen(argv[1]) == 2)
+		pin = argv[1][1] - '0';
+	else if (strlen(argv[1]) == 2) {
+		pin = 10 * (argv[1][1] - '0');
+		pin += argv[1][2] - '0';
+	}
 
 	gpio_printPinInfoHeader();
 
 	/* print single pin */
-	if (pin <= 15) {
+	if (pin < 16) {
 		gpio_printPinInfo(port, pin);
 		putchar('\r'); putchar('\n');
 		return SUCCESS;
 	}
 
 	/* print all pins */
-	for (i = 0; i < 15; i++) {
+	for (i = 0; i < 16; i++)
 		gpio_printPinInfo(port, i);
-	}
 
 	putchar('\r'); putchar('\n');
 
@@ -94,7 +114,7 @@ command_status do_io(int argc, char *argv[]) {
 
 COMMAND_ENTRY(
 	"io",
-	"io port [pin]",
+	"io { (port [pin]) | aliases | ALIAS }",
 	"TODO.",
 	do_io
 )

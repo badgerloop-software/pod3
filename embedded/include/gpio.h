@@ -30,18 +30,16 @@ typedef enum {
 } GPIO_PULLUP_STATE;
 
 typedef enum {
-	OTHER = 0x0,
-	SENSOR = 0x1,
-	SOLENOID = 0x2,
-	RETRO = 0x5,
-	LED = 0x8,
-	I2C = 0x11,
-	PRESSURE = 0x21,
-	BRAKE = 0x42,
-	PROP = 0x82
+	OTHER =		0x01,
+	SENSOR =	0x02,
+	VALVE =		0x04,
+	RETRO =		0x08,
+	LED =		0x10,
+	I2C =		0x20,
+	PRESSURE =	0x40
 } GPIO_GROUP;
 
-typedef struct _GPIO{
+typedef struct _GPIO {
 	GPIO_TypeDef* port;
 	uint8_t pin;
 	bool state;

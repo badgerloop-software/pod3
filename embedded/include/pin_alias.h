@@ -27,5 +27,6 @@ extern const GPIO GPIO_TABLE[];
 int gpioAliasInit(void);
 int hasGpioAlias(GPIO_TypeDef ** port, uint8_t * pin, char * name);
 int getGpioAlias(GPIO_TypeDef ** port, uint8_t * pin, GPIO * alias);
+int getGpioAliasIndex(const char *str);
 
 #endif
