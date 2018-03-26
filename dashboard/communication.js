@@ -13,7 +13,6 @@ const sendMessage = function (restParams=[],eventSuffix="") {
     for (let i = 0; i < restParams.length; i++){
         address = address + restParams[i] + "/";
     }
-    console.log(address);
     request(address, (err, res, body) => {
         receivedEmitter.emit("messageReceived" + eventSuffix, body);
     })

@@ -62,16 +62,15 @@
                                   <div class="card-body">
                                       <div class="row text-left">
                                           <div class="col btn-">
-                                              <canvas id="myChart" height="0" width="0"></canvas>
                                               <table class="table table-sm table-hover">
                                                   <h5 class="text-center font-weight-bold data-category">MOTION</h5>
                                                   <tbody>
                                                   <tr>
-                                                      <th id="test" scope="row">Stopping Distance</th>
+                                                      <th id="stopping distance" scope="row">Stopping Distance</th>
                                                       <td class="data">x</td>
                                                   </tr>
                                                   <tr>
-                                                      <th scope="row">Strip Count</th>
+                                                      <th id="strip count" scope="row">Strip Count</th>
                                                       <td class="data">x</td>
                                                   </tr>
                                                   <tr>
@@ -258,12 +257,15 @@
                           </div>
                       </div>
                   </div>
-                  <div class="rounded">
-                      <h4 class="card-title">Terminal</h4>
-                      <div class="card bg-light mb-3 rounded">
-                        <iframe src="terminal_embedded.html" width=inherit height="350" style="border-style: none"></iframe>
-                      </div>
+                  <div id="canvas-container">
+                      <canvas id="canvas" height="0" width="0"></canvas>
                   </div>
+                  <!--<div class="rounded">-->
+                      <!--<h4 class="card-title">Terminal</h4>-->
+                      <!--<div class="card bg-light mb-3 rounded">-->
+                        <!--<iframe src="terminal_embedded.html" width=inherit height="350" style="border-style: none"></iframe>-->
+                      <!--</div>-->
+                  <!--</div>-->
               </div>
 		  </section>
 		</main>

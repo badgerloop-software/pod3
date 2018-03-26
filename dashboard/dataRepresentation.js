@@ -14,17 +14,17 @@ function makeChart (canvas, data, name) {
                 data:[data],
                 lineTension: 0,
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
+                    '#c5050c',
                 ],
                 borderColor: [
-                    'rgba(255,99,132,1)',
+                    '#c5050c',
                 ],
                 borderWidth: 1,
                 fill: false,
             }]
         },
         options: {
-            /*///////For increasing performance//////
+            ///////For increasing performance//////
             animation: {
                 duration: 0, // general animation time
             },
@@ -32,21 +32,25 @@ function makeChart (canvas, data, name) {
                 animationDuration: 0, // duration of animations when hovering an item
             },
             responsiveAnimationDuration: 0, // animation duration after a resize
-            //*////////End performance boosters, comment out above code to make the graph nicer + slower////
+            ////////End performance boosters, comment out above code to make the graph nicer + slower////
             tooltips: {
-                enabled: false
+                enabled: true
             },
             scales: {
                 xAxes: [{
                     type: "time",
                     time: {
                         displayFormats: {
-                            second: "ss",
-                            millisecond: "ss.SSS",
+                            second: "hh:mm:ss.S",
+                            millisecond: "hh:mm:ss.S",
                         },
                         min: new Date(),
-                        stepSize: 10,
+                        //stepSize: 500,
+
                     },
+                    ticks: {
+                        source: 'data'
+                    }
 
                 }],
                 yAxes:[{
