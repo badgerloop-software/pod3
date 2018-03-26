@@ -89,7 +89,7 @@ command_status do_io(int argc, char *argv[]) {
 		pin = argv[2][0] - '0';
 	else if (strlen(argv[1]) == 2)
 		pin = argv[1][1] - '0';
-	else if (strlen(argv[1]) == 2) {
+	else if (strlen(argv[1]) == 3) {
 		pin = 10 * (argv[1][1] - '0');
 		pin += argv[1][2] - '0';
 	}
@@ -115,6 +115,6 @@ command_status do_io(int argc, char *argv[]) {
 COMMAND_ENTRY(
 	"io",
 	"io { (port [pin]) | aliases | ALIAS }",
-	"TODO.",
+	"View information about GPIO ports and pins.",
 	do_io
 )
