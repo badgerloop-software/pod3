@@ -3,6 +3,20 @@
 #include "usart.h"
 #include "pin_alias.h"
 
+/* STM32L432KC */
+// TODO
+
+/* Nucleo 32 I/O */
+FILL_GPIO(LED,		GPIOB, 3, OUTPUT, LOW_SPEED, NONE, true, LED)
+FILL_AFIO(UART_TX,	GPIOA, 2, ALT, 7, MEDIUM_SPEED, NONE, true, OTHER)
+FILL_AFIO(UART_RX,	GPIOA, 15, ALT, 3, MEDIUM_SPEED, NONE, true, OTHER)
+
+/* CAN */
+// TODO
+
+/* I2C */
+// TODO
+
 int io_init(void) {
 
 	return gpioAliasInit();
@@ -20,9 +34,6 @@ int periph_init(void) {
 	return ret;
 }
 
-#define LED3_PIN	3
-#define LED_PORT	GPIOB
-
 inline void blink_handler(unsigned int blink_int) {
 
 	static unsigned int curr = 0, prev = 0;
@@ -30,19 +41,19 @@ inline void blink_handler(unsigned int blink_int) {
 	curr = ticks / blink_int;
 	if (curr != prev)
 		(curr % 2) ?
-			gpio_writePin(LED_PORT, LED3_PIN, 1) :
-			gpio_writePin(LED_PORT, LED3_PIN, 0);
+			gpio_writePin(GPIOB, 3, 1) : gpio_writePin(GPIOB, 3, 0);
 	prev = curr;
 }
 
-inline void fault(void) {
+void fault(void) {
+
+	printf("Entered %s\r\n", __func__);
+
 	while (1) {
 		blink_handler(750);
 	}
 }
 
 inline void set_led(bool state) {
-	(state) ?
-		gpio_writePin(LED_PORT, LED3_PIN, 1) :
-		gpio_writePin(LED_PORT, LED3_PIN, 0);
+	(state) ? gpio_writePin(GPIOB, 3, 1) : gpio_writePin(GPIOB, 3, 0);
 }

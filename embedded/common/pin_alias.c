@@ -6,27 +6,10 @@ const char *GROUP_NAMES[] = {
 };
 const uint8_t NUM_GROUPS = sizeof(GROUP_NAMES) / sizeof(char *);
 
-const GPIO GPIO_TABLE[] = {
-
-	/* STM32L432KC */
-	// TODO
-
-	/* Nucleo 32 I/O */
-	FILL_GPIO("LED",		GPIOB, 3, OUTPUT, LOW_SPEED, NONE, true, LED)
-	FILL_AFIO("UART TX",	GPIOA, 2, ALT, 7, MEDIUM_SPEED, NONE, true, OTHER)
-	FILL_AFIO("UART RX",	GPIOA, 15, ALT, 3, MEDIUM_SPEED, NONE, true, OTHER)
-
-	/* CAN */
-	// TODO
-
-	/* I2C */
-	// TODO
-
-};
-const uint8_t NUM_GPIO_ALIAS = sizeof(GPIO_TABLE) / sizeof(GPIO);
+const GPIO *GPIO_TABLE = (GPIO *) &__GPIO_ENTRIES_START;
 
 int gpioAliasInit(void) {
-	int i;
+	unsigned int i;
 	GPIO_TypeDef * port;
 	uint8_t pin;
 
@@ -56,8 +39,8 @@ int gpioAliasInit(void) {
 }
 
 int hasGpioAlias(GPIO_TypeDef **port, uint8_t *pin, char *name) {
-	int i;
-	for (i = 0; i< NUM_GPIO_ALIAS ;i++) {
+	unsigned int i;
+	for (i = 0; i < NUM_GPIO_ALIAS ;i++) {
 		if (!strcmp(GPIO_TABLE[i].name, name)) {
 			*pin = GPIO_TABLE[i].pin;
 			*port = GPIO_TABLE[i].port;
@@ -68,7 +51,7 @@ int hasGpioAlias(GPIO_TypeDef **port, uint8_t *pin, char *name) {
 }
 
 int getGpioAlias(GPIO_TypeDef **port, uint8_t *pin, GPIO *alias) {
-	int i; 
+	unsigned int i;
 	for (i = 0; i < NUM_GPIO_ALIAS; i++) {
 		if (GPIO_TABLE[i].pin == *pin && GPIO_TABLE[i].port == *port) {
 			*alias = GPIO_TABLE[i];
@@ -79,7 +62,7 @@ int getGpioAlias(GPIO_TypeDef **port, uint8_t *pin, GPIO *alias) {
 }
 
 int getGpioAliasIndex(const char *str) {
-	int i;
+	unsigned int i;
 	for (i = 0; i < NUM_GROUPS; i++) {
 		if (!strcmp(str, GROUP_NAMES[i]))
 			return i;

@@ -55,6 +55,11 @@ SECTIONS {
 		KEEP(*(.commands))
 		__COMMANDS_END = .;
 
+		/* GPIO initialization data section */
+		__GPIO_ENTRIES_START = .;
+		KEEP(*(.GPIO))
+		__GPIO_ENTRIES_END = .;
+
 		*(.init)
 		*(.fini)
 

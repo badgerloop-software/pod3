@@ -70,7 +70,7 @@ command_status do_io(int argc, char *argv[]) {
 	if ((idx = getGpioAliasIndex(argv[1])) >= 0) {
 		count = 0;
 		gpio_printPinInfoHeader();
-		for (i = 0; i < NUM_GPIO_ALIAS; i++) {
+		for (i = 0; (unsigned int) i < NUM_GPIO_ALIAS; i++) {
 			if ((0x1 << idx) & GPIO_TABLE[i].group) {
 				gpio_printPinInfo(GPIO_TABLE[i].port, GPIO_TABLE[i].pin);
 				count++;
