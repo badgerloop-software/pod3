@@ -104,9 +104,9 @@ void print_mmap_t(const mmap_t *entry) {
 	unit = units[i];
 
 	printf(
-		"%-10s:\t0x%08lx - 0x%08lx (%lu %s)\r\n",
+		"%-10s:\t0x%08lx - 0x%08lx (%lu %s) %s\r\n",
 		entry->name, entry->addr, entry->addr + entry->size - 1,
-		size, unit
+		size, unit, (entry->children) ? "*" : ""
 	);
 }
 
