@@ -28,6 +28,9 @@ $(OBJ_DIR):
 
 %.bin: %.elf
 	@$(TOOLCHAIN)objcopy -O binary $< $@
+	+@printf "copying '$(notdir $<)' -> '$(notdir $@)' ("
+	@stat --printf="%s" $@
+	+@echo " / 262144)"
 
 unmount:
 	-@./build.py mount -u --all
