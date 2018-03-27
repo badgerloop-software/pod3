@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 
 extern uint32_t __etext;
 extern uint32_t __data_start__, __data_end__;
@@ -59,9 +60,12 @@ void Reset_Handler(void) {
 	__START();
 }
 
+extern void fault(void);
 void Default_Handler(void) {
-	/* TODO */
-	while(1);
+
+	printf("Entered default interrupt handler\r\n");
+
+	fault();
 }
 
 void NMI_Handler        (void) __attribute__((weak, alias("Default_Handler")));
