@@ -6,9 +6,6 @@
 #define EXP_SECT(sect)\
 	((const uint32_t) &sect)
 
-#define SECT_SZ(start, end)\
-	(EXP_SECT(end) - EXP_SECT(start))
-
 extern const unsigned int __stext, __etext, __Vectors_End, __COMMANDS_START,
 	   __COMMANDS_END, __GPIO_ENTRIES_START, __GPIO_ENTRIES_END,
 	   __data_start__, __data_end__, __bss_start__, __bss_end__;
@@ -30,11 +27,27 @@ const mmap_t CODE[] = {
 	MIN_MMAP_ENTRY("OPT BYTES", 0x1fff7800, 0x10)
 };
 
+const mmap_t APB1[] = {
+	MIN_MMAP_ENTRY("TODO", 0x0, 0x1)
+};
+
+const mmap_t APB2[] = {
+	MIN_MMAP_ENTRY("TODO", 0x0, 0x1)
+};
+
+const mmap_t AHB1[] = {
+	MIN_MMAP_ENTRY("TODO", 0x0, 0x1)
+};
+
+const mmap_t AHB2[] = {
+	MIN_MMAP_ENTRY("TODO", 0x0, 0x1)
+};
+
 const mmap_t PERIPH[] = {
-	MIN_MMAP_ENTRY("APB1", 0x40000000, 0x9800)
-	MIN_MMAP_ENTRY("APB2", 0x40010000, 0x5800)
-	MIN_MMAP_ENTRY("AHB1", 0x40020000, 0x4400)
-	MIN_MMAP_ENTRY("AHB2", 0x48000000, 0x8060C00)
+	MMAP_ENTRY("APB1", 0x40000000, 0x9800, APB1)
+	MMAP_ENTRY("APB2", 0x40010000, 0x5800, APB2)
+	MMAP_ENTRY("AHB1", 0x40020000, 0x4400, AHB1)
+	MMAP_ENTRY("AHB2", 0x48000000, 0x8060C00, AHB2)
 };
 
 const mmap_t TOP_LEVEL[] = {
@@ -105,7 +118,8 @@ void print_mmap_t(const mmap_t *entry) {
 
 	printf(
 		"%-10s:\t0x%08lx - 0x%08lx (%lu %s) %s\r\n",
-		entry->name, entry->addr, entry->addr + entry->size - 1,
+		entry->name, entry->addr,
+		(entry->end_addr) ? entry->end_addr - 1 : entry->addr + entry->size - 1,
 		size, unit, (entry->children) ? "*" : ""
 	);
 }
