@@ -23,7 +23,7 @@ typedef struct command {
 extern command_t *commands;
 
 /* symbols need to be defined in the linker script */
-extern unsigned int __COMMANDS_END, __COMMANDS_START;
+extern const unsigned int __COMMANDS_END, __COMMANDS_START;
 #define NUM_COMMANDS (\
 	((unsigned int) &__COMMANDS_END - (unsigned int) &__COMMANDS_START)/sizeof(command_t)\
 )

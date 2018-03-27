@@ -42,6 +42,8 @@ SECTIONS {
 
 	.text : {
 
+		__stext = .;
+
 		KEEP(*(.vectors))
 		KEEP(*(.device_vectors))
 		__Vectors_End = .;
