@@ -4,6 +4,8 @@
 int get_command_index(char *command);
 void exec_command(int argc, char **argv);
 
+#define UNUSED(x) (void)(x)
+
 typedef enum {
 	SUCCESS = 0,
 	USAGE,
