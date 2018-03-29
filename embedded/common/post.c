@@ -70,9 +70,6 @@ void post(const char *app_name) {
 	printf("HCLK:\t%lu kHz\r\n", rcc_get_AHB() / 1000);
 	printf("APB1:\t%lu kHz\r\n", rcc_get_APB1() / 1000);
 	printf("APB2:\t%lu kHz\r\n", rcc_get_APB2() / 1000);
-	if (rcc_get_SysClockSrc() == PLL) {
-
-	}
 	puts("----------------------------------------------------------------------\r");
 
 	/* clear reset flags */

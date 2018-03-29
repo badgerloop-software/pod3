@@ -34,6 +34,8 @@ void SystemInit(void) {
 	SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET;
 #endif
 
+	FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN;
+
 	SystemCoreClockUpdate();
 }
 
