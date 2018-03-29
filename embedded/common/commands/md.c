@@ -18,7 +18,7 @@ command_status do_md(int argc, char *argv[]) {
 		return FAIL;
 	}
 
-	printf("[@0x%08lx] 0x%lx\r\n", (uint32_t) addr, *addr);
+	printf("[@0x%08lx] 0x%08lx\r\n", (uint32_t) addr, *addr);
 
 	return SUCCESS;
 }

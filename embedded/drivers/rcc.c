@@ -6,7 +6,7 @@ const char *clk_src_strings[] = {
 	"MSI", "HSI", "HSE", "PLL",
 	"PLLSAI1",
 	"LSI", "LSE",
-	"UNKNOWN", "NONE"
+	"UNKNOWN", "CLK_NONE"
 };
 
 bool rcc_setClk(clk_src_t clk, bool state) {
@@ -80,6 +80,9 @@ bool rcc_setClk(clk_src_t clk, bool state) {
 			(*reg & ready_mask) :	/* turn on  = wait for bit to be set	*/
 			!(*reg & ready_mask);	/* turn off = wait for bit to cleared	*/
 	} while(!result);
+
+	/* write this bit if we just turned on the PLL */
+	if ((clk == PLL) && state) RCC->PLLCFGR |= RCC_PLLCFGR_PLLREN;
 	
 	return true;
 }
@@ -106,7 +109,7 @@ bool rcc_changeSysClockSrc(clk_src_t clk) {
 
 	/* make sure this source is on */
 	if (!rcc_getClockState(clk))
-		return false;
+		rcc_setClk(clk, true);
 	
 	switch (clk) {
 		case MSI:
@@ -129,6 +132,7 @@ bool rcc_changeSysClockSrc(clk_src_t clk) {
 
 	RCC->CFGR |= set_mask;
 	while (!(RCC->CFGR & ready_mask)) {;}
+	SystemCoreClockUpdate();
 	return true;
 }
 
@@ -144,7 +148,7 @@ clk_src_t rcc_get_SysClockSrc(void) {
 
 clk_src_t rcc_get_PLLClockSrc(void) {
 	switch (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) {
-		case 0: return NONE;
+		case 0: return CLK_NONE;
 		case RCC_PLLCFGR_PLLSRC_MSI: return MSI;
 		case RCC_PLLCFGR_PLLSRC_HSI: return HSI;
 		case RCC_PLLCFGR_PLLSRC_HSE: return HSE;
@@ -152,22 +156,154 @@ clk_src_t rcc_get_PLLClockSrc(void) {
 	return UNKNOWN;
 }
 
-inline uint32_t rcc_get_APB1(void) {
+uint32_t rcc_get_MSI(void) {
+
+	uint32_t msirange;
+
+	/* determine source of scalar for MSI */
+	if (!(RCC->CR & RCC_CR_MSIRGSEL))
+		msirange = (RCC->CSR & RCC_CSR_MSISRANGE) >> 8U;
+	else msirange = (RCC->CR & RCC_CR_MSIRANGE) >> 4U;
+
+	/*MSI frequency range in HZ*/
+	return MSIRangeTable[msirange];
+}
+
+uint32_t rcc_get_APB1(void) {
 	return (
-		SystemCoreClock >> APBPrescTable[
+		rcc_get_AHB() >> APBPrescTable[
 			(RCC->CFGR & RCC_CFGR_PPRE1) >> RCC_CFGR_PPRE1_Pos
 		]
 	);
 }
 
-inline uint32_t rcc_get_APB2(void) {
+int rcc_set_APB1(uint8_t value) {
+	uint32_t curr;
+	if (value > 7) return 1;
+	curr = RCC->CFGR;
+	curr &= ~RCC_CFGR_PPRE2;
+	curr |= value << RCC_CFGR_PPRE2_Pos;
+	RCC->CFGR = curr;
+	return 0;
+}
+
+uint32_t rcc_get_APB2(void) {
 	return (
-		SystemCoreClock >> APBPrescTable[
+		rcc_get_AHB() >> APBPrescTable[
 			(RCC->CFGR & RCC_CFGR_PPRE2) >> RCC_CFGR_PPRE2_Pos
 		]
 	);
 }
 
-void rcc_setPLLs() {
-	
+int rcc_set_APB2(uint8_t value) {
+	uint32_t curr;
+	if (value > 7) return 1;
+	curr = RCC->CFGR;
+	curr &= ~RCC_CFGR_PPRE1;
+	curr |= value << RCC_CFGR_PPRE1_Pos;
+	RCC->CFGR = curr;
+	return 0;
+}
+
+uint32_t rcc_get_AHB(void) {
+	return (
+		SystemCoreClock >> AHBPrescTable[
+			(RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos
+		]
+	);
+}
+
+int rcc_set_AHB(uint8_t value) {
+	uint32_t curr;
+	if (value > 15) return 1;
+	curr = RCC->CFGR;
+	curr &= ~RCC_CFGR_HPRE;
+	curr |= value << RCC_CFGR_HPRE_Pos;
+	RCC->CFGR = curr;
+	return 0;
+}
+
+int rcc_check_PLL_config(
+	clk_src_t src, uint8_t N, uint8_t M, uint8_t PDIV, uint8_t R, uint8_t Q
+) {
+
+	uint32_t frequency;
+
+	/* validate inputs */
+	if (src != MSI && src != HSI && src != HSE)
+		return 1;
+	if (M > 7 || N > 86 || N < 8 || Q > 3 || PDIV > 31 || R > 3 || PDIV == 1)
+		return 1;
+
+	/* set frequency to what the input will be */
+	switch (src) {
+	case MSI: frequency = rcc_get_MSI(); break;
+	case HSE: frequency = HSE_VALUE; break;
+	default: frequency = 16000000;
+	}
+
+	frequency /= M + 1; 
+
+	/* make sure M falls in a valid range */
+	if (frequency < 4000000 || frequency > 16000000)
+		return 1;
+
+	/* set frequency to what the input will be */
+	switch (src) {
+	case MSI: frequency = rcc_get_MSI(); break;
+	case HSE: frequency = HSE_VALUE; break;
+	default: frequency = 16000000;
+	}
+
+	frequency /= M + 1;
+
+	/* make sure M falls in a valid range */
+	if (frequency < 4000000 || frequency > 16000000)
+		return 1;
+
+	frequency *= N;
+
+	/* make sure N falls in a valid range */
+	if (frequency < 64000000 || frequency > 344000000)
+		return 1;
+
+	/* make sure Q and R falls in a valid range */
+	if ((frequency / (2 + 2*Q)) > 80000000)
+		return 1;
+	if ((frequency / (2 + 2*R))  > 80000000)
+		return 1;
+
+	return 0;
+}
+
+int rcc_setPLLs(
+	clk_src_t src, uint8_t N, uint8_t M, uint8_t PDIV, uint8_t R, uint8_t Q
+) {
+
+	if (rcc_check_PLL_config(src, N, M, PDIV, R, Q))
+		return 1;
+
+	/* change off of PLL if we're using it */
+	if (rcc_get_SysClockSrc() == PLL)
+		rcc_changeSysClockSrc(MSI);
+
+	/* turn off PLL */
+	if (rcc_getClockState(PLL))
+		rcc_setClk(PLL, false);
+
+	/* turn on the input if necessary */
+	if (!rcc_getClockState(src))
+		rcc_setClk(src, true);
+
+	/* reset the configuration register */
+	RCC->PLLCFGR = 0x00001000;
+
+	/* set all bits at once */
+	RCC->PLLCFGR = (
+		(M << RCC_PLLCFGR_PLLM_Pos) | (N << RCC_PLLCFGR_PLLN_Pos) |
+		(Q << RCC_PLLCFGR_PLLQ_Pos) | (R << RCC_PLLCFGR_PLLR_Pos) |
+		(PDIV << RCC_PLLCFGR_PLLPDIV_Pos) | ((uint32_t) src + 1)
+	);
+
+	return 0;
 }

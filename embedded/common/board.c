@@ -1,6 +1,7 @@
 #include "gpio.h"
 #include "board.h"
 #include "usart.h"
+#include "rcc.h"
 #include "pin_alias.h"
 
 /* STM32L432KC */
@@ -19,7 +20,22 @@ FILL_AFIO(UART_RX,	GPIOA, 15, ALT, 3, MEDIUM_SPEED, NONE, true, OTHER)
 
 int io_init(void) {
 
-	return gpioAliasInit();
+	int ret = 0;
+
+	/* set HCLK = SYSCLK / 2 */
+	rcc_set_AHB(8);
+
+	/* set PLL configuration and make it the system clock source: */
+	/* ((16 MHz / 2) * 24) / 4 = 48 MHz SYSCLK */
+	ret += rcc_setPLLs(HSI, 24, 1, 0, 1, 1);
+	rcc_changeSysClockSrc(PLL);
+
+	/* turn off unused MSI */
+	rcc_setClk(MSI, false);
+
+	ret += gpioAliasInit();
+
+	return ret;
 }
 
 int periph_init(void) {

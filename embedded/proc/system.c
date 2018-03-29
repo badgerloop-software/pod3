@@ -38,8 +38,8 @@ void SystemInit(void) {
 }
 
 void SystemCoreClockUpdate(void) {
-	uint32_t tmp = 0U, msirange = 0U, pllvco = 0U, pllr = 2U,
-			 pllsource = 0U, pllm = 2U;
+	uint32_t msirange = 0U, pllvco = 0U, pllr = 2U,
+			 pllsource = 0U, pllm = 2U; //, tmp = 0U;
 
 	/* determine source of scalar for MSI */
 	if (!(RCC->CR & RCC_CR_MSIRGSEL))
@@ -84,8 +84,8 @@ void SystemCoreClockUpdate(void) {
 	}
 
 	/* Compute HCLK clock frequency */
-	tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4U)];
-	SystemCoreClock >>= tmp;
+	//tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4U)];
+	//SystemCoreClock >>= tmp;
 
 	SysTick_Config(SystemCoreClock / 1000);
 }
