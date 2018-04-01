@@ -49,6 +49,7 @@ function submit(){
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //When a message is received from the pi it updates the terminal
 communication.updater.on("messageReceived", (data) => {
     console.log(communication.data);
@@ -60,6 +61,9 @@ communication.updater.on("messageReceived", (data) => {
 
 
 function processText(input) {
+=======
+function processText(input, optionalArgs) {
+>>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
 =======
 function processText(input, optionalArgs) {
 >>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests

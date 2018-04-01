@@ -5,11 +5,14 @@ const frameStyle = require('./frameStyle');
 const terminal = require("./terminal");
 const communication = require("./communication");
 <<<<<<< HEAD
+<<<<<<< HEAD
 const graphs = require("./dataRepresentation");
 const stopper = document.getElementById("stopping distance");
 const counter = document.getElementById("strip count");
 const myCanvas = document.getElementById("canvas");
 
+=======
+>>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
 =======
 >>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
 //Gets each of the categories of data we are currently working with
