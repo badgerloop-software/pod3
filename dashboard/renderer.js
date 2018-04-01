@@ -1,15 +1,41 @@
 
-const electron = require('electron');
+//const electron = require('electron');
 const stateControl = require('./stateManager');
 const frameStyle = require('./frameStyle');
+const terminal = require("./terminal");
 const communication = require("./communication");
+<<<<<<< HEAD
 const graphs = require("./dataRepresentation");
 const stopper = document.getElementById("stopping distance");
 const counter = document.getElementById("strip count");
 const myCanvas = document.getElementById("canvas");
 
+=======
+>>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
 //Gets each of the categories of data we are currently working with
 let dataBlocks = document.getElementsByClassName('data-category');
+let dataLabels = document.getElementsByClassName("micro-data-label");
+let tableData = document.getElementsByClassName("micro-data");
+
+const messageBase = "messageReceived_";
+
+if(dataLabels.length !== tableData.length)
+    console.log("ERROR: # of Labels != # of data entries");
+
+for (let i = 0; i < dataLabels.length; i++) {
+    communication.updater.on(messageBase + dataLabels[i].innerHTML, (data) => {
+        tableData[i].innerHTML = data;
+    });
+}
+
+setInterval(() => {
+    for (let i = 0; i < tableData.length; i++) {
+        communication.sendMessage(dataLabels[i].innerHTML, {restParams:["data",dataLabels[i].innerHTML]});
+    }
+}, 100);
+
+
+
 let labels = [];
 for (let i = 0; i < dataBlocks.length; i++){
     labels.push(dataBlocks.item(i).textContent.toLowerCase());

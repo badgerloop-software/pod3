@@ -3,10 +3,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
-
 let mainWindow;
-let ready = false;
-
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -30,14 +27,12 @@ function createWindow() {
     mainWindow.on('ready-to-show', () => {
         mainWindow.show();
         mainWindow.focus();
-    })
+
+    });
 
     mainWindow.on('closed', function () {
         mainWindow = null;
     });
-
-    ready = true;
-
 }
 
 
@@ -46,8 +41,6 @@ app.on('ready', () => {
 
 });
 
-
-
 app.on("window-all-closed", function () {
     app.quit();
-})
+});

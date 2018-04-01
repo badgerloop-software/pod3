@@ -10,6 +10,7 @@
 .terminal-text {
     color: lawngreen;
     margin-left: 10px;
+    text-align: left;
 }
 
 .terminal-input {
@@ -29,11 +30,12 @@
 
 #terminal-body-embed {
     background-color: #000000;
+    border-radius: 25px;
 }
 
-#terminal-input-embed {
-    width: 250px;
-}
+/*#terminal-input-embed {*/
+    /*width: 200px;*/
+/*}*/
 
 #terminal-input {
     width: 600px;
