@@ -44,76 +44,6 @@
 	</nav>
 	<div class="container-fluid">
 	  <div class="row">
-<<<<<<< HEAD
-<<<<<<< HEAD
-		<main class="col no-padding" role="main">
-            <br>
-		  <section class="d-flex text-center placeholders flex-row">
-              <div class="col micro-data-container  bg-light border">
-                  <h4 class="card-title" style="margin-top: 10px">Microcontroller Data</h4>
-                  <div class="d-flex align-content-start mb-3">
-                          <div class="col">
-                              <div class="card bg-light mb-3">
-                                  <div class="card-body">
-                                      <div class="row text-left">
-                                          <div class="col btn-">
-                                              <table class="table table-sm table-hover">
-                                                  <h5 class="text-center font-weight-bold data-category">MOTION</h5>
-                                                  <tbody>
-                                                  <tr>
-                                                      <th id="stopping distance" scope="row">Stopping Distance</th>
-                                                      <td class="data">x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th id="strip count" scope="row">Strip Count</th>
-                                                      <td class="data">x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Position</th>
-                                                      <td class="data">x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Acceleration</th>
-                                                      <td class="data"></td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Velocity</th>
-                                                      <td class="data">x</td>
-                                                  </tr>
-                                                  </tbody>
-                                              </table>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="card bg-light mb-3">
-                                  <div class="card-body">
-                                      <div class="row text-left">
-                                          <div class="col btn-">
-                                              <table class="table table-sm table-hover">
-                                                  <h5 class="text-center font-weight-bold data-category">PROPULSION</h5>
-                                                  <tbody>
-                                                  <tr>
-                                                      <th scope="row">Prop. Sirocco</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Prop. LTE</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Ambient Pressure</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Ambient Temperature</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  </tbody>
-                                              </table>
-=======
-=======
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
 		<main class="col" role="main">
             <br>
 		  <section class="d-flex text-center placeholders flex-row">
@@ -181,7 +111,6 @@
                                                       </tbody>
                                                   </table>
                                               </div>
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
                                           </div>
                                       </div>
                                   </div>
@@ -220,32 +149,6 @@
                                       </div>
                                   </div>
                               </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                              <div class="card bg-light mb-3">
-                                  <div class="card-body">
-                                      <div class="row text-left">
-                                          <div class="col btn-">
-                                              <table class="table table-sm table-hover">
-                                                  <h5 class="text-center font-weight-bold data-category">BRAKING</h5>
-                                                  <tbody>
-                                                  <tr>
-                                                      <th scope="row">Brake Line Secondary</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Brake Line Primary</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row">Brake Pads Primary</th>
-                                                      <td>x</td>
-                                                  </tr>
-                                                  </tbody>
-                                              </table>
-=======
-=======
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
                                   <div class="card bg-light mb-3">
                                       <div class="card-body">
                                           <div class="row text-left">
@@ -268,14 +171,13 @@
                                                       </tbody>
                                                   </table>
                                               </div>
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
                                           </div>
                                       </div>
                                   </div>
                           </div>
                   </div>
               </div>
-			  <div class="col control-boxes">
+			  <div class="d-flex flex-column">
                   <h4 class="card-title">Manual Overrides</h4>
                   <div class="card bg-light mb-3" style="border-radius: 25px;">
                       <div class="card-body">
@@ -310,6 +212,7 @@
                           </div>
 
                           <!--Below the state control box-->
+                          <h4 class="card-title"></h4>
                           <h4 class="card-title">Actuation Overrides</h4>
                           <div class="container">
                               <div class="row">
@@ -341,13 +244,6 @@
                           </div>
                       </div>
                   </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  <div id="canvas-container">
-                      <canvas id="canvas" height="0" width="0"></canvas>
-=======
-=======
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
                   <div> <!-- Terminal Here -->
                       <h4 class="card-title">Terminal</h4>
                       <div class="card bg-light mb-3" style="border-radius: 25px; padding: 10px">
@@ -365,7 +261,6 @@
                               </div>
                           </div>
                       </div>
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
                   </div>
                   <!--<div class="rounded">-->
                       <!--<h4 class="card-title">Terminal</h4>-->
@@ -379,17 +274,8 @@
 	  </div>
 	</div>
     <script src="renderer.js"></script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     <!--<script src="stateManager.js"></script>-->
     <!--<script src="communication.js"></script>-->
     <!--<script src="terminal.js"></script>-->
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
-=======
-    <!--<script src="stateManager.js"></script>-->
-    <!--<script src="communication.js"></script>-->
-    <!--<script src="terminal.js"></script>-->
->>>>>>> f75e16a... Changed the communication to have more robust default parameter handling, set up file transfer framework on dashboard side, made some minor visual tweaks to the dashboard, fixed the embedded terminal issue, added the ability for data to change on the main display based on remote requests
   </body>
 </html>
