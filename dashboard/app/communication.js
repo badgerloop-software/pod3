@@ -11,13 +11,14 @@ const server = express();
 server.listen("8009", ()=> {});
 server.get("/config/:configFile", (req, res, err) => {
     let options = {
-        root: __dirname + '/configs/',
+        root: __dirname + '\\..\\configs\\',
         headers: {
             'x-timestamp': Date.now(),
             'x-sent': true
         }
     };
     res.sendFile(req.param('configFile'), options);
+    console.log(options.root);
 });
 ///
 

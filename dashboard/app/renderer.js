@@ -23,18 +23,6 @@ setInterval(() => {
     }
 }, 100);
 
-
-
-let labels = [];
-for (let i = 0; i < dataBlocks.length; i++){
-    labels.push(dataBlocks.item(i).textContent.toLowerCase());
-}
-
-//Prints each of the current major data labels
-labels.forEach((label) => {
-   console.log(label);
-});
-
 //TEMP
 var thisChart;
 var newData = 0;
