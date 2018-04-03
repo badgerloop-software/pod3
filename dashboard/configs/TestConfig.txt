@@ -32,8 +32,6 @@ app.get('/config/:configName', (req, res)=> {
 });
 
 receivedEmitter.on("fileReceived", (body) => {
-    if(body.toString().includes("no such file or directory"))
-        return;
     fs.writeFile(__dirname + "/transferredConfig.txt", body);
     console.log("File successfully written");
 });

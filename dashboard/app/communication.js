@@ -1,7 +1,7 @@
 const express = require("express");
 const request = require("request");
 const events = require("events");
-
+const path = require("path");
 const defaultIP = "localhost";  //Should be different for each person
 const defaultPort = "8008";
 
@@ -11,7 +11,7 @@ const server = express();
 server.listen("8009", ()=> {});
 server.get("/config/:configFile", (req, res, err) => {
     let options = {
-        root: __dirname + '\\..\\configs\\',
+        root: path.join(__dirname + '/../configs/'),
         headers: {
             'x-timestamp': Date.now(),
             'x-sent': true
@@ -19,6 +19,7 @@ server.get("/config/:configFile", (req, res, err) => {
     };
     res.sendFile(req.param('configFile'), options);
     console.log(options.root);
+    console.log(req.param('configFile'));
 });
 ///
 
