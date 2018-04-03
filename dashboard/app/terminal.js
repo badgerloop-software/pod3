@@ -2,7 +2,7 @@
 const terminalInput = document.getElementsByClassName("terminal-input")[0];
 const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
-const communication = require("./communication");
+const communication = require("./app/communication");
 //const fs = require("fs");
 
 const eventNameBase = "messageReceived_";

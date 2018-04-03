@@ -42,12 +42,6 @@ const sendMessage = function (key, {restParams, ip, port} = {ip:defaultIP, port:
     })
 };
 
-function printResponse(data, element) {
-    element.innerHTML += "<br>" +
-        data +
-        "<br> > ";
-}
 
 module.exports.sendMessage = sendMessage;
 module.exports.updater = receivedEmitter;
-module.exports.printResponse = printResponse;
