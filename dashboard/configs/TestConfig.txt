@@ -1,1 +1,39 @@
-Hello World
+Put a file you want to transfer here! Run this on your server:
+
+---------------Example Server Side Code Below----------------------------------
+
+const events = require("events");
+const fs = require("fs");
+
+const app = express();
+
+// Port can be whatever, but it must be different
+// from the other port you use for other info
+const port = 8009;
+
+let message = "NULL";
+
+const receivedEmitter = new events.EventEmitter();
+app.listen(port, () => console.log('example'));
+
+
+// For the dash to transfer a file, it needs to open a connection
+// and this server has to actually request the file, so when the dashboard
+// says its going to transfer a file, first the server verifies that it's
+// listening, then it requests for the dashboard to transfer the file
+
+app.get('/config/:configName', (req, res)=> {
+    let address = "http://" + req.hostname + ":" + (port) + req.path;
+    console.log("Request for file transfer from: " + address);
+    request(address, (err, res, body) => {
+        receivedEmitter.emit("fileReceived", body);
+    });
+    res.send("Writing file");
+});
+
+receivedEmitter.on("fileReceived", (body) => {
+    if(body.toString().includes("no such file or directory"))
+        return;
+    fs.writeFile(__dirname + "/transferredConfig.txt", body);
+    console.log("File successfully written");
+});

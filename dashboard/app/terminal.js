@@ -3,7 +3,7 @@ const terminalInput = document.getElementsByClassName("terminal-input")[0];
 const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
-//const fs = require("fs");
+
 
 const eventNameBase = "messageReceived_";
 function printResponse(data) {
@@ -53,7 +53,7 @@ function processText(input, optionalArgs) {
     if (input === "help") {
         terminalText.innerHTML += "<br>" +
             " &emsp; clear : Clears the entire window" + "<br>" +
-            " &emsp; connect [OPTIONAL ARGS: [IP address] [Port]] : Checks for a response from the server" + "<br>" +
+            " &emsp; connect [OPTIONAL ARGS: i=[IP address] p=[Port]] : Checks for a response from the server" + "<br>" +
             " &emsp; configure [configFileName.*] : Sends the designated config file to the server" +
             "<br> > ";
     }
@@ -70,8 +70,18 @@ function processText(input, optionalArgs) {
     }
 
     if (input === "connect") {
-        //TODO Make this command establish a connection with the Pi!
-        communication.sendMessage("connect", {ip:optionalArgs[0], port:optionalArgs[1]});
+        //Make this command establish a connection with the Pi!
+        let newIP;
+        let newPort;
+        for (let i = 0; i < optionalArgs.length; i++){
+            if (optionalArgs[i].charAt(0) === "i") {
+                newIP = optionalArgs[i].slice(2);   //cuts off the
+            } else if (optionalArgs[i].charAt(0) === "p") {
+                newPort = optionalArgs[i].slice(2);
+            }
+        }
+        console.log("IP: " + newIP + "   PORT: " + newPort);
+        communication.sendMessage("connect", {ip:newIP, port:newPort});
         return;
     }
 

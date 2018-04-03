@@ -42,9 +42,9 @@ brand.addEventListener('click', () => {
         height: 600,
         show: false,
         icon: __dirname + '/assets/icons/png/64x64.png'
-    })
+    });
 
     newWindow.loadURL('http://badgerloop.com');
     newWindow.on('ready-to-show', () => {newWindow.show()})
     newWindow.on('closed', () => {newWindow = null})
-})
+});

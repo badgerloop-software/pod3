@@ -1,9 +1,8 @@
 const stateControl = require('./app/stateManager');
 const frameStyle = require('./app/frameStyle');
-const terminal = require("./app/terminal");
-const communication = require("./app/communication");
+const comm = require("./app/communication");
 //Gets each of the categories of data we are currently working with
-let dataBlocks = document.getElementsByClassName('data-category');
+//let dataBlocks = document.getElementsByClassName('data-category');
 let dataLabels = document.getElementsByClassName("micro-data-label");
 let tableData = document.getElementsByClassName("micro-data");
 
@@ -13,14 +12,14 @@ if(dataLabels.length !== tableData.length)
     console.log("ERROR: # of Labels != # of data entries");
 
 for (let i = 0; i < dataLabels.length; i++) {
-    communication.updater.on(messageBase + dataLabels[i].innerHTML, (data) => {
+    comm.updater.on(messageBase + dataLabels[i].innerHTML, (data) => {
         tableData[i].innerHTML = data;
     });
 }
 
 setInterval(() => {
     for (let i = 0; i < tableData.length; i++) {
-        communication.sendMessage(dataLabels[i].innerHTML, {restParams:["data",dataLabels[i].innerHTML]});
+        comm.sendMessage(dataLabels[i].innerHTML, {restParams:["data",dataLabels[i].innerHTML]});
     }
 }, 100);
 
