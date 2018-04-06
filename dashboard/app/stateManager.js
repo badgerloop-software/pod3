@@ -1,3 +1,4 @@
+==== BASE ====
 // Author: Bloop Software
 // Brief: This is a state class used to manage the state buttons at the top
 // right of the screen. It makes sure that only one button is lit up at any time
@@ -25,7 +26,6 @@ class State{
             } else {
                 this.stateButtonTags.remove("btn-secondary");
                 this.stateButtonTags.add("btn-success");
-                this.sendMessage();  // only sends when the button is being selected
             }
 
             //Passes the next state name so it can be the only one lit
@@ -34,10 +34,6 @@ class State{
 
             this.selected = !this.selected;
         });
-
-        remoteState.updater.on("messageReceived" + this.stateName, (data)=>{
-            console.log(this.stateName + " got some data: " + data);
-        })
     }
 
     setInactive(){
@@ -47,13 +43,6 @@ class State{
             this.selected = false;
         }
     }
-
-    sendMessage() {
-        let messageAddr = ["control","state",this.stateName];
-        remoteState.sendMessage(messageAddr, this.stateName);
-    }
-
-
 }
 
 //All the states
