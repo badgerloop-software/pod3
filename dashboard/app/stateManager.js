@@ -1,4 +1,3 @@
-==== BASE ====
 // Author: Bloop Software
 // Brief: This is a state class used to manage the state buttons at the top
 // right of the screen. It makes sure that only one button is lit up at any time
