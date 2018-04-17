@@ -67,15 +67,15 @@
                                                               <td class="micro-data">x</td>
                                                           </tr>
                                                           <tr>
-                                                              <th class="micro-data-label" scope="row">Position</th>
+                                                              <th class="micro-data-label" scope="row">Position (m)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
                                                           <tr>
-                                                              <th class="micro-data-label" scope="row">Acceleration</th>
+                                                              <th class="micro-data-label" scope="row">Velocity (m/s)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
                                                           <tr>
-                                                              <th class="micro-data-label" scope="row">Velocity</th>
+                                                              <th class="micro-data-label" scope="row">Acceleration (m/(s^2))</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
                                                       </tbody>
@@ -88,23 +88,23 @@
                                       <div class="card-body micro-data-box">
                                           <div class="row text-left">
                                               <div class="col btn-">
-                                                  <h5 class="text-center font-weight-bold data-category">PROPULSION</h5>
+                                                  <h5 class="text-center font-weight-bold data-category">Pressure & Braking</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
                                                       <tr>
-                                                          <th class="micro-data-label" scope="row">Prop. Sirocco</th>
+                                                          <th class="micro-data-label" scope="row">Current Pressure (PSI)</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
                                                       <tr>
-                                                          <th class="micro-data-label" scope="row">Prop. LTE</th>
+                                                          <th class="micro-data-label" scope="row">Ambient Pod Pressure (PSI)</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
                                                       <tr>
-                                                          <th class="micro-data-label" scope="row">Ambient Pressure</th>
+                                                          <th class="micro-data-label" scope="row">Actuations Left</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
                                                       <tr>
-                                                          <th class="micro-data-label" scope="row">Ambient Temperature</th>
+                                                          <th class="micro-data-label" scope="row">Pressure Vessel Pressure (PSI)</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
                                                       </tbody>
@@ -119,27 +119,27 @@
                                   <div class="card-body micro-data-box">
                                       <div class="row text-left">
                                           <div class="col">
-                                              <h5 class="text-center font-weight-bold data-category">BATTERY</h5>
+                                              <h5 class="text-center font-weight-bold data-category">BATTERY PACK</h5>
                                               <table class="table table-sm table-hover table-striped">
                                                   <tbody>
                                                   <tr>
-                                                      <th class="micro-data-label" scope="row">Percent Charge</th>
+                                                      <th class="micro-data-label" scope="row">Pack Voltage (V)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
                                                   <tr>
-                                                      <th class="micro-data-label" scope="row">Charge Remaining</th>
+                                                      <th class="micro-data-label" scope="row">Pack Current (A)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
                                                   <tr>
-                                                      <th class="micro-data-label" scope="row">Current</th>
+                                                      <th class="micro-data-label" scope="row">Pack Temperature (C)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
                                                   <tr>
-                                                      <th class="micro-data-label" scope="row">Battery Temperature</th>
+                                                      <th class="micro-data-label" scope="row">Pack SOC (%)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
                                                   <tr>
-                                                      <th class="micro-data-label" scope="row">Voltage</th>
+                                                      <th class="micro-data-label" scope="row">Pack Capacity</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
                                                   </tbody>
@@ -152,21 +152,27 @@
                                       <div class="card-body micro-data-box">
                                           <div class="row text-left">
                                               <div class="col">
-                                                  <h5 class="text-center font-weight-bold data-category">BRAKING</h5>
+                                                  <h5 class="text-center font-weight-bold data-category">BATTERY CELLS</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
                                                           <tr>
-                                                              <th class="micro-data-label" scope="row">Brake Line Secondary</th>
+                                                              <th class="micro-data-label" scope="row">Cell High (V)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
                                                           <tr>
-                                                              <th class="micro-data-label" scope="row">Brake Line Primary</th>
+                                                              <th class="micro-data-label" scope="row">Cell Low (V)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
                                                           <tr>
-                                                              <th class="micro-data-label" scope="row">Brake Pads Primary</th>
+                                                              <th class="micro-data-label" scope="row">Cell Average (V)</th>
+                                                              <td class="micro-data">x</td>
+
+                                                          </tr>
+                                                          <tr>
+                                                              <th class="micro-data-label" scope="row">LV Battery Temp (C)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
+
                                                       </tbody>
                                                   </table>
                                               </div>
@@ -223,8 +229,8 @@
                               <div class="row">
                                   <div class="col">
                                       <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                          <button type="button" class="btn btn-secondary">Sec. Brake On</button>
-                                          <button type="button" class="btn btn-secondary">Sec. Brake Off</button>
+                                          <button type="button" class="btn btn-secondary">High Voltage Enable</button>
+                                          <button type="button" class="btn btn-secondary">High Voltage Disable</button>
                                       </div>
                                   </div>
                               </div>
