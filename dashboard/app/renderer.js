@@ -19,9 +19,14 @@ for (let i = 0; i < dataLabels.length; i++) {
 
 setInterval(() => {
     for (let i = 0; i < tableData.length; i++) {
-        comm.sendMessage(dataLabels[i].innerHTML, {restParams:["data",dataLabels[i].innerHTML]});
+        let dataLabel = dataLabels[i].innerHTML;
+        let cutOff = 0;
+        if ((cutOff = dataLabel.indexOf("(")) >= 0) {
+            dataLabel = dataLabel.substr(0, cutOff + 1)
+        }
+        comm.sendMessage(dataLabels[i].innerHTML, {restParams:["data",dataLabel]});
     }
-}, 100);
+}, 500);
 
 //TEMP
 var thisChart;
