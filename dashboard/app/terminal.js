@@ -85,8 +85,8 @@ function processText(input, optionalArgs) {
         return;
     }
 
-    if (input === "loghistory") {
-        //TODO Save a txt file with all of the contents of the terminal text
+    if (input === "query") {
+        //TODO allow manual querying of the database, could use second prompt and password verification
         return;
     }
 

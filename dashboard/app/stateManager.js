@@ -5,7 +5,6 @@
 // can be used to override and force a state change.
 
 
-
 //The container of the state buttons, also used as the dispatcher of the event
 const stateMaster = document.getElementById("state_master");
 const remoteState = require("./communication");
@@ -45,16 +44,17 @@ class State{
 }
 
 //All the states
-const fault = new State("fault");
-const idle = new State("idle");
-const ready = new State("ready");
-const pushing = new State("pushing");
-const coasting = new State("coasting");
-const braking = new State("braking");
-const stateList = [fault,idle,ready,pushing,coasting,braking];
+
+let buttons = stateMaster.getElementsByTagName("button");
+let stateList = [];
+for (let i = 0; i < buttons.length; i++) {
+    stateList.push(new State(stateMaster.getElementsByTagName("button")[i].innerHTML.toLowerCase()));
+}
 
 const initialEvent = new MouseEvent('click');
-idle.stateButton.dispatchEvent(initialEvent);   //sets idle as the initial default state
+stateList.find(function(element){
+    return element.stateName === "idle";
+}).stateButton.dispatchEvent(initialEvent); //sets idle as the initial default state
 
 //Every time the state changes it sets the other buttons to inactive
 stateMaster.addEventListener("stateChange", (e)=> {

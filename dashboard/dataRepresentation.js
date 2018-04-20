@@ -14,10 +14,10 @@ function makeChart (canvas, data, name) {
                 data:[data],
                 lineTension: 0,
                 backgroundColor: [
-                    '#c5050c',
+                    '#540306',
                 ],
                 borderColor: [
-                    '#c5050c',
+                    '#540306',
                 ],
                 borderWidth: 1,
                 fill: false,
@@ -41,8 +41,8 @@ function makeChart (canvas, data, name) {
                     type: "time",
                     time: {
                         displayFormats: {
-                            second: "hh:mm:ss.S",
-                            millisecond: "hh:mm:ss.S",
+                            second: "mm:ss.S",
+                            millisecond: "mm:ss.S",
                         },
                         min: new Date(),
                         //stepSize: 500,
@@ -64,7 +64,6 @@ function makeChart (canvas, data, name) {
 
         }
     });
-    console.log(chart.options.scales.xAxes.min);
     module.exports.chart = chart;
 }
 
@@ -79,7 +78,6 @@ function makeChart (canvas, data, name) {
 //Todo Make options to get rid of stale data
 function addData(chart, label, data) {      //fixme Tooltips behave weird, figure out why
     //newChart.data.labels.push(label);
-    console.log("TIME 1:" + moment().millisecond());
     let numDataPoints = chart.data.datasets[0].data.length;
     if (numDataPoints >= 10){   //removes the data that is older than 10 iterations, reusable, might be moved to a view change option
         chart.data.datasets[0].data.shift();
@@ -89,7 +87,6 @@ function addData(chart, label, data) {      //fixme Tooltips behave weird, figur
         dataset.data.push(data);
     })
     chart.update(); //may need to handle tooltip glitch here
-    console.log("TIME 2:" + moment().millisecond());
 }
 module.exports.addData = addData;
 module.exports.makeChart = makeChart;

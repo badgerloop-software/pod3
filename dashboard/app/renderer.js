@@ -1,18 +1,47 @@
 const stateControl = require('./app/stateManager');
 const frameStyle = require('./app/frameStyle');
+const accover = require('./app/activationOverrides')
 const comm = require("./app/communication");
+const graphs = require("./dataRepresentation");
+const freeSpace = document.getElementById("free-space");
 //Gets each of the categories of data we are currently working with
 //let dataBlocks = document.getElementsByClassName('data-category');
 let dataLabels = document.getElementsByClassName("micro-data-label");
 let tableData = document.getElementsByClassName("micro-data");
-
+let tableRows = document.getElementsByClassName("micro-data-row");
 const messageBase = "messageReceived_";
-
-if(dataLabels.length !== tableData.length)
+let myCanvas = freeSpace.getElementsByTagName("canvas")[0];
+const divs = Array.from(freeSpace.getElementsByTagName('div'));
+let terminalContainer = divs.find((elem) => {return elem.id.includes("terminal-container")});
+if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.length)
     console.log("ERROR: # of Labels != # of data entries");
+
+
+var thisChart;
+const UPDATE_TIME = 500;
+
+let requestLoop;
+//Math.floor(Math.random()*newData++) 
+for (let i = 0; i < tableRows.length; i++) {
+    tableRows[i].addEventListener("click", ()=> {
+        if (requestLoop !== undefined) {
+            clearInterval(requestLoop);
+        }
+        terminalContainer.style.display = "none";
+        myCanvas.style.display = "block";
+        myCanvas.height = 50;
+        myCanvas.width = 100;
+        graphs.makeChart(myCanvas, {t:new Date(), y:tableData[i].innerHTML}, dataLabels[i].innerHTML);
+        thisChart = graphs.chart;
+        requestLoop = setInterval(() => {
+            graphs.addData(thisChart, "Ezra", {t: new Date(), y:tableData[i].innerHTML});
+        }, UPDATE_TIME);
+    })
+}
 
 for (let i = 0; i < dataLabels.length; i++) {
     comm.updater.on(messageBase + dataLabels[i].innerHTML, (data) => {
+
         tableData[i].innerHTML = data;
     });
 }
@@ -28,47 +57,13 @@ setInterval(() => {
     }
 }, 500);
 
-//TEMP
-var thisChart;
-var newData = 0;
-// /TEMP
-const UPDATE_TIME = 500;
 
-let requestLoop;
-//Need some way to switch between them
-// counter.addEventListener("click", () => {
-//
-//     myCanvas.height = 100;
-//     myCanvas.width = 100;
-//     graphs.makeChart(myCanvas, {t:new Date(), y:newData++}, "strip count");
-//     thisChart = graphs.chart;
-//     requestLoop = setInterval(() => {
-//         graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
-//     }, UPDATE_TIME);
-// });
-// stopper.addEventListener("click", () => {
-//     // if (myCanvas.height !== 0) {
-//     //     const requestLoop = setInterval(() => {
-//     //         graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
-//     //     }, UPDATE_TIME);
-//     myCanvas.height = 100;
-//     myCanvas.width = 100;
-//     graphs.makeChart(myCanvas, {t:new Date(), y:newData++}, "stopping distance");
-//     thisChart = graphs.chart;
-//     requestLoop = setInterval(() => {
-//         graphs.addData(thisChart, "Ezra", {t: new Date(), y:Math.floor(Math.random()*newData++)});
-//     }, UPDATE_TIME);
-// });
-
-
-//TODO Incorporate a database so the request loop is actually requesting something
-// //The loop that will keep requesting the most recent data
-// const requestLoop = setInterval(() => {
-//
-//
-//
-//     })
-// }, 100);
-
-
-//requestLoop.start();
+myCanvas.addEventListener("click", ()=> {
+    if (requestLoop !== undefined) {
+        clearInterval(requestLoop);
+    }
+    myCanvas.width = 0;
+    myCanvas.height = 0;
+    myCanvas.style.display = "none";
+    terminalContainer.style.display = "block";
+});

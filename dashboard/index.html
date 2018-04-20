@@ -58,23 +58,23 @@
                                                   <h5 class="text-center font-weight-bold data-category">MOTION</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Stopping Distance</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Strip Count</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Position (m)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Velocity (m/s)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Acceleration (m/(s^2))</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
@@ -91,19 +91,19 @@
                                                   <h5 class="text-center font-weight-bold data-category">Pressure & Braking</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
-                                                      <tr>
+                                                      <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Current Pressure (PSI)</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
-                                                      <tr>
+                                                      <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Ambient Pod Pressure (PSI)</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
-                                                      <tr>
+                                                      <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Actuations Left</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
-                                                      <tr>
+                                                      <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Pressure Vessel Pressure (PSI)</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
@@ -122,23 +122,23 @@
                                               <h5 class="text-center font-weight-bold data-category">BATTERY PACK</h5>
                                               <table class="table table-sm table-hover table-striped">
                                                   <tbody>
-                                                  <tr>
+                                                  <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack Voltage (V)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
+                                                  <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack Current (A)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
+                                                  <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack Temperature (C)</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
+                                                  <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack SOC</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
+                                                  <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack Capacity</th>
                                                       <td class="micro-data">x</td>
                                                   </tr>
@@ -155,24 +155,23 @@
                                                   <h5 class="text-center font-weight-bold data-category">BATTERY CELLS</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Cell High (V)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Cell Low (V)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Cell Average (V)</th>
                                                               <td class="micro-data">x</td>
 
                                                           </tr>
-                                                          <tr>
+                                                          <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">LV Battery Temp (C)</th>
                                                               <td class="micro-data">x</td>
                                                           </tr>
-
                                                       </tbody>
                                                   </table>
                                               </div>
@@ -189,26 +188,21 @@
                           <!--The box on the top right with the state buttons-->
                           <h4 class="card-title">State Control</h4>
                           <div id="state_master" class="container state_container">
-                              <div class="row">
-                                  <div class="col-sm">
+                              <div class="flex-row">
+                                  <div class="btn-group btn-group-sm" role="group">
                                       <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
-                                  </div>
-                                  <div class="col-sm">
+                                      <span>&emsp;</span>
                                       <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
-                                  </div>
-                                  <div class="col-sm">
+                                      <span>&emsp;</span>
                                       <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
                                   </div>
                               </div>
                               <p/>
-                              <div class="row">
-                                  <div class="col-sm">
-                                      <button id="state_pushing" type="button" class="btn btn-secondary btn-sm">Pushing</button>
-                                  </div>
-                                  <div class="col-sm">
+                              <div class="flex-row">
+                                  <div class="btn-group btn-group-sm" role="group">
                                       <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
-                                  </div>
-                                  <div class="col-sm">
+                                      <span>&emsp;</span>
+
                                       <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
                                   </div>
                               </div>
@@ -229,8 +223,8 @@
                               <div class="row">
                                   <div class="col">
                                       <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                          <button type="button" class="btn btn-secondary">High Voltage Enable</button>
-                                          <button type="button" class="btn btn-secondary">High Voltage Disable</button>
+                                          <button id="hv_enable" type="button" class="btn btn-secondary">High Voltage Enable</button>
+                                          <button id="hv_disable" type="button" class="btn btn-secondary">High Voltage Disable</button>
                                       </div>
                                   </div>
                               </div>
@@ -246,19 +240,22 @@
                           </div>
                       </div>
                   </div>
-                  <div> <!-- Terminal Here -->
-                      <h4 class="card-title">Terminal</h4>
-                      <div class="card bg-light mb-3" style="border-radius: 25px; padding: 10px">
-                          <div class="container-fluid" style="padding-left: 0px" id="terminal-start-embed">
-                              <div class="terminal-body" id="terminal-body-embed">
-                                  <p class="terminal-text" id="terminal-text">
-                                      > Type 'help' to see what you can do!
-                                  </p>
-                              </div>
-                              <div class="d-flex flex-row">
-                                  <div class="border-dark">
-                                      <input class="terminal-input" id="terminal-input-embed" type="text" value="help" style="text-indent: 5px">
-                                      <button class="btn btn-dark btn-sm text-center font-weight-bold pt-0 pb-0" style="font-size: 20px;" id="submit">&crarr;</button>
+                  <div id="free-space"> <!-- Terminal Here -->
+                      <canvas id="new-chart" height="0" width="0" style="display: none"></canvas>
+                      <div id="terminal-container">
+                          <h4 class="card-title">Terminal</h4>
+                          <div class="card bg-light mb-3" style="border-radius: 25px; padding: 10px">
+                              <div class="container-fluid" style="padding-left: 0px" id="terminal-start-embed">
+                                  <div class="terminal-body" id="terminal-body-embed">
+                                      <p class="terminal-text" id="terminal-text">
+                                          > Type 'help' to see what you can do!
+                                      </p>
+                                  </div>
+                                  <div class="d-flex flex-row">
+                                      <div class="border-dark">
+                                          <input class="terminal-input" id="terminal-input-embed" type="text" value="help" style="text-indent: 5px">
+                                          <button class="btn btn-dark btn-sm text-center font-weight-bold pt-0 pb-0" style="font-size: 20px;" id="submit">&crarr;</button>
+                                      </div>
                                   </div>
                               </div>
                           </div>

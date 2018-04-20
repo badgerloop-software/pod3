@@ -2,7 +2,7 @@ const express = require("express");
 const request = require("request");
 const events = require("events");
 const path = require("path");
-const defaultIP = "192.168.1.113";  //Should be different for each person
+const defaultIP = "localhost";  //Should be different for each person
 const defaultPort = "8008";
 
 const receivedEmitter = new events.EventEmitter();
