@@ -1,14 +1,14 @@
-
 const terminalInput = document.getElementsByClassName("terminal-input")[0];
 const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
 
-
 const eventNameBase = "messageReceived_";
-function printResponse(data) {
-    terminalText.innerHTML += "<br>" +
-        data +
+
+function printResponse(response) {
+    terminalText.innerHTML +=
+        "<br>" +
+        response +
         "<br> > ";
 }
 

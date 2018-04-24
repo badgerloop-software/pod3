@@ -8,6 +8,8 @@
 }
 
 .terminal-text {
+    font-family: "Courier New";
+    font-size: 14px;
     color: lawngreen;
     margin-left: 10px;
     text-align: left;

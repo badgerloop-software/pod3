@@ -6,7 +6,7 @@ const defaultIP = "localhost";  //Should be different for each person
 const defaultPort = "8008";
 
 const receivedEmitter = new events.EventEmitter();
-/// This section is made for sending config files to the pi
+/* This section is made for sending config files to the pi */
 const server = express();
 server.listen("8009", ()=> {});
 server.get("/config/:configFile", (req, res, err) => {
@@ -21,19 +21,13 @@ server.get("/config/:configFile", (req, res, err) => {
     console.log(options.root);
     console.log(req.param('configFile'));
 });
-///
+/**/
 
 const sendMessage = function (key, {restParams, ip, port} = {ip:defaultIP, port:defaultPort, restParams:[]}) {
     // Handle defaults, isnt ideal but Ill work on learning a better way
-    if (restParams === undefined) {
-        restParams = [];
-    }
-    if (port === undefined) {
-        port = defaultPort;
-    }
-    if (ip === undefined){
-        ip = defaultIP;
-    }
+    if (restParams === undefined) restParams = [];
+    if (port === undefined) port = defaultPort;
+    if (ip === undefined) ip = defaultIP;
 
     let address = "http://" + ip + ":" + port + "/";
     for (let i = 0; i < restParams.length; i++){
@@ -43,7 +37,6 @@ const sendMessage = function (key, {restParams, ip, port} = {ip:defaultIP, port:
         receivedEmitter.emit("messageReceived_" + key, body);
     })
 };
-
 
 module.exports.sendMessage = sendMessage;
 module.exports.updater = receivedEmitter;
