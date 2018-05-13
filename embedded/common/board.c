@@ -20,11 +20,6 @@
 	FILL_AFIO(CAN1_TX, GPIOA, 12, ALT, 9, LOW_SPEED, NONE, true, OTHER)
 	FILL_AFIO(CAN1_RX, GPIOA, 11, ALT, 9, LOW_SPEED, NONE, true, OTHER)
 
-/* CAN */
-// TODO
-
-/* I2C */
-// TODO
 
 int io_init(void) {
 

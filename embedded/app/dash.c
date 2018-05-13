@@ -9,10 +9,14 @@
 #define BLINK_INTERVAL	250
 
 /* Nucleo 32 I/O */
+//THERM1: between batteries 1 and 2
+//THERM2: between batteries 2 and 3
 FILL_GPIO(THERM1,     GPIOB, 1, INPUT, LOW_SPEED, NONE, true, SENSOR)
 FILL_GPIO(THERM2,	  GPIOC, 14, INPUT, LOW_SPEED, NONE, true, SENSOR)
 
 //SENSOR
+//VOLT_SENSE is 12V battery voltage
+//CURR_SENSE is 12V battery current draw, charging not included
 FILL_GPIO(VOLT_SENSE, GPIOA, 6, INPUT, LOW_SPEED, NONE, true, SENSOR)
 FILL_GPIO(CURR_SENSE, GPIOA, 5, INPUT, LOW_SPEED, NONE, true, SENSOR)
 
