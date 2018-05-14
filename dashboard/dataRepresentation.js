@@ -1,11 +1,17 @@
 
 const charts = require("chart.js");
 const moment = require("moment");
-// Update X as the t value
-// Update Y as value at that t value
 
+/**@name makeChart
+ * @purpose Creates a graph based on a certain data set and in a specified html element
+ *
+ * @param canvas The spot on the DOM where the new chart will go
+ * @param data The initial data that will go on the chart
+ * @param name the name of the chart
+ *
+ **/
 function makeChart (canvas, data, name) {
-    const chart = new charts.Chart(canvas, {
+    module.exports.chart = new charts.Chart(canvas, {
         type: 'line',
         data: {
             labels: [name],
@@ -46,36 +52,31 @@ function makeChart (canvas, data, name) {
                         },
                         min: new Date(),
                         //stepSize: 500,
-
                     },
                     ticks: {
                         source: 'data'
                     }
-
                 }],
                 yAxes:[{
                     ticks: {
                         min: 0,
                         max: 100
                     }
-
                 }]
             }
-
         }
     });
-    module.exports.chart = chart;
 }
 
 /**@name addData
  * @purpose Takes in a label for the new data and some new information to
  * add to the graph and updates the graph with that info
  *
+ * @param chart the chart that is going to be modified
  * @param label the tag for the new piece of data (might go away)
  * @param data the actual data point, should be in JSON form e.g. { x:number, y:number }
  *
  **/
-//Todo Make options to get rid of stale data
 function addData(chart, label, data) {      //fixme Tooltips behave weird, figure out why
     //newChart.data.labels.push(label);
     let numDataPoints = chart.data.datasets[0].data.length;
@@ -85,7 +86,7 @@ function addData(chart, label, data) {      //fixme Tooltips behave weird, figur
     }
     chart.data.datasets.forEach((dataset) => {
         dataset.data.push(data);
-    })
+    });
     chart.update(); //may need to handle tooltip glitch here
 }
 module.exports.addData = addData;
