@@ -1,5 +1,5 @@
 TOOLCHAIN = arm-none-eabi-
-INCLUDES = -I proc -I include -I include/cmsis
+INCLUDES = -I proc -I include -I include/cmsis -I include/st
 CFLAGS = $(FPU) $(ARCH_FLAGS) $(DEFINES) $(CPU_DEFINES) $(INCLUDES)
 CFLAGS += -Wall -Wextra -ffunction-sections -fdata-sections -Werror
 CFLAGS += -fno-builtin -Os
