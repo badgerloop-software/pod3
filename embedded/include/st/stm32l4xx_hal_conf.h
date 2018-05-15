@@ -8,6 +8,9 @@
 #define HAL_SPI_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
 #define HAL_RCC_MODULE_ENABLED
+#define HAL_FLASH_MODULE_ENABLED
+#define HAL_GPIO_MODULE_ENABLED
+#define HAL_PWR_MODULE_ENABLED
 
 /* #define HAL_ADC_MODULE_ENABLED */
 /* #define HAL_CAN_LEGACY_MODULE_ENABLED */
@@ -20,14 +23,12 @@
 /* #define HAL_DMA2D_MODULE_ENABLED */
 /* #define HAL_DSI_MODULE_ENABLED */
 /* #define HAL_FIREWALL_MODULE_ENABLED */
-/* #define HAL_FLASH_MODULE_ENABLED */
 /* #define HAL_GFXMMU_MODULE_ENABLED */
 /* #define HAL_HASH_MODULE_ENABLED */
 /* #define HAL_HCD_MODULE_ENABLED */
 /* #define HAL_NAND_MODULE_ENABLED */
 /* #define HAL_NOR_MODULE_ENABLED */
 /* #define HAL_SRAM_MODULE_ENABLED */
-/* #define HAL_GPIO_MODULE_ENABLED */
 /* #define HAL_IRDA_MODULE_ENABLED */
 /* #define HAL_IWDG_MODULE_ENABLED */
 /* #define HAL_LCD_MODULE_ENABLED */
@@ -36,7 +37,6 @@
 /* #define HAL_OPAMP_MODULE_ENABLED */
 /* #define HAL_OSPI_MODULE_ENABLED */
 /* #define HAL_PCD_MODULE_ENABLED */
-/* #define HAL_PWR_MODULE_ENABLED */
 /* #define HAL_QSPI_MODULE_ENABLED */
 /* #define HAL_RNG_MODULE_ENABLED */
 /* #define HAL_RTC_MODULE_ENABLED */
@@ -356,6 +356,9 @@
 #endif /* HAL_GFXMMU_MODULE_ENABLED */
 
 extern uint32_t SystemCoreClock;
+extern const uint8_t AHBPrescTable[16];
+extern const uint8_t APBPrescTable[8];
+extern const uint32_t MSIRangeTable[12];
 
 #ifdef  USE_FULL_ASSERT
 #define assert_param(expr) ((expr) ? (void)0U : assert_failed((char *)__FILE__, __LINE__))
