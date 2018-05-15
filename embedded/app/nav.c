@@ -40,6 +40,37 @@ FILL_AFIO(SPI3_SSEL, GPIOA, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER );
 FILL_AFIO(UART1_TX, GPIOB, 6, ALT, 7, LOW_SPEED, NONE, true, OTHER );
 FILL_AFIO(UART1_RX, GPIOB, 7, ALT, 7, LOW_SPEED, NONE, true, OTHER );
 
+//I2C
+//Solenoid (PCF8574)
+/*
+U1 I2C Address 0x100
+	P0: SOL1: Primary Braking Trigger
+	P1: SOL2: Primary Braking Venting
+	P2: SOL3: Secondary Braking Trigger
+	P3: SOL4: Secondary Braking Venting
+	P4: SOL5: Not planned
+	P5: SOL6: Not Planned
+	P6: SOL7: Not planned
+	P7: SOL8: Not planned
+   */
+
+//Pressure
+//ADC (PCF8591)
+/*
+U7 I2C Address 0x48:
+	AIN0: DUCER1: Primary Tank
+	AIN1: DUCER2: Secondary Tank
+	AIN2: DUCER3: Primary Upstream
+	AIN3: DUCER4: Primary Downstream
+U8 I2C Address: 0x49:
+	AIN0: DUCER5: Secondary Upstream
+	AIN1: DUCER6: Secondary Downstream
+	AIN2: DUCER7: Primary Brakes
+	AIN3: DUCER8: Distance Sensor
+
+ 	*/
+
+
 inline void printPrompt(void) {
 	fputs("[nav-build] $ ", stdout);
 	fflush(stdout);
