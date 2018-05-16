@@ -30,6 +30,19 @@ The following software packages are required for local development:
 
 Some additional configuration may be required to allow non-root access to serial streams and USB devices. For server installations, `/etc/fstab` entries are used to allow the STM32 Nucleo's to be mounted to a known location automatically (required for [build.py](build.py)).
 
+Example configuration (note: add these lines, don't overwrite other entries):
+
+```
+/dev/sdc        /tmp/nucleo1    vfat    user,umask=000,utf8,noauto      0      0
+/dev/sdd        /tmp/nucleo2    vfat    user,umask=000,utf8,noauto      0      0
+/dev/sde        /tmp/nucleo3    vfat    user,umask=000,utf8,noauto      0      0
+/dev/sdf        /tmp/nucleo4    vfat    user,umask=000,utf8,noauto      0      0
+```
+
+The first entry needs to match with the first available `/dev/sd*` name the OS will assign to the ST-LINKv2 (which appears as removable storage).
+
+A machine with only one physical disk may need to start at `/dev/sdb`, for instance.
+
 Debugging with GDB is possible with help from a [Linux, stlink driver port](https://github.com/texane/stlink) which has its own set of installation instructions. The `st-util` command is used by this repository to instantiate a local GDB server and [.gdbinit](.gdbinit) is configured to automatically connect to this server (see the `debug` make target section).
 
 ## Directory Structure
