@@ -1,10 +1,10 @@
 /*Load other scripts*/
+const comm = require("./app/communication");
 const stateControl = require('./app/stateManager');
 const frameStyle = require('./app/frameStyle');
 const accover = require('./app/activationOverrides');
-const comm = require("./app/communication");
 const graphs = require("./dataRepresentation");
-
+const statusCheck = require("./app/statusCheckers");
 /*Get each element of the DOM that will be used*/
 const freeSpace = document.getElementById("free-space");
 const dataLabels = document.getElementsByClassName("micro-data-label");
@@ -21,7 +21,8 @@ if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.len
 var thisChart;
 const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
-
+let defaultIp = "localhost";
+let defaultPort = 8008;
 /*Let's each data row create a graph from itself when clicked*/
 for (let i = 0; i < tableRows.length; i++) {
     tableRows[i].addEventListener("click", ()=> {
@@ -55,7 +56,7 @@ setInterval(() => {
         if ((cutOff = dataLabel.indexOf("(")) >= 0) {
             dataLabel = dataLabel.substr(0, cutOff + 1)
         }
-        comm.sendMessage(dataLabels[i].innerHTML, {restParams:["data",dataLabel]});
+        comm.sendMessage(dataLabels[i].innerHTML, defaultIp, defaultPort, "data" ,dataLabel);
     }
 }, UPDATE_TIME);
 

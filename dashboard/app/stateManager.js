@@ -29,7 +29,6 @@ class State{
             //Passes the next state name so it can be the only one lit
             let stateChange = new CustomEvent("stateChange", {detail : stateName});
             stateMaster.dispatchEvent(stateChange);
-
             this.selected = !this.selected;
         });
     }

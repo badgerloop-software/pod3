@@ -4,7 +4,8 @@ const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
 
 const eventNameBase = "messageReceived_";
-
+const defaultIP = "localhost";
+const defaultPort = 8008;
 function printResponse(response) {
     terminalText.innerHTML +=
         "<br>" +
@@ -60,8 +61,7 @@ function processText(input, optionalArgs) {
 
     if (input === "configure") {
         //Add checking for if file exists
-        let RESTArgs = ["config", optionalArgs[0]];
-        communication.sendMessage("config", {restParams:RESTArgs});
+        communication.sendMessage("config", defaultIP, defaultPort, "config", optionalArgs[0]);
     }
 
     if (input === "clear") {
@@ -71,8 +71,8 @@ function processText(input, optionalArgs) {
 
     if (input === "connect") {
         //Make this command establish a connection with the Pi!
-        let newIP;
-        let newPort;
+        let newIP = defaultIP;
+        let newPort = defaultPort;
         for (let i = 0; i < optionalArgs.length; i++){
             if (optionalArgs[i].charAt(0) === "i") {
                 newIP = optionalArgs[i].slice(2);   //cuts off the
@@ -81,7 +81,7 @@ function processText(input, optionalArgs) {
             }
         }
         console.log("IP: " + newIP + "   PORT: " + newPort);
-        communication.sendMessage("connect", {ip:newIP, port:newPort});
+        communication.sendMessage("connect", newIP, newPort);
         return;
     }
 

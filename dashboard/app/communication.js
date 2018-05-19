@@ -23,11 +23,9 @@ server.get("/config/:configFile", (req, res, err) => {
 });
 /**/
 
-const sendMessage = function (key, {restParams, ip, port} = {ip:defaultIP, port:defaultPort, restParams:[]}) {
+const sendMessage = function (key, ip, port, ...restParams) {
     // Handle defaults, isn't ideal but Ill work on learning a better way
     if (restParams === undefined) restParams = [];
-    if (port === undefined) port = defaultPort;
-    if (ip === undefined) ip = defaultIP;
 
     let address = "http://" + ip + ":" + port + "/";
     for (let i = 0; i < restParams.length; i++){
