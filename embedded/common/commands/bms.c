@@ -1,26 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "commands.h"
-
-void bms_query(uint8_t can_id, long long byte_info){
-	//bms_queryCAN(can_id, byte_info);
-	printf("\r\nREPLACE with BMS query call\r\n");
-	printf("Printing data from %u%lli\r\n",can_id,byte_info);
-	printf("=============================\r\n");
-
-}
-
-void bms_reset(void){
-        //NOTE: This is done by power cycling the BMS via the GPIO on the PV MCU
-	//There is no CAN Command to reset the BMS
-	//rms_send_CAN_command(can_id, byte_info);
-	printf("\r\nREPLACE with RMS query call\r\n");
-	printf("Resetting BMS");
-        printf("============================\r\n");
-}
-
-
-
+#include "bms.h"
 
 command_status do_bms(int argc, char *argv[]) {
         printf("%s: TODO (%d args given)\r\n", argv[0], argc);
@@ -83,16 +64,15 @@ command_status do_bms(int argc, char *argv[]) {
 
 	printf("\r\nARGV[1]: %s", argv[1]);
         if(!strcmp("query", argv[1])){
-	        uint8_t can_id = 0xAA;
-		long long byte_info = 0x00FF0011EE00FF00;
-		bms_query(can_id, byte_info);
+	        enum BMS_QUERY query;
+		query = RELAY_STATUS;
+		printf("\r\n COMMAND PID: %04x", query);
+		bms_getRelayStatus();
 		return SUCCESS;
 	
-	}
-	if(!strcmp("reset", argv[1])){
-		bms_reset();
+	} else if(!strcmp("reset", argv[1])){
 		return SUCCESS;
-	}
+	} 
 	return SUCCESS;
 }
 
