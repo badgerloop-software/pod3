@@ -4,8 +4,8 @@ const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
 
 const eventNameBase = "messageReceived_";
-const defaultIP = "localhost";
-const defaultPort = 8008;
+defaultIP = "localhost";
+defaultPort = 8008;
 function printResponse(response) {
     terminalText.innerHTML +=
         "<br>" +

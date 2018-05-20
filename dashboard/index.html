@@ -211,23 +211,33 @@
                       <div class="card-body" style="margin-right: 5px; margin-left: 5px">
                           <!--The box on the top right with the state buttons-->
                           <h4 class="card-title">State Control</h4>
-                          <div id="state_master" class="container state_container">
-                              <div class="flex-row">
-                                  <div class="btn-group btn-group-sm" role="group">
-                                      <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
-                                      <span>&emsp;</span>
-                                      <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
-                                      <span>&emsp;</span>
-                                      <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
+                          <div class="d-flex flex-row justify-content-between">
+                              <div id="status-control" class="">
+                                  <div style="position: relative">
+                                      <div id="connection-indicator" class="connection-indicator"></div>
+                                      <button id="connection-btn" class="btn btn-sm btn-info">
+                                          Server Status
+                                      </button>
                                   </div>
                               </div>
-                              <p/>
-                              <div class="flex-row">
-                                  <div class="btn-group btn-group-sm" role="group">
-                                      <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
-                                      <span>&emsp;</span>
+                              <div id="state_master" class="state_container">
+                                  <div class="flex-row">
+                                      <div class="btn-group btn-group-sm" role="group">
+                                          <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
+                                          <span>&emsp;</span>
+                                          <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
+                                          <span>&emsp;</span>
+                                          <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
+                                      </div>
+                                  </div>
+                                  <p/>
+                                  <div class="flex-row">
+                                      <div class="btn-group btn-group-sm" role="group">
+                                          <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
+                                          <span>&emsp;</span>
 
-                                      <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
+                                          <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
+                                      </div>
                                   </div>
                               </div>
                           </div>

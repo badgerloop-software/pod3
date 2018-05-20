@@ -18,7 +18,7 @@ let terminalContainer = divs.find((elem) => {return elem.id.includes("terminal-c
 if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.length)
     console.log("ERROR: # of Labels != # of data entries");
 
-var thisChart;
+let thisChart;
 const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
 let defaultIp = "localhost";
