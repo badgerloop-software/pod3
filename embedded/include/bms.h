@@ -62,12 +62,39 @@ enum BMS_QUERY {
 	CELL_COUNT = 0xF007,
 };
 
-
+char* bms_can_send(uint64_t address);
 char* bms_getRelayStatus(void);
+double bms_getPackVoltOpenCircuit(void);
+double bms_getPackVoltHigh(void);
+uint8_t bms_getPackVoltHighNum(void);
+double  bms_getPackVoltLow(void);
+int bms_getPackVoltLowNum(void);
+double bms_getPackVoltCellAvg(void);
+double bms_getCellVoltAll(void);
+double bms_getPackRes(void);
+int bms_getCellTempLowNum(void);
+double bms_getCellTempAvg(void);
+double bms_getCellTempAll(void);
+char*  bms_getRelayState(void);
+int bms_getCellCount(void);
+double bms_getChargeCurrLimit(void);
+double bms_getDischargeCurrLimit(void);
+double bms_getPackCurrent(void);
+double bms_getStateOfCharge(void);
+double bms_getAmpHours(void);
+double bms_getDepthOfDischarge(void);
+double bms_getPackHealth(void);
+double bms_getCellResHigh(void);
 
 
+int bms_getCellResLowNum(void);
 
-/*                                  Getters                                  */
 
-
+int bms_getCellResHighNum(void);
+double bms_getCellResLow(void);
+double bms_getCellResAvg(void);
+double bms_getCellResAll(void);
+double bms_getCellTempHigh(void);
+double bms_getCellTempLow(void);
+double bms_getPackTempAll(void);
 #endif
