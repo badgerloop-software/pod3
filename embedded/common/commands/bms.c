@@ -4,7 +4,7 @@
 #include "bms.h"
 
 command_status do_bms(int argc, char *argv[]) {
-        printf("%s: TODO (%d args given)\r\n", argv[0], argc);
+        printf("\r\n%s: TODO (%d args given)\r\n", argv[0], argc);
 	
 	/*BMS Queries*/
 	/*
@@ -61,7 +61,7 @@ command_status do_bms(int argc, char *argv[]) {
 	 *
 	 *
 	 * */
-
+	/*
 	printf("\r\nARGV[1]: %s", argv[1]);
         if(!strcmp("query", argv[1])){
 	        enum BMS_QUERY query;
@@ -72,9 +72,88 @@ command_status do_bms(int argc, char *argv[]) {
 	
 	} else if(!strcmp("reset", argv[1])){
 		return SUCCESS;
-	} 
-	return SUCCESS;
-}
+	}
+	*/
+
+
+	printf("\r\nargs: ");
+	for(int i = 1; i < argc; i++){
+		printf("%s, ", argv[i]);
+	}
+	
+	
+	if (!strcmp("query", argv[1])){
+	        if (!strcmp("volt", argv[2])){
+		        if (!strcmp("pack", argv[3])){
+		        } else if (!strcmp("pack_open_circuit", argv[3])){
+				bms_getPackVoltOpenCircuit();
+			} else if (!strcmp("cell_high", argv[3])){
+			        bms_getPackVoltHigh();
+			} else if (!strcmp("cell_high_num", argv[3])){
+			        bms_getPackVoltHighNum();
+			} else if (!strcmp("cell_low", argv[3])){
+			        bms_getPackVoltLow();
+			} else if (!strcmp("cell_low_num", argv[3])){
+				bms_getPackVoltLowNum();
+			} else if (!strcmp("cell_avg", argv[3])){
+			        bms_getPackVoltCellAvg();
+			} else if (!strcmp("all", argv[3])){
+			        bms_getCellVoltAll();
+			}
+		} else if (!strcmp("res", argv[2])){
+			if (!strcmp("pack", argv[3])){
+				bms_getPackRes();
+			} else if (!strcmp("cell_high", argv[3])){
+				bms_getCellResHigh();
+			} else if (!strcmp("cell_high_num", argv[3])){
+			        bms_getCellResHighNum();
+			} else if (!strcmp("cell_low", argv[3])){
+			        bms_getCellResLow();
+			} else if (!strcmp("cell_low_num", argv[3])){
+			        bms_getCellResLowNum();
+			} else if (!strcmp("cell_avg", argv[3])){
+			        bms_getCellResAvg();
+			} else if (!strcmp("all", argv[3])){
+			        bms_getCellResAll();
+			}
+		} else if (!strcmp("temp", argv[2])){
+		        if (!strcmp("cell_high", argv[3])){
+		                bms_getCellTempHigh(); 
+			} else if (!strcmp("cell_low", argv[3])){
+			        bms_getCellTempLow();
+			} else if (!strcmp("cell_avg", argv[3])){
+			        bms_getCellTempAvg();
+			} else if (!strcmp("all", argv[3])){
+			        bms_getCellTempAll();
+			}
+		} else if (!strcmp("gen", argv[2])){
+		        if(!strcmp("relays", argv[3])){
+				bms_getRelayState();
+			} else if (!strcmp("cell_count", argv[3])){
+			        bms_getCellCount();
+			} else if (!strcmp("charge_curr_limit", argv[3])){
+			        bms_getChargeCurrLimit();
+			} else if (!strcmp("discharge_curr_limit", argv[3])){
+			        bms_getDischargeCurrLimit();
+			} else if (!strcmp("current",argv[3])){
+			        bms_getPackCurrent();
+			} else if (!strcmp("state_of_charge", argv[3])){
+			        bms_getStateOfCharge();
+			} else if (!strcmp("amp_hrs", argv[3])){
+			        bms_getAmpHours();
+			} else if (!strcmp("depth_of_discharge", argv[3])){
+			        bms_getDepthOfDischarge();
+			} else if (!strcmp("pack_health", argv[3])){
+			        bms_getPackHealth();
+			}
+		}
+
+        } else if(!strcmp("reset", argv[1])){
+	        printf("Function not supported by Orion BMS");
+			return SUCCESS;
+		}
+	        return SUCCESS;
+	}
 
 COMMAND_ENTRY(
 	"bms",
