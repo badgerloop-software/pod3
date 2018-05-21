@@ -13,21 +13,32 @@ let connected = false;
  **/
 let validTargets = ["server","pod"];
 validTargets.forEach((elem) => {
-    communicator.updater.on("messageReceived_" + elem, (data) => {
-        console.log(data);
-        connected = true;
+    communicator.updater.on("messageReceived_heartbeat_" + elem, (data) => {
+        if (data === undefined) {
+            connected = false;
+        } else {
+            connected = true;
+        }
+        if (connected) {
+            connectInd.classList.add("active-indicator");
+        } else {
+            connectInd.classList.remove("active-indicator")
+        }
     });
 });
+
 function heartbeat(target) {
     if (!validTargets.includes(target)) {return}
+    console.log(connected);
     let key = "heartbeat_" + target;  //for the event handler
     communicator.sendMessage(key, defaultIP, defaultPort, target);
-    connected = false;
 }
 
 connectBtn.addEventListener("click", () => {
    if (connected) {
        connectInd.classList.add("active-indicator");
+   } else {
+       connectInd.classList.remove("active-indicator")
    }
 });
 

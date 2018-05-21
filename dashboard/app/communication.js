@@ -7,7 +7,7 @@ const port = 8008;
 const receivedEmitter = new events.EventEmitter();
 /* This section is made for sending config files to the pi */
 const server = express();
-server.listen(port, ()=> {});
+server.listen(port + 1, ()=> {});
 server.get("/config/:configFile", (req, res, err) => {
     let options = {
         root: path.join(__dirname + '/../configs/'),
@@ -29,7 +29,6 @@ const sendMessage = function (key, ip, port, ...restParams) {
         address = address + restParams[i] + "/";
     }
     request(address, (err, res, body) => {
-        console.log(body);
         receivedEmitter.emit("messageReceived_" + key, body);
     })
 };
