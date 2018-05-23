@@ -210,17 +210,27 @@
                   <div class="card bg-light mb-3" style="border-radius: 25px;">
                       <div class="card-body" style="margin-right: 5px; margin-left: 5px">
                           <!--The box on the top right with the state buttons-->
-                          <h4 class="card-title">State Control</h4>
+                          <!--<h4 class="card-title">State Control</h4>-->
                           <div class="d-flex flex-row justify-content-between">
-                              <div id="status-control" class="">
-                                  <div style="position: relative">
-                                      <div id="connection-indicator" class="connection-indicator"></div>
-                                      <button id="connection-btn" class="btn btn-sm btn-info">
-                                          Server Status
-                                      </button>
+                              <div id="status-control" class="col">
+                                  <h5 class="card-title">Connection Status</h5>
+                                  <div class="col" style="position: relative">
+                                      <div class="row">
+                                        <div id="connection-indicator" class="connection-indicator"></div>
+                                        <button id="server-connection-btn" class="btn btn-sm btn-info">
+                                          Server
+                                        </button>
+                                      </div>
+                                      <div class="row mt-1">
+                                          <div id="pod-connection-indicator" class="connection-indicator" style="top: 40px"></div>
+                                          <button id="pod-connection-btn" class="btn btn-sm btn-info">
+                                              Pod
+                                          </button>
+                                      </div>
                                   </div>
                               </div>
                               <div id="state_master" class="state_container">
+                                  <h5 class="card-title">State Control</h5>
                                   <div class="flex-row">
                                       <div class="btn-group btn-group-sm" role="group">
                                           <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>

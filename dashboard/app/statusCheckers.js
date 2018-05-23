@@ -1,5 +1,5 @@
 const communicator = require("./communication");
-const connectBtn = document.getElementById("connection-btn");
+const connectBtn = document.getElementById("server-connection-btn");
 const connectInd = document.getElementById("connection-indicator");
 
 let defaultIP = "localhost";
@@ -15,14 +15,11 @@ let validTargets = ["server","pod"];
 validTargets.forEach((elem) => {
     communicator.updater.on("messageReceived_heartbeat_" + elem, (data) => {
         if (data === undefined) {
+            connectInd.classList.remove("active-indicator")
             connected = false;
         } else {
-            connected = true;
-        }
-        if (connected) {
             connectInd.classList.add("active-indicator");
-        } else {
-            connectInd.classList.remove("active-indicator")
+            connected = true;
         }
     });
 });
@@ -35,16 +32,13 @@ function heartbeat(target) {
 }
 
 connectBtn.addEventListener("click", () => {
-   if (connected) {
-       connectInd.classList.add("active-indicator");
-   } else {
-       connectInd.classList.remove("active-indicator")
-   }
+   heartbeat("server");
 });
 
 const pollServer = setInterval(() => {
     heartbeat("server");
-}, 100);
+    heartbeat("pod");
+}, 500);
 
 
 
