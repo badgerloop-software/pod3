@@ -28,6 +28,7 @@ const sendMessage = function (key, ip, port, ...restParams) {
     for (let i = 0; i < restParams.length; i++){
         address = address + restParams[i] + "/";
     }
+    console.log(address)
     request(address, (err, res, body) => {
         receivedEmitter.emit("messageReceived_" + key, body);
     })

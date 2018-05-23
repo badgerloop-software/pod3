@@ -48,15 +48,22 @@ for (let i = 0; i < dataLabels.length; i++) {
     });
 }
 
+/*Trims potentially unfortunate characters off of the names so that it can make REST requests*/
+let conciseLabels = [];
+for (let i = 0; i < dataLabels.length; i++) {
+    let tempLabel = dataLabels[i].innerHTML;
+    let cutOff = tempLabel.indexOf("(");
+    if (cutOff >= 0) {
+        tempLabel = tempLabel.substr(0, cutOff);
+    }
+    conciseLabels[i] = tempLabel.split(' ').join('');
+}
+
+
 /*Polls for new data from the server as often as UPDATE_TIME*/
 setInterval(() => {
     for (let i = 0; i < tableData.length; i++) {
-        let dataLabel = dataLabels[i].innerHTML;
-        let cutOff = 0;
-        if ((cutOff = dataLabel.indexOf("(")) >= 0) {
-            dataLabel = dataLabel.substr(0, cutOff + 1)
-        }
-        comm.sendMessage(dataLabels[i].innerHTML, defaultIP, defaultPort, "data" ,dataLabel);
+        comm.sendMessage(dataLabels[i].innerHTML, defaultIP, defaultPort, "data" ,conciseLabels[i]);
     }
 }, UPDATE_TIME);
 
