@@ -16,7 +16,7 @@ let validTargets = ["server","pod"];
 validTargets.forEach((elem) => {
     communicator.updater.on("messageReceived_heartbeat_" + elem, (data) => {
         if (data === undefined) {
-            connectInd.classList.remove("active-indicator")
+            connectInd.classList.remove("active-indicator");
             connected = false;
         } else {
             connectInd.classList.add("active-indicator");

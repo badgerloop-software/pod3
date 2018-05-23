@@ -14,6 +14,7 @@
       <link href="style/header.css" rel="stylesheet">
       <link href="style/MicrocontrollerData.css" rel="stylesheet">
       <link href="style/terminal.css" rel="stylesheet">
+      <link href="style/confirmationPopup.css" rel="stylesheet">
   </head>
   <body>
     <!-- important note about the <nav/>: You need to include the not-draggable class on all of its elements to make sure they can be clicked-->
@@ -42,7 +43,19 @@
             </form>
         </div>
 	</nav>
-	<div class="container-fluid">
+	<div id="popup-container" class="confirm-window" style="display: none">
+        <div class="confirm-window-title">
+            Warning!
+        </div>
+        <div class="confirm-window-text">
+            Activating this override could have severe repercussions, please confirm with the password
+        </div>
+        <input class="confirm-window-password" id="confirm-window-password" type="password" value="" placeholder="password">
+        <button id="confirm-window-button" class="confirm-window-button">
+            Confirm
+        </button>
+    </div>
+    <div id="page-container" class="container-fluid">
 	  <div class="row">
 		<main class="col" role="main" style="margin-left: 0; margin-right: 0;">
             <br>
