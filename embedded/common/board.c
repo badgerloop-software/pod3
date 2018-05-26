@@ -7,6 +7,9 @@
 
 /* STM32L432KC */
 // TODO
+#include "stm32l4xx_hal.h"
+CAN_HandleTypeDef hcan;
+uint32_t HAL_GetTick(void) {return ticks;}
 
 /* Nucleo 32 I/O */
 	FILL_GPIO(LED,		GPIOB, 3, OUTPUT, LOW_SPEED, NONE, true, LED)
@@ -49,12 +52,26 @@ int periph_init(void) {
 
 	/* USB UART */
 	init_regs[0] = USART_CR1_RXNEIE;
-	//printf("%d\n\r", (int)init_regs[0]);
 	ret += usart_config(USB_UART, SYSCLK, init_regs, 115200, true);
 	ret += usart_config(USART1, SYSCLK, init_regs, 115200, true);
 
-	//printf("%d\n\r", test);
 	process_input("i2c init");
+
+	/* CAN */
+	if (HAL_CAN_Init(&hcan) != HAL_OK)
+		printf("CAN Error \r\n");
+	else printf("CAN Init OK\r\n");
+
+	__HAL_RCC_CAN1_CLK_ENABLE();
+	HAL_NVIC_SetPriority(CAN1_TX_IRQn,0,0);
+	HAL_NVIC_SetPriority(CAN1_RX0_IRQn,0,0);
+	HAL_NVIC_SetPriority(CAN1_RX1_IRQn,0,0);
+	HAL_NVIC_SetPriority(CAN1_SCE_IRQn,0,0);
+	HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_RX1_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
+
 	return ret;
 }
 
