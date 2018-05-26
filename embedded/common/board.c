@@ -8,8 +8,6 @@
 /* STM32L432KC */
 // TODO
 #include "stm32l4xx_hal.h"
-CAN_HandleTypeDef hcan;
-uint32_t HAL_GetTick(void) {return ticks;}
 
 /* Nucleo 32 I/O */
 	FILL_GPIO(LED,		GPIOB, 3, OUTPUT, LOW_SPEED, NONE, true, LED)
@@ -45,7 +43,80 @@ int io_init(void) {
 	return ret;
 }
 
-int periph_init(void) {
+void CAN_Config(CAN_HandleTypeDef *hcan) {
+
+	if (HAL_CAN_Init(hcan) != HAL_OK)
+		printf("CAN Error \r\n");
+	else printf("CAN Init OK\r\n");
+
+	__HAL_RCC_CAN1_CLK_ENABLE();
+	/*
+	HAL_NVIC_SetPriority(CAN1_TX_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(CAN1_RX1_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(CAN1_SCE_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_RX1_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
+	*/
+
+	//TODO check instance
+	/* CAN FILTER */
+	hcan->Instance = CAN1;
+	hcan->Init.TimeTriggeredMode = DISABLE;
+	hcan->Init.AutoBusOff = DISABLE;
+	hcan->Init.AutoWakeUp = DISABLE;
+	hcan->Init.AutoRetransmission = ENABLE;
+	hcan->Init.ReceiveFifoLocked = DISABLE;
+	hcan->Init.TransmitFifoPriority = DISABLE;
+	hcan->Init.Mode = CAN_MODE_NORMAL;
+	hcan->Init.SyncJumpWidth = CAN_SJW_1TQ;
+	hcan->Init.TimeSeg1 = CAN_BS1_4TQ;
+	hcan->Init.TimeSeg2 = CAN_BS2_3TQ;
+	/* Prescaler Calc 
+	 * Figure 452 Page 1369 of the Reference manual
+	 *
+	 * Baudrate = 1/Nominal_Bit_Time
+	 * Baudrate = 250kbs Tpclk = 24000kHz
+	 * (Decided Nominal_Bit_Time = 8 Time quanta)
+	 * Solve for length of one time quanta: 
+	 * Tq = (Prescaler + 1) * Tpclk
+	 *
+	 */
+	hcan->Init.Prescaler = 11;
+
+	/* CAN Filter */
+	//TODO Check
+	CAN_FilterTypeDef sFilterConfig;
+	sFilterConfig.FilterBank = 0;
+	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+   	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+   	sFilterConfig.FilterIdHigh = 0x0000;
+   	sFilterConfig.FilterIdLow = 0x0000;
+   	sFilterConfig.FilterMaskIdHigh = 0x0000;
+   	sFilterConfig.FilterMaskIdLow = 0x0000;
+   	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+  	sFilterConfig.FilterActivation = ENABLE;
+   	sFilterConfig.SlaveStartFilterBank = 14;
+
+	if (HAL_CAN_Init(hcan) != HAL_OK)
+		printf("CAN INIT ERROR \r\n");
+	else
+		printf("CAN Init OK\r\n");
+
+	if (HAL_CAN_ConfigFilter(hcan, &sFilterConfig))
+		printf("CAN Filter Errror\r\n");
+	else
+		printf("CAN Filter OK\r\n");
+
+	if (HAL_CAN_Start(hcan) != HAL_OK)
+		printf("CAN Start Error\r\n");
+	else
+		printf("CAN Started OK\r\n");
+}
+
+int periph_init(CAN_HandleTypeDef *hcan) {
 
 	int ret = 0;
 	uint32_t init_regs[3] = {0, 0, 0};
@@ -57,20 +128,8 @@ int periph_init(void) {
 
 	process_input("i2c init");
 
-	/* CAN */
-	if (HAL_CAN_Init(&hcan) != HAL_OK)
-		printf("CAN Error \r\n");
-	else printf("CAN Init OK\r\n");
-
-	__HAL_RCC_CAN1_CLK_ENABLE();
-	HAL_NVIC_SetPriority(CAN1_TX_IRQn,0,0);
-	HAL_NVIC_SetPriority(CAN1_RX0_IRQn,0,0);
-	HAL_NVIC_SetPriority(CAN1_RX1_IRQn,0,0);
-	HAL_NVIC_SetPriority(CAN1_SCE_IRQn,0,0);
-	HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
-	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
-	HAL_NVIC_EnableIRQ(CAN1_RX1_IRQn);
-	HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
+	/* CAN Configuration */
+	CAN_Config(hcan);
 
 	return ret;
 }
