@@ -35,51 +35,41 @@ FILL_AFIO(SPI3_SSEL, GPIOA, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER )
 //SD
 FILL_GPIO(SD_CS,	 GPIOB, 0, OUTPUT, LOW_SPEED, NONE, true, OTHER )
 
+/* CAN Globals */
+uint8_t ubKeyNumber = 0x0;
+CAN_HandleTypeDef     hcan;
+CAN_TxHeaderTypeDef   TxHeader;
+CAN_RxHeaderTypeDef   RxHeader;
+uint8_t               TxData[8];
+uint8_t               RxData[8];
+uint32_t              TxMailbox;
+
 inline void printPrompt(void) {
 	fputs("[dash-build] $ ", stdout);
 	fflush(stdout);
 }
 
-int dash_init() {
-
+int dash_init(void) {
 	/* dash specific initializations */
-	/*UartHandle->Instance		 = USART1
-	
-	UartHandle->Init.BaudRate        = 115200;
-	UartHandle->Init.WordLength      = UART_WORDLENGTH_8B;
-	UartHandle->Init.StopBits	 = UART_STOPBITS_1;
-	UartHandle->Init.Parity	 	 = UART_PARITY_NONE;
-	UartHandle->Init.HwFlowCtl	 = UART_HWCONTROL_NONE;
-	UartHandle->Init.Mode		 = UART_MODE_TX_RX;
-	UartHandle->Init.OverSampling	 = UART_OVERSAMPLING_16;
-	
-	if (HAL_UART_DeInit(UartHandle) != HAL_OK) printf("FAILURE TO CHECK DeInit\n\r");
-	*/
-
-	
 	return 0;
 }
 
 int main(void) {
-
 	PC_Buffer *rx;
 	PC_Buffer *ctrl_rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dash_init())
+	if (io_init() || periph_init(&hcan) || dash_init())
 		fault();
-
 	rx = get_rx(USB_UART);
 	ctrl_rx = get_rx(USART1);
 
 	post("Dashboard");
 	printPrompt();
-
 	while (1) {
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
 	}
-
 	return 0;
 }
