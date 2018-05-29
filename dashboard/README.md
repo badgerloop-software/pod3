@@ -1,4 +1,4 @@
-# pod3_dashboard
+# Pod-3 Dashboard
 
 ## Getting Started On Development
 <ol>
@@ -24,6 +24,7 @@ It would be helpful to have at least a general understanding of the following be
   - [Electron](https://electronjs.org/)
   - [Express](https://expressjs.com/)
   - [MySQL](https://www.mysql.com/)
+  - [Chartjs](https://chartjs.io/)
 
 
 

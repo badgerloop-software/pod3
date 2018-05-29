@@ -2,7 +2,7 @@ const hv_enable = document.getElementById("hv_enable");
 const hv_disable = document.getElementById("hv_disable");
 const popup = document.getElementById("popup-container");
 const whole_window = document.getElementById("page-container");
-const password = document.getElementById("confirm-window-password");
+const password_input = document.getElementById("confirm-window-password");
 const confirm_window_btn = document.getElementById("confirm-window-button");
 const brake_on = document.getElementById("brake_on");
 const brake_off = document.getElementById("brake_off");
@@ -19,12 +19,12 @@ function verificationRequest(e) {
 }
 
 function checkPassword(e) {
-    if (password.value === PASSWORD) {
-        password.value = "";
-        password.placeholder = "Verification Successful";
+    if (password_input.value === PASSWORD) {
+        password_input.value = "";
+        password_input.placeholder = "Verification Successful";
     } else {
-        password.value = "";
-        password.placeholder = "Try again"
+        password_input.value = "";
+        password_input.placeholder = "Try again"
     }
 }
 
@@ -42,7 +42,7 @@ brake_vent_off.addEventListener("click", verificationRequest);
 
 whole_window.addEventListener("click", () => {popup.style.display = "none"});
 
-password.addEventListener("keydown", (e)=> {
+password_input.addEventListener("keydown", (e)=> {
     if (event.keyCode === 13) {
         checkPassword(e);
     }

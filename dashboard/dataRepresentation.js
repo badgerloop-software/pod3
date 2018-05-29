@@ -1,5 +1,4 @@
 const charts = require("chart.js");
-const moment = require("moment");
 
 /**@name makeChart
  * @purpose Creates a graph based on a certain data set and in a specified html element

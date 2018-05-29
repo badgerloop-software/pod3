@@ -7,7 +7,7 @@ let defaultPort = 8008;
 let connected = false;
 
 /**
- * @heartbeat : Automatically tests to see if it can find the server or pod
+ * @name heartbeat: Automatically tests to see if it can find the server or pod
  *
  * @params
  * target the thing that you want to check a heartbeat for
