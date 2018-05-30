@@ -74,6 +74,7 @@ void CAN_Config(CAN_HandleTypeDef *hcan) {
 	hcan->Init.SyncJumpWidth = CAN_SJW_1TQ;
 	hcan->Init.TimeSeg1 = CAN_BS1_4TQ;
 	hcan->Init.TimeSeg2 = CAN_BS2_3TQ;
+
 	/* Prescaler Calc 
 	 * Figure 452 Page 1369 of the Reference manual
 	 *
@@ -87,14 +88,15 @@ void CAN_Config(CAN_HandleTypeDef *hcan) {
 	hcan->Init.Prescaler = 11;
 
 	/* CAN Filter */
+	printf("CAN FILTER INIT");	
 	//TODO Check
 	CAN_FilterTypeDef sFilterConfig;
 	sFilterConfig.FilterBank = 0;
 	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
    	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-   	sFilterConfig.FilterIdHigh = 0x0000;
+   	sFilterConfig.FilterIdHigh = 0xffff;
    	sFilterConfig.FilterIdLow = 0x0000;
-   	sFilterConfig.FilterMaskIdHigh = 0x0000;
+   	sFilterConfig.FilterMaskIdHigh = 0xffff;
    	sFilterConfig.FilterMaskIdLow = 0x0000;
    	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
   	sFilterConfig.FilterActivation = ENABLE;

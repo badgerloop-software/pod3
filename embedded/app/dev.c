@@ -38,12 +38,24 @@ int main(void) {
 
 	rx = get_rx(USB_UART);
 
-	post("Developmental");
+	
 	printPrompt();
+	printf("Init OK\r\n");
 
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+		/*	
+		if(HAL_CAN_GetTxMailboxesFreeLevel(&hcan, CAN_RX_FIFO0)){
+			printf("SENDING MESSAGE");
+			HAL_CAN_AddTxMessage(&hcan, &TxHeader, );
+		}
+		*/
+		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO1)){
+			printf("CAN MESSAGE IN FIFO\r\n");
+			printf("%dr\n", HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData));
+
+		}
 	}
 
 	return 0;

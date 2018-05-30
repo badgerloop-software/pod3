@@ -60,7 +60,7 @@ int pv_init(void) {
 
 int main(void) {
 
-
+	printf("Initializing pressure vessel");
 
 	PC_Buffer *rx;
 
@@ -70,12 +70,13 @@ int main(void) {
 
 	rx = get_rx(USB_UART);
 
-	post("Dashboard");
+	post("Pressure Vessel");
 	printPrompt();
 
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+		printf("IN WHILE");
 	}
 
 /*	
