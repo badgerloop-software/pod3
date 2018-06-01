@@ -1,4 +1,19 @@
 .micro-data-container{
-    margin-right: 10px;
+    margin-left: 2%;
     border-radius: 25px;
+}
+
+.control-boxes {
+    margin-left: 2%;
+    margin-right: 3%;
+}
+
+.no-padding {
+    padding: 0px;
+}
+
+.micro-data-box {
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
 }

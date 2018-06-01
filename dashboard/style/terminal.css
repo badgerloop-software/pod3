@@ -8,8 +8,11 @@
 }
 
 .terminal-text {
+    font-family: "Courier New";
+    font-size: 14px;
     color: lawngreen;
     margin-left: 10px;
+    text-align: left;
 }
 
 .terminal-input {
@@ -18,8 +21,6 @@
     padding-right: 5px;
     margin-right: 5px;
     border: 1px solid #ccc;
-
-
 }
 
 #submit{
@@ -29,10 +30,7 @@
 
 #terminal-body-embed {
     background-color: #000000;
-}
-
-#terminal-input-embed {
-    width: 250px;
+    border-radius: 25px;
 }
 
 #terminal-input {

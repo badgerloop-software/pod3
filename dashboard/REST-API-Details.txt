@@ -15,4 +15,12 @@ current allowed depth = 3;
     - depth is important
 
 /control/#INDIVIDUAL_MODULE
-    -
+
+
+
+Sending a file steps:
+    1. Make request to server with the file name
+    2. Server receives filename
+    3. Server requests file from localhost
+    4. localhost processes request with filename, sends file over stream
+    5. server receives and saves file
