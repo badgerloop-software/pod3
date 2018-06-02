@@ -88,7 +88,7 @@ void CAN_Config(CAN_HandleTypeDef *hcan) {
 	hcan->Init.Prescaler = 11;
 
 	/* CAN Filter */
-	printf("CAN FILTER INIT");	
+	
 	//TODO Check
 	CAN_FilterTypeDef sFilterConfig;
 	sFilterConfig.FilterBank = 0;

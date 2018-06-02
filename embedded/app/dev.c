@@ -22,7 +22,6 @@ inline void printPrompt(void) {
 }
 
 int dev_init(void) {
-
 	/* dev specific initializations */
 
 	return 0;
@@ -38,23 +37,31 @@ int main(void) {
 
 	rx = get_rx(USB_UART);
 
-	
 	printPrompt();
 	printf("Init OK\r\n");
 
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
-		/*	
-		if(HAL_CAN_GetTxMailboxesFreeLevel(&hcan, CAN_RX_FIFO0)){
+			
+		if(HAL_CAN_GetTxMailboxesFreeLevel(&hcan)){
 			printf("SENDING MESSAGE");
-			HAL_CAN_AddTxMessage(&hcan, &TxHeader, );
+			uint8_t data = 0x0; 
+			TxData[0] = data;
+			TxData[1] = 0xAD;
+			
+			
+			
+			if(HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK){
+				printf("CAN SEND ERROR");
+		
+		
+			}	
 		}
-		*/
+		
 		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO1)){
 			printf("CAN MESSAGE IN FIFO\r\n");
 			printf("%dr\n", HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData));
-
 		}
 	}
 
