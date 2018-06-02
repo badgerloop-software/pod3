@@ -48,14 +48,15 @@ int periph_init(CAN_HandleTypeDef hcan) {
 
 	int ret = 0;
 	uint32_t init_regs[3] = {0, 0, 0};
-	printf("call CAN_Config()");
-	/* CAN Configuration */
-	CAN_Config(hcan);
 
 	/* USB UART */
 	init_regs[0] = USART_CR1_RXNEIE;
 	ret += usart_config(USB_UART, SYSCLK, init_regs, 115200, true);
 
+	/* CAN CONFIG */
+	CAN_Config(hcan);
+	
+	
 
 	return ret;
 }
@@ -65,12 +66,10 @@ int periph_init(CAN_HandleTypeDef hcan) {
 void CAN_Config(CAN_HandleTypeDef hcan){
 	/* CAN */
 	HAL_Init();
-	printf("HAL_INIT OK\r\n");
-
+	
 	__HAL_RCC_CAN1_CLK_ENABLE();
-        printf("HALL_RCC_CLK_ENABLE() OK\r\n");
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	printf("HAL_GPIOA_CLK_ENABLE() OK\r\n");
+        __HAL_RCC_GPIOA_CLK_ENABLE();
+	
         
 	
 	/* Interrupt based functions
@@ -88,11 +87,6 @@ void CAN_Config(CAN_HandleTypeDef hcan){
 	* Interrupt handlers
 	*/
 	
-
-
-
-
-
 	
 	//TODO check instance
 	/* CAN FILTER */
@@ -104,7 +98,7 @@ void CAN_Config(CAN_HandleTypeDef hcan){
 	hcan.Init.AutoRetransmission = ENABLE;
 	hcan.Init.ReceiveFifoLocked = DISABLE;
 	hcan.Init.TransmitFifoPriority = DISABLE;
-	hcan.Init.Mode = CAN_MODE_NORMAL;
+	hcan.Init.Mode = CAN_MODE_LOOPBACK;
 	hcan.Init.SyncJumpWidth = CAN_SJW_1TQ;
 	hcan.Init.TimeSeg1 = CAN_BS1_4TQ;
 	hcan.Init.TimeSeg2 = CAN_BS2_3TQ;
@@ -123,7 +117,7 @@ void CAN_Config(CAN_HandleTypeDef hcan){
 	
 
 	/* CAN Filter */
-	printf("CAN FILTER INIT");	
+	
 	//TODO Check
 	CAN_FilterTypeDef sFilterConfig;
 	sFilterConfig.FilterBank = 0;
@@ -139,20 +133,14 @@ void CAN_Config(CAN_HandleTypeDef hcan){
 
 	if(HAL_CAN_Init(&hcan) != HAL_OK){
 		printf("CAN INIT ERROR \r\n");
-	} else {
-		printf("CAN Init OK\r\n");
 	}
 
 	if(HAL_CAN_ConfigFilter(&hcan, &sFilterConfig)){
 		printf("CAN Filter Errror\r\n");
-	} else {
-		printf("CAN Filter OK\r\n");
-	}
+	} 
 
 	if(HAL_CAN_Start(&hcan) != HAL_OK){
 		printf("CAN Start Error\r\n");
-	} else {
-		printf("CAN Started OK\r\n");
 	} 		
 }
 
