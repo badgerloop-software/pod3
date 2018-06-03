@@ -19,8 +19,8 @@
 	FILL_AFIO(I2C1_SDA,	GPIOA, 10, ALT, 4, LOW_SPEED, NONE, true, I2C)
 
 	//CAN
-	FILL_AFIO(CAN1_TX, GPIOA, 12, ALT, 9, LOW_SPEED, NONE, true, OTHER)
-	FILL_AFIO(CAN1_RX, GPIOA, 11, ALT, 9, LOW_SPEED, NONE, true, OTHER)
+	FILL_AFIO(CAN1_TX, GPIOA, 12, ALT, 9, LOW_SPEED, NONE, true, I2C)
+	FILL_AFIO(CAN1_RX, GPIOA, 11, ALT, 9, LOW_SPEED, NONE, true, I2C)
 
 
 int io_init(void) {
@@ -43,7 +43,7 @@ int io_init(void) {
 	return ret;
 }
 
-void CAN_Config(CAN_HandleTypeDef *hcan) {
+void CAN_Config_old(CAN_HandleTypeDef *hcan) {
 
 	if (HAL_CAN_Init(hcan) != HAL_OK)
 		printf("CAN Error \r\n");
@@ -131,7 +131,8 @@ int periph_init(CAN_HandleTypeDef *hcan) {
 	process_input("i2c init");
 
 	/* CAN Configuration */
-	CAN_Config(hcan);
+	//CAN_Config(hcan);
+	UNUSED(hcan);
 
 	return ret;
 }

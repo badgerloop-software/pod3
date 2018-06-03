@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "commands.h"
 #include "can.h"
+
 command_status do_can(int argc, char *argv[]) {
 
 	printf("%s:  (%d args given)\r\n", argv[0], argc);
@@ -12,11 +14,14 @@ command_status do_can(int argc, char *argv[]) {
 		can_read();
 
 	} else if(!strcmp("send", argv[1])){
-		uint16_t can_id = (uint16_t) ~((unsigned int) argv[2]);
-		uint64_t length = (uint64_t) ~((unsigned int) argv[3]);
-		uint64_t data =   (uint64_t) ~((unsigned int) argv[4]);
-		printf("\r\ncalling can_send with params \r\n");
-		can_send(can_id, length, data);
+		
+		
+		uint16_t can_id = (uint16_t) atoi(argv[2]);
+		uint64_t length = (uint64_t) atoi( argv[3]);
+		uint64_t data =   (uint64_t) atoi(argv[4]);
+		printf("can_id: %d length %llu: data %llu", can_id, length, data);
+		
+		can_send(can_id, length, data, hcan);
 	}
 
 	return CMD_SUCCESS;
