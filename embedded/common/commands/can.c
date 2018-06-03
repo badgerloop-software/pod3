@@ -11,7 +11,7 @@ command_status do_can(int argc, char *argv[]) {
 	if(!strcmp("read", argv[1])){	
 
 		printf("\r\ncalling can_read()\r\n");
-		can_read();
+		can_read(hcan);
 
 	} else if(!strcmp("send", argv[1])){
 		
