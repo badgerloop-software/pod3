@@ -27,7 +27,7 @@ int gpioAliasInit(void) {
 
 			if (GPIO_TABLE[i].group == I2C)
 				gpio_openDrainState(port, pin, true);
-
+			
 			//if (GPIO_TABLE[i].group == RETRO)
 			//	exti_config(port, pin, true, false, true);
 
