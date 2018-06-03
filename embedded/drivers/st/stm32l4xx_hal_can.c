@@ -1191,7 +1191,7 @@ uint32_t HAL_CAN_GetRxFifoFillLevel(CAN_HandleTypeDef *hcan, uint32_t RxFifo)
   {
     if (RxFifo == CAN_RX_FIFO0)
     {
-      filllevel = hcan->Instance->RF0R & CAN_RF0R_FMP0;
+	filllevel = hcan->Instance->RF0R & CAN_RF0R_FMP0;
     }
     else /* RxFifo == CAN_RX_FIFO1 */
     {
@@ -1962,7 +1962,13 @@ void CAN1_TX_IRQHandler(void){
 void CAN1_TX_IRQHandler(void){
 	HAL_CAN_IRQHandler();
 }
+
+
+
+
 */
+
+
 /* BADGERLOOP ADDED END 05/24/2018 */
 
 

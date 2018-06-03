@@ -3,12 +3,15 @@
 
 #include <stdint.h>
 #include "system.h"
+#include <stm32l4xx_hal.h>
 
 /*****************************************************************************/
 /*                                 CAN Enums                                 */
 /*****************************************************************************/
 
 
+CAN_HandleTypeDef hcan;
+
 char* can_read();
-void can_send(uint16_t can_id, uint64_t length, uint64_t data);
+void can_send(uint16_t can_id, uint64_t length, uint64_t data, CAN_HandleTypeDef hcan);
 #endif
