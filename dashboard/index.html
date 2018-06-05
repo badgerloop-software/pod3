@@ -5,21 +5,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="Flight-Software">
-
-
 	<title>Badgerloop Dashboard</title>
-
 	<!-- Bootstrap core CSS -->
       <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
         <!-- Custom style -->
       <link href="style/dashboard.css" rel="stylesheet">
       <link href="style/scrollbar.css" rel="stylesheet">
       <link href="style/header.css" rel="stylesheet">
       <link href="style/MicrocontrollerData.css" rel="stylesheet">
-
+      <link href="style/terminal.css" rel="stylesheet">
+      <link href="style/confirmationPopup.css" rel="stylesheet">
   </head>
-
   <body>
     <!-- important note about the <nav/>: You need to include the not-draggable class on all of its elements to make sure they can be clicked-->
     <nav id="nav_header" class="navbar navbar-expand-md fixed-top justify-content-between nav-features">
@@ -27,7 +23,6 @@
             <a class="navbar-brand not-draggable brand-features" href="#" id="brand">
                 <img class="d-inline-block align-top rounded" src="assets/badgerloopNewLogo.PNG" height="40" alt="logo">
             </a>
-
         </div>
         <div>
             <form class="form-inline">
@@ -48,80 +43,83 @@
             </form>
         </div>
 	</nav>
-
-	<div class="container-fluid">
+	<div id="popup-container" class="confirm-window" style="display: none">
+        <div class="confirm-window-title">
+            Warning!
+        </div>
+        <div class="confirm-window-text">
+            Activating this override could have severe repercussions, please confirm with the password
+        </div>
+        <input class="confirm-window-password" id="confirm-window-password" type="password" value="" placeholder="password">
+        <button id="confirm-window-button" class="confirm-window-button">
+            Confirm
+        </button>
+    </div>
+    <div id="page-container" class="container-fluid">
 	  <div class="row">
-
-		<main class="col" role="main">
+		<main class="col" role="main" style="margin-left: 0; margin-right: 0;">
             <br>
-
-
-		  <section class="d-flex text-center placeholders flex-row">
-
-              <div class="d-flex flex-column micro-data-container  bg-light border">
+            <!-- Pop up for overrides -->
+		  <section class="row text-center placeholders" style="justify-content: space-between">
+              <div class="col micro-data-container  bg-light border" style="max-width: 55%">
                   <h4 class="card-title" style="margin-top: 10px">Microcontroller Data</h4>
                   <div class="d-flex align-content-start mb-3">
                           <div class="col">
-                              <div class="col">
                                   <div class="card bg-light mb-3">
-                                      <div class="card-body">
+                                      <div class="card-body micro-data-box">
                                           <div class="row text-left">
-                                              <div class="col btn-">
-
-                                                  <table class="table table-sm table-hover">
-                                                      <h5 class="text-center font-weight-bold data-category">MOTION</h5>
+                                              <div class="col">
+                                                  <h5 class="text-center font-weight-bold data-category">MOTION</h5>
+                                                  <table class="table table-sm table-hover table-striped">
                                                       <tbody>
-                                                          <tr>
-                                                              <th scope="row">Stopping Distance</th>
-                                                              <td class="data">x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Stopping Distance</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
-                                                              <th scope="row">Strip Count</th>
-                                                              <td class="data">x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Strip Count</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
-                                                              <th scope="row">Position</th>
-                                                              <td class="data">x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Position (m)</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
-                                                              <th scope="row">Acceleration</th>
-                                                              <td class="data"></td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Velocity (m/s)</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
-                                                              <th scope="row">Velocity</th>
-                                                              <td class="data">x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Acceleration (m/(s^2))</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-
                                                       </tbody>
                                                   </table>
                                               </div>
                                           </div>
                                       </div>
                                   </div>
-                              </div>
-                              <div class="col">
                                   <div class="card bg-light mb-3">
-                                      <div class="card-body">
+                                      <div class="card-body micro-data-box">
                                           <div class="row text-left">
                                               <div class="col btn-">
-                                                  <table class="table table-sm table-hover">
-                                                      <h5 class="text-center font-weight-bold data-category">PROPULSION</h5>
+                                                  <h5 class="text-center font-weight-bold data-category">Pressure & Braking</h5>
+                                                  <table class="table table-sm table-hover table-striped">
                                                       <tbody>
-                                                      <tr>
-                                                          <th scope="row">Prop. Sirocco</th>
-                                                          <td>x</td>
+                                                      <tr class="micro-data-row">
+                                                          <th class="micro-data-label" scope="row">Current Pressure (PSI)</th>
+                                                          <td class="micro-data">x</td>
                                                       </tr>
-                                                      <tr>
-                                                          <th scope="row">Prop. LTE</th>
-                                                          <td>x</td>
+                                                      <tr class="micro-data-row">
+                                                          <th class="micro-data-label" scope="row">Ambient Pod Pressure (PSI)</th>
+                                                          <td class="micro-data">x</td>
                                                       </tr>
-                                                      <tr>
-                                                          <th scope="row">Ambient Pressure</th>
-                                                          <td>x</td>
+                                                      <tr class="micro-data-row">
+                                                          <th class="micro-data-label" scope="row">Actuations Left</th>
+                                                          <td class="micro-data">x</td>
                                                       </tr>
-                                                      <tr>
-                                                          <th scope="row">Ambient Temperature</th>
-                                                          <td>x</td>
+                                                      <tr class="micro-data-row">
+                                                          <th class="micro-data-label" scope="row">Pressure Vessel Pressure (PSI)</th>
+                                                          <td class="micro-data">x</td>
                                                       </tr>
                                                       </tbody>
                                                   </table>
@@ -129,39 +127,34 @@
                                           </div>
                                       </div>
                                   </div>
-                              </div>
                           </div>
-
                           <div class="col">
                               <div class="card bg-light mb-3">
-                                  <div class="card-body">
+                                  <div class="card-body micro-data-box">
                                       <div class="row text-left">
-                                          <div class="col btn-">
-                                              <table class="table table-sm table-hover">
-                                                  <h5 class="text-center font-weight-bold data-category">BATTERY</h5>
+                                          <div class="col">
+                                              <h5 class="text-center font-weight-bold data-category">BATTERY PACK</h5>
+                                              <table class="table table-sm table-hover table-striped">
                                                   <tbody>
-                                                  <tr>
-                                                      <th scope="row">Percent Charge</th>
-                                                      <td class="data">x</td>
+                                                  <tr class="micro-data-row">
+                                                      <th class="micro-data-label" scope="row">Pack Voltage (V)</th>
+                                                      <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
-                                                      <th scope="row">Charge Remaining</th>
-                                                      <td class="data">x</td>
+                                                  <tr class="micro-data-row">
+                                                      <th class="micro-data-label" scope="row">Pack Current (A)</th>
+                                                      <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
-                                                      <th scope="row">Current</th>
-                                                      <td class="data">x</td>
+                                                  <tr class="micro-data-row">
+                                                      <th class="micro-data-label" scope="row">Pack Temperature (C)</th>
+                                                      <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
-                                                      <th scope="row">Battery Temperature</th>
-                                                      <td class="data">x</td>
+                                                  <tr class="micro-data-row">
+                                                      <th class="micro-data-label" scope="row">Pack SOC</th>
+                                                      <td class="micro-data">x</td>
                                                   </tr>
-                                                  <tr>
-                                                      <th scope="row">Voltage</th>
-                                                      <td class="data">x</td>
-                                                  </tr>
-                                                  <tr>
-                                                      <th scope="row"><p></p></th>
+                                                  <tr class="micro-data-row">
+                                                      <th class="micro-data-label" scope="row">Pack Capacity</th>
+                                                      <td class="micro-data">x</td>
                                                   </tr>
                                                   </tbody>
                                               </table>
@@ -169,25 +162,29 @@
                                       </div>
                                   </div>
                               </div>
-                              <div class="col">
                                   <div class="card bg-light mb-3">
-                                      <div class="card-body">
+                                      <div class="card-body micro-data-box">
                                           <div class="row text-left">
-                                              <div class="col btn-">
-                                                  <table class="table table-sm table-hover">
-                                                      <h5 class="text-center font-weight-bold data-category">BRAKING</h5>
+                                              <div class="col">
+                                                  <h5 class="text-center font-weight-bold data-category">BATTERY CELLS</h5>
+                                                  <table class="table table-sm table-hover table-striped">
                                                       <tbody>
-                                                          <tr>
-                                                              <th scope="row">Brake Line Secondary</th>
-                                                              <td>x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Cell High (V)</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
-                                                              <th scope="row">Brake Line Primary</th>
-                                                              <td>x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Cell Low (V)</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
-                                                          <tr>
-                                                              <th scope="row">Brake Pads Primary</th>
-                                                              <td>x</td>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">Cell Average (V)</th>
+                                                              <td class="micro-data">x</td>
+
+                                                          </tr>
+                                                          <tr class="micro-data-row">
+                                                              <th class="micro-data-label" scope="row">LV Battery Temp (C)</th>
+                                                              <td class="micro-data">x</td>
                                                           </tr>
                                                       </tbody>
                                                   </table>
@@ -195,87 +192,107 @@
                                           </div>
                                       </div>
                                   </div>
-                              </div>
                           </div>
-
                   </div>
               </div>
-			  <div class="d-flex flex-column">
+			  <div class="col" style="max-width: 40%">
                   <h4 class="card-title">Manual Overrides</h4>
-                  <div class="card bg-light mb-3">
-                      <div class="card-body">
-
+                  <div class="card bg-light mb-3" style="border-radius: 25px;">
+                      <div class="card-body" style="margin-right: 5px; margin-left: 5px">
                           <!--The box on the top right with the state buttons-->
-                          <h4 class="card-title">State Control</h4>
-                          <div id="state_master" class="container state_container">
-                              <div class="row">
-                                  <div class="col-sm">
-                                      <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
-                                  </div>
-                                  <div class="col-sm">
-                                      <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
-                                  </div>
-                                  <div class="col-sm">
-                                      <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
+                          <!--<h4 class="card-title">State Control</h4>-->
+                          <div class="d-flex flex-row justify-content-between">
+                              <div id="status-control" class="col">
+                                  <h5 class="card-title">Connection Status</h5>
+                                  <div class="col" style="position: relative">
+                                      <div class="row">
+                                        <div id="connection-indicator" class="connection-indicator"></div>
+                                        <button id="server-connection-btn" class="btn btn-sm btn-info">
+                                          Server
+                                        </button>
+                                      </div>
+                                      <div class="row mt-1">
+                                          <div id="pod-connection-indicator" class="connection-indicator" style="top: 40px"></div>
+                                          <button id="pod-connection-btn" class="btn btn-sm btn-info">
+                                              Pod
+                                          </button>
+                                      </div>
                                   </div>
                               </div>
-                              <div class="row">
-                                  <p> </p>
-                              </div>
-                              <div class="row">
-                                  <div class="col-sm">
-                                      <button id="state_pushing" type="button" class="btn btn-secondary btn-sm">Pushing</button>
+                              <div id="state_master" class="state_container">
+                                  <h5 class="card-title">State Control</h5>
+                                  <div class="flex-row">
+                                      <div class="btn-group btn-group-sm" role="group">
+                                          <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
+                                          <span>&emsp;</span>
+                                          <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
+                                          <span>&emsp;</span>
+                                          <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
+                                      </div>
                                   </div>
-                                  <div class="col-sm">
-                                      <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
-                                  </div>
-                                  <div class="col-sm">
-                                      <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
+                                  <p/>
+                                  <div class="flex-row">
+                                      <div class="btn-group btn-group-sm" role="group">
+                                          <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
+                                          <span>&emsp;</span>
+
+                                          <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
+                                      </div>
                                   </div>
                               </div>
                           </div>
-
+                          <p />
                           <!--Below the state control box-->
-                          <h4 class="card-title"></h4>
                           <h4 class="card-title">Actuation Overrides</h4>
                           <div class="container">
                               <div class="row">
                                   <div class="col">
                                       <div class="btn-group btn-group-sm" role="group">
-                                          <button type="button" class="btn btn-secondary">Prim. Brake On</button>
-                                          <button type="button" class="btn btn-secondary">Prim. Brake Off</button>
+                                          <button id="brake_on" type="button" class="btn btn-secondary">Prim. Brake On</button>
+                                          <button id="brake_off" type="button" class="btn btn-secondary">Prim. Brake Off</button>
                                       </div>
                                   </div>
                               </div>
-                              <div class="row">
-                                  <p> </p>
-                              </div>
+                              <p/>
                               <div class="row">
                                   <div class="col">
                                       <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                          <button type="button" class="btn btn-secondary">Sec. Brake On</button>
-                                          <button type="button" class="btn btn-secondary">Sec. Brake Off</button>
+                                          <button id="hv_enable" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#confirmation-window">High Voltage Enable</button>
+                                          <button id="hv_disable" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#confirmation-window">High Voltage Disable</button>
                                       </div>
                                   </div>
                               </div>
-                              <div class="row">
-                                  <p></p>
-                              </div>
+                              <p/>
                               <div class="row">
                                   <div class="col">
                                       <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                          <button type="button" class="btn btn-secondary">Prim. Brake Vent On</button>
-                                          <button type="button" class="btn btn-secondary">Prim. Brake Vent Off</button>
+                                          <button id="brake_vent_on" type="button" class="btn btn-secondary">Prim. Brake Vent On</button>
+                                          <button id="brake_vent_off" type="button" class="btn btn-secondary">Prim. Brake Vent Off</button>
                                       </div>
                                   </div>
                               </div>
                           </div>
                       </div>
                   </div>
-                  <div>
-                      <h4 class="card-title">Terminal</h4>
-                      <div class="card bg-light mb-3">
-                        <iframe src="terminal_embedded.html" width="400" height="300" style="border-style: none"></iframe>
+                  <div id="free-space"> <!-- Terminal Here -->
+                      <canvas id="new-chart" height="0" width="0" style="display: none"></canvas>
+                      <div id="terminal-container">
+                          <h4 class="card-title">Terminal</h4>
+                          <div class="card bg-light mb-3" style="border-radius: 25px; padding: 10px">
+                              <div class="container-fluid" style="padding-left: 0px" id="terminal-start-embed">
+                                  <div class="terminal-body" id="terminal-body-embed">
+                                      <p class="terminal-text" id="terminal-text">
+                                          > Type 'help' to see what you can do!
+                                      </p>
+                                  </div>
+                                  <div class="d-flex flex-row">
+                                      <div class="border-dark">
+                                          <input class="terminal-input" id="terminal-input-embed" type="text" value="help" style="text-indent: 5px">
+                                          <button class="btn btn-dark btn-sm text-center font-weight-bold pt-0 pb-0" style="font-size: 20px;" id="submit">&crarr;</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
                   </div>
               </div>
@@ -283,8 +300,7 @@
 		</main>
 	  </div>
 	</div>
-    <script src="renderer.js"></script>
-    <script src="stateManager.js"></script>
-
+    <script src="app/renderer.js"></script>
+    <script src="app/terminal.js"></script>
   </body>
 </html>
