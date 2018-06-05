@@ -100,12 +100,12 @@ class BloopTCP:
             self.sock.close()
             self.sock = None
 
-def server(ip, port):
+def tcp_server(ip, port):
     b = BloopTCP()
     b._listen_on(ip, port)
     return b
 
-def client(ip, port):
+def tcp_client(ip, port):
     b = BloopTCP()
     b._connect_to(ip, port)
     return b
