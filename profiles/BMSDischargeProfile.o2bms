@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.8.0_144" class="java.beans.XMLDecoder">
+<java version="1.8.0_162" class="java.beans.XMLDecoder">
  <object class="bmsapp.DefaultProfile" id="DefaultProfile0">
   <void property="balanceDelay">
    <int>80</int>
@@ -20,7 +20,7 @@
    <int>2</int>
   </void>
   <void property="canbusFrequency">
-   <int>2</int>
+   <int>1</int>
   </void>
   <void property="captestHighCellvTolerance">
    <int>750</int>
@@ -732,10 +732,16 @@
    <int>18</int>
   </void>
   <void property="dischargeRelayCurrentRestoreDelay">
-   <int>1</int>
+   <int>3</int>
+  </void>
+  <void property="dischargeRelayRestore">
+   <int>30</int>
+  </void>
+  <void property="dischargeRelayRestoreSoc">
+   <int>20</int>
   </void>
   <void property="dischargeRelayVoltageRestoreDelay">
-   <int>1</int>
+   <int>3</int>
   </void>
   <void property="displayBcastInterface">
    <int>2</int>
@@ -906,13 +912,10 @@
    <int>20</int>
   </void>
   <void property="isolationClipping">
-   <int>4500</int>
-  </void>
-  <void property="isolationDelay">
-   <int>4</int>
+   <int>3700</int>
   </void>
   <void property="isolationThreshold">
-   <int>1900</int>
+   <int>3200</int>
   </void>
   <void property="j1772DefaultAcVoltage">
    <int>110</int>
@@ -946,6 +949,9 @@
   </void>
   <void property="maxDclTemperature">
    <int>50</int>
+  </void>
+  <void property="maxDischargeRelayReenableCount">
+   <int>2</int>
   </void>
   <void property="maximumCCL">
    <int>4</int>
@@ -1010,6 +1016,9 @@
   <void property="mpo4Type">
    <int>10</int>
   </void>
+  <void property="mpoFunction">
+   <int>11</int>
+  </void>
   <void property="mpoHighTemperature">
    <int>85</int>
   </void>
@@ -1045,6 +1054,9 @@
   </void>
   <void property="peakIncRelayDclTime">
    <int>3</int>
+  </void>
+  <void property="populatedThermistors">
+   <int>255</int>
   </void>
   <void id="BmsProfile$ProfilePopulationTableArray0" property="populationTable">
    <void index="0">
