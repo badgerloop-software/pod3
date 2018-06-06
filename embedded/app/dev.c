@@ -37,7 +37,7 @@ int main(void) {
 		fault();
 
 	rx = get_rx(USB_UART);
-	CAN_Config(&hcan);
+	CAN_Config(&hcan, "dev");
 	
 	fflush(stdout);
 	printPrompt();
@@ -46,6 +46,21 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+		
+		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
+			printf("CAN MESSAGE IN FIFO\r\n");
+			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
+			printf("Here is our message #0 %x\r\n", RxData[0]);
+			printf("Here is our message #1 %x\r\n", RxData[1]);
+			printf("Here is our message #2 %x\r\n", RxData[2]);
+			printf("Here is our message #3 %x\r\n", RxData[3]);
+			printf("Here is our message #4 %x\r\n", RxData[4]);
+			printf("Here is our message #5 %x\r\n", RxData[5]);
+			printf("Here is our message #6 %x\r\n", RxData[6]);
+			printf("Here is our message #7 %x\r\n", RxData[7]);
+				break;
+			}
+		
 		/*	
 		if(HAL_CAN_GetTxMailboxesFreeLevel(&hcan)){
 			printf("SENDING MESSAGE");
