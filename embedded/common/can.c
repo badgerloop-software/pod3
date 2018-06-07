@@ -48,14 +48,14 @@ void can_send(uint16_t can_id, uint64_t length, uint64_t data, CAN_HandleTypeDef
 	if(HAL_CAN_GetTxMailboxesFreeLevel(&hcan)){
 		printf("SENDING MESSAGE");
 		uint8_t TxData[8];
-		TxData[0] = 0xde;
-		TxData[1] = 0xad;
-		TxData[2] = 0xbe;
-		TxData[3] = 0xef;
-		TxData[4] = 0xca;
-		TxData[5] = 0xca;
-		TxData[6] = 0xfa;
-		TxData[7] = 0xce;
+		TxData[0] = 0x55;
+		TxData[1] = 0x55;
+		TxData[2] = 0x55;
+		TxData[3] = 0x55;
+		TxData[4] = 0x55;
+		TxData[5] = 0x55;
+		TxData[6] = 0x55;
+		TxData[7] = 0x55;
 		uint32_t TxMailbox = 0;
 		
 		if(HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
