@@ -9,4 +9,4 @@ SRCS += common/commands/io.c
 SRCS += common/commands/memmap.c
 SRCS += common/commands/md.c
 SRCS += common/commands/can.c
-
+SRCS += common/commands/bms.c
