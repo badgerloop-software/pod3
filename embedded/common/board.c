@@ -45,7 +45,7 @@ void CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	hcan->Init.SyncJumpWidth = CAN_SJW_1TQ;
 	hcan->Init.TimeSeg1 = CAN_BS1_4TQ;
 	hcan->Init.TimeSeg2 = CAN_BS2_3TQ;
-	
+
 	/* CAN FILTER */
 	sFilterConfig.FilterBank = 0;
 	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
@@ -109,6 +109,7 @@ void CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	if(HAL_CAN_Start(hcan) != HAL_OK){
 		printf("CAN Start Error\r\n");
 	} 	
+	
 	return;
 }
 

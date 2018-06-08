@@ -10,5 +10,5 @@ SRCS += common/pin_alias.c
 SRCS += common/dashboard_control.c
 SRCS += common/can.c
 SRCS += common/bms.c
-
+SRCS += common/rms.c
 include common/commands/conf.mk
