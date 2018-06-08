@@ -7,21 +7,30 @@
 command_status do_can(int argc, char *argv[]) {
 
 	printf("%s:  (%d args given)\r\n", argv[0], argc);
-		
+	
+	//Usage: can read
 	if(!strcmp("read", argv[1])){	
 
 		printf("\r\ncalling can_read()\r\n");
-		can_read(hcan);
+		can_read(&hcan);
 
+	//Usage: can send <can ID> <data>
+	//
 	} else if(!strcmp("send", argv[1])){
 		
 		
 		uint16_t can_id = (uint16_t) atoi(argv[2]);
-		uint64_t length = (uint64_t) atoi( argv[3]);
-		uint64_t data =   (uint64_t) atoi(argv[4]);
-		printf("can_id: %d length %llu: data %llu", can_id, length, data);
+		size_t length = strlen(argv[3]);
+		char *data = strdup(argv[3]);
+		printf("can_id: %d, length: %d, data %s", can_id, length, data);
 		
-		can_send(can_id, length, data, hcan);
+		if( length > 0 && length <= 8){
+			can_send(can_id, length, (uint8_t*)data, &hcan);
+		}
+		else{
+			printf("Data must be <= 8 chars and > 0.");
+			return ERROR;
+		}
 	}
 
 	return CMD_SUCCESS;

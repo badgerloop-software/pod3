@@ -12,6 +12,6 @@
 
 CAN_HandleTypeDef hcan;
 
-char* can_read(CAN_HandleTypeDef hcan);
-void can_send(uint16_t can_id, uint64_t length, uint64_t data, CAN_HandleTypeDef hcan);
+char* can_read(CAN_HandleTypeDef *hcan);
+void can_send(uint16_t can_id, size_t length, uint8_t* data, CAN_HandleTypeDef *hcan);
 #endif
