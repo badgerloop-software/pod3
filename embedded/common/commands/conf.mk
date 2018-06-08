@@ -8,5 +8,5 @@ SRCS += common/commands/i2c.c
 SRCS += common/commands/io.c
 SRCS += common/commands/memmap.c
 SRCS += common/commands/md.c
-SRCS += common/commands/can.c
 SRCS += common/commands/bms.c
+SRCS += common/commands/rms.c

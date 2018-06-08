@@ -1106,7 +1106,6 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
       {
         /* Update error code */
         hcan->ErrorCode |= HAL_CAN_ERROR_PARAM;
-
         return HAL_ERROR;
       }
     }
@@ -1117,7 +1116,6 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
       {
         /* Update error code */
         hcan->ErrorCode |= HAL_CAN_ERROR_PARAM;
-
         return HAL_ERROR;
       }
     }
@@ -1166,7 +1164,6 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
   {
     /* Update error code */
     hcan->ErrorCode |= HAL_CAN_ERROR_NOT_INITIALIZED;
-
     return HAL_ERROR;
   }
 }
@@ -1947,8 +1944,8 @@ HAL_StatusTypeDef HAL_CAN_ResetError(CAN_HandleTypeDef *hcan)
  
 /*CAN Interrupt Handlers*/
 /*
-void CAN1_TX_IRQHandler(void){
-	HAL_CAN_IRQHandler();
+void CAN1_RX0_IRQHandler(void){
+	return;
 }
 
 void CAN1_TX_IRQHandler(void){
