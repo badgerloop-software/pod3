@@ -1,151 +1,449 @@
 #include <string.h>
 #include <stdio.h>
 #include "bms.h"
+#include "can.h"
+#include <stm32l4xx_hal.h>
 
-/* temporary CAN message send */
-char* can_query(uint16_t pid){ 
-        printf("\r\n\nSending CAN message %04x\r\n", pid); 
-        return "sucessful CAN Query"; 
-} 
- 
-char* bms_getRelayStatus(void){ 
+uint8_t bms_getRelayStatus(void){ 
         printf("\r\nGetRelayStatus\r\n"); 
-        return can_query(0xF004); 
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf004;
+	
+	uint8_t * return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 } 
  
 
-int bms_getCellCount(void){
-	return (int) can_query(0xF007);
+uint8_t bms_getCellCount(void){
+
+
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf007;
+	uint8_t * return_data = can_send_obd2(can_id, length, mode, pid,  &hcan);
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 }
 
 
-char* bms_can_send(uint64_t address){
-        /* placeholder use of byte_info */
-	printf("\r\nSending CAN Message to Address: %llu and message: \r\n", address);
-	char* query_returned = "CAN VALUE";
-	return query_returned;
+uint8_t bms_getPackVoltOpenCircuit(void){
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf00e;
+	uint8_t * return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 }
-double bms_getPackVoltOpenCircuit(void){
-	bms_can_send(0xF00E     );
-	return 0;
-}
-double bms_getPackVoltHigh(void){
-	bms_can_send(0xF033     );
-	return 0;
+uint8_t bms_getPackVoltHigh(void){
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf033;
+	uint8_t * return_data = can_send_obd2(can_id, length, mode, pid,  &hcan);
+	
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
 uint8_t bms_getPackVoltHighNum(void){
-	bms_can_send(0xF03D     );
-	return 0;
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf03d;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double  bms_getPackVoltLow(void){
-	bms_can_send(0xF032     );
-	return 0;
+uint8_t  bms_getPackVoltLow(void){
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf032;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-int bms_getPackVoltLowNum(void){
-	bms_can_send(0xF03E     );
-	return 0;
+uint8_t bms_getPackVoltLowNum(void){
+	
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf03e;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+	
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getPackVoltCellAvg(void){
-	bms_can_send(0xF034     );
-	return 0;
+uint8_t bms_getPackVoltCellAvg(void){
+	
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf034;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+	//maximum value: 0xfff
+	//minimum value: 0
+
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getCellVoltAll(void){
+uint8_t bms_getCellVoltAll(void){
         //TODO loop through all cell info
         //bms_can_send( );
         return 0;
-	}  
-double bms_getPackRes(void){
-	bms_can_send(0xF011     );
-        return 0;
-	}
-double bms_getCellResHigh(void){
-        bms_can_send(0xF039     );
-        return 0;
-        }
-int bms_getCellResHighNum(void){
-        bms_can_send(0xF041     );
-	return 0;
+}  
+
+uint8_t bms_getPackRes(void){
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf011;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+	
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 }
-double bms_getCellResLow(void){
-	bms_can_send(0xF038     );
-	return 0;
+
+uint8_t bms_getCellResHigh(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf039;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
+}
+
+uint8_t bms_getCellResHighNum(void){
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf041;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
+}
+uint8_t bms_getCellResLow(void){
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf038;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-int bms_getCellResLowNum(void){
-	bms_can_send(0xF042     );
-	return 0;
+uint8_t bms_getCellResLowNum(void){
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf042;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getCellResAvg(void){
-	bms_can_send(0xF03A     );
-	return 0;
+uint8_t bms_getCellResAvg(void){
+	
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf03a;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getCellResAll(void){
+uint8_t bms_getCellResAll(void){
 	//TODO loop through cell info
 	//bms_can_send( );
 	return 0;
-	}
-double bms_getCellTempHigh(void){
-        bms_can_send(0xF028);
-        return 0;
-        }
-double bms_getCellTempLow(void){
-        bms_can_send(0xF029     );
-        return 0;
-        }
-double bms_getCellTempAvg(void){
-	bms_can_send(0xF02A     );
-	return 0;
-	}
-double bms_getCellTempAll(void){
+}
+uint8_t bms_getCellTempHigh(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf028;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
+}
+uint8_t bms_getCellTempLow(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf029;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
+}
+uint8_t bms_getCellTempAvg(void){
+
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf02a;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
+}
+uint8_t bms_getCellTempAll(void){
         //TODO
         //bms_can_send( );
 	return 0;
 }
-char*  bms_getRelayState(void){
-        bms_can_send(0xF004     );
-        return "0";
+uint8_t bms_getRelayState(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf004;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getChargeCurrLimit(void){
-	bms_can_send(0xF00A     );
-	return 0;
+uint8_t bms_getChargeCurrLimit(void){
+	
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf00a;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid,  &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getDischargeCurrLimit(void){
-	bms_can_send(0xF00B     );
-	return 0;
+uint8_t bms_getDischargeCurrLimit(void){
+
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf00b;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getPackCurrent(void){
-        bms_can_send(0xF00C     );
-        return 0;
+uint8_t bms_getPackCurrent(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf00c;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getStateOfCharge(void){
-        bms_can_send(0xF00F     );
-        return 0;
+uint8_t bms_getStateOfCharge(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf00f;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getAmpHours(void){
-        bms_can_send(0xF010     );
-        return 0;
+uint8_t bms_getAmpHours(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf010;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
-double bms_getDepthOfDischarge(void){
-        bms_can_send(0xF012     );
-        return 0;
+uint8_t bms_getDepthOfDischarge(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf012;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
 
-double bms_getPackHealth(void){
-        bms_can_send(0xF013     );
-        return 0;
+uint8_t bms_getPackHealth(void){
+        
+	uint16_t can_id = 0x7df;
+	size_t length = 1;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf013;
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid,  &hcan);
+
+
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: none
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+
+	return scaled_value; 
 
 }
