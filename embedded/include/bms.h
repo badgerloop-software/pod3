@@ -62,39 +62,35 @@ enum BMS_QUERY {
 	CELL_COUNT = 0xF007,
 };
 
-char* bms_can_send(uint64_t address);
-char* bms_getRelayStatus(void);
-double bms_getPackVoltOpenCircuit(void);
-double bms_getPackVoltHigh(void);
-uint8_t bms_getPackVoltHighNum(void);
-double  bms_getPackVoltLow(void);
-int bms_getPackVoltLowNum(void);
-double bms_getPackVoltCellAvg(void);
-double bms_getCellVoltAll(void);
-double bms_getPackRes(void);
-int bms_getCellTempLowNum(void);
-double bms_getCellTempAvg(void);
-double bms_getCellTempAll(void);
-char*  bms_getRelayState(void);
-int bms_getCellCount(void);
-double bms_getChargeCurrLimit(void);
-double bms_getDischargeCurrLimit(void);
-double bms_getPackCurrent(void);
-double bms_getStateOfCharge(void);
-double bms_getAmpHours(void);
-double bms_getDepthOfDischarge(void);
-double bms_getPackHealth(void);
-double bms_getCellResHigh(void);
-
-
-int bms_getCellResLowNum(void);
-
-
-int bms_getCellResHighNum(void);
-double bms_getCellResLow(void);
-double bms_getCellResAvg(void);
-double bms_getCellResAll(void);
-double bms_getCellTempHigh(void);
-double bms_getCellTempLow(void);
-double bms_getPackTempAll(void);
+uint8_t  bms_can_send(uint64_t address);
+uint8_t bms_getRelayStatus(void);
+uint8_t  bms_getPackVoltOpenCircuit(void);
+uint8_t  bms_getPackVoltHigh(void);
+uint8_t  bms_getPackVoltHighNum(void);
+uint8_t  bms_getPackVoltLow(void);
+uint8_t  bms_getPackVoltLowNum(void);
+uint8_t  bms_getPackVoltCellAvg(void);
+uint8_t  bms_getCellVoltAll(void);
+uint8_t  bms_getPackRes(void);
+uint8_t  bms_getCellTempLowNum(void);
+uint8_t  bms_getCellTempAvg(void);
+uint8_t  bms_getCellTempAll(void);
+uint8_t  bms_getRelayState(void);
+uint8_t  bms_getCellCount(void);
+uint8_t  bms_getChargeCurrLimit(void);
+uint8_t  bms_getDischargeCurrLimit(void);
+uint8_t  bms_getPackCurrent(void);
+uint8_t  bms_getStateOfCharge(void);
+uint8_t  bms_getAmpHours(void);
+uint8_t  bms_getDepthOfDischarge(void);
+uint8_t  bms_getPackHealth(void);
+uint8_t  bms_getCellResHigh(void);
+uint8_t  bms_getCellResLowNum(void);
+uint8_t  bms_getCellResHighNum(void);
+uint8_t  bms_getCellResLow(void);
+uint8_t  bms_getCellResAvg(void);
+uint8_t  bms_getCellResAll(void);
+uint8_t  bms_getCellTempHigh(void);
+uint8_t  bms_getCellTempLow(void);
+uint8_t  bms_getPackTempAll(void);
 #endif
