@@ -3,7 +3,7 @@ import bloop_comms
 ip = '127.0.0.1'
 port = 7777
 print('connecting to {0} on port {1}'.format(ip, port))
-client = bloop_comms.tcp_client(ip, port)
+client = bloop_comms.tcp_sender(ip, port)
 
 done = False
 while not done:
@@ -18,6 +18,6 @@ while not done:
         sent = client.send(mesg)
         print('sent {0} bytes'.format(sent))
     except:
-        pass
+        print('crashed')
 
 client.disconnect()
