@@ -99,6 +99,45 @@ class TCPListener:
             conn.close()
         return mesg,addr
 
+class UDPEndpoint:
+
+    def __init__(self, send_ip, send_port, recv_ip, recv_port):
+        self.buf_size = 4096
+        # just open two pipes for sending and receiving
+        self.recv_addr = (recv_ip, recv_port)
+        self.send_addr = (send_ip, send_port)
+        self.recv_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.recv_sock.settimeout(1.0)
+        self.send_sock.settimeout(1.0)
+        self.recv_sock.bind(self.recv_addr)
+
+    def disconnect(self):
+        if self.recv_sock is not None:
+            self.recv_sock.close()
+            self.recv_sock = None
+        if self.send_sock is not None:
+            self.send_sock.close()
+            self.send_sock = None
+
+    def send(self, mesg):
+        sent = -1
+        try:
+            sent = self.send_sock.sendto(mesg, self.send_addr)
+        except:
+            pass
+        return sent
+
+    def recv(self):
+        # just make sure the buffer is big enough for any messages here
+        mesg = None
+        try:
+            mesg = self.recv_sock.recv(self.buf_size)
+        except:
+            # TODO handle disconnect and reconnect if problems
+            pass
+        return mesg
+
 ####################################
 ### IGNORE THIS HOT MESS FOR NOW ###
 ####################################
@@ -211,6 +250,10 @@ def tcp_listener(ip, port):
 def tcp_sender(ip, port):
     s = TCPSender(ip, port)
     return s
+
+def udp_endpoint(send_ip, send_port, recv_ip, recv_port):
+    e = UDPEndpoint(send_ip, send_port, recv_ip, recv_port)
+    return e
 
 def _tcp_server(ip, port):
     b = BloopTCP()
