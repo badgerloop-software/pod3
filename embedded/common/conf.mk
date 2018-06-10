@@ -9,4 +9,6 @@ SRCS += common/post.c
 SRCS += common/pin_alias.c
 SRCS += common/dashboard_control.c
 SRCS += common/dashboard_data.c
+SRCS += common/retro.c
+
 include common/commands/conf.mk
