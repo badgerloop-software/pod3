@@ -24,7 +24,7 @@
 	FILL_AFIO(CAN1_RX, GPIOA, 11, ALT, 9, LOW_SPEED, NONE, true, I2C)
 
 	
-void CAN_Config(CAN_HandleTypeDef *hcan, char* board){
+int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	
 	CAN_FilterTypeDef sFilterConfig;
 
@@ -34,6 +34,7 @@ void CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	__HAL_RCC_CAN1_CLK_ENABLE();
         __HAL_RCC_GPIOA_CLK_ENABLE();
 
+	/* General CAN Init */
 	hcan->Instance = CAN1;
 	hcan->Init.TimeTriggeredMode = DISABLE;
 	hcan->Init.AutoBusOff = DISABLE;
@@ -42,16 +43,29 @@ void CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	hcan->Init.ReceiveFifoLocked = DISABLE;
 	hcan->Init.TransmitFifoPriority = DISABLE;
 	hcan->Init.Mode = CAN_MODE_NORMAL;
+
+	/* CAN Bit Timing Register Init */
 	hcan->Init.SyncJumpWidth = CAN_SJW_1TQ;
 	hcan->Init.TimeSeg1 = CAN_BS1_4TQ;
 	hcan->Init.TimeSeg2 = CAN_BS2_3TQ;
+	hcan->Init.Prescaler = 11;
+	/* Prescaler Calc 
+	 * Figure 452 Page 1369 of the Reference manual
+	 *
+	 * Baudrate = 1/Nominal_Bit_Time
+	 * Baudrate = 250kbs Tpclk = 24000kHz
+	 * (Decided Nominal_Bit_Time = 8 Time quanta)
+	 * Solve for length of one time quanta: 
+	 * Tq = (Prescaler + 1) * Tpclk
+	 *
+	 */
 
-	/* CAN FILTER */
+	/* CAN Filter Config */
 	sFilterConfig.FilterBank = 0;
 	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
 	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
 	
-	//Board Specific (Filter) Initialization
+	/* Board Specific (Filter) Initialization */
 	if( strcmp(board, "nav") == 0){
 		sFilterConfig.FilterIdHigh = 0x0000;
 		sFilterConfig.FilterIdLow = 0x0000;
@@ -77,40 +91,29 @@ void CAN_Config(CAN_HandleTypeDef *hcan, char* board){
    		sFilterConfig.FilterMaskIdLow = 0x0000;
 	}
 	else{
-		return;
+		printf("Incorrect Usage. Include a Board Name.");
+		return 1;
 	}	
   	
 	//TODO Create filters for FIFO 1 as well and FIFO 0
    	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
   	sFilterConfig.SlaveStartFilterBank = 14;
 	sFilterConfig.FilterActivation = ENABLE;
-	
-	/* Prescaler Calc 
-	 * Figure 452 Page 1369 of the Reference manual
-	 *
-	 * Baudrate = 1/Nominal_Bit_Time
-	 * Baudrate = 250kbs Tpclk = 24000kHz
-	 * (Decided Nominal_Bit_Time = 8 Time quanta)
-	 * Solve for length of one time quanta: 
-	 * Tq = (Prescaler + 1) * Tpclk
-	 *
-	 */
 
-	hcan->Init.Prescaler = 11;
-
-	/* CAN Filter */
-	
+	/* Calling Init Functions */
 	if(HAL_CAN_Init(hcan) != HAL_OK){
-		printf("CAN INIT ERROR \r\n");
+		printf("CAN Init Error.\r\n");
+		return 1;
 	}
 	if(HAL_CAN_ConfigFilter(hcan, &sFilterConfig)){
-		printf("CAN Filter Errror\r\n");
+		printf("CAN Filter Error.\r\n");
+		return 1;
 	}
 	if(HAL_CAN_Start(hcan) != HAL_OK){
-		printf("CAN Start Error\r\n");
+		printf("CAN Start Error.\r\n");
+		return 1;
 	} 	
-	
-	return;
+	return 0;
 }
 
 

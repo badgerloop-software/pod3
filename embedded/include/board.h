@@ -6,8 +6,8 @@
 #include "stm32l4xx_hal.h"
 
 int io_init(void);
-int periph_init(CAN_HandleTypeDef *hcan);
-void CAN_Config(CAN_HandleTypeDef*, char*);
+int periph_init();
+int CAN_Config(CAN_HandleTypeDef*, char*);
 void fault(void);
 void blink_handler(unsigned int blink_int);
 void set_led(bool state);

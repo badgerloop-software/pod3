@@ -9,7 +9,6 @@
 /*                                 CAN Enums                                 */
 /*****************************************************************************/
 
-
 CAN_HandleTypeDef hcan;
 
 char* can_read(CAN_HandleTypeDef *hcan);
