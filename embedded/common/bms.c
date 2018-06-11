@@ -14,7 +14,7 @@ uint8_t bms_getRelayStatus(void){
 	
 	uint8_t * return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
 
-	//maximum value: 0xfff
+	//maximum value: 0xffff
 	//minimum value: 0
 	//scaling: none
 	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
@@ -40,6 +40,22 @@ uint8_t bms_getCellCount(void){
 	return scaled_value; 
 }
 
+uint8_t bms_getPackVolt(){
+	uint16_t can_id = 0x7df;
+	size_t length = 2;
+	uint8_t mode = 0x22;
+	uint16_t pid = 0xf00d;
+	uint8_t * return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+	
+	//maximum value: 0xfff
+	//minimum value: 0
+	//scaling: 0.1
+
+	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+	return scaled_value;
+
+
+}
 
 uint8_t bms_getPackVoltOpenCircuit(void){
 

@@ -83,9 +83,13 @@ command_status do_bms(int argc, char *argv[]) {
 	
 	
 	if (!strcmp("query", argv[1])){
-	        if (!strcmp("volt", argv[2])){
-		        if (!strcmp("pack", argv[3])){
-		        } else if (!strcmp("pack_open_circuit", argv[3])){
+		printf("in query\r\n");
+		if (!strcmp("volt", argv[2])){
+		        printf("in volt\r\n");
+			if (!strcmp("pack", argv[3])){
+		        	printf("in pack\r\n");
+				bms_getPackVolt();
+			} else if (!strcmp("pack_open_circuit", argv[3])){
 				bms_getPackVoltOpenCircuit();
 			} else if (!strcmp("cell_high", argv[3])){
 			        bms_getPackVoltHigh();
