@@ -26,14 +26,19 @@ char* can_read(CAN_HandleTypeDef *hcan ){
 }
 
 
-void can_send(uint16_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef *hcan){
-	printf("\r\nCAN SEND ID: %d, length: %d\r\n", can_id, length);
+void can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef *hcan){
+	printf("\r\nCAN SEND ID: %lx, length: %d\r\n", can_id, length);
 
 
-	TxHeader.StdId = 0;
+	TxHeader.StdId = can_id;
 	TxHeader.IDE = 0;
 	TxHeader.RTR = 0;
-	TxHeader.DLC = length;
+	if( length % 2 == 1){
+		TxHeader.DLC = (length/2) + 1;
+	}
+	else{
+		TxHeader.DLC = length/2;
+	}
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
 		printf("SENDING MESSAGE\r\n");
 	 	/*
@@ -52,11 +57,10 @@ void can_send(uint16_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef
 			printf("ADD TX MESSAGE ERROR\r\n");
 
 		} else {
-			printf("SEND OK\r\n");
+		//	printf("SEND OK\r\n");
 		}
-
-		printf("TxMailbox after sending %lu\r\n",TxMailbox);
 	}
+
 	/* LOOPBACK MODE STUFF
 	for(int i = 0; i < 1000; i++){
 	
@@ -99,7 +103,7 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 	TxData[5] = 0x55;
 	TxData[6] = 0x55;
 	TxData[7] = 0x55;
-	
+	printf("In OBD2 Send \r\n");	
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
 		printf("SENDING MESSAGE\r\n");
 	 	/*
@@ -135,11 +139,6 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 			}
 		}
 	}
-
-
-
-
-
 
 	return RxData;
 }
