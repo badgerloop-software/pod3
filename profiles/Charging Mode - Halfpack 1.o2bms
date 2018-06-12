@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.8.0_162" class="java.beans.XMLDecoder">
+<java version="1.8.0_101" class="java.beans.XMLDecoder">
  <object class="bmsapp.DefaultProfile" id="DefaultProfile0">
   <void property="balanceDelay">
    <int>80</int>
@@ -109,6 +109,9 @@
     <void property="length">
      <int>8</int>
     </void>
+    <void property="messageFlags">
+     <int>64</int>
+    </void>
     <void property="offMatrix">
      <void index="7">
       <int>1720</int>
@@ -151,7 +154,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="offMatrix">
      <void index="7">
@@ -204,7 +207,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -263,7 +266,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -328,7 +331,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -390,7 +393,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -455,7 +458,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -503,7 +506,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>209</int>
+     <int>145</int>
     </void>
     <void property="multMatrix">
      <void index="2">
@@ -561,7 +564,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>209</int>
+     <int>145</int>
     </void>
     <void property="multMatrix">
      <void index="2">
@@ -601,7 +604,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>195</int>
+     <int>131</int>
     </void>
    </void>
   </void>
