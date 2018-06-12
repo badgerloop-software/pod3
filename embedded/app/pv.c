@@ -36,6 +36,16 @@ FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 //Motor GPIO circuit output
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
+/* Private variables ---------------------------------------------------------*/
+uint8_t ubKeyNumber = 0x0;
+CAN_HandleTypeDef     hcan;
+CAN_TxHeaderTypeDef   TxHeader;
+CAN_RxHeaderTypeDef   RxHeader;
+uint8_t               TxData[8];
+uint8_t               RxData[8];
+uint32_t              TxMailbox;
+
+	
 inline void printPrompt(void) {
 	fputs("[pv-build] $ ", stdout);
 	fflush(stdout);
@@ -50,10 +60,12 @@ int pv_init(void) {
 
 int main(void) {
 
+	printf("Initializing pressure vessel");
+
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || pv_init())
+	if (io_init() || periph_init(hcan) || pv_init())
 		fault();
 
 	rx = get_rx(USB_UART);
@@ -64,7 +76,16 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+		printf("IN WHILE");
 	}
 
+/*	
+	printf("In While");	
+	if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
+		printf("CAN MESSAGE %d\r\n", HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData));
+		}
+
+
+*/	
 	return 0;
 }

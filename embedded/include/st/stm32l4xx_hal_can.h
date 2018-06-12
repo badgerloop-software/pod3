@@ -759,6 +759,14 @@ HAL_StatusTypeDef HAL_CAN_ResetError(CAN_HandleTypeDef *hcan);
                                 CAN_IT_ERROR_PASSIVE        | CAN_IT_BUSOFF                    | \
                                 CAN_IT_LAST_ERROR_CODE      | CAN_IT_ERROR))
 
+
+
+
+
+
+
+
+
 /**
   * @}
   */

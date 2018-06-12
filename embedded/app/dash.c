@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 
 #include "system.h"
@@ -33,35 +34,38 @@ FILL_AFIO(SPI3_SSEL, GPIOA, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER )
 //SD
 FILL_GPIO(SD_CS,	 GPIOB, 0, OUTPUT, LOW_SPEED, NONE, true, OTHER )
 
+
+/* Private variables ---------------------------------------------------------*/
+uint8_t ubKeyNumber = 0x0;
+CAN_HandleTypeDef     hcan;
+CAN_TxHeaderTypeDef   TxHeader;
+CAN_RxHeaderTypeDef   RxHeader;
+uint8_t               TxData[8];
+uint8_t               RxData[8];
+uint32_t              TxMailbox;
+
+
 inline void printPrompt(void) {
 	fputs("[dash-build] $ ", stdout);
 	fflush(stdout);
 }
 
 int dash_init(void) {
-
 	/* dash specific initializations */
-
 	return 0;
 }
 
 int main(void) {
-
 	PC_Buffer *rx;
-
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dash_init())
+	if (io_init() || periph_init(hcan) || dash_init())
 		fault();
-
 	rx = get_rx(USB_UART);
-
 	post("Dashboard");
 	printPrompt();
-
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}
-
 	return 0;
 }

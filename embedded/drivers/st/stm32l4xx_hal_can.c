@@ -1106,7 +1106,6 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
       {
         /* Update error code */
         hcan->ErrorCode |= HAL_CAN_ERROR_PARAM;
-
         return HAL_ERROR;
       }
     }
@@ -1117,7 +1116,6 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
       {
         /* Update error code */
         hcan->ErrorCode |= HAL_CAN_ERROR_PARAM;
-
         return HAL_ERROR;
       }
     }
@@ -1166,7 +1164,6 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
   {
     /* Update error code */
     hcan->ErrorCode |= HAL_CAN_ERROR_NOT_INITIALIZED;
-
     return HAL_ERROR;
   }
 }
@@ -1191,7 +1188,7 @@ uint32_t HAL_CAN_GetRxFifoFillLevel(CAN_HandleTypeDef *hcan, uint32_t RxFifo)
   {
     if (RxFifo == CAN_RX_FIFO0)
     {
-      filllevel = hcan->Instance->RF0R & CAN_RF0R_FMP0;
+	filllevel = hcan->Instance->RF0R & CAN_RF0R_FMP0;
     }
     else /* RxFifo == CAN_RX_FIFO1 */
     {
@@ -1942,6 +1939,36 @@ HAL_StatusTypeDef HAL_CAN_ResetError(CAN_HandleTypeDef *hcan)
   return status;
 }
 
+
+/* BADGERLOOP ADDED BEGIN: 05/24/2018 */
+ 
+/*CAN Interrupt Handlers*/
+/*
+void CAN1_RX0_IRQHandler(void){
+	return;
+}
+
+void CAN1_TX_IRQHandler(void){
+	HAL_CAN_IRQHandler();
+}
+ 
+void CAN1_TX_IRQHandler(void){
+	HAL_CAN_IRQHandler();
+}
+
+void CAN1_TX_IRQHandler(void){
+	HAL_CAN_IRQHandler();
+}
+
+
+
+
+*/
+
+
+/* BADGERLOOP ADDED END 05/24/2018 */
+
+
 /**
   * @}
   */
@@ -1949,6 +1976,10 @@ HAL_StatusTypeDef HAL_CAN_ResetError(CAN_HandleTypeDef *hcan)
 /**
   * @}
   */
+
+
+
+
 
 #endif /* HAL_CAN_MODULE_ENABLED */
 

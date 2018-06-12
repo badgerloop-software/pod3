@@ -202,7 +202,7 @@ typedef enum
 typedef enum
 {
   ERROR = 0,
-  SUCCESS = !ERROR
+  OK = !ERROR
 } ErrorStatus;
 
 /**
