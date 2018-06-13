@@ -4,6 +4,7 @@
 #include "can.h"
 #include <stm32l4xx_hal.h>
 
+
 uint16_t bms_getRelayStatus(void){
         printf("\r\nGetRelayStatus\r\n");
 
@@ -166,12 +167,13 @@ uint8_t * bms_getCellVoltAll(void){
         size_t length = 24;
         uint8_t mode = 0x22;
         uint16_t pid = 0xf100;
-        uint8_t *return_data = 0.0001 * can_send_obd2(can_id, length, mode, pid, &hcan);
+        uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+	*return_data = 0.0001 * (*return_data);
 
         for(uint16_t i = 1; i < 16; i++) {
           pid = 0xf100 + i;
           return_data = return_data + length;
-          return_data = 0.0001 * can_send_obd2(can_id, length, mode, pid, &hcan);
+          *return_data = 0.0001 * (*can_send_obd2(can_id, length, mode, pid, &hcan));
         }
 
         return return_data;
@@ -286,13 +288,14 @@ uint8_t * bms_getCellResAll(void){
 	size_t length = 24;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf200;
-	uint8_t *return_data = 0.01 * can_send_obd2(can_id, length, mode, pid, &hcan);
+	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
+	*return_data = 0.01 * (*return_data);
 
-  for(uint16_t i = 1; i < 16; i++) {
-    pid = 0xf200 + i;
-    return_data = return_data + length;
-    return_data = 0.01 * can_send_obd2(can_id, length, mode, pid, &hcan);
-  }
+	for(uint16_t i = 1; i < 16; i++) {
+    	  pid = 0xf200 + i;
+ 	  return_data = return_data + length;
+	  *return_data = 0.01 * (*can_send_obd2(can_id, length, mode, pid, &hcan));
+	}
 
 	return return_data;
 }

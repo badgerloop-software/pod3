@@ -9,7 +9,7 @@
 /*                                 BMS Enums                                 */
 /*****************************************************************************/
 /*
-typedef struct {
+typedef struct ;
 	uint64_t RELAY_STATUS = 0xF004;
 	uint64_t CELL_COUNT = 0xF007;
 	uint64_t CHARGE_CURR_LIM = 0XF00A;
@@ -63,35 +63,32 @@ enum BMS_QUERY {
 };
 
 uint8_t bms_can_send(uint64_t address);
-uint8_t bms_getRelayStatus(void);
-uint8_t bms_getPackVolt(void);
-uint8_t bms_getPackVoltOpenCircuit(void);
-uint8_t bms_getPackVoltHigh(void);
-uint8_t bms_getPackVoltHighNum(void);
-uint8_t bms_getPackVoltLow(void);
-uint8_t bms_getPackVoltLowNum(void);
-uint8_t bms_getPackVoltCellAvg(void);
-uint8_t bms_getCellVoltAll(void);
-uint8_t bms_getPackRes(void);
-uint8_t bms_getCellTempLowNum(void);
-uint8_t bms_getCellTempAvg(void);
-uint8_t bms_getCellTempAll(void);
-uint8_t bms_getRelayState(void);
+uint16_t bms_getRelayStatus(void);
 uint8_t bms_getCellCount(void);
-uint8_t bms_getChargeCurrLimit(void);
-uint8_t bms_getDischargeCurrLimit(void);
-uint8_t bms_getPackCurrent(void);
-uint8_t bms_getStateOfCharge(void);
-uint8_t bms_getAmpHours(void);
-uint8_t bms_getDepthOfDischarge(void);
-uint8_t bms_getPackHealth(void);
-uint8_t bms_getCellResHigh(void);
-uint8_t bms_getCellResLowNum(void);
-uint8_t bms_getCellResHighNum(void);
-uint8_t bms_getCellResLow(void);
-uint8_t bms_getCellResAvg(void);
-uint8_t bms_getCellResAll(void);
+uint8_t bms_getPackVolt();
+uint16_t bms_getPackVoltOpenCircuit(void);
+uint16_t bms_getPackVoltHigh(void);
+uint16_t bms_getPackVoltHighNum(void);
+uint16_t  bms_getPackVoltLow(void);
+uint16_t bms_getPackVoltLowNum(void);
+uint16_t bms_getPackVoltCellAvg(void);
+uint8_t * bms_getCellVoltAll(void);
+uint16_t bms_getPackRes(void);
+uint16_t bms_getCellResHigh(void);
+uint16_t bms_getCellResHighNum(void);
+uint16_t bms_getCellResLow(void);
+uint16_t bms_getCellResLowNum(void);
+uint16_t bms_getCellResAvg(void);
+uint8_t * bms_getCellResAll(void);
 uint8_t bms_getCellTempHigh(void);
 uint8_t bms_getCellTempLow(void);
-uint8_t bms_getPackTempAll(void);
+uint8_t bms_getCellTempAvg(void);
+uint16_t bms_getChargeCurrLimit(void);
+uint16_t bms_getDischargeCurrLimit(void);
+uint16_t bms_getPackCurrent(void);
+uint8_t bms_getStateOfCharge(void);
+uint16_t bms_getAmpHours(void);
+uint8_t bms_getDepthOfDischarge(void);
+uint8_t bms_getPackHealth(void);
+
 #endif

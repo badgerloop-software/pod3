@@ -6,9 +6,9 @@
 command_status do_bms(int argc, char *argv[]) {
         printf("\r\n%s: TODO (%d args given)\r\n", argv[0], argc);
 	
-	/*BMS Queries*/
-	/*
-	 * Description 			Unit 	PID	Length (bytes)
+	//BMS Queries
+	
+	/* Description 			Unit 	PID	Length (bytes)
 	 * Pack State
 	 * Relays Status			0xF004	2
 	 * Populated Cell Count			0xF007  1
@@ -60,8 +60,7 @@ command_status do_bms(int argc, char *argv[]) {
 	 * Internal Ohms (Cells 61-72) 	mOhms 	0xF205  24
 	 *
 	 *
-	 * */
-	/*
+	 */ 
 	printf("\r\nARGV[1]: %s", argv[1]);
         if(!strcmp("query", argv[1])){
 	        enum BMS_QUERY query;
@@ -73,7 +72,10 @@ command_status do_bms(int argc, char *argv[]) {
 	} else if(!strcmp("reset", argv[1])){
 		return SUCCESS;
 	}
-	*/
+	
+
+
+
 
 
 	printf("\r\nargs: ");
@@ -127,12 +129,10 @@ command_status do_bms(int argc, char *argv[]) {
 			        bms_getCellTempLow();
 			} else if (!strcmp("cell_avg", argv[3])){
 			        bms_getCellTempAvg();
-			} else if (!strcmp("all", argv[3])){
-			        bms_getCellTempAll();
 			}
 		} else if (!strcmp("gen", argv[2])){
 		        if(!strcmp("relays", argv[3])){
-				bms_getRelayState();
+				bms_getRelayStatus();
 			} else if (!strcmp("cell_count", argv[3])){
 			        bms_getCellCount();
 			} else if (!strcmp("charge_curr_limit", argv[3])){
@@ -156,8 +156,9 @@ command_status do_bms(int argc, char *argv[]) {
 	        printf("Function not supported by Orion BMS");
 			return SUCCESS;
 		}
-	        return SUCCESS;
-	}
+		return SUCCESS;
+
+}
 
 COMMAND_ENTRY(
 	"bms",

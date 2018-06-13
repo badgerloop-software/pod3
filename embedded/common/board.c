@@ -48,12 +48,12 @@ int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	hcan->Init.SyncJumpWidth = CAN_SJW_1TQ;
 	hcan->Init.TimeSeg1 = CAN_BS1_4TQ;
 	hcan->Init.TimeSeg2 = CAN_BS2_3TQ;
-	hcan->Init.Prescaler = 11;
+	hcan->Init.Prescaler = 12;
 	/* Prescaler Calc 
 	 * Figure 452 Page 1369 of the Reference manual
 	 *
 	 * Baudrate = 1/Nominal_Bit_Time
-	 * Baudrate = 250kbs Tpclk = 24000kHz
+	 * Baudrate = 250kbs Tpclk = 1/24000kHz
 	 * (Decided Nominal_Bit_Time = 8 Time quanta)
 	 * Solve for length of one time quanta: 
 	 * Tq = (Prescaler + 1) * Tpclk
@@ -88,7 +88,7 @@ int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 		sFilterConfig.FilterIdHigh = 0x0000;
 		sFilterConfig.FilterIdLow = 0x0000;
   		sFilterConfig.FilterMaskIdHigh = 0x0000;
-   		sFilterConfig.FilterMaskIdLow = 0x0000;
+   		sFilterConfig.FilterMaskIdLow = 0x07FF;
 	}
 	else{
 		printf("Incorrect Usage. Include a Board Name.");
