@@ -71,6 +71,8 @@ int main(void) {
 		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
 			printf("FILL LEVEL: %lu\r\n", HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0));
 			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
+
+			printf("CAN ID: #%lx\r\n", RxHeader.StdId );
 			/* Printing out received data */
 			for( int i = 0; i < 8; i++){
 				//if(RxData[i] != 0){

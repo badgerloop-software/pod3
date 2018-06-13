@@ -26,7 +26,8 @@
 	
 int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	
-	CAN_FilterTypeDef sFilterConfig;
+	CAN_FilterTypeDef sFilterConfig0;
+	CAN_FilterTypeDef sFilterConfig1;
 
 	/* CAN */
 	HAL_Init();
@@ -61,51 +62,50 @@ int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	 */
 
 	/* CAN Filter Config */
-	sFilterConfig.FilterBank = 0;
-	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig0.FilterBank = 0;
+	sFilterConfig0.FilterMode = CAN_FILTERMODE_IDMASK;
+	sFilterConfig0.FilterScale = CAN_FILTERSCALE_32BIT;
 	
 	/* Board Specific (Filter) Initialization */
 	if( strcmp(board, "nav") == 0){
-		sFilterConfig.FilterIdHigh = 0x0000;
-		sFilterConfig.FilterIdLow = 0x0000;
-  		sFilterConfig.FilterMaskIdHigh = 0x0000;
-   		sFilterConfig.FilterMaskIdLow = 0x0000;
+		sFilterConfig0.FilterIdHigh = 0x0000;
+		sFilterConfig0.FilterIdLow = 0x0000;
+  		sFilterConfig0.FilterMaskIdHigh = 0x0000;
+   		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	}
 	else if( strcmp(board, "dash") == 0){
-		sFilterConfig.FilterIdHigh = 0x0000;
-		sFilterConfig.FilterIdLow = 0x0000;
-  		sFilterConfig.FilterMaskIdHigh = 0x0000;
-   		sFilterConfig.FilterMaskIdLow = 0x0000;
+		sFilterConfig0.FilterIdHigh = 0x0000;
+		sFilterConfig0.FilterIdLow = 0x0000;
+  		sFilterConfig0.FilterMaskIdHigh = 0x0000;
+   		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	}
 	else if( strcmp(board, "pv") == 0){
-		sFilterConfig.FilterIdHigh = 0x0000;
-		sFilterConfig.FilterIdLow = 0x0000;
-  		sFilterConfig.FilterMaskIdHigh = 0x0000;
-   		sFilterConfig.FilterMaskIdLow = 0x0000;
+		sFilterConfig0.FilterIdHigh = 0x0000;
+		sFilterConfig0.FilterIdLow = 0x0000;
+  		sFilterConfig0.FilterMaskIdHigh = 0x0000;
+   		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	}
+	/*For CAN ID filtering, look at: https://community.st.com/thread/28968 */
 	else if( strcmp(board, "dev") == 0){
-		sFilterConfig.FilterIdHigh = 0x0000;
-		sFilterConfig.FilterIdLow = 0x0000;
-  		sFilterConfig.FilterMaskIdHigh = 0x0000;
-   		sFilterConfig.FilterMaskIdLow = 0x07FF;
+		sFilterConfig0.FilterIdHigh = 0x7FF << 5;
+		sFilterConfig0.FilterIdLow = 0x0000;
+  		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;
+   		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	}
 	else{
 		printf("Incorrect Usage. Include a Board Name.");
 		return 1;
 	}	
   	
-	//TODO Create filters for FIFO 1 as well and FIFO 0
-   	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
-  	sFilterConfig.SlaveStartFilterBank = 14;
-	sFilterConfig.FilterActivation = ENABLE;
-
+   	sFilterConfig0.FilterFIFOAssignment = CAN_RX_FIFO0;
+  	sFilterConfig0.SlaveStartFilterBank = 14;
+	sFilterConfig0.FilterActivation = ENABLE;
 	/* Calling Init Functions */
 	if(HAL_CAN_Init(hcan) != HAL_OK){
 		printf("CAN Init Error.\r\n");
 		return 1;
 	}
-	if(HAL_CAN_ConfigFilter(hcan, &sFilterConfig)){
+	if(HAL_CAN_ConfigFilter(hcan, &sFilterConfig0) || HAL_CAN_ConfigFilter(hcan,&sFilterConfig1)){
 		printf("CAN Filter Error.\r\n");
 		return 1;
 	}
