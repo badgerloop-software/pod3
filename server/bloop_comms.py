@@ -36,7 +36,7 @@ class TCPListener:
 
     def __init__(self):
         self.timeout = 1.0
-        self.buf_size = 1024
+        self.buf_size = 4096
         self.sock = None
         self.is_listening = False
 
