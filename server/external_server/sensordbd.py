@@ -8,8 +8,12 @@ import argparse
 import pymongo
 import json
 
+# these should probably be added to a shared import
 DB_NAME = 'pod_data'
-SENSOR_ID = 'sensor_id'
+SENSOR_NAME = 'sensor_name'
+SENSOR_DATA_ARR = 'sensor_data'
+SENSOR_VALUE = 'value'
+TIMESTAMP = 'timestamp'
 
 def build_arg_parser():
     parser = argparse.ArgumentParser(description='Accept incoming sensor readings from the pod and store them in the database.')
@@ -41,12 +45,19 @@ def try_parse_json(mesg):
     return parsed
 
 def handle_database_entry(data, db):
-    # grab the appropriate collection by the sensor id
-    sensor_id = data.get(SENSOR_ID)
-    if sensor_id is not None:
-        coll = db[sensor_id]
-        # TODO insert the appropriate data into the collection
-        pass
+    print(data)
+    # grab the appropriate collection by the sensor name
+    sensor_name = data.get(SENSOR_NAME)
+    if sensor_name is not None:
+        coll = db[sensor_name]
+        # each collection just has one document labeled with the sensor name
+        doc_match = {SENSOR_NAME: sensor_name}
+        # push the latest datapoint onto the array
+        sensor_val = data.get(SENSOR_VALUE)
+        timestamp = data.get(TIMESTAMP)
+        payload = {TIMESTAMP: timestamp, SENSOR_VALUE: sensor_val}
+        arr_push = {'$push': {SENSOR_DATA_ARR: payload}}
+        coll.update_one(doc_match, arr_push)
 
 def handle_incoming(udp_comm, db):
     # see if we got anything
