@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "system.h"
-
+#include "can.h"
 /*****************************************************************************/
 /*                                 BMS Enums                                 */
 /*****************************************************************************/
@@ -62,6 +62,8 @@ enum BMS_QUERY {
 	CELL_COUNT = 0xF007,
 };
 
+
+int bms_clearFaults(void);
 uint8_t bms_can_send(uint64_t address);
 uint16_t bms_getRelayStatus(void);
 uint8_t bms_getCellCount(void);

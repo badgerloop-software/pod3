@@ -4,6 +4,29 @@
 #include "can.h"
 #include <stm32l4xx_hal.h>
 
+CAN_TxHeaderTypeDef TxHeader;
+CAN_RxHeaderTypeDef RxHeader;
+
+int bms_clearFaults(void){
+
+	uint16_t can_id = 0x7e3;
+	uint8_t TxData[8];
+	uint8_t length = 8;
+
+	TxData[0] = (uint8_t) 0x01;
+	TxData[1] = (uint8_t) 0x04;
+	TxData[2] = (uint8_t) 0x00;
+	TxData[3] = (uint8_t) 0x00;
+	TxData[4] = (uint8_t) 0x00;
+	TxData[5] = (uint8_t) 0x01;
+	TxData[6] = (uint8_t) 0x00;
+	TxData[7] = (uint8_t) 0x00;
+
+	can_send(can_id, length,  TxData, &hcan);
+
+	return 0;
+}
+
 
 uint16_t bms_getRelayStatus(void){
         printf("\r\nGetRelayStatus\r\n");
@@ -37,7 +60,7 @@ uint8_t bms_getCellCount(void){
 	//minimum value: 0
 	//scaling: none
 	uint8_t scaled_value = return_data[0]; //+ (return_data[1] << 8);
-
+	printf("Scaled Cell Count: %d\r\n", scaled_value);
 	return scaled_value;
 }
 
@@ -53,6 +76,7 @@ uint8_t bms_getPackVolt(){
 	//scaling: 0.1
 
 	uint8_t scaled_value = return_data[0] + (return_data[1] << 8);
+	printf("Scaled Pack Voltage %d\r\n", scaled_value);
 	return scaled_value;
 
 
