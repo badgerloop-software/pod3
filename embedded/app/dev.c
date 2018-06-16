@@ -10,6 +10,7 @@
 /* CAN Globals */
 uint8_t ubKeyNumber = 0x0;
 extern CAN_HandleTypeDef     hcan;
+extern uint8_t message_num;
 
 void CAN_Config(CAN_HandleTypeDef *hcan);
 
@@ -25,7 +26,7 @@ int dev_init(void) {
 
 int main(void) {
 	PC_Buffer *rx; /* Serial */
-//	int ticks; /* Used for SysTick operation */
+	int ticks; /* Used for SysTick operation */
 
 	/* CAN Variables */
 //	CAN_TxHeaderTypeDef   TxHeader;
@@ -34,28 +35,14 @@ int main(void) {
 	uint8_t               RxData[8];
 //	uint32_t   	      TxMailbox;
 
+	message_num = 0;
+
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init(&hcan) || dev_init())
 		fault();
 
-	/* Initializing TX Header and Data for CAN messages */
-/*	TxHeader.StdId = 0x7e3;
-	TxHeader.IDE = 0;
-	TxHeader.RTR = 0;
-	TxHeader.DLC = 8;	
-
-	TxData[0] = 0x01;
-	TxData[1] = 0x3e;
-	TxData[2] = 0;
-	TxData[3] = 0;
-	TxData[4] = 0;
-	TxData[5] = 0;
-	TxData[6] = 0;
-	TxData[7] = 0;
-	
-	TxMailbox = 0;
-*/
 	rx = get_rx(USB_UART); /* Serial Init */
+
 	/* CAN Init */
 	while( CAN_Config(&hcan, "dev") != 0){
 		printf("CAN Config Error.\r\n");
@@ -83,24 +70,26 @@ int main(void) {
 		}
 
 	
-		/*SysTick configured to send messages every 500 ms */
+		/*SysTick configured to send messages every 250 ms */
 	
-	/*
+	
 		ticks = HAL_GetTick();
 		static unsigned int curr = 0, prev = 0;
-		curr = ticks / 500;
+		curr = ticks / 250;
 		if (curr != prev){
 			prev = curr;
-			//printf( "Sending a message\r\n");
-			if(HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
-				printf("HAL_CAN_AddTxMessage Error.\r\n");
-
-			} else {
-				//printf("Send OK.\r\n");
+			if(message_num == 1){
+				if( can_clearFaults(&hcan) ){
+					printf( "CAN clear faults error.\r\n");
+				}
+				message_num = 0;
 			}
-			fflush(stdout);
+			else if( can_heartbeat(&message_num, &hcan) != 0 ){
+				printf("CAN Heartbeat Error.\r\n");
+				fflush(stdout);
+			}
 		}
-		*/
+	
 	
 	}
 }
