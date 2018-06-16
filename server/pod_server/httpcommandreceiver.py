@@ -5,6 +5,7 @@ from bottle import route, run, request
 
 # these should probably be added to a shared import (e.g. bloop_comms)
 ROUTE_STATE_CHANGE = '/state_change'
+ROUTE_POKE = '/poke'
 COMMAND_VALUE = 'value'
 
 ###########
@@ -42,6 +43,7 @@ def issue_state_change(new_state):
 # ROUTE CONTROLLERS #
 #####################
 
+# route to request issue a state change
 @route(ROUTE_STATE_CHANGE, method='POST')
 def request_state_change():
     new_state = request.forms.get(COMMAND_VALUE)
@@ -49,6 +51,11 @@ def request_state_change():
         success,message = issue_state_change(new_state)
         return json_basic_response(success=success, message=message)
     return json_basic_response(success=False, message='no new state requested')
+
+# route to just see if the server is responding
+@route(ROUTE_POKE, method=['GET', 'POST'])
+def poke():
+    return json_basic_response(success=True)
 
 ########
 # MAIN #
