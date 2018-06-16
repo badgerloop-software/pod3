@@ -75,7 +75,6 @@ class TCPListener:
 
     def connect(self, ip, port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.settimeout(self.timeout) # set the global timeout
         self.server_addr = (ip, port)
         # bind and listen
         self.sock.bind(self.server_addr)
