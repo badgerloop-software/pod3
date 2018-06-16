@@ -5,6 +5,8 @@
 #include "can.h"
 #include <limits.h>
 
+extern uint8_t message_num;
+
 command_status do_can(int argc, char *argv[]) {
 
 	printf("%s:  (%d args given)\r\n", argv[0], argc);
@@ -74,8 +76,12 @@ command_status do_can(int argc, char *argv[]) {
 			printf("Data must be <= 16 hex values and > 0.");
 			return ERROR;
 		}
-	}
+	
+	} else if(!strcmp("update", argv[1])){
 
+		can_update(atoi(argv[2]));
+		printf( "Message Number: %d\r\n", message_num);
+	}	
 	return CMD_SUCCESS;
 }
 

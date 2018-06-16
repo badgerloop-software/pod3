@@ -8,7 +8,7 @@
 uint16_t bms_getRelayStatus(void){
         printf("\r\nGetRelayStatus\r\n");
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf004;
@@ -27,7 +27,7 @@ uint16_t bms_getRelayStatus(void){
 uint8_t bms_getCellCount(void){
 
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf007;
@@ -42,7 +42,7 @@ uint8_t bms_getCellCount(void){
 }
 
 uint8_t bms_getPackVolt(){
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf00d;
@@ -60,7 +60,7 @@ uint8_t bms_getPackVolt(){
 
 uint16_t bms_getPackVoltOpenCircuit(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf00e;
@@ -76,7 +76,7 @@ uint16_t bms_getPackVoltOpenCircuit(void){
 }
 uint16_t bms_getPackVoltHigh(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf033;
@@ -93,7 +93,7 @@ uint16_t bms_getPackVoltHigh(void){
 }
 uint16_t bms_getPackVoltHighNum(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf03d;
@@ -110,7 +110,7 @@ uint16_t bms_getPackVoltHighNum(void){
 }
 uint16_t  bms_getPackVoltLow(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf032;
@@ -128,7 +128,7 @@ uint16_t  bms_getPackVoltLow(void){
 uint16_t bms_getPackVoltLowNum(void){
 
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf03e;
@@ -146,7 +146,7 @@ uint16_t bms_getPackVoltLowNum(void){
 uint16_t bms_getPackVoltCellAvg(void){
 
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf034;
@@ -163,7 +163,7 @@ uint16_t bms_getPackVoltCellAvg(void){
 uint8_t * bms_getCellVoltAll(void){
         //TODO loop through all cell info
         //bms_can_send( );
-        uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
         size_t length = 24;
         uint8_t mode = 0x22;
         uint16_t pid = 0xf100;
@@ -181,7 +181,7 @@ uint8_t * bms_getCellVoltAll(void){
 
 uint16_t bms_getPackRes(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf011;
@@ -198,7 +198,7 @@ uint16_t bms_getPackRes(void){
 
 uint16_t bms_getCellResHigh(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf039;
@@ -215,7 +215,7 @@ uint16_t bms_getCellResHigh(void){
 
 uint16_t bms_getCellResHighNum(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf041;
@@ -231,7 +231,7 @@ uint16_t bms_getCellResHighNum(void){
 }
 uint16_t bms_getCellResLow(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf038;
@@ -248,7 +248,7 @@ uint16_t bms_getCellResLow(void){
 }
 uint16_t bms_getCellResLowNum(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf042;
@@ -266,7 +266,7 @@ uint16_t bms_getCellResLowNum(void){
 uint16_t bms_getCellResAvg(void){
 
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf03a;
@@ -284,7 +284,7 @@ uint16_t bms_getCellResAvg(void){
 uint8_t * bms_getCellResAll(void){
 	//TODO loop through cell info
 	//bms_can_send( );
-  uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 24;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf200;
@@ -301,7 +301,7 @@ uint8_t * bms_getCellResAll(void){
 }
 uint8_t bms_getCellTempHigh(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf028;
@@ -317,7 +317,7 @@ uint8_t bms_getCellTempHigh(void){
 }
 uint8_t bms_getCellTempLow(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf029;
@@ -333,7 +333,7 @@ uint8_t bms_getCellTempLow(void){
 }
 uint8_t bms_getCellTempAvg(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf02a;
@@ -350,7 +350,7 @@ uint8_t bms_getCellTempAvg(void){
 
 uint16_t bms_getChargeCurrLimit(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf00a;
@@ -367,7 +367,7 @@ uint16_t bms_getChargeCurrLimit(void){
 }
 uint16_t bms_getDischargeCurrLimit(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf00b;
@@ -384,7 +384,7 @@ uint16_t bms_getDischargeCurrLimit(void){
 }
 uint16_t bms_getPackCurrent(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf00c;
@@ -401,7 +401,7 @@ uint16_t bms_getPackCurrent(void){
 }
 uint8_t bms_getStateOfCharge(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf00f;
@@ -418,7 +418,7 @@ uint8_t bms_getStateOfCharge(void){
 }
 uint16_t bms_getAmpHours(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 2;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf010;
@@ -435,7 +435,7 @@ uint16_t bms_getAmpHours(void){
 }
 uint8_t bms_getDepthOfDischarge(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf012;
@@ -453,7 +453,7 @@ uint8_t bms_getDepthOfDischarge(void){
 
 uint8_t bms_getPackHealth(void){
 
-	uint16_t can_id = 0x7df;
+	uint16_t can_id = 0x7e3;
 	size_t length = 1;
 	uint8_t mode = 0x22;
 	uint16_t pid = 0xf013;
