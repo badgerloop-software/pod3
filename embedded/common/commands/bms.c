@@ -61,22 +61,6 @@ command_status do_bms(int argc, char *argv[]) {
 	 *
 	 *
 	 */ 
-	printf("\r\nARGV[1]: %s", argv[1]);
-        if(!strcmp("query", argv[1])){
-	        enum BMS_QUERY query;
-		query = RELAY_STATUS;
-		printf("\r\n COMMAND PID: %04x", query);
-		bms_getRelayStatus();
-		return SUCCESS;
-	
-	} else if(!strcmp("reset", argv[1])){
-		return SUCCESS;
-	}
-	
-
-
-
-
 
 	printf("\r\nargs: ");
 	for(int i = 1; i < argc; i++){
@@ -156,7 +140,11 @@ command_status do_bms(int argc, char *argv[]) {
 	        printf("Function not supported by Orion BMS");
 			return SUCCESS;
 		}
+	else if (!strcmp("clear_faults", argv[1])){
+		bms_clearFaults();
+	}
 		return SUCCESS;
+	
 
 }
 
