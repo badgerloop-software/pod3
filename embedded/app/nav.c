@@ -71,7 +71,6 @@ U8 I2C Address: 0x49:
  	*/
 
 /* CAN Globals */
-uint8_t ubKeyNumber = 0x0;
 CAN_HandleTypeDef     hcan;
 CAN_TxHeaderTypeDef   TxHeader;
 CAN_RxHeaderTypeDef   RxHeader;

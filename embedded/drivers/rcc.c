@@ -1,7 +1,7 @@
 #include "rcc.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdio.h>
+
 const char *clk_src_strings[] = {
 	"MSI", "HSI", "HSE", "PLL",
 	"PLLSAI1",
@@ -138,18 +138,10 @@ bool rcc_changeSysClockSrc(clk_src_t clk) {
 
 clk_src_t rcc_get_SysClockSrc(void) {
 	switch (RCC->CFGR & RCC_CFGR_SWS_Msk) {
-		case RCC_CFGR_SWS_MSI: 
-			printf("MSI");
-			return MSI;
-		case RCC_CFGR_SWS_HSI: 
-			printf("HSI");
-			return HSI;
-		case RCC_CFGR_SWS_HSE: 
-			printf("HSE");
-			return HSE;
-		case RCC_CFGR_SWS_PLL:
-		       	printf("PLL");
-			return PLL;
+		case RCC_CFGR_SWS_MSI: return MSI;
+		case RCC_CFGR_SWS_HSI: return HSI;
+		case RCC_CFGR_SWS_HSE: return HSE;
+		case RCC_CFGR_SWS_PLL:return PLL;
 	}
 	return UNKNOWN;
 }

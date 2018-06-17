@@ -36,7 +36,6 @@ FILL_AFIO(SPI3_SSEL, GPIOA, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER )
 FILL_GPIO(SD_CS,	 GPIOB, 0, OUTPUT, LOW_SPEED, NONE, true, OTHER )
 
 /* CAN Globals */
-uint8_t ubKeyNumber = 0x0;
 CAN_HandleTypeDef     hcan;
 CAN_TxHeaderTypeDef   TxHeader;
 CAN_RxHeaderTypeDef   RxHeader;

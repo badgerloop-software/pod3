@@ -1939,35 +1939,6 @@ HAL_StatusTypeDef HAL_CAN_ResetError(CAN_HandleTypeDef *hcan)
 }
 
 
-/* BADGERLOOP ADDED BEGIN: 05/24/2018 */
- 
-/*CAN Interrupt Handlers*/
-/*
-void CAN1_RX0_IRQHandler(void){
-	return;
-}
-
-void CAN1_TX_IRQHandler(void){
-	HAL_CAN_IRQHandler();
-}
- 
-void CAN1_TX_IRQHandler(void){
-	HAL_CAN_IRQHandler();
-}
-
-void CAN1_TX_IRQHandler(void){
-	HAL_CAN_IRQHandler();
-}
-
-
-
-
-*/
-
-
-/* BADGERLOOP ADDED END 05/24/2018 */
-
-
 /**
   * @}
   */
@@ -1975,10 +1946,6 @@ void CAN1_TX_IRQHandler(void){
 /**
   * @}
   */
-
-
-
-
 
 #endif /* HAL_CAN_MODULE_ENABLED */
 
