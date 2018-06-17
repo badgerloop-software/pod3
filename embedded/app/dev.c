@@ -8,7 +8,6 @@
 #include "can.h"
 
 /* CAN Globals */
-uint8_t ubKeyNumber = 0x0;
 extern CAN_HandleTypeDef     hcan;
 extern uint8_t message_num;
 

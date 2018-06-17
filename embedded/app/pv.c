@@ -37,7 +37,6 @@ FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
 /* CAN Globals */
-uint8_t ubKeyNumber = 0x0;
 CAN_HandleTypeDef     hcan;
 CAN_TxHeaderTypeDef   TxHeader;
 CAN_RxHeaderTypeDef   RxHeader;

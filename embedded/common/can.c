@@ -41,16 +41,6 @@ void can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef
 	}
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
 		printf("SENDING MESSAGE\r\n");
-	 	/*
-		TxData[0] = (uint8_t) 0x55;
-		TxData[1] = (uint8_t) 0x55;
-		TxData[2] = (uint8_t) 0x55;
-		TxData[3] = (uint8_t) 0x55;
-		TxData[4] = (uint8_t) 0x55;
-		TxData[5] = (uint8_t) 0x55;
-		TxData[6] = (uint8_t) 0x55;
-		TxData[7] = (uint8_t) 0x55;
-		*/
 		uint32_t TxMailbox = 0;
 		
 		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
@@ -60,25 +50,6 @@ void can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef
 		//	printf("SEND OK\r\n");
 		}
 	}
-
-	/* LOOPBACK MODE STUFF
-	for(int i = 0; i < 1000; i++){
-	
-		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
-			printf("CAN MESSAGE IN FIFO\r\n");
-			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
-			printf("Here is our message #0 %x\r\n", RxData[0]);
-			printf("Here is our message #1 %x\r\n", RxData[1]);
-			printf("Here is our message #2 %x\r\n", RxData[2]);
-			printf("Here is our message #3 %x\r\n", RxData[3]);
-			printf("Here is our message #4 %x\r\n", RxData[4]);
-			printf("Here is our message #5 %x\r\n", RxData[5]);
-			printf("Here is our message #6 %x\r\n", RxData[6]);
-			printf("Here is our message #7 %x\r\n", RxData[7]);
-		break;
-		}
-	}
-	*/
 }
 
 //Temporary function for updating message_num (heartbeat related) from the command line
@@ -91,19 +62,12 @@ int can_update( uint8_t message_number ){
 
 uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, uint16_t pid, CAN_HandleTypeDef *hcan){
 	
+	//OBD2 Message format: CAN_ID, CAN Message length, OBDII message length, Mode, PID, Data
+
 	TxHeader.StdId = can_id;
 	TxHeader.IDE = 0;
 	TxHeader.RTR = 0;
 	TxHeader.DLC = (uint8_t) 8;
-	// Required message format:
-	// Number of additional bytes:
-	// mode:
-	// pid code:
-
-
-
-
-
 
 	uint8_t TxData[8];
 	TxData[0] = message_length;
@@ -117,16 +81,6 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 	printf("In OBD2 Send \r\n");	
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
 		printf("SENDING MESSAGE\r\n");
-	 	/*
-		TxData[0] = (uint8_t) 0x55;
-		TxData[1] = (uint8_t) 0x55;
-		TxData[2] = (uint8_t) 0x55;
-		TxData[3] = (uint8_t) 0x55;
-		TxData[4] = (uint8_t) 0x55;
-		TxData[5] = (uint8_t) 0x55;
-		TxData[6] = (uint8_t) 0x55;
-		TxData[7] = (uint8_t) 0x55;
-		*/
 		uint32_t TxMailbox = 0;
 		
 		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
@@ -233,8 +187,3 @@ int can_clearFaults( CAN_HandleTypeDef *hcan ){
 		return 0; //Returns 0 on success
 	}
 }
-
-
-
-
-
