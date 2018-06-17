@@ -141,7 +141,7 @@ clk_src_t rcc_get_SysClockSrc(void) {
 		case RCC_CFGR_SWS_MSI: return MSI;
 		case RCC_CFGR_SWS_HSI: return HSI;
 		case RCC_CFGR_SWS_HSE: return HSE;
-		case RCC_CFGR_SWS_PLL:return PLL;
+		case RCC_CFGR_SWS_PLL: return PLL;
 	}
 	return UNKNOWN;
 }

@@ -1105,7 +1105,8 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
       {
         /* Update error code */
         hcan->ErrorCode |= HAL_CAN_ERROR_PARAM;
-        return HAL_ERROR;
+        
+	return HAL_ERROR;
       }
     }
     else if (RxFifo == CAN_RX_FIFO1) /* Rx element is assigned to Rx FIFO 1 */
@@ -1115,7 +1116,8 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
       {
         /* Update error code */
         hcan->ErrorCode |= HAL_CAN_ERROR_PARAM;
-        return HAL_ERROR;
+        
+	return HAL_ERROR;
       }
     }
 
@@ -1163,6 +1165,7 @@ HAL_StatusTypeDef HAL_CAN_GetRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo,
   {
     /* Update error code */
     hcan->ErrorCode |= HAL_CAN_ERROR_NOT_INITIALIZED;
+    
     return HAL_ERROR;
   }
 }
