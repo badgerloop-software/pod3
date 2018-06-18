@@ -64,6 +64,7 @@ enum BMS_QUERY {
 
 
 int bms_clearFaults(void);
+int shutdownCircuit_MCUToggle(int state);
 uint8_t bms_can_send(uint64_t address);
 uint16_t bms_getRelayStatus(void);
 uint8_t bms_getCellCount(void);

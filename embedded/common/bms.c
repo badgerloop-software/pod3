@@ -2,10 +2,18 @@
 #include <stdio.h>
 #include "bms.h"
 #include "can.h"
+#include "gpio.h"
 #include <stm32l4xx_hal.h>
 
 CAN_TxHeaderTypeDef TxHeader;
 CAN_RxHeaderTypeDef RxHeader;
+
+int shutdownCircuit_MCUToggle(int state){
+	printf("state %d\r\n", state);
+	gpio_writePin(GPIOA, 6, state);	
+	return 0;
+}
+
 
 int bms_clearFaults(void){
 

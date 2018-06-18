@@ -1,5 +1,5 @@
 #include "gpio.h"
-
+#include <stdio.h>
 static int verify_gpio_mode(GPIO_MODE mode) {
 	if ((uint32_t) mode > 3) return -1;
 	return 0;
