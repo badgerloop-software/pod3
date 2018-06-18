@@ -111,7 +111,6 @@ command_status do_io(int argc, char *argv[]) {
 	putchar('\r'); putchar('\n');
 
 	if (strcmp(argv[2], "on") == 0) {
-		printf("turning pin on");
 		mode = gpio_getMode(port, pin);
 		if (mode == ALT || mode == ANALOG) {
 			printf("Pin is either alternate function or analog \r\n");
@@ -119,18 +118,19 @@ command_status do_io(int argc, char *argv[]) {
 		}
 		gpio_setClock(port, true);
 		gpio_setMode(port, pin, OUTPUT);
+		printf("writing pin to 1\r\n");
 		gpio_writePin(port, pin, 1);
 	}
 
 	// attempt to reset pin 
 	else if (strcmp(argv[2], "off") == 0) {
-		printf("Turing pin off");
 		mode = gpio_getMode(port, pin);
 		if (mode == ALT || mode == ANALOG) {
 			printf("Pin is either alternate function or analog \r\n");
 			return FAIL;
 		}
 		gpio_setMode(port, pin, OUTPUT);
+		printf("writing port off\r\n");
 		gpio_writePin(port, pin, 0);
 	}
 

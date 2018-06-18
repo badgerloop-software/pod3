@@ -140,6 +140,15 @@ command_status do_bms(int argc, char *argv[]) {
 	        printf("Function not supported by Orion BMS");
 			return SUCCESS;
 		}
+	else if (!strcmp("mcu_enable", argv[1])){
+		printf("enabling pin\r\n");
+		shutdownCircuit_MCUToggle(1);
+		
+		}
+	else if (!strcmp("mcu_disable", argv[1])){
+		printf("disable pin\r\n");
+		shutdownCircuit_MCUToggle(0);
+		}
 	else if (!strcmp("clear_faults", argv[1])){
 		bms_clearFaults();
 	}

@@ -236,9 +236,11 @@ inline void blink_handler(unsigned int blink_int) {
 	static unsigned int curr = 0, prev = 0;
 
 	curr = ticks / blink_int;
-	if (curr != prev)
-		(curr % 2) ?
+	if (curr != prev) 
+		(curr % 2) ? 
 			gpio_writePin(GPIOB, 3, 1) : gpio_writePin(GPIOB, 3, 0);
+
+		
 	prev = curr;
 }
 
