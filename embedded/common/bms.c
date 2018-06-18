@@ -9,7 +9,6 @@ CAN_TxHeaderTypeDef TxHeader;
 CAN_RxHeaderTypeDef RxHeader;
 
 int shutdownCircuit_MCUToggle(int state){
-	printf("state %d\r\n", state);
 	gpio_writePin(GPIOA, 6, state);	
 	return 0;
 }
