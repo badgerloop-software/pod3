@@ -7,3 +7,4 @@ bin
 *.map
 *.pyc
 FLASH_*
+*~
