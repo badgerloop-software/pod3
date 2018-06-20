@@ -43,18 +43,17 @@ command_status do_can(int argc, char *argv[]) {
 
 		size_t length = strlen(argv[3]);
 
-		for( int i = 0; i < (int)length; i++){
-			converted = strtoll(argv[3], &str, 16);
-			if(converted == LONG_MAX || converted == LONG_MIN ){
-				printf("strtoll() error.\r\n" );
-			}
-			else if( str == argv[3] ){
-				printf("No digits were found.\r\n");
-			}
-			else if( *str != '\0'){
-				printf("Extra string passed in.\r\n");
-			}
+		converted = strtoll(argv[3], &str, 16);
+		if(converted == LONG_MAX || converted == LONG_MIN ){
+			printf("strtoll() error.\r\n" );
 		}
+		else if( str == argv[3] ){
+			printf("No digits were found.\r\n");
+		}
+		else if( *str != '\0'){
+			printf("Extra string passed in.\r\n");
+		}
+		
 		
 		data[7] = (converted & 0xff00000000000000) >> 56;
 		data[6] = (converted & 0x00ff000000000000) >> 48;
