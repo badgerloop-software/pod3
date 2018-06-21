@@ -149,6 +149,16 @@ int can_heartbeat(uint8_t *message_number, CAN_HandleTypeDef *hcan){
 		TxData[6] = 0x00;
 		TxData[7] = 0x00;
 	}
+	else if( number == 5 ){ //Command 16 nm forward
+		TxData[0] = 0xA0;
+		TxData[1] = 0x00;
+		TxData[2] = 0x00;
+		TxData[3] = 0x00;
+		TxData[4] = 0x00;
+		TxData[5] = 0x01;
+		TxData[6] = 0x00;
+		TxData[7] = 0x00;
+	}
 	else{ //In all other cases, TxData will be set to 0
 		for(int i = 0; i < 8; i++){
 			TxData[i] = 0;

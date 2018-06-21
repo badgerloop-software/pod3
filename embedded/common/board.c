@@ -87,7 +87,7 @@ int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
 	}
 	/*For CAN ID filtering, look at: https://community.st.com/thread/28968 */
 	else if( strcmp(board, "dev") == 0){
-		sFilterConfig0.FilterIdHigh = 0x7eb << 5;
+		sFilterConfig0.FilterIdHigh = 0x7ff << 5;
 		sFilterConfig0.FilterIdLow = 0x0000;
   		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;
    		sFilterConfig0.FilterMaskIdLow = 0x0000;
