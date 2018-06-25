@@ -3,6 +3,7 @@ const request = require("request");
 const events = require("events");
 const path = require("path");
 const port = 8008;
+const podAddr = {"ip": "localhost", "port": 7777};
 
 const receivedEmitter = new events.EventEmitter();
 /* This section is made for sending config files to the pi */
@@ -33,5 +34,37 @@ const sendMessage = function (key, ip, port, ...restParams) {
     })
 };
 
+const postPayload = function (ip, port, route, payload) {
+    let address = "http://" + ip + ":" + port + "/" + route;
+    request.post({url: address,
+		  form: payload},
+		  function(err, res, body) {
+		      /* TODO do something useful like display the response */
+		      console.log(body);
+		  }
+    );
+};
+
+const getPodIP = function() {
+    return podAddr["ip"];
+};
+
+const setPodIP = function(ip) {
+    podAddr["ip"] = ip;
+};
+
+const getPodPort = function() {
+    return podAddr["port"];
+};
+
+const setPodPort = function(port) {
+    podAddr["port"] = port;
+};
+
 module.exports.sendMessage = sendMessage;
 module.exports.updater = receivedEmitter;
+module.exports.postPayload = postPayload;
+module.exports.getPodIP = getPodIP;
+module.exports.setPodIP = setPodIP;
+module.exports.getPodPort = getPodPort;
+module.exports.setPodPort = setPodPort;

@@ -5,7 +5,9 @@ from bottle import route, run, request
 
 # these should probably be added to a shared import (e.g. bloop_comms)
 ROUTE_STATE_CHANGE = '/state_change'
+ROUTE_BRAKE_ONOFF = '/brake_onoff'
 ROUTE_POKE = '/poke'
+ROUTE_BLANK = '/'
 COMMAND_VALUE = 'value'
 
 ###########
@@ -31,12 +33,20 @@ def json_basic_response(success=False, message=None):
 ####################
 
 def issue_state_change(new_state):
+    print('requested state change: {0}'.format(new_state))
     success = True
     message = None
     # TODO issue the new state change
     ##########################
     # STATE CHANGE CODE HERE #
     ##########################
+    return success,message
+
+def issue_brake_onoff(onoff):
+    print('requested brake override: {0}'.format(onoff))
+    success = True
+    message = None
+    # TODO turn the brakes on or off
     return success,message
 
 #####################
@@ -52,10 +62,23 @@ def request_state_change():
         return json_basic_response(success=success, message=message)
     return json_basic_response(success=False, message='no new state requested')
 
+# route to command override the brakes
+@route(ROUTE_BRAKE_ONOFF, method='POST')
+def request_brake_onoff():
+    onoff = request.forms.get(COMMAND_VALUE)
+    if onoff is not None:
+        success,message = issue_brake_onoff(onoff)
+        return json_basic_response(success=success, message=message)
+    return json_basic_response(success=False, message='no on or off requested')
+
 # route to just see if the server is responding
 @route(ROUTE_POKE, method=['GET', 'POST'])
 def poke():
     return json_basic_response(success=True)
+
+@route(ROUTE_BLANK, method='GET')
+def blank():
+    return poke()
 
 ########
 # MAIN #
