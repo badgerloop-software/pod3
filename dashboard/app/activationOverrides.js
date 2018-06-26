@@ -30,16 +30,19 @@ function verificationRequest(e) {
     if (this === brake_on || this === brake_off) {
 	let onoff = (this === brake_on) ? "on" : "off";
         let payload = {"value": onoff};
-	communication.postPayload(podIP, podPort, 'brake_onoff', payload);
+        communication.postPayload(podIP, podPort, 'prim_brake_onoff', payload);
     }
     else if (this === brake_vent_on || this === brake_vent_off) {
         let onoff = (this === brake_vent_on) ? "on" : "off";
-	// TODO
+        let payload = {"value": onoff};
+        communication.postPayload(podIP, podPort, 'prim_brake_vent', payload);
     }
     else if (this === hv_enable || this === hv_disable) {
         let endis = (this === hv_enable) ? "enable" : "disable";
-	// TODO
+        let payload = {"value": endis};
+        communication.postPayload(podIP, podPort, 'high_voltage', payload);
     }
+    // TODO add whatever other buttons we need for overrides
 }
 
 function confirmCommand() {

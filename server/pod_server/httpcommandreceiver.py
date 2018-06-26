@@ -5,7 +5,9 @@ from bottle import route, run, request
 
 # these should probably be added to a shared import (e.g. bloop_comms)
 ROUTE_STATE_CHANGE = '/state_change'
-ROUTE_BRAKE_ONOFF = '/brake_onoff'
+ROUTE_PRIM_BRAKE_ONOFF = '/prim_brake_onoff'
+ROUTE_PRIM_BRAKE_VENT = '/prim_brake_vent'
+ROUTE_HIGH_VOLTAGE = '/high_voltage'
 ROUTE_POKE = '/poke'
 ROUTE_BLANK = '/'
 COMMAND_VALUE = 'value'
@@ -42,11 +44,25 @@ def issue_state_change(new_state):
     ##########################
     return success,message
 
-def issue_brake_onoff(onoff):
-    print('requested brake override: {0}'.format(onoff))
+def issue_prim_brake_onoff(onoff):
+    print('requested primary brake: {0}'.format(onoff))
     success = True
     message = None
     # TODO turn the brakes on or off
+    return success,message
+
+def issue_prim_brake_vent(onoff):
+    print('requested primary brake vent: {0}'.format(onoff))
+    success = True
+    message = None
+    # TODO issue it over SPI
+    return success,message
+
+def issue_high_voltage(enable_disable):
+    print('requested high voltage: {0}'.format(enable_disable))
+    success = True
+    message = None
+    # TODO issue it over SPI
     return success,message
 
 #####################
@@ -63,13 +79,31 @@ def request_state_change():
     return json_basic_response(success=False, message='no new state requested')
 
 # route to command override the brakes
-@route(ROUTE_BRAKE_ONOFF, method='POST')
-def request_brake_onoff():
+@route(ROUTE_PRIM_BRAKE_ONOFF, method='POST')
+def request_prim_brake_onoff():
     onoff = request.forms.get(COMMAND_VALUE)
     if onoff is not None:
-        success,message = issue_brake_onoff(onoff)
+        success,message = issue_prim_brake_onoff(onoff)
         return json_basic_response(success=success, message=message)
     return json_basic_response(success=False, message='no on or off requested')
+
+# route to command primary brake vent
+@route(ROUTE_PRIM_BRAKE_VENT, method='POST')
+def request_prim_brake_vent():
+    onoff = request.forms.get(COMMAND_VALUE)
+    if onoff is not None:
+        success,message = issue_prim_brake_vent(onoff)
+        return json_basic_response(success=success, message=message)
+    return json_basic_response(success=False, message='no vent on or off requested')
+
+# route to enable/disable high voltage
+@route(ROUTE_HIGH_VOLTAGE, method='POST')
+def request_high_voltage_enable_disable():
+    endis = request.forms.get(COMMAND_VALUE)
+    if endis is not None:
+        success,message = issue_high_voltage(endis)
+        return json_basic_response(success=success, message=message)
+    return json_basic_response(success=False, message='no enable/disable requested')
 
 # route to just see if the server is responding
 @route(ROUTE_POKE, method=['GET', 'POST'])
