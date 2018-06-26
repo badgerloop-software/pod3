@@ -5,6 +5,8 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "can.h"
+
 
 #define BLINK_INTERVAL	250
 
@@ -90,6 +92,85 @@ int nav_init(void) {
 	return 0;
 }
 
+
+int nav_telemetry_send(void){
+	uint32_t can_id = 0x106;
+	size_t length = 8;
+	uint8_t TxData[8];
+	
+	// First Telemetry Message Setup
+	TxData[0] = 0; // Position
+	TxData[1] = 0; // Velocity
+	TxData[2] = 0; // Acceleration -X
+	TxData[3] = 0; // Acceleration -Y
+	TxData[4] = 0; // Acceleration -Z
+	TxData[5] = 0; // Tape Count 
+	TxData[6] = 0; // Tape Count (1 bit)
+	TxData[7] = 0; // Not Used
+	
+	can_send(can_id, length, TxData, &hcan);
+
+
+	// Second Telemetry Message Setup
+	can_id = 0x107;
+	TxData[0] = 0; // Pressure 1 (high bytes)
+	TxData[1] = 0; // Pressure 1 (low bytes)
+	TxData[2] = 0; // Pressure 2 (high bytes)
+	TxData[3] = 0; // Pressure 2 (low bytes)
+	TxData[4] = 0; // Pressure 3 (high bytes)
+	TxData[5] = 0; // Pressure 3 (low bytes)
+	TxData[6] = 0; // Pressure 4 (low bytes)
+	TxData[7] = 0; // Pressure 4 (low bytes)
+
+
+	can_send(can_id, length, TxData, &hcan);
+
+
+	can_id = 0x108;
+	TxData[0] = 0; // Pressure 5 (high bytes)
+	TxData[1] = 0; // Pressure 5 (low bytes)
+	TxData[2] = 0; // Pressure 6 (high bytes)
+	TxData[3] = 0; // Pressure 6 (low bytes)
+	TxData[4] = 0; // Solenoid 1 driven (bit 0)... Solenoid 6 Driven (bit 5)
+	TxData[5] = 0; // Should Stop == True if byte 5 == 1
+	TxData[6] = 0; // Unused
+	TxData[7] = 0; // Unused
+
+	can_send(can_id, length, TxData, &hcan);
+
+	return 0;
+}
+
+
+
+
+void nav_receive_telemetry(uint32_t can_id, uint8_t * RxData){
+	//TODO update with incomming CAN messages
+	printf("received telmetry from %lx\r\n", can_id);
+	for(int i = 0; i < 8; i++){
+		printf("RxData[%d]: %x\r\n", i, RxData[i]);
+	}
+	if(can_id == 0x0d0){
+		//TODO update with State handler update
+	} else if (can_id == 0x0d1){
+		//TODO update with State transition start
+	} else if (can_id == 0x0d2){
+		//TODO actuation overwrite
+	} else if (can_id == 0x0d3){
+		// TODO fault handler
+	} else if (can_id == 0x0d4){
+		// TODO update ccp telemetry vals
+	} else if (can_id == 0x0d6){
+		// TODO update PV telemetry vals
+	} else if (can_id == 0x0d8){
+		// TODO handle PV faults
+	} 
+
+
+
+}
+
+
 int main(void) {
 
 	PC_Buffer *rx;
@@ -106,6 +187,8 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+	
+		nav_telemetry_send();
 	}
 
 	return 0;
