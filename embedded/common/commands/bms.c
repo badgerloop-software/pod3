@@ -4,7 +4,9 @@
 #include "bms.h"
 
 command_status do_bms(int argc, char *argv[]) {
-        printf("\r\n%s: TODO (%d args given)\r\n", argv[0], argc);
+        
+	int i;
+	printf("\r\n%s: TODO (%d args given)\r\n", argv[0], argc);
 	
 	//BMS Queries
 	
@@ -63,7 +65,7 @@ command_status do_bms(int argc, char *argv[]) {
 	 */ 
 
 	printf("\r\nargs: ");
-	for(int i = 1; i < argc; i++){
+	for(i = 1; i < argc; i++){
 		printf("%s, ", argv[i]);
 	}
 	

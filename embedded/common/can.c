@@ -9,13 +9,14 @@ uint8_t RxData[8];
 extern uint8_t message_num; //defined in can.h
 
 char* can_read(CAN_HandleTypeDef *hcan ){
+	int i;
 	printf("\r\nIn CAN READ\\");
 	
 	if(HAL_CAN_GetRxFifoFillLevel(hcan, CAN_RX_FIFO0)){
 		printf("CAN MESSAGE IN FIFO\r\n");
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData);
 		
-		for(int i = 0; i < 8; i++){
+		for(i = 0; i < 8; i++){
 			if( RxData[i] != 0){
 				printf("Here is our message %x\r\n", RxData[i]);
 			}
@@ -62,6 +63,7 @@ int can_update( uint8_t message_number ){
 
 uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, uint16_t pid, CAN_HandleTypeDef *hcan){
 	
+	int i = 0;
 	//OBD2 Message format: CAN_ID, CAN Message length, OBDII message length, Mode, PID, Data
 
 	TxHeader.StdId = can_id;
@@ -98,7 +100,7 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 		printf("CAN MESSAGE IN FIFO\r\n");
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData);
 		
-		for(int i = 0; i < 8; i++){
+		for(i = 0; i < 8; i++){
 			if( RxData[i] != 0){
 				printf("Here is our message %x\r\n", RxData[i]);
 			}
@@ -110,6 +112,7 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 
 
 int can_heartbeat(uint8_t *message_number, CAN_HandleTypeDef *hcan){
+	int i = 0;
 	TxHeader.StdId = 0xC0; //Always to same CAN ID
 	TxHeader.IDE = 0; //Standard ID length
 	TxHeader.RTR = 0; //Always data frame
@@ -160,7 +163,7 @@ int can_heartbeat(uint8_t *message_number, CAN_HandleTypeDef *hcan){
 		TxData[7] = 0x00;
 	}
 	else{ //In all other cases, TxData will be set to 0
-		for(int i = 0; i < 8; i++){
+		for(i = 0; i < 8; i++){
 			TxData[i] = 0;
 		}
 	}

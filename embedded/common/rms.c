@@ -165,9 +165,10 @@ int rms_setTorque(uint8_t val){
 }
 
 int rms_multDisableInverter(){ 
+	int i;
 	printf("\r\nMultDisableInverter\r\n");
 
-	for(int i = 0; i < 5; i++)
+	for(i = 0; i < 5; i++)
 		rms_disableInverter();
 	return 0;
 } 

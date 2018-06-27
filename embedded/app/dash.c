@@ -10,7 +10,7 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-uint8_t transition_active
+uint8_t transition_active;
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
 //THERM2: between batteries 2 and 3
@@ -143,9 +143,10 @@ int ccp_telemetry_send(void){
 }
 
 void dash_receive_telemetry(uint32_t can_id, uint8_t * RxData){
+	int i;
 	if (can_id == 0x0d6){
 		printf("received telmetry from %lx\r\n", can_id);
-		for(int i = 0; i < 8; i++){
+		for(i = 0; i < 8; i++){
 			printf("RxData[%d]: %x\r\n", i, RxData[i]);
 		}
 	}
