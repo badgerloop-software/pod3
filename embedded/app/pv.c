@@ -140,8 +140,9 @@ int pv_telemetry_send(void){
 
 
 void pv_receive_telemetry(uint32_t can_id, uint8_t * RxData){
+	int i;
 	printf("received telmetry from %lx\r\n", can_id);
-	for(int i = 0; i < 8; i++){
+	for(i = 0; i < 8; i++){
 		printf("RxData[%d]: %x\r\n", i, RxData[i]);
 	}
 	if(can_id == 0x0d0){

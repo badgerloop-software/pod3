@@ -194,6 +194,7 @@ uint16_t bms_getPackVoltCellAvg(void){
 uint8_t * bms_getCellVoltAll(void){
         //TODO loop through all cell info
         //bms_can_send( );
+	uint16_t i;
 	uint16_t can_id = 0x7e3;
         size_t length = 24;
         uint8_t mode = 0x22;
@@ -201,7 +202,7 @@ uint8_t * bms_getCellVoltAll(void){
         uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
 	*return_data = 0.0001 * (*return_data);
 
-        for(uint16_t i = 1; i < 16; i++) {
+        for(i = 1; i < 16; i++) {
           pid = 0xf100 + i;
           return_data = return_data + length;
           *return_data = 0.0001 * (*can_send_obd2(can_id, length, mode, pid, &hcan));
@@ -315,6 +316,7 @@ uint16_t bms_getCellResAvg(void){
 uint8_t * bms_getCellResAll(void){
 	//TODO loop through cell info
 	//bms_can_send( );
+	uint16_t i;
 	uint16_t can_id = 0x7e3;
 	size_t length = 24;
 	uint8_t mode = 0x22;
@@ -322,7 +324,7 @@ uint8_t * bms_getCellResAll(void){
 	uint8_t *return_data = can_send_obd2(can_id, length, mode, pid, &hcan);
 	*return_data = 0.01 * (*return_data);
 
-	for(uint16_t i = 1; i < 16; i++) {
+	for(i = 1; i < 16; i++) {
     	  pid = 0xf200 + i;
  	  return_data = return_data + length;
 	  *return_data = 0.01 * (*can_send_obd2(can_id, length, mode, pid, &hcan));

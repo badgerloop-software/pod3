@@ -146,8 +146,9 @@ int nav_telemetry_send(void){
 
 void nav_receive_telemetry(uint32_t can_id, uint8_t * RxData){
 	//TODO update with incomming CAN messages
+	int i;
 	printf("received telmetry from %lx\r\n", can_id);
-	for(int i = 0; i < 8; i++){
+	for(i = 0; i < 8; i++){
 		printf("RxData[%d]: %x\r\n", i, RxData[i]);
 	}
 	if(can_id == 0x0d0){

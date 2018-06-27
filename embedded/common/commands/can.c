@@ -13,6 +13,7 @@ command_status do_can(int argc, char *argv[]) {
 	long long converted = 0;	
 	uint8_t data[8];
 	char* str;
+	int i;
 	
 	//Usage: can read
 	if(!strcmp("read", argv[1])){	
@@ -65,7 +66,7 @@ command_status do_can(int argc, char *argv[]) {
 		data[0] = (converted & 0x00000000000000ff);
 
 		printf("can_id: %lx, length: %d\r\n", can_id, length);
-		for(int i = 0; i < 8; i++){
+		for(i = 0; i < 8; i++){
 			printf("Data #%d: %x\r\n", i,data[i]);
 		}
 		if( length > 0 && length <= 16){

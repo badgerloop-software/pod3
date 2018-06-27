@@ -33,6 +33,7 @@ int main(void) {
 //	uint8_t               TxData[8];
 	uint8_t               RxData[8];
 //	uint32_t   	      TxMailbox;
+	int i;
 
 	message_num = 0;
 
@@ -60,7 +61,7 @@ int main(void) {
 
 			printf("CAN ID: #%lx\r\n", RxHeader.StdId );
 			/* Printing out received data */
-			for( int i = 0; i < 8; i++){
+			for(i = 0; i < 8; i++){
 				//if(RxData[i] != 0){
 					printf("CAN Message Data #%d %x\r\n", i, RxData[i]);
 				//}
