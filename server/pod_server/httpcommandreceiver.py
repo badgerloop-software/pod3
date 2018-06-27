@@ -12,6 +12,8 @@ ROUTE_POKE = '/poke'
 ROUTE_BLANK = '/'
 COMMAND_VALUE = 'value'
 
+VALID_STATES = ['state_poweroff', 'state_idle', 'state_ready_for_pumpdown', 'state_pumpdown', 'state_ready', 'state_postrun', 'state_service_low_speed', 'state_safe_to_approach', 'state_prop_start_hyperloop', 'state_prop_start_openair', 'state_prop_start_extsub', 'state_prop_dsa_hyperloop', 'state_prop_dsa_openair', 'state_prop_dsa_extsub', 'state_braking_hyperloop', 'state_braking_openair', 'state_braking_extsub', 'state_fault_prerun', 'state_fault_run', 'state_fault_postrun'];
+
 ###########
 # HELPERS #
 ###########
