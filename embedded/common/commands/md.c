@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <stdint.h>
 #include "commands.h"
 
 command_status do_md(int argc, char *argv[]) {
@@ -20,7 +21,7 @@ command_status do_md(int argc, char *argv[]) {
 
 	printf("[@0x%08lx] 0x%08lx\r\n", (uint32_t) addr, *addr);
 
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 COMMAND_ENTRY(

@@ -4,10 +4,12 @@
 int get_command_index(char *command);
 void exec_command(int argc, char **argv);
 
+#ifndef UNUSED
 #define UNUSED(x) (void)(x)
+#endif
 
 typedef enum {
-	SUCCESS = 0,
+	CMD_SUCCESS = 0,
 	USAGE,
 	FAIL
 } command_status;

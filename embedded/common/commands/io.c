@@ -63,7 +63,7 @@ command_status do_io(int argc, char *argv[]) {
 	if (!strcmp("aliases", argv[1])) {
 		for (i = 0; i < NUM_GROUPS; i++)
 			printf("%s\r\n", GROUP_NAMES[i]);
-		return SUCCESS;
+		return CMD_SUCCESS;
 	}
 
 	/* print all pins related to this alias */
@@ -77,7 +77,7 @@ command_status do_io(int argc, char *argv[]) {
 			}
 		}
 		printf("\r\ntotal: %d\r\n\r\n", count);
-		return SUCCESS;
+		return CMD_SUCCESS;
 	}
 
 	port = gpio_getGpioPort(argv[1][0]);
@@ -100,7 +100,7 @@ command_status do_io(int argc, char *argv[]) {
 	if (pin < 16) {
 		gpio_printPinInfo(port, pin);
 		putchar('\r'); putchar('\n');
-		return SUCCESS;
+		return CMD_SUCCESS;
 	}
 
 	/* print all pins */
@@ -109,7 +109,7 @@ command_status do_io(int argc, char *argv[]) {
 
 	putchar('\r'); putchar('\n');
 
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 COMMAND_ENTRY(

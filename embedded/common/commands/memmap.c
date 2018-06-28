@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "commands.h"
 #include "memmap.h"
 
@@ -128,7 +129,7 @@ command_status do_memmap(int argc, char *argv[]) {
 
 	print_all(curr, size);
 
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 COMMAND_ENTRY(

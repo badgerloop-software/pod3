@@ -21,7 +21,7 @@ command_status do_help(int argc, char *argv[]) {
 
 	putchar('\r'); putchar('\n');
 
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 COMMAND_ENTRY(

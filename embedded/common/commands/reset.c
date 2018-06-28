@@ -7,7 +7,7 @@
 command_status do_reset(int argc, char *argv[]) {
 	UNUSED(argc); UNUSED(argv);
 	NVIC_SystemReset();
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 COMMAND_ENTRY("reset", "reset", "Perform a software reset.", do_reset)

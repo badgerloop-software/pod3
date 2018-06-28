@@ -79,11 +79,13 @@ void PendSV_Handler     (void) __attribute__((weak, alias("Default_Handler")));
 
 volatile unsigned int ticks = 0;
 void SysTick_Handler(void) { ticks++; }
+uint32_t HAL_GetTick(void) { return ticks; }
 
 void delay_ms(unsigned int period) {
 	unsigned int curr_count = ticks;
 	while (ticks < curr_count + period) {;}
 }
+void HAL_Delay(uint32_t Delay) { delay_ms(Delay); }
 
 typedef void(*f_ptr)(void);
 const f_ptr __core_vectors[] __attribute__((section(".vectors"))) = {
