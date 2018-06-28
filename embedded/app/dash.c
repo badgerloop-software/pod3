@@ -10,6 +10,11 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
+#define CCP_MODULE 1
+#define NAV_MODULE 0
+#define PV_MODULE 0
+#define DEV_MODULE 0
+
 uint8_t transition_active;
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2

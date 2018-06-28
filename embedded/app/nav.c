@@ -9,6 +9,11 @@
 
 
 #define BLINK_INTERVAL	250
+#define CCP_MODULE 0
+#define NAV_MODULE 1
+#define PV_MODULE 0
+#define DEV_MODULE 0
+
 
 /* Nucleo 32 I/O */
 

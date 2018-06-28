@@ -7,6 +7,14 @@
 #include "stm32l4xx_hal.h"
 #include "can.h"
 
+
+#define CCP_MODULE 0 
+#define NAV_MODULE 0
+#define PV_MODULE 0
+#define DEV_MODULE 1
+
+
+
 /* CAN Globals */
 extern CAN_HandleTypeDef     hcan;
 extern uint8_t message_num;

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "can.h"
+#include "badgerloop.h"
 #include <stm32l4xx_hal.h>
 #include <unistd.h>
 CAN_TxHeaderTypeDef TxHeader;
