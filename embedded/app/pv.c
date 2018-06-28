@@ -9,6 +9,11 @@
 
 #define BLINK_INTERVAL	250
 
+#define CCP_MODULE 0
+#define NAV_MODULE 0
+#define PV_MODULE 1
+#define DEV_MODULE 0
+
 /* Nucleo 32 I/O */
 //Shutdown Circuit
 FILL_GPIO(MSTR_SW_FDBK, GPIOB, 0, INPUT, LOW_SPEED, NONE, true, OTHER)
