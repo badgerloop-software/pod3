@@ -45,7 +45,7 @@
 #include "stm32l4xx_hal_def.h"
 
 /* Include low level driver */
-#include "stm32l4xx_ll_adc.h"
+//#include "stm32l4xx_ll_adc.h"
 
 /** @addtogroup STM32L4xx_HAL_Driver
   * @{
@@ -370,7 +370,7 @@ typedef struct
 
   ADC_InitTypeDef               Init;                   /*!< ADC initialization parameters and regular conversions setting */
 
-  DMA_HandleTypeDef             *DMA_Handle;            /*!< Pointer DMA Handler */
+//  DMA_HandleTypeDef             *DMA_Handle;            /*!< Pointer DMA Handler */
 
   HAL_LockTypeDef               Lock;                   /*!< ADC locking object */
 
@@ -1769,9 +1769,9 @@ uint32_t                HAL_ADC_GetError(ADC_HandleTypeDef *hadc);
 HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef* hadc, uint32_t ConversionGroup);
 HAL_StatusTypeDef ADC_Enable(ADC_HandleTypeDef* hadc);
 HAL_StatusTypeDef ADC_Disable(ADC_HandleTypeDef* hadc);
-void ADC_DMAConvCplt(DMA_HandleTypeDef *hdma);
-void ADC_DMAHalfConvCplt(DMA_HandleTypeDef *hdma);
-void ADC_DMAError(DMA_HandleTypeDef *hdma);
+//void ADC_DMAConvCplt(DMA_HandleTypeDef *hdma);
+//void ADC_DMAHalfConvCplt(DMA_HandleTypeDef *hdma);
+//void ADC_DMAError(DMA_HandleTypeDef *hdma);
 
 /**
   * @}

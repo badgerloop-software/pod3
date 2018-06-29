@@ -15,3 +15,6 @@ SRCS += drivers/st/stm32l4xx_hal_flash_ramfunc.c
 SRCS += drivers/st/stm32l4xx_hal_pwr.c
 SRCS += drivers/st/stm32l4xx_hal_pwr_ex.c
 SRCS += drivers/st/stm32l4xx_hal_gpio.c
+SRCS += drivers/st/stm32l4xx_hal_adc.c
+SRCS += drivers/st/stm32l4xx_hal_adc_ex.c
+SRCS += drivers/st/stm32l4xx_ll_adc.c
