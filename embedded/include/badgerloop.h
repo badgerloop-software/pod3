@@ -38,7 +38,7 @@
 #define ACCEL_IDLE_LOWER	-100	//cm/s^s
 
 #define TARGET_DECEL		-2943
-
+extern bool *should_stop;
 
 
 /*****************************************************************************/
@@ -66,9 +66,12 @@ extern int *t_batt, *t_pod;
 #define SET_TPOD(val)		*t_pod = (val)
 #define GET_TPOD		((int) (*t_pod))
 
-extern uint16_t *tube_pressure;
+extern uint16_t *tube_pressure, *pv_pressure;
 #define SET_TUBEPRESSURE(val)	*tube_pressure = (val)
 #define GET_TUBEPRESSURE		(*tube_pressure)
+#define SET_PVPRESSURE(val)	*pv_pressure = (val)
+#define GET_PVPRESSURE			(*pv_pressure)
+
 
 extern uint16_t * pres_tank_pri, *pres_tank_sec, *pres_line_pri, *pres_line_sec, *pres_actuator_pri, *pres_actuator_sec;
 #define SET_PRES_TANK_PRI(val) *pres_tank_pri = (val)
@@ -83,6 +86,14 @@ extern uint16_t * pres_tank_pri, *pres_tank_sec, *pres_line_pri, *pres_line_sec,
 #define GET_PRES_ACTU_PRI 	(int) (*pres_actuator_pri)
 #define SET_PRES_ACTU_SEC(val) *pres_tank_pri = (val)
 #define GET_PRES_ACTU_SEC	(int) (*pres_tank_pri)
+
+extern uint8_t *top_retro_count, *mid_retro_count, *bot_retro_count;
+#define SET_TOP_RETRO_COUNT(val) *top_retro_count = (val)
+#define GET_TOP_RETRO_COUNT(val) (int) (*top_retro_count)
+#define SET_MID_RETRO_COUNT(val) *mid_retro_count = (val)
+#define GET_MID_RETRO_COUNT(val) (int) (*mid_retro_count)
+#define SET_BOT_RETRO_COUNT(val) *bot_retro_count = (val)
+#define GET_BOT_RETRO_COUNT(val) (int) (*bot_retro_count)
 
 extern uint8_t *lim_states;
 #define BLIM1 0x1
@@ -103,42 +114,64 @@ extern uint8_t *lim_states;
 #define GET_PVLIM	(*lim_states & PVLIM)
 
 extern uint8_t *shutdown_circuit_status;
-#define MSTR_SW_FDBK 0x1
-#define SET_MSTR_SW_FDBK	*shutdown_circuit_status |= MSTR_SW_FDBK
-#define CLR_MSTR_SW_FDBK	*shutdown_circuit_status &= ~MSTR_SW_FDBK
-#define GET_MSTR_SW_FDBK	(*shutdown_circuit_status & MSTR_SW_FDBK)
-#define E_STOP_FDBK 0x2
-#define SET_E_STOP_FDBK		*shutdown_circuit_status |= E_STOP_FDBK
-#define CLR_E_STOP_FDBK		*shutdown_circuit_status &= ~E_STOP_FDBK
-#define GET_E_STOP_FDBK		(*shutdown_circuit_status & E_STOP_FDBK)
-#define PV_LIM_FDBK 0x4
-#define SET_PV_LIM_FDBK		*shutdown_circuit_status |=PV_LIM_FDBK
-#define CLR_PV_LIM_FDBK		*shutdown_circuit_status &= ~PV_LIM_FDBK
-#define GET_PV_LIM_FDBK		(*shutdown_circuit_status & PV_LIM_FDBK)
-#define HVD_FDBK 0x8
-#define SET_HVD_FDBK		*shutdown_circuit_status |= HVD_FDBK
-#define CLR_HVD_FDBK		*shutdown_circuit_status &= ~HVD_FDBK
-#define GET_HVD_FDBK		(*shutdown_circuit_status & HVD_FDBK)
-#define BMS_STAT_FDBK 0x10
-#define SET_BMS_STAT_FDBK	*shutdown_circuit_status |= BMS_STAT_FDBK
-#define CLR_BMS_STAT_FDBK	*shutdown_circuit_status &= ~BMS_STAT_FDBK
-#define GET_BMS_STAT_FDK	(*shutdown_circuit_statuss & BMS_STAT_FDBK)
-#define IMD_STAT_FDBK 0x20
-#define SET_IMD_STAT_FDBK	*shutdown_circuit_status |= IMD_STAT_FDBK
-#define CLR_IMD_STAT_FDBK	*shutdown_circuit_status &= ~IMD_STAT_FDBK
-#define GET_IMD_STAT_FDBK	(*shutdown_circuit_status & IMD_STAT_FDBK)
-#define HV_EN_FDBK 0x40
-#define SET_HV_EN_FDBK		*shutdown_circuit_status |= HV_EN_FDBK
-#define CLR_HV_EN_FDBK		*shutdown_circuit_status &= ~HV_EN_FDBK
-#define GET_HV_EN_FDBK		(*shutdown_circuit_status & HV_EN_FDBK)
-
-
+#define MSTR_SW_FDBK_TEL 0x1
+#define SET_MSTR_SW_FDBK	*shutdown_circuit_status |= MSTR_SW_FDBK_TEL
+#define CLR_MSTR_SW_FDBK	*shutdown_circuit_status &= ~MSTR_SW_FDBK_TEL
+#define GET_MSTR_SW_FDBK	(*shutdown_circuit_status & MSTR_SW_FDBK_TEL)
+#define E_STOP_FDBK_TEL 0x2
+#define SET_E_STOP_FDBK		*shutdown_circuit_status |= E_STOP_FDBK_TEL
+#define CLR_E_STOP_FDBK		*shutdown_circuit_status &= ~E_STOP_FDBK_TEL
+#define GET_E_STOP_FDBK		(*shutdown_circuit_status & E_STOP_FDBK_TEL)
+#define PV_LIM_FDBK_TEL 0x4
+#define SET_PV_LIM_FDBK		*shutdown_circuit_status |=PV_LIM_FDBK_TEL
+#define CLR_PV_LIM_FDBK		*shutdown_circuit_status &= ~PV_LIM_FDBK_TEL
+#define GET_PV_LIM_FDBK		(*shutdown_circuit_status & PV_LIM_FDBK_TEL)
+#define HVD_FDBK_TEL 0x8
+#define SET_HVD_FDBK		*shutdown_circuit_status |= HVD_FDBK_TEL
+#define CLR_HVD_FDBK		*shutdown_circuit_status &= ~HVD_FDBK_TEL
+#define GET_HVD_FDBK		(*shutdown_circuit_status & HVD_FDBK_TEL)
+#define BMS_STAT_FDBK_TEL 0x10
+#define SET_BMS_STAT_FDBK	*shutdown_circuit_status |= BMS_STAT_FDBK_TEL
+#define CLR_BMS_STAT_FDBK	*shutdown_circuit_status &= ~BMS_STAT_FDBK_TEL
+#define GET_BMS_STAT_FDK	(*shutdown_circuit_statuss & BMS_STAT_FDBK_TEL)
+#define IMD_STAT_FDBK_TEL 0x20
+#define SET_IMD_STAT_FDBK	*shutdown_circuit_status |= IMD_STAT_FDBK_TEL
+#define CLR_IMD_STAT_FDBK	*shutdown_circuit_status &= ~IMD_STAT_FDBK_TEL
+#define GET_IMD_STAT_FDBK	(*shutdown_circuit_status & IMD_STAT_FDBK_TEL)
+#define HV_EN_FDBK_TEL 0x40
+#define SET_HV_EN_FDBK		*shutdown_circuit_status |= HV_EN_FDBK_TEL
+#define CLR_HV_EN_FDBK		*shutdown_circuit_status &= ~HV_EN_FDBK_TEL
+#define GET_HV_EN_FDBK		(*shutdown_circuit_status & HV_EN_FDBK_TEL)
 
 /* Actuation Functions */
 void primary_brakes(int intensity);
 void seconary_brakes(int intensity);
 void vent_primary_brakes(bool open);
 void vent_secondary_brakes(bool open);
+
+
+
+/*****************************************************************************/
+/*                          	Inter-Module CAN	                     */
+/*****************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif
