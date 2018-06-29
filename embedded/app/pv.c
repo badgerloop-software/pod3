@@ -6,7 +6,7 @@
 #include "usart.h"
 #include "pin_alias.h"
 #include "can.h"
-
+#include "badgerloop.h"
 #define BLINK_INTERVAL	250
 
 #define CCP_MODULE 0
@@ -101,7 +101,7 @@ int pv_telemetry_send(void){
 	//MCU_Enabled
 	if (gpio_readPin(GPIOA, 6)) 	 shutdown_circuit_status += 128;
 
-	printf("Shutdown_Circuit_status %d\r\n", shutdown_circuit_status);
+	//printf("Shutdown_Circuit_status %d\r\n", shutdown_circuit_status);
 
 	TxData[0] = shutdown_circuit_status; // Position
 	TxData[1] = 0; // Unused 
