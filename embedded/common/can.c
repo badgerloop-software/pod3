@@ -29,8 +29,10 @@ char* can_read(CAN_HandleTypeDef *hcan ){
 
 
 void can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef *hcan){
-	printf("\r\nCAN SEND ID: %lx, length: %d\r\n", can_id, length);
 
+#if DEBUG_IO
+	printf("\r\nCAN SEND ID: %lx, length: %d\r\n", can_id, length);
+#endif
 
 	TxHeader.StdId = can_id;
 	TxHeader.IDE = 0;
