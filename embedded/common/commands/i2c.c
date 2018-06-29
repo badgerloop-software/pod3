@@ -98,11 +98,6 @@ command_status do_init(void) {
 	 */
 	i2c_handle.Init.Timing				|= 0x02 << I2C_TIMINGR_PRESC_Pos;
 
-	//i2c_handle.Init.Timing				= 0x00800C21;
-	//i2c_handle.Init.Timing				= 0x20A03E55;
-
-	printf("i2c timing value: 0x%x\r\n", (unsigned int) i2c_handle.Init.Timing);
-
 	i2c_handle.Init.OwnAddress1			= 0x01;
 	i2c_handle.Init.AddressingMode		= I2C_ADDRESSINGMODE_7BIT;
 	i2c_handle.Init.DualAddressMode		= I2C_DUALADDRESS_DISABLE;
@@ -110,21 +105,31 @@ command_status do_init(void) {
 	i2c_handle.Init.NoStretchMode		= I2C_NOSTRETCH_DISABLE;
 
 	retval = HAL_I2C_Init(&i2c_handle);
-
-	print_i2c_state(&i2c_handle);
+	HAL_I2CEx_ConfigAnalogFilter(&i2c_handle, I2C_ANALOGFILTER_DISABLE);
 
 	return (retval == HAL_OK) ? CMD_SUCCESS : FAIL;
 }
 
 command_status try_query(uint8_t addr) {
 	HAL_StatusTypeDef retval;
-	retval = HAL_I2C_IsDeviceReady(&i2c_handle, addr << 1, 1, 500);
-	if (retval != HAL_OK) {
+	retval = HAL_I2C_IsDeviceReady(&i2c_handle, addr << 1, 2, 50);
+	if (retval == HAL_OK)
+		printf("found 0x%x\r\n", addr);
+	else if (retval != HAL_TIMEOUT) {
 		print_hal(retval);
 		print_i2c_error(&i2c_handle);
 		print_i2c_state(&i2c_handle);
 	}
 	return (retval == HAL_OK) ? CMD_SUCCESS : FAIL;
+}
+
+command_status try_scan(void) {
+	uint8_t i;
+	command_status retval = FAIL;
+	for (i = 0; i < 128; i++)
+		if (try_query(i) == CMD_SUCCESS)
+			retval = CMD_SUCCESS;
+	return retval;
 }
 
 command_status do_i2c(int argc, char *argv[]) {
@@ -135,13 +140,15 @@ command_status do_i2c(int argc, char *argv[]) {
 		return do_init();
 	else if (!strcmp("query", argv[1]) && argc >= 3)
 		return try_query((uint8_t) strtol(argv[2], NULL, 16));
+	else if (!strcmp("scan", argv[1]))
+		return try_scan();
 
 	return USAGE;
 }
 
 COMMAND_ENTRY(
 	"i2c",
-	"i2c {init|query}",
+	"i2c {init|query <addr>|scan}",
 	"Interact with the I2C subsystem.",
 	do_i2c
 )
