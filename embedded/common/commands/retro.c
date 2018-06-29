@@ -13,15 +13,19 @@ void printStamp (int pin, timeStamp * stamp) {
 	printf("%-10s:%lu\r\n", "Previous", stamp->prev);
 	printf("%-10s:%lu\r\n", "Current", stamp->curr);
 	printf("%-10s:%lu\r\n", "Count", stamp->count);
-	for (i = 0; i < AVERAGE_SIZE; i++)
-		printf("Filter[i]:%lu\r\n", stamp->filter[i]);
+	for (i = 0; i < AVERAGE_SIZE; i++){
+		printf("Filter[%d]:%lu\r\n",i, stamp->filter[i]);
+	}	
+	
 	printf("main\r\n");
 	printf("addr %p\r\n", mainRetro);
 	printf("%-10s:%lu\r\n", "Previous", mainRetro->prev);
 	printf("%-10s:%lu\r\n", "Current", mainRetro->curr);
 	printf("%-10s:%lu\r\n", "Count", mainRetro->count);
-	for (i = 0; i < AVERAGE_SIZE; i++)
-		printf("Filter[i]:%lu\r\n", mainRetro->filter[i]);
+	
+	for (i = 0; i < AVERAGE_SIZE; i++){
+		printf("Filter[%d]:%lu\r\n", i,mainRetro->filter[i]);
+	}
 }
 
 command_status do_exti(int argc, char *argv[]) {
@@ -32,7 +36,7 @@ command_status do_exti(int argc, char *argv[]) {
 	if(hasGpioAlias(&port, &pin, argv[1])){
 		printStamp(pin, getTimeStamps(pin));
 		printf("Velocity %d cm/s\r\n", getVelocity());
-	return SUCCESS;
+		return SUCCESS;
 	}
 
 	pin = atoi((const char *) argv[1]);
@@ -42,4 +46,4 @@ command_status do_exti(int argc, char *argv[]) {
 
 	return SUCCESS;
 }
-COMMAND_ENTRY("exti", "exti <pin>", "Prints current and previous time stamp of the External Interrpt. Only on interrupt per pin number", do_exti)
+COMMAND_ENTRY("exti", "exti <pin>", "Prints current and previous time stamp of the External Interrupt. Only on interrupt per pin number", do_exti)

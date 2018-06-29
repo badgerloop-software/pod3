@@ -10,14 +10,20 @@ void initRetro(void) {
 
 void badRetro(void){
 	if (FRONT.count == MIDDLE.count) {
-	if (mainRetro != &FRONT) printf("main retro now front\r\n");
-		mainRetro = &FRONT;
-	} else if (MIDDLE.count == REAR.count) {
-		if (mainRetro != &FRONT) printf("main retro now middle\r\n");
-			mainRetro = &MIDDLE;
-	} else if (FRONT.count == REAR.count) {
-		if (mainRetro != &FRONT) printf("main retro now front\r\n");
+		if (mainRetro != &FRONT){ 
+			printf("main retro now front\r\n");
 			mainRetro = &FRONT;
+		}
+	} else if (MIDDLE.count == REAR.count) {
+		if (mainRetro != &FRONT){
+			printf("main retro now middle\r\n");
+			mainRetro = &MIDDLE;
+		}	
+	} else if (FRONT.count == REAR.count) {
+		if (mainRetro != &FRONT){
+			printf("main retro now front\r\n");
+			mainRetro = &FRONT;
+		}
 	}
 }
 
