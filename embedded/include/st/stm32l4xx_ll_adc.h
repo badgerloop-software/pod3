@@ -2384,18 +2384,20 @@ typedef struct
   * @retval ADC register address
   */
 #if defined(ADC_MULTIMODE_SUPPORT)
+
+/*
 __STATIC_INLINE uint32_t LL_ADC_DMA_GetRegAddr(ADC_TypeDef *ADCx, uint32_t Register)
 {
   register uint32_t data_reg_addr = 0U;
   
   if (Register == LL_ADC_DMA_REG_REGULAR_DATA)
   {
-    /* Retrieve address of register DR */
+    // Retrieve address of register DR
     data_reg_addr = (uint32_t)&(ADCx->DR);
   }
-  else /* (Register == LL_ADC_DMA_REG_REGULAR_DATA_MULTI) */
+  else // (Register == LL_ADC_DMA_REG_REGULAR_DATA_MULTI)
   {
-    /* Retrieve address of register CDR */
+    // Retrieve address of register CDR
     data_reg_addr = (uint32_t)&((__LL_ADC_COMMON_INSTANCE(ADCx))->CDR);
   }
   
@@ -2404,9 +2406,10 @@ __STATIC_INLINE uint32_t LL_ADC_DMA_GetRegAddr(ADC_TypeDef *ADCx, uint32_t Regis
 #else
 __STATIC_INLINE uint32_t LL_ADC_DMA_GetRegAddr(ADC_TypeDef *ADCx, uint32_t Register)
 {
-  /* Retrieve address of register DR */
+  // Retrieve address of register DR 
   return (uint32_t)&(ADCx->DR);
 }
+*/
 #endif
 
 /**
