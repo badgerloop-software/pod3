@@ -12,3 +12,4 @@ SRCS += common/commands/uart.c
 SRCS += common/commands/can.c
 SRCS += common/commands/bms.c
 SRCS += common/commands/rms.c
+SRCS += common/commands/badgerloop.c
