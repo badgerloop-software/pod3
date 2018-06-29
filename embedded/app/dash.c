@@ -5,6 +5,7 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "uart.h"
 
 #define BLINK_INTERVAL	250
 
@@ -38,10 +39,23 @@ inline void printPrompt(void) {
 	fflush(stdout);
 }
 
-int dash_init(void) {
+int dash_init() {
 
 	/* dash specific initializations */
+	/*UartHandle->Instance		 = USART1
+	
+	UartHandle->Init.BaudRate        = 115200;
+	UartHandle->Init.WordLength      = UART_WORDLENGTH_8B;
+	UartHandle->Init.StopBits	 = UART_STOPBITS_1;
+	UartHandle->Init.Parity	 	 = UART_PARITY_NONE;
+	UartHandle->Init.HwFlowCtl	 = UART_HWCONTROL_NONE;
+	UartHandle->Init.Mode		 = UART_MODE_TX_RX;
+	UartHandle->Init.OverSampling	 = UART_OVERSAMPLING_16;
+	
+	if (HAL_UART_DeInit(UartHandle) != HAL_OK) printf("FAILURE TO CHECK DeInit\n\r");
+	*/
 
+	
 	return 0;
 }
 

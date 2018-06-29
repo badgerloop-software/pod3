@@ -159,7 +159,7 @@ static int usart_setClockSource(USART_TypeDef* usart, usart_clk_src_t src) {
 		default: return -1;
 	}
 	
-	RCC->CCIPR = ~(0x3 << pin_num) | (src << pin_num);
+	RCC->CCIPR |= (src << pin_num);
 	
 	return 0;
 }
@@ -174,7 +174,9 @@ int usart_config(
 	/* turn this USART off if it's on */
 	if (usart->CR1 & USART_CR1_UE) {
 		usart->CR1 &= ~USART_CR1_UE;
-		while (usart->CR1 & USART_CR1_UE) {;}
+		while (usart->CR1 & USART_CR1_UE) {
+			
+			printf("loop\n\r");}
 	}
 	
 	if (usart_setClockSource(usart, src) || usart_bufferInit(usart))

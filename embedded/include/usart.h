@@ -1,5 +1,5 @@
-#ifndef _UART__H__
-#define _UART__H__
+#ifndef _USART__H__
+#define _USART__H__
 
 #include <stdio.h>
 #include <stdbool.h>
