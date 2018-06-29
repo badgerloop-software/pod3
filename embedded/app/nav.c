@@ -5,6 +5,7 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "exti.h"
 
 #define BLINK_INTERVAL	250
 
@@ -80,6 +81,29 @@ int nav_init(void) {
 
 	/* nav specific initializations */
 
+	GPIO_TypeDef *gpioa = GPIOA;
+
+	/* Retro 1 is on pin PA0
+	   Retro 2 is on pin PA1
+	   Retro 3 is on pin PA5 */
+
+	/* Retro Init */
+	//void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool ie) {
+		
+	//Pin 0 EXTI Config
+	exti_config(gpioa, 0, 1, 0, 1);
+	
+	//Pin 1 EXTI Config
+	exti_config(gpioa, 1, 1, 0, 1);
+	
+	//Pin 5 EXTI Config
+	exti_config(gpioa, 5, 1, 0, 1);
+	
+	/* Necessary Handlers
+	void EXTI0_IRQHandler(void) {}
+	void EXTI1_IRQHandler(void) {}
+	void EXTI9_5_IRQHandler(void) {}
+	*/
 	return 0;
 }
 
