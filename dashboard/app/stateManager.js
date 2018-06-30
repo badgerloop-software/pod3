@@ -56,6 +56,90 @@ function confirmDialog() {
     return dialogRes === buttons.indexOf("Confirm");
 }
 
+//All the states
+let currState = "state_poweroff";
+const nextStateIDs = {
+    "state_poweroff": ["state_idle"],
+    "state_idle": ["state_ready_for_pumpdown"],
+    "state_ready_for_pumpdown": ["state_pumpdown"],
+    "state_pumpdown": ["state_ready"],
+    "state_ready": ["state_prop_start_hyperloop", "state_prop_start_openair", "state_prop_start_extsub"],
+    "state_postrun": ["state_safe_to_approach"],
+    "state_service_low_speed": ["state_idle"],
+    "state_safe_to_approach": ["state_idle"],
+    "state_prop_start_hyperloop": ["state_prop_dsa_hyperloop"],
+    "state_prop_start_openair": ["state_prop_dsa_openair"],
+    "state_prop_start_extsub": ["state_prop_dsa_extsub"],
+    "state_prop_dsa_hyperloop": ["state_braking_hyperloop"],
+    "state_prop_dsa_openair": ["state_braking_openair"],
+    "state_prop_dsa_extsub": ["state_braking_extsub"],
+    "state_braking_hyperloop": ["state_postrun"],
+    "state_braking_openair": ["state_postrun"],
+    "state_braking_extsub": ["state_postrun"],
+    "state_fault_prerun": ["state_poweroff", "state_idle"],
+    "state_fault_run": ["state_service_low_speed", "state_idle"],
+    "state_fault_postrun": ["state_service_low_speed", "state_idle"]
+};
+const faultStateIDs = ["state_fault_prerun", "state_fault_run", "state_fault_postrun"];
+const nonFaultStateIDs = ["state_poweroff", "state_idle", "state_ready_for_pumpdown", "state_pumpdown", "state_ready", "state_postrun", "state_service_low_speed", "state_safe_to_approach", "state_prop_start_hyperloop", "state_prop_start_openair", "state_prop_start_extsub", "state_prop_dsa_hyperloop", "state_prop_dsa_openair", "state_prop_dsa_extsub", "state_braking_hyperloop", "state_braking_openair", "state_braking_extsub"];
+const stateIDs = nonFaultStateIDs.concat(faultStateIDs);
+
+function markInactive(toMark) {
+    toMark.classList.remove("btn-success");
+    toMark.classList.remove("btn-primary");
+    toMark.classList.add("btn-secondary");
+    toMark.selected = false;
+}
+
+function markFaultInactive(toMark) {
+    toMark.classList.remove("btn-success");
+    toMark.classList.remove("btn-primary");
+    toMark.classList.add("btn-danger");
+    toMark.selected = false;
+}
+
+function markActive(toMark) {
+    toMark.classList.remove("btn-secondary");
+    toMark.classList.remove("btn-primary");
+    toMark.classList.remove("btn-danger");
+    toMark.classList.add("btn-success");
+    toMark.selected = true;
+}
+
+function markAsNext(toMark) {
+    toMark.classList.remove("btn-secondary");
+    toMark.classList.remove("btn-success");
+    toMark.classList.add("btn-primary");
+    toMark.selected = false;
+}
+
+function resetButtonColors() {
+    // reset the regular state buttons
+    for (let i = 0; i < nonFaultStateIDs.length; i++) {
+        let currButton = document.getElementById(nonFaultStateIDs[i]);
+        markInactive(currButton);
+    }
+    // reset the regular state buttons
+    for (let i = 0; i < faultStateIDs.length; i++) {
+        let currButton = document.getElementById(faultStateIDs[i]);
+        markFaultInactive(currButton);
+    }
+}
+
+function updateStateVisuals() {
+    // reset all buttons to the default setting
+    resetButtonColors();
+    // mark the current state as active
+    let currStateButton = document.getElementById(currState);
+    markActive(currStateButton);
+    // and mark all the suggested next states
+    let nexts = nextStateIDs[currState];
+    for (let i = 0; i < nexts.length; i++) {
+        let nextButton = document.getElementById(nexts[i]);
+        markAsNext(nextButton);
+    }
+}
+
 function stateChangeRequest(e) {
     // check for confirmation
     isConfirmed = confirmDialog();
@@ -67,19 +151,22 @@ function stateChangeRequest(e) {
     let podPort = communication.getPodPort();
     // which state are we trying to send
     let targ = e.target;
-    let new_state = targ.id;
-    payload = {"value": new_state};
+    let newState = targ.id;
+    payload = {"value": newState};
     communication.postPayload(podIP, podPort, 'state_change', payload);
+    // update the state button visuals
+    // TODO should only update visuals when new state is confirmed
+    currState = newState;
+    updateStateVisuals();
 }
 
-//All the states
-
-const state_ids = ["state_poweroff", "state_idle", "state_ready_for_pumpdown", "state_pumpdown", "state_ready", "state_postrun", "state_service_low_speed", "state_safe_to_approach", "state_prop_start_hyperloop", "state_prop_start_openair", "state_prop_start_extsub", "state_prop_dsa_hyperloop", "state_prop_dsa_openair", "state_prop_dsa_extsub", "state_braking_hyperloop", "state_braking_openair", "state_braking_extsub", "state_fault_prerun", "state_fault_run", "state_fault_postrun"];
 // add a function to the click for all buttons
-for (let i = 0; i < state_ids.length; i++) {
-    let curr_button = document.getElementById(state_ids[i]);
+for (let i = 0; i < stateIDs.length; i++) {
+    let curr_button = document.getElementById(stateIDs[i]);
     curr_button.addEventListener("click", stateChangeRequest);
 }
+// and set the initial state visuals
+updateStateVisuals();
 
 /*
 let buttons = stateMaster.getElementsByTagName("button");
