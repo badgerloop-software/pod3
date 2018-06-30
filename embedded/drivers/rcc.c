@@ -20,7 +20,6 @@ bool rcc_setClk(clk_src_t clk, bool state) {
 		return false;
 	
 	switch (clk) {
-
 		case MSI:
 			reg = &RCC->CR;
 			set_mask = RCC_CR_MSION;

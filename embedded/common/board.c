@@ -65,7 +65,7 @@ inline void blink_handler(unsigned int blink_int) {
 	curr = ticks / blink_int;
 	if (curr != prev)
 		(curr % 2) ?
-			gpio_writePin(GPIOB, 3, 1) : gpio_writePin(GPIOB, 3, 0);
+		    gpio_writePin(GPIOB, 3, 1) : gpio_writePin(GPIOB, 3, 0);
 	prev = curr;
 }
 

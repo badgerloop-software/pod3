@@ -1,6 +1,7 @@
 #include "exti.h"
 #include <string.h>
 
+uint8_t led = 0;
 int count1 = 0;
 int count2 = 0;
 int count3 = 0;
@@ -75,8 +76,19 @@ void EXTI0_IRQHandler(void) {
 		EXTI->PR |= EXTI_PR_PR0;
 		
 		/* TESTING */
-		printf("Count 1: %d\r\n", count1);
-	}
+	    if( led == 0 ){
+            led = 1;
+            gpio_writePin(GPIOB, 3, led); 
+        }
+        else{
+            led = 0;
+            gpio_writePin(GPIOB, 3, led); 
+        }
+        count1++;
+        printf("Retro 1 Count: %d\r\n", count1 );
+        /* END TESTING */
+
+    }
 }
 
 void EXTI1_IRQHandler(void) {
@@ -89,9 +101,18 @@ void EXTI1_IRQHandler(void) {
 
 		EXTI->PR |= EXTI_PR_PR1;
 		
-		/* TESTING */
-		count1++;		
-		printf("Count 1: %d\r\n", count1);
+        /* TESTING */
+	    if( led == 0 ){
+            led = 1;
+            gpio_writePin(GPIOB, 3, led); 
+        }
+        else{
+            led = 0;
+            gpio_writePin(GPIOB, 3, led); 
+        }
+        count2++;
+        printf("Retro 2 Count: %d\r\n", count2 );
+        /* END TESTING */
 	}
 }
 
@@ -104,10 +125,6 @@ void EXTI2_IRQHandler(void) {
 		interLine[2].count ++;
 
 		EXTI->PR |= EXTI_PR_PR2;
-	
-		/* TESTING */
-		count2++;		
-		printf("Count 2: %d\r\n", count2);
 	}
 }
 
@@ -146,10 +163,20 @@ void EXTI9_5_IRQHandler(void) {
 
 		EXTI->PR |= EXTI_PR_PR5;
 
-		/* TESTING */
-		count3++;		
-		printf("Count 3: %d\r\n", count3);
-	}
+        /* TESTING */
+	    if( led == 0 ){
+            led = 1;
+            gpio_writePin(GPIOB, 3, led); 
+        }
+        else{
+            led = 0;
+            gpio_writePin(GPIOB, 3, led); 
+        }
+        count3++;
+        printf("Retro 3 Count: %d\r\n", count3 );
+        /* END TESTING */
+	
+    }
 	if (EXTI->PR & EXTI_PR_PR6) {
 		interLine[6].prev = interLine[6].curr;
 		interLine[6].curr = ticks;

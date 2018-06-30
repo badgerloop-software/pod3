@@ -7,6 +7,9 @@
 #include "pin_alias.h"
 #include "exti.h"
 
+/* TESTING */
+#include "gpio.h"
+
 #define BLINK_INTERVAL	250
 
 /* Nucleo 32 I/O */
@@ -32,10 +35,10 @@ FILL_GPIO(IMU_SYNC_OUT,	GPIOC, 15, INPUT, LOW_SPEED, NONE, true, SENSOR);
 FILL_GPIO(IMU_SYNC_IN,	GPIOA, 8, OUTPUT, LOW_SPEED, NONE, true, SENSOR);
 
 //SPI
-FILL_AFIO(SPI3_SCLK, GPIOB, 3, ALT, 6, LOW_SPEED, NONE, true, OTHER );
-FILL_AFIO(SPI3_MOSI, GPIOB, 5, ALT, 6, LOW_SPEED, NONE, true, OTHER );
-FILL_AFIO(SPI3_MISO, GPIOB, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER );
-FILL_AFIO(SPI3_SSEL, GPIOA, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER );
+//FILL_AFIO(SPI3_SCLK, GPIOB, 3, ALT, 6, LOW_SPEED, NONE, true, OTHER );
+//FILL_AFIO(SPI3_MOSI, GPIOB, 5, ALT, 6, LOW_SPEED, NONE, true, OTHER );
+//FILL_AFIO(SPI3_MISO, GPIOB, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER );
+//FILL_AFIO(SPI3_SSEL, GPIOA, 4, ALT, 6, LOW_SPEED, NONE, true, OTHER );
 
 //UART
 FILL_AFIO(UART1_TX, GPIOB, 6, ALT, 7, LOW_SPEED, NONE, true, OTHER );
@@ -91,19 +94,23 @@ int nav_init(void) {
 	//void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool ie) {
 		
 	//Pin 0 EXTI Config
-	exti_config(gpioa, 0, 1, 0, 1);
+	exti_config(gpioa, 0, 0, 1, 1);
 	
 	//Pin 1 EXTI Config
-	exti_config(gpioa, 1, 1, 0, 1);
+	exti_config(gpioa, 1, 0, 1, 1);
 	
 	//Pin 5 EXTI Config
-	exti_config(gpioa, 5, 1, 0, 1);
+	exti_config(gpioa, 5, 0, 1, 1);
 	
 	/* Necessary Handlers
 	void EXTI0_IRQHandler(void) {}
 	void EXTI1_IRQHandler(void) {}
 	void EXTI9_5_IRQHandler(void) {}
 	*/
+
+    /* Testing */
+    gpio_writePin(GPIOB, 3, 0);
+
 	return 0;
 }
 
@@ -122,7 +129,7 @@ int main(void) {
 
 	while (1) {
 		check_input(rx);
-		blink_handler(BLINK_INTERVAL);
+		//blink_handler(BLINK_INTERVAL);
 	}
 
 	return 0;
