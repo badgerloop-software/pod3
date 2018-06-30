@@ -169,7 +169,7 @@ command_status try_scan(void) {
 command_status try_write(uint8_t addr, uint16_t nbytes, const uint8_t *data) {
 	uint32_t ticks_start = ticks;
 	memcpy(i2c_tx, data, nbytes);
-	if (HAL_I2C_Master_Transmit_IT(&i2c_handle, addr, i2c_tx, nbytes) != HAL_OK)
+	if (HAL_I2C_Master_Transmit_IT(&i2c_handle, addr << 1, i2c_tx, nbytes) != HAL_OK)
 		return FAIL;
 	i2c_flags |= I2C_WAITING_TX;
 	while ((i2c_flags & I2C_WAITING_TX) && I2C_TIMEOUT_CHK) {;}
@@ -179,7 +179,7 @@ command_status try_write(uint8_t addr, uint16_t nbytes, const uint8_t *data) {
 command_status try_read(uint8_t addr, uint16_t nbytes) {
 	uint16_t i;
 	uint32_t ticks_start = ticks;
-	if (HAL_I2C_Master_Receive_IT(&i2c_handle, addr, i2c_rx, nbytes) != HAL_OK)
+	if (HAL_I2C_Master_Receive_IT(&i2c_handle, addr << 1, i2c_rx, nbytes) != HAL_OK)
 		return FAIL;
 	i2c_flags |= I2C_WAITING_RX;
 	while ((i2c_flags & I2C_WAITING_RX) && I2C_TIMEOUT_CHK) {;}
@@ -191,7 +191,7 @@ command_status try_read(uint8_t addr, uint16_t nbytes) {
 command_status try_mem_read(uint8_t addr, uint16_t memAddr, uint16_t memAddrSize, uint16_t nbytes) {
 	uint16_t i;
 	uint32_t ticks_start = ticks;
-	if (HAL_I2C_Mem_Read_IT(&i2c_handle, addr, memAddr, memAddrSize, i2c_rx, nbytes) != HAL_OK)
+	if (HAL_I2C_Mem_Read_IT(&i2c_handle, addr << 1, memAddr, memAddrSize, i2c_rx, nbytes) != HAL_OK)
 		return FAIL;
 	i2c_flags |= I2C_WAITING_MEM_RX;
 	while ((i2c_flags & I2C_WAITING_MEM_RX) && I2C_TIMEOUT_CHK) {;}
@@ -203,7 +203,7 @@ command_status try_mem_read(uint8_t addr, uint16_t memAddr, uint16_t memAddrSize
 command_status try_mem_write(uint8_t addr, uint16_t memAddr, uint16_t memAddrSize, uint16_t nbytes, const uint8_t *data) {
 	uint32_t ticks_start = ticks;
 	memcpy(i2c_tx, data, nbytes);
-	if (HAL_I2C_Mem_Write_IT(&i2c_handle, addr, memAddr, memAddrSize, i2c_tx, nbytes) != HAL_OK)
+	if (HAL_I2C_Mem_Write_IT(&i2c_handle, addr << 1, memAddr, memAddrSize, i2c_tx, nbytes) != HAL_OK)
 		return FAIL;
 	i2c_flags |= I2C_WAITING_MEM_TX;
 	while ((i2c_flags & I2C_WAITING_MEM_TX) && I2C_TIMEOUT_CHK) {;}
