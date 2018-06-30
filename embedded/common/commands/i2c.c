@@ -5,7 +5,24 @@
 #include "commands.h"
 #include "stm32l4xx_hal_conf.h"
 
+extern volatile uint32_t ticks;
+
+#define BLOOP_I2C_TIMEOUT	50
+#define I2C_BUF_SIZE		64
+
 I2C_HandleTypeDef i2c_handle;
+uint8_t i2c_rx[I2C_BUF_SIZE];
+uint8_t i2c_tx[I2C_BUF_SIZE];
+uint8_t i2c_transfer[I2C_BUF_SIZE];
+
+volatile uint32_t i2c_flags = 0x0;
+#define I2C_WAITING_TX		0x00000001
+#define I2C_WAITING_RX		0x00000002
+#define I2C_WAITING_MEM_TX	0x00000004
+#define I2C_WAITING_MEM_RX	0x00000008
+#define I2C_ERROR			0x00000010
+#define I2C_CLEAR_ERROR		i2c_flags &= ~(I2C_ERROR)
+#define I2C_TIMEOUT_CHK		(ticks - ticks_start < BLOOP_I2C_TIMEOUT)
 
 void print_hal(HAL_StatusTypeDef value) {
 	const char *err_msg;
@@ -67,6 +84,12 @@ command_status do_init(void) {
 	/* clock source: PCLK1 (ABP1, 24 MHz) */
 	__HAL_RCC_I2C1_CLK_ENABLE();
 
+	/* enable interrupts */
+	NVIC_SetPriority(I2C1_EV_IRQn, 3);
+	NVIC_EnableIRQ(I2C1_EV_IRQn);
+	NVIC_SetPriority(I2C1_ER_IRQn, 3);
+	NVIC_EnableIRQ(I2C1_ER_IRQn);
+
 	i2c_handle.Instance					= I2C1;
 
 	i2c_handle.Init.Timing				= 0x0;
@@ -105,14 +128,18 @@ command_status do_init(void) {
 	i2c_handle.Init.NoStretchMode		= I2C_NOSTRETCH_DISABLE;
 
 	retval = HAL_I2C_Init(&i2c_handle);
-	HAL_I2CEx_ConfigAnalogFilter(&i2c_handle, I2C_ANALOGFILTER_DISABLE);
+	//HAL_I2CEx_ConfigAnalogFilter(&i2c_handle, I2C_ANALOGFILTER_DISABLE);
+	
+	memset(i2c_rx, 0x0, I2C_BUF_SIZE);
+	memset(i2c_tx, 0x0, I2C_BUF_SIZE);
+	i2c_flags = 0x0;
 
 	return (retval == HAL_OK) ? CMD_SUCCESS : FAIL;
 }
 
 command_status try_query(uint8_t addr) {
 	HAL_StatusTypeDef retval;
-	retval = HAL_I2C_IsDeviceReady(&i2c_handle, addr << 1, 2, 50);
+	retval = HAL_I2C_IsDeviceReady(&i2c_handle, addr << 1, 2, BLOOP_I2C_TIMEOUT);
 	if (retval == HAL_OK)
 		printf("found 0x%x\r\n", addr);
 	else if (retval != HAL_TIMEOUT) {
@@ -121,6 +148,13 @@ command_status try_query(uint8_t addr) {
 		print_i2c_state(&i2c_handle);
 	}
 	return (retval == HAL_OK) ? CMD_SUCCESS : FAIL;
+}
+
+command_status try_dump(void) {
+	print_i2c_error(&i2c_handle);
+	print_i2c_state(&i2c_handle);
+	printf("internal flags: 0x%lx\r\n", i2c_flags);
+	return CMD_SUCCESS;
 }
 
 command_status try_scan(void) {
@@ -132,23 +166,196 @@ command_status try_scan(void) {
 	return retval;
 }
 
+command_status try_write(uint8_t addr, uint16_t nbytes, const uint8_t *data) {
+	uint32_t ticks_start = ticks;
+	memcpy(i2c_tx, data, nbytes);
+	if (HAL_I2C_Master_Transmit_IT(&i2c_handle, addr, i2c_tx, nbytes) != HAL_OK)
+		return FAIL;
+	i2c_flags |= I2C_WAITING_TX;
+	while ((i2c_flags & I2C_WAITING_TX) && I2C_TIMEOUT_CHK) {;}
+	return (i2c_flags & I2C_ERROR) ? FAIL : CMD_SUCCESS;
+}
+
+command_status try_read(uint8_t addr, uint16_t nbytes) {
+	uint16_t i;
+	uint32_t ticks_start = ticks;
+	if (HAL_I2C_Master_Receive_IT(&i2c_handle, addr, i2c_rx, nbytes) != HAL_OK)
+		return FAIL;
+	i2c_flags |= I2C_WAITING_RX;
+	while ((i2c_flags & I2C_WAITING_RX) && I2C_TIMEOUT_CHK) {;}
+	if (i2c_flags & I2C_ERROR) return FAIL;
+	for (i = 0; i < nbytes; i++) printf("%d: 0x%x\r\n", i, i2c_rx[i]);
+	return CMD_SUCCESS;
+}
+
+command_status try_mem_read(uint8_t addr, uint16_t memAddr, uint16_t memAddrSize, uint16_t nbytes) {
+	uint16_t i;
+	uint32_t ticks_start = ticks;
+	if (HAL_I2C_Mem_Read_IT(&i2c_handle, addr, memAddr, memAddrSize, i2c_rx, nbytes) != HAL_OK)
+		return FAIL;
+	i2c_flags |= I2C_WAITING_MEM_RX;
+	while ((i2c_flags & I2C_WAITING_MEM_RX) && I2C_TIMEOUT_CHK) {;}
+	if (i2c_flags & I2C_ERROR) return FAIL;
+	for (i = 0; i < nbytes; i++) printf("%d: 0x%x\r\n", i, i2c_rx[i]);
+	return CMD_SUCCESS;
+}
+
+command_status try_mem_write(uint8_t addr, uint16_t memAddr, uint16_t memAddrSize, uint16_t nbytes, const uint8_t *data) {
+	uint32_t ticks_start = ticks;
+	memcpy(i2c_tx, data, nbytes);
+	if (HAL_I2C_Mem_Write_IT(&i2c_handle, addr, memAddr, memAddrSize, i2c_tx, nbytes) != HAL_OK)
+		return FAIL;
+	i2c_flags |= I2C_WAITING_MEM_TX;
+	while ((i2c_flags & I2C_WAITING_MEM_TX) && I2C_TIMEOUT_CHK) {;}
+	return ((i2c_flags & I2C_ERROR) || !I2C_TIMEOUT_CHK) ? FAIL : CMD_SUCCESS;
+}
+
 command_status do_i2c(int argc, char *argv[]) {
+
+	uint8_t addr;
+	uint16_t nbytes, memAddr, i;
 
 	if (argc == 1) return USAGE;
 
+	I2C_CLEAR_ERROR;
+
+	/* init (or re-init) the i2c subsystem */
 	if (!strcmp("init", argv[1]))
 		return do_init();
-	else if (!strcmp("query", argv[1]) && argc >= 3)
-		return try_query((uint8_t) strtol(argv[2], NULL, 16));
+
+	/* search the entire i2c address space for nodes */
 	else if (!strcmp("scan", argv[1]))
 		return try_scan();
+
+	else if (!strcmp("dump", argv[1]))
+		return try_dump();
+
+	if (argc == 2) return USAGE;
+
+	addr = (uint8_t) strtol(argv[2], NULL, 16);
+	if (addr > 127) {
+		printf("'%s' is too large\r\n", argv[2]);
+		return FAIL;
+	}
+
+	/* query a specific node address for an ACK */
+	if (!strcmp("query", argv[1]))
+		return try_query(addr);
+
+	if (argc == 3) return USAGE;
+
+	/* read n bytes */
+	if (!strcmp("r", argv[1])) {
+		nbytes = (uint16_t) strtol(argv[3], NULL, 10);
+		return try_read(addr, nbytes);
+	}
+
+	/* write remaining input data to the specified address */
+	else if (!strcmp("w", argv[1])) {
+		nbytes = argc - 3;
+		for (i = 0; i < nbytes; i++)
+			i2c_transfer[i] = (uint8_t) strtol(argv[i + 3], NULL, 16);
+		return try_write(addr, nbytes, i2c_transfer);
+	}
+
+	if (argc == 4) return USAGE;
+
+	memAddr = (uint16_t) strtol(argv[3], NULL, 16);
+
+	/* read from a single-byte memory address */
+	if (!strcmp("mr1", argv[1])) {
+		nbytes = (uint16_t) strtol(argv[4], NULL, 10);
+		return try_mem_read(addr, memAddr, 1, nbytes);
+	}
+
+	/* write to a single-byte memory address */
+	else if (!strcmp("mw1", argv[1])) {
+		nbytes = argc - 4;
+		for (i = 0; i < nbytes; i++)
+			i2c_transfer[i] = (uint8_t) strtol(argv[i + 4], NULL, 16);
+		return try_mem_write(addr, memAddr, 1, nbytes, i2c_transfer);
+	}
+
+	/* read from a two-byte memory address */
+	else if (!strcmp("mr2", argv[1])) {
+		nbytes = (uint16_t) strtol(argv[4], NULL, 10);
+		return try_mem_read(addr, memAddr, 2, nbytes);
+	}
+
+	/* write to a two-byte memory address */
+	else if (!strcmp("mw2", argv[1])) {
+		nbytes = argc - 4;
+		for (i = 0; i < nbytes; i++)
+			i2c_transfer[i] = (uint8_t) strtol(argv[i + 4], NULL, 16);
+		return try_mem_write(addr, memAddr, 2, nbytes, i2c_transfer);
+	}
 
 	return USAGE;
 }
 
 COMMAND_ENTRY(
 	"i2c",
-	"i2c {init|query <addr>|scan}",
+	"i2c <subcommand> [args...]\r\n\r\n"
+	"init\r\n"
+	"scan\r\n"
+	"dump\r\n"
+	"query <addr>\r\n"
+	"r <addr> <num_bytes>\r\n"
+	"w <addr> <val1 val2 . . .>\r\n"
+	"mr1 <addr> <memAddr> <num_bytes>\r\n"
+	"mw1 <addr> <memAddr> <val1 val2 . . .>\r\n"
+	"mr2 <addr> <memAddr> <num_bytes>\r\n"
+	"mw2 <addr> <memAddr> <val1 val2 . . .>\r\n",
 	"Interact with the I2C subsystem.",
 	do_i2c
 )
+
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	UNUSED(hi2c);
+	i2c_flags &= ~(I2C_WAITING_MEM_TX);
+}
+
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	UNUSED(hi2c);
+	i2c_flags &= ~(I2C_WAITING_MEM_RX);
+}
+
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	UNUSED(hi2c);
+	i2c_flags &= ~(I2C_WAITING_TX);
+}
+
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	UNUSED(hi2c);
+	i2c_flags &= ~(I2C_WAITING_RX);
+}
+
+void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	printf("%s: why are we here?\r\n", __func__);
+	print_i2c_state(hi2c);
+}
+
+void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+	printf("%s: why are we here?\r\n", __func__);
+	print_i2c_state(hi2c);
+}
+
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
+	printf("%s\r\n", __func__);
+	print_i2c_error(hi2c);
+	i2c_flags |= I2C_ERROR;
+}
+
+void HAL_I2C_AbortCpltCallback(I2C_HandleTypeDef *hi2c) {
+	printf("%s\r\n", __func__);
+	print_i2c_error(hi2c);
+	i2c_flags |= I2C_ERROR;
+}
+
+void I2C1_EV_IRQHandler(void) {
+	HAL_I2C_EV_IRQHandler(&i2c_handle);
+}
+
+void I2C1_ER_IRQHandler(void) {
+	HAL_I2C_ER_IRQHandler(&i2c_handle);
+}

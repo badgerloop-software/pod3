@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "rcc.h"
 #include "pin_alias.h"
+#include "console.h"
 
 /* STM32L432KC */
 // TODO
@@ -53,6 +54,7 @@ int periph_init(void) {
 
 	usart_config(USART1, APBX, init_regs, 115200, true);
 	//printf("%d\n\r", test);
+	process_input("i2c init");
 	return ret;
 }
 
