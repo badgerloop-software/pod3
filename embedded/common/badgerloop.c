@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "gpio.h"
+
 #define DEBUG_IO	1
 
 
@@ -105,41 +106,51 @@ void telemetry_setup(void) {
 
 //#endif
 
-//#if PV_MODULE
+#if PV_MODULE
 	
 
 	temp = gpio_readPin(GPIOB, 0);
+	printf("TEMP 1 %d", temp);
 	if(temp) SET_MSTR_SW_FDBK;
 	else CLR_MSTR_SW_FDBK;
 
 	temp = gpio_readPin(GPIOB, 7);
+	printf("TEMP 2 %d", temp);
 	if(temp) SET_E_STOP_FDBK;
 	else CLR_E_STOP_FDBK;
 
 	temp = gpio_readPin(GPIOB, 6);
+	printf("TEMP 3 %d", temp);
 	if(temp) SET_PV_LIM_FDBK;
 	else CLR_PV_LIM_FDBK;
 
 	temp = gpio_readPin(GPIOB, 1);
+	printf("TEMP 4 %d", temp);
 	if(temp) SET_HVD_FDBK;
 	else CLR_HVD_FDBK;
 
 	temp = gpio_readPin(GPIOC, 14);
+	printf("TEMP 5 %d", temp);
 	if(temp) SET_BMS_STAT_FDBK;
 	else CLR_BMS_STAT_FDBK;
 
 	temp = gpio_readPin(GPIOC, 8);
+	printf("TEMP 6 %d", temp);
 	if(temp) SET_IMD_STAT_FDBK;
 	else CLR_IMD_STAT_FDBK;
 	
 	temp = gpio_readPin(GPIOA, 8);
+	printf("TEMP 7 %d", temp);
 	if(temp) SET_HV_EN_FDBK;
 	else CLR_HV_EN_FDBK;
 
+	printf("Shutdown_Circuit_Status %d",*shutdown_circuit_status);
+
+	//TODO Replace val with I2C sensor reading
+	SET_PVPRESSURE(val);
 
 
-
-//#endif
+#endif
 
 
 }
