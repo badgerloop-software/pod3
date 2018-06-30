@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #define SPACEX_IP	1
 #define DASHBOARD_IP	10
 #define DEV_IP		112
@@ -38,13 +37,12 @@
 #define ACCEL_IDLE_LOWER	-100	//cm/s^s
 
 #define TARGET_DECEL		-2943
-extern bool *should_stop;
 
 
 /*****************************************************************************/
 /*                          		setters		                     */
 /*****************************************************************************/
-extern int *acceleration_x,*acceleration_y, *acceleration_z, *velocity, *position;
+extern int *acceleration_x,*acceleration_y, *acceleration_z, *velocity, *position, *should_stop;
 #define SET_ACCEL_x(val)	*acceleration_x = (val)
 #define GET_ACCEL_x		((int) (*acceleration_x))
 #define SET_ACCEL_y(val)	*acceleration_y = (val)
@@ -55,6 +53,8 @@ extern int *acceleration_x,*acceleration_y, *acceleration_z, *velocity, *positio
 #define GET_VEL			((int) (*velocity))
 #define SET_POS(val)		*position = (val)
 #define GET_POS			((int) (*position))
+#define SET_SHOULD_STOP(val) 	*should_stop = (val)
+#define GET_SHOULD_STOP		((int) (*should_stop))
 extern int *v_batt, *i_batt;
 #define SET_VBATT(val)		*v_batt = (val)
 #define GET_VBATT		((int) (*v_batt))
@@ -154,24 +154,57 @@ void vent_secondary_brakes(bool open);
 /*****************************************************************************/
 /*                          	Inter-Module CAN	                     */
 /*****************************************************************************/
+typedef enum sending_module_val{
+	RMS_SEND = 0,
+	CCP_SEND = 1,
+	NAV_SEND = 2,
+	PV_SEND = 4,
+	BMS_SEND = 7
+} SENDING_MODULE;
 
+typedef enum receiving_module_val{
+	RMS_REC_1 = 0xC,
+	RMS_REC_2 = 0xA,
+	CCP_REC = 1,
+	NAV_REC = 2,
+	PV_REC = 3,
+	BMS_REC = 0xe,
+	ALL_REC = 4,
+	CCP_NAV_REC = 5,
+	CCP_PV_REC = 6,
+	NAV_PV_REC = 7,
+	CCP_NAV_PV_REC =8
+} RECEIVING_MODULE;
 
+typedef enum message_type {
+	CCP_FAULT = 0,
+	CCP_WARNING = 1,
+	LV_HEARTBEAT = 2,
 
+	NAV_SOLENOID_COMMAND = 3,
+	PV_MCU_ENABLE_COMMAND = 4,
 
+	PV_FAULT =5,
+	PV_WARNING =6,
+	SHUTDOWN_CIRCUIT_STATUS=7,
+	PV_PRESSURE=8,
+//	RMS_ENABLE_HEARTBEAT
+//	RMS_CLEAR_FAULTS
+	//RMS_TORQUE
+	//RMS_DISABLE_INVERTER
+	//RMS_CAP_DISCHARGE
 
+	NAV_FAULT=9,
+	NAV_WARNING=10,
+	TAPE_SHOULD_STOP=11,
+	NAV_PRES_1=12,
+	NAV_PRES_2=13,
+	NAV_PRES_3=14,
+	NAV_SOLENOID_1=15
 
+	//OBDII_RETURN
 
-
-
-
-
-
-
-
-
-
-
-
+} MESSAGE_TYPE;
 
 
 #endif

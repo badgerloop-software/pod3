@@ -28,7 +28,7 @@ char* can_read(CAN_HandleTypeDef *hcan ){
 }
 
 
-void can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef *hcan){
+int can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef *hcan){
 
 #if DEBUG_IO
 	printf("\r\nCAN SEND ID: %lx, length: %d\r\n", can_id, length);
@@ -47,13 +47,11 @@ void can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef
 		printf("SENDING MESSAGE\r\n");
 		uint32_t TxMailbox = 0;
 		
-		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
-			printf("ADD TX MESSAGE ERROR\r\n");
-
-		} else {
-		//	printf("SEND OK\r\n");
-		}
+		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK) return 0;
+		
+		
 	}
+	return 1;
 }
 
 //Temporary function for updating message_num (heartbeat related) from the command line
@@ -202,4 +200,24 @@ int can_clearFaults( CAN_HandleTypeDef *hcan ){
 	} else {
 		return 0; //Returns 0 on success
 	}
+}
+
+
+int intermodule_can_message(SENDING_MODULE sending_module, RECEIVING_MODULE receiving_module, int message_num, MESSAGE_TYPE message_type, uint8_t *TxData, CAN_HandleTypeDef *hcan){
+	uint16_t can_id = (sending_module << 8) + (receiving_module << 4) + message_num;
+	printf("sending_module % \r\nreceiving module %u\r\n message num %u", sending_module, receiving_module, message_type);
+	printf("CAN_ID %d", can_id);
+		
+	TxData[0] = message_type;
+	TxData[1] = TxData[0];
+	TxData[2] = TxData[1];
+	TxData[3] = TxData[2];
+	TxData[4] = TxData[3];
+	TxData[5] = TxData[4];
+	TxData[6] = TxData[5];
+	TxData[7] = TxData[6];
+	uint8_t length = 8;
+
+	printf("can_id %u", can_id);
+	return can_send(can_id, length, TxData, hcan);
 }
