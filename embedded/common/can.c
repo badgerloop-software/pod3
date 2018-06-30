@@ -205,8 +205,7 @@ int can_clearFaults( CAN_HandleTypeDef *hcan ){
 
 int intermodule_can_message(SENDING_MODULE sending_module, RECEIVING_MODULE receiving_module, int message_num, MESSAGE_TYPE message_type, uint8_t *TxData, CAN_HandleTypeDef *hcan){
 	uint16_t can_id = (sending_module << 8) + (receiving_module << 4) + message_num;
-	printf("sending_module % \r\nreceiving module %u\r\n message num %u", sending_module, receiving_module, message_type);
-	printf("CAN_ID %d", can_id);
+	printf("CAN_ID %x\r\n", can_id);
 		
 	TxData[0] = message_type;
 	TxData[1] = TxData[0];
@@ -218,6 +217,5 @@ int intermodule_can_message(SENDING_MODULE sending_module, RECEIVING_MODULE rece
 	TxData[7] = TxData[6];
 	uint8_t length = 8;
 
-	printf("can_id %u", can_id);
 	return can_send(can_id, length, TxData, hcan);
 }
