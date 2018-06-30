@@ -1,6 +1,10 @@
 #include "exti.h"
 #include <string.h>
 
+int count1 = 0;
+int count2 = 0;
+int count3 = 0;
+
 /* gets interupt vecotor number for pin */
 static IRQn_Type exti_get_irq_num(uint32_t pin) {
 	switch(pin) {
@@ -69,6 +73,9 @@ void EXTI0_IRQHandler(void) {
 		interLine[0].count ++;
 
 		EXTI->PR |= EXTI_PR_PR0;
+		
+		/* TESTING */
+		printf("Count 1: %d\r\n", count1);
 	}
 }
 
@@ -81,6 +88,10 @@ void EXTI1_IRQHandler(void) {
 		interLine[1].count ++;
 
 		EXTI->PR |= EXTI_PR_PR1;
+		
+		/* TESTING */
+		count1++;		
+		printf("Count 1: %d\r\n", count1);
 	}
 }
 
@@ -93,6 +104,10 @@ void EXTI2_IRQHandler(void) {
 		interLine[2].count ++;
 
 		EXTI->PR |= EXTI_PR_PR2;
+	
+		/* TESTING */
+		count2++;		
+		printf("Count 2: %d\r\n", count2);
 	}
 }
 
@@ -105,6 +120,7 @@ void EXTI3_IRQHandler(void) {
 		interLine[3].count ++;
 
 		EXTI->PR |= EXTI_PR_PR3;
+	
 	}
 }
 
@@ -129,6 +145,10 @@ void EXTI9_5_IRQHandler(void) {
 		interLine[5].count ++;
 
 		EXTI->PR |= EXTI_PR_PR5;
+
+		/* TESTING */
+		count3++;		
+		printf("Count 3: %d\r\n", count3);
 	}
 	if (EXTI->PR & EXTI_PR_PR6) {
 		interLine[6].prev = interLine[6].curr;
