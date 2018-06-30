@@ -3,8 +3,6 @@ const connectBtn = document.getElementById("server-connection-btn");
 const connectInd = document.getElementById("connection-indicator");
 const podConnectInd = document.getElementById("pod-connection-indicator");
 
-let defaultIP = "localhost";
-let defaultPort = 8008;
 let connected = false;
 let podConnected = false;
 
@@ -42,8 +40,9 @@ function pod_heartbeat() {
 }
 
 function server_heartbeat() {
-    // TODO this should not just be using the default address
-    heartbeat(defaultIP, defaultPort, "server", "server");
+    let serverIP = communicator.getServerIP();
+    let serverPort = communicator.getServerPort();
+    heartbeat(serverIP, serverPort, "server", "server");
 }
 
 connectBtn.addEventListener("click", () => {

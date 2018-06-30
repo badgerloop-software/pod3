@@ -2,13 +2,15 @@ const express = require("express");
 const request = require("request");
 const events = require("events");
 const path = require("path");
-const port = 8008;
+// address of the DB server
+const serverAddr = {"ip": "localhost", "port": 8008};
+// address of the pod
 const podAddr = {"ip": "localhost", "port": 7777};
 
 const receivedEmitter = new events.EventEmitter();
 /* This section is made for sending config files to the pi */
 const server = express();
-server.listen(port + 1, ()=> {});
+server.listen(serverAddr["port"] + 1, ()=> {});
 server.get("/config/:configFile", (req, res, err) => {
     let options = {
         root: path.join(__dirname + '/../configs/'),
@@ -61,6 +63,22 @@ const setPodPort = function(port) {
     podAddr["port"] = port;
 };
 
+const getServerIP = function() {
+    return serverAddr["ip"];
+};
+
+const setServerIP = function(ip) {
+    serverAddr["ip"] = ip;
+};
+
+const getServerPort = function() {
+    return serverAddr["port"];
+}
+
+const setServerPort = function(port) {
+    serverAddr["port"];
+}
+
 module.exports.sendMessage = sendMessage;
 module.exports.updater = receivedEmitter;
 module.exports.postPayload = postPayload;
@@ -68,3 +86,7 @@ module.exports.getPodIP = getPodIP;
 module.exports.setPodIP = setPodIP;
 module.exports.getPodPort = getPodPort;
 module.exports.setPodPort = setPodPort;
+module.exports.getServerIP = getServerIP;
+module.exports.setServerIP = setServerIP;
+module.exports.getServerPort = getServerPort;
+module.exports.setServerPort = setServerPort;
