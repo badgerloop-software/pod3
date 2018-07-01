@@ -140,7 +140,7 @@ command_status do_bms(int argc, char *argv[]) {
 
         } else if(!strcmp("reset", argv[1])){
 	        printf("Function not supported by Orion BMS");
-			return SUCCESS;
+			return CMD_SUCCESS;
 		}
 	else if (!strcmp("mcu_enable", argv[1])){
 		printf("enabling pin\r\n");
@@ -154,7 +154,7 @@ command_status do_bms(int argc, char *argv[]) {
 	else if (!strcmp("clear_faults", argv[1])){
 		bms_clearFaults();
 	}
-		return SUCCESS;
+		return CMD_SUCCESS;
 	
 
 }
