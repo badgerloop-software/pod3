@@ -49,11 +49,9 @@ void telemetry_setup(void) {
 	SET_TBATT(val);
 	SET_TPOD(val);
 	SET_TUBEPRESSURE(val);
-
 //#endif
 
 //#if NAV_MODULE
-	
 	//Pneumatic pressure
 	SET_PRES_TANK_PRI(val);
 #if DEBUG_IO
@@ -85,9 +83,6 @@ void telemetry_setup(void) {
 	printf("secondary actuator pressure %d", val);
 #endif
 	
-	
-	
-	
 	//Accel, Velocity, Position
 	SET_ACCEL_x(val);
 	SET_ACCEL_y(val);
@@ -103,12 +98,11 @@ void telemetry_setup(void) {
 	temp = gpio_readPin(GPIOA, 7);
 	SET_BLIM2;
 
-
 //#endif
 
 #if PV_MODULE
-	
 
+    //Temperature Sensors
 	temp = gpio_readPin(GPIOB, 0);
 	printf("TEMP 1 %d", temp);
 	if(temp) SET_MSTR_SW_FDBK;
@@ -149,9 +143,7 @@ void telemetry_setup(void) {
 	//TODO Replace val with I2C sensor reading
 	SET_PVPRESSURE(val);
 
-
 #endif
-
 
 }
 
