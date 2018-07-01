@@ -30,6 +30,7 @@ void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool i
 
 	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
+	SYSCFG->EXTICR[pin / 4] &= ~(7 << (pin % 4 * 4)); 	/* clearing SYSCFG external interrupt configuration registers */
 	SYSCFG->EXTICR[pin / 4] |= (gpio_getGpioPortChar(port) - 65) << (pin % 4 * 4); 	/* SYSCFG external interrupt configuration registers */
 	
 	EXTI->PR = 0xffff;
@@ -74,19 +75,10 @@ void EXTI0_IRQHandler(void) {
 		EXTI->PR |= EXTI_PR_PR0;
 		
 		/* TESTING */
-	    if( led == 0 ){
-            led = 1;
-            gpio_writePin(GPIOB, 3, led); 
-        }
-        else{
-            led = 0;
-            gpio_writePin(GPIOB, 3, led); 
-        }
-        count1++;
-        printf("Retro 1 Count: %d\r\n", count1 );
+        count0++;
+        printf("Retro 0 Count: %d\r\n", count0);
         /* END TESTING */
-
-    }
+	}
 }
 
 void EXTI1_IRQHandler(void) {
@@ -99,17 +91,9 @@ void EXTI1_IRQHandler(void) {
 
 		EXTI->PR |= EXTI_PR_PR1;
 		
-        /* TESTING */
-	    if( led == 0 ){
-            led = 1;
-            gpio_writePin(GPIOB, 3, led); 
-        }
-        else{
-            led = 0;
-            gpio_writePin(GPIOB, 3, led); 
-        }
-        count2++;
-        printf("Retro 2 Count: %d\r\n", count2 );
+		/* TESTING */
+        count1++;
+        printf("Retro 1 Count: %d\r\n", count1 );
         /* END TESTING */
 	}
 }
@@ -162,14 +146,6 @@ void EXTI9_5_IRQHandler(void) {
 		EXTI->PR |= EXTI_PR_PR5;
 
         /* TESTING */
-	    if( led == 0 ){
-            led = 1;
-            gpio_writePin(GPIOB, 3, led); 
-        }
-        else{
-            led = 0;
-            gpio_writePin(GPIOB, 3, led); 
-        }
         count3++;
         printf("Retro 3 Count: %d\r\n", count3 );
         /* END TESTING */
