@@ -12,7 +12,7 @@ volatile uint32_t i2c_flags;
 
 int i2c_block(uint32_t flag, uint32_t ticks_start) {
 	while ((i2c_flags & flag) && I2C_TIMEOUT_CHK) {;}
-	return I2C_TIMEOUT_CHK;
+	return (I2C_TIMEOUT_CHK) ? 0 : 1;
 }
 
 bool i2c_errors_present(void) {
