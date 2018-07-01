@@ -15,15 +15,20 @@ command_status do_uart(int argc, char *argv[]) {
 		uart_send();
 		fprintf(stdout, "This is where you can find another message\n\r");
 	}
+	if (!strcmp("receive", argv[1])) {
+		printf("RECEIVING!\n\r");
+		uart_receive();
+	}
 	
 	return SUCCESS;
 }
 
 
 command_status uart_send () {
+        int i = 0;
 	char message[] =  "I am a message";
-	for (int i = 0; i < (int)(sizeof(message)/sizeof(message[0])); i++) {
-		_putc(USART1, true, message[i]);
+	for (i = 0; i < (int)(sizeof(message)/sizeof(message[0])); i++) {
+                _putc(USART1, true, message[i]);
 	}
 	return SUCCESS;
 }
@@ -33,6 +38,13 @@ command_status uart_receive () {
 	PC_Buffer *rx;
 	rx = get_rx(USART1);
 	printf("%s\n\r", rx->array);
+        char c = ' ';
+        while (c != '\n') {
+	        _getc(USART1, true, &c);
+                printf("%c", c);
+                fflush(stdout);
+        }
+	//	printf("%s\n\r", rx->array);
 	return SUCCESS;
 }
 
