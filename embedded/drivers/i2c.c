@@ -62,7 +62,7 @@ HAL_StatusTypeDef i2c_init(void) {
 	 * 24 MHz / 3 = 8 MHz, tI2CCLK = 0.125 us
 	 *
 	 */
-	i2c_handle.Init.Timing				|= 0x02 << I2C_TIMINGR_PRESC_Pos;
+	i2c_handle.Init.Timing				|= (0x05) << I2C_TIMINGR_PRESC_Pos;
 
 	i2c_handle.Init.OwnAddress1			= 0x01;
 	i2c_handle.Init.AddressingMode		= I2C_ADDRESSINGMODE_7BIT;
