@@ -95,16 +95,16 @@ command_status do_init(void) {
 	i2c_handle.Init.Timing				= 0x0;
 
 	/* 8 bits, tLOW constraints: >= ~1.3 us */
-	i2c_handle.Init.Timing				|= 0x09 << I2C_TIMINGR_SCLL_Pos;
+	i2c_handle.Init.Timing				|= 0x13 << I2C_TIMINGR_SCLL_Pos;
 
 	/* 8 bits, tHIGH constraints: >= ~0.6 us */
-	i2c_handle.Init.Timing				|= 0x03 << I2C_TIMINGR_SCLH_Pos;
+	i2c_handle.Init.Timing				|= 0x0F << I2C_TIMINGR_SCLH_Pos;
 
 	/* 4 bits, tSDADEL constraints: UNKNOWN */
-	i2c_handle.Init.Timing				|= 0x01 << I2C_TIMINGR_SDADEL_Pos;
+	i2c_handle.Init.Timing				|= 0x02 << I2C_TIMINGR_SDADEL_Pos;
 
 	/* 4 bits, tSCLDEL constraints: UNKNOWN */
-	i2c_handle.Init.Timing				|= 0x03 << I2C_TIMINGR_SCLDEL_Pos;
+	i2c_handle.Init.Timing				|= 0x04 << I2C_TIMINGR_SCLDEL_Pos;
 
 	/* 4 bits, constraints:
 	 *
