@@ -9,6 +9,7 @@
 #include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
+#define MODULE_DASH
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2

@@ -6,6 +6,7 @@
 #include "pin_alias.h"
 
 #define BLINK_INTERVAL	250
+#define MODULE_PV
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit

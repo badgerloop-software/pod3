@@ -7,7 +7,7 @@
 #include "pin_alias.h"
 
 #define BLINK_INTERVAL	250
-
+#define MODULE_NAV
 /* Nucleo 32 I/O */
 
 //Limit Switches
