@@ -33,3 +33,15 @@ void exec_command(int argc, char **argv) {
 	else if (result == USAGE)
 		printf("%s usage: %s\r\n", argv[0], commands[command_ind].usage);
 }
+
+void print_hal(HAL_StatusTypeDef value) {
+	const char *err_msg;
+	switch (value) {
+		case HAL_OK: err_msg = "ok"; break;
+		case HAL_ERROR: err_msg = "error"; break;
+		case HAL_BUSY: err_msg = "busy"; break;
+		case HAL_TIMEOUT: err_msg = "timeout"; break;
+		default: err_msg = "uknown";
+	}
+	printf("hal returned '%s'\r\n", err_msg);
+}

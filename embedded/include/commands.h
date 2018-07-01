@@ -1,8 +1,11 @@
 #ifndef _COMMANDS__H__
 #define _COMMANDS__H__
 
+#include "stm32l4xx_hal_def.h"
+
 int get_command_index(char *command);
 void exec_command(int argc, char **argv);
+void print_hal(HAL_StatusTypeDef value);
 
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)
