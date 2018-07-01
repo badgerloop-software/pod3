@@ -30,7 +30,7 @@ command_status do_badgerloop(int argc, char *argv[]) {
 	
 
 
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 COMMAND_ENTRY(
