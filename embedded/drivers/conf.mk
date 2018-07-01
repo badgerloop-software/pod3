@@ -4,3 +4,4 @@ SRCS += drivers/gpio.c
 SRCS += drivers/rcc.c
 SRCS += drivers/usart.c
 SRCS += drivers/i2c.c
+SRCS += drivers/exti.c
