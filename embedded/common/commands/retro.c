@@ -44,7 +44,7 @@ command_status do_exti(int argc, char *argv[]) {
                 gpio_writePin(GPIOB, 3, led);
             }
     
-            return SUCCESS;
+            return CMD_SUCCESS;
     }
 
 
@@ -55,7 +55,7 @@ command_status do_exti(int argc, char *argv[]) {
 	if(hasGpioAlias(&port, &pin, argv[1])){
 		printStamp(pin, getTimeStamps(pin));
 		printf("Velocity %d cm/s\r\n", getVelocity());
-		return SUCCESS;
+		return CMD_SUCCESS;
 	}
 
 	pin = atoi((const char *) argv[1]);
@@ -63,6 +63,6 @@ command_status do_exti(int argc, char *argv[]) {
 	printStamp(pin, getTimeStamps(pin));
 	printf("Velocity %d cm/s\r\n", getVelocity());
 
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 COMMAND_ENTRY("exti", "exti <pin>", "Prints current and previous time stamp of the External Interrupt. Only on interrupt per pin number", do_exti)
