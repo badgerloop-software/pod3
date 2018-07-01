@@ -93,7 +93,7 @@ void EXTI1_IRQHandler(void) {
 		EXTI->PR1 |= EXTI_PR1_PIF1;
 		
 		/* TESTING */
-        count1++;
+        count2++;
         printf("Retro 2 Count: %d\r\n", count2 );
         /* END TESTING */
 	}
