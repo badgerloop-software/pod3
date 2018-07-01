@@ -90,7 +90,7 @@ int nav_init(void) {
 	   Retro 2 is on pin PA1
 	   Retro 3 is on pin PA5 */
 
-	/* Retro Init */
+	/* EXTI Init */
 	//void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool ie) {
 		
 	//Pin 0 EXTI Config
