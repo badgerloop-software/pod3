@@ -14,9 +14,7 @@
 
 /* CAN Globals */
 extern CAN_HandleTypeDef     hcan;
-extern uint8_t message_num;
-
-//void CAN_Config(CAN_HandleTypeDef *hcan);
+extern uint8_t               message_num;
 
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
@@ -32,58 +30,37 @@ int main(void) {
 	PC_Buffer *rx; /* Serial */
 	int ticks; /* Used for SysTick operation */
 
-	/* CAN Variables */
-//	CAN_TxHeaderTypeDef   TxHeader;
-	CAN_RxHeaderTypeDef   RxHeader;
-//	uint8_t               TxData[8];
-	uint8_t               RxData[8];
-//	uint32_t   	      TxMailbox;
-	int i;
-
 	message_num = 0;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init(&hcan) || dev_init())
+	if (io_init() || periph_init() || dev_init())
 		fault();
-
-	rx = get_rx(USB_UART); /* Serial Init */
 
 	/* CAN Init */
 	while( CAN_Config(&hcan, "dev") != 0){
 		printf("CAN Config Error.\r\n");
 	}	
 	
+    rx = get_rx(USB_UART); /* Serial Init */
+	
 	printPrompt();
-	printf("Init OK\r\n");
-	fflush(stdout);
-	while (1) {
+	
+    while (1) {
 		check_input(rx); /* Check for Serial Input */
 		
 		/* Check for incoming CAN messages */
-		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
-			printf("FILL LEVEL: %lu\r\n", HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0));
-			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
+        if( can_read(&hcan) ){
+            printf( "CAN Read Error.\r\n" );
+        }
 
-			printf("CAN ID: #%lx\r\n", RxHeader.StdId );
-			/* Printing out received data */
-			for(i = 0; i < 8; i++){
-				//if(RxData[i] != 0){
-					printf("CAN Message Data #%d %x\r\n", i, RxData[i]);
-				//}
-			}
-		
-		}
-
-	
-		/*SysTick configured to send messages every 250 ms */
-	
-	
+		/*SysTick configured to Heartbeat message every 250 ms */
 		ticks = HAL_GetTick();
 		static unsigned int curr = 0, prev = 0;
 		curr = ticks / 250;
 		if (curr != prev){
 			prev = curr;
-			if(message_num == 1){
+			//Handles sending clear faults message only once
+            if(message_num == 1){
 				if( can_clearFaults(&hcan) ){
 					printf( "CAN clear faults error.\r\n");
 				}
@@ -91,10 +68,8 @@ int main(void) {
 			}
 			else if( can_heartbeat(&message_num, &hcan) != 0 ){
 				printf("CAN Heartbeat Error.\r\n");
-				fflush(stdout);
 			}
 		}
-	
 	
 	}
 }

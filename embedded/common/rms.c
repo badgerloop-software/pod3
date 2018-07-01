@@ -104,12 +104,13 @@ int rms_enableHeartbeat(){
 	can_send(can_id, length, data, &hcan); 
 	return 0;
 }
+
 int rms_disableInverter(){ 
         printf("\r\ndisableInverter\r\n"); 
 	         										                           	              
 	uint16_t can_id = 0x00c1;	
 	
-	data[0] = 0x0;
+    	data[0] = 0x0;
         data[1] = 0x0;
         data[2] = 0x0;
         data[3] = 0x0;
@@ -172,6 +173,7 @@ int rms_multDisableInverter(){
 		rms_disableInverter();
 	return 0;
 } 
+
 int rms_rpmThresDisable(){ 
 	printf("\r\nRPMThresDisable\r\n"); 
 
