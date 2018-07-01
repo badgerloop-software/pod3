@@ -200,50 +200,89 @@
                   <div class="card bg-light mb-3" style="border-radius: 25px;">
                       <div class="card-body" style="margin-right: 5px; margin-left: 5px">
                           <!--The box on the top right with the state buttons-->
-                          <!--<h4 class="card-title">State Control</h4>-->
-                          <div class="d-flex flex-row justify-content-between">
-                              <div id="status-control" class="col">
-                                  <h5 class="card-title">Connection Status</h5>
-                                  <div class="col" style="position: relative">
-                                      <div class="row">
-                                        <div id="connection-indicator" class="connection-indicator"></div>
-                                        <button id="server-connection-btn" class="btn btn-sm btn-info">
-                                          Server
-                                        </button>
-                                      </div>
-                                      <div class="row mt-1">
-                                          <div id="pod-connection-indicator" class="connection-indicator" style="top: 40px"></div>
-                                          <button id="pod-connection-btn" class="btn btn-sm btn-info">
-                                              Pod
-                                          </button>
-                                      </div>
+			  <h5 class="card-title">Connection Status</h5>
+			  <div id="status-control" class="container">
+			      <div class="flex-row">
+                                  <div class="btn-group btn-group-sm">
+				      <div id="connection-indicator" class="connection-indicator"></div>
+				      <button id="server-connection-btn" class="btn btn-sm btn-info">
+					Server
+				      </button>
+				      <span>&emsp;</span>
+				      <div id="pod-connection-indicator" class="connection-indicator"></div>
+				      <button id="pod-connection-btn" class="btn btn-sm btn-info">
+					 Pod
+				      </button>
                                   </div>
-                              </div>
-                              <div id="state_master" class="state_container">
-                                  <h5 class="card-title">State Control</h5>
-                                  <div class="flex-row">
-                                      <div class="btn-group btn-group-sm" role="group">
-                                          <button id="state_fault" type="button" class="btn btn-secondary btn-sm">Fault</button>
-                                          <span>&emsp;</span>
-                                          <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
-                                          <span>&emsp;</span>
-                                          <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
-                                      </div>
-                                  </div>
-                                  <p/>
-                                  <div class="flex-row">
-                                      <div class="btn-group btn-group-sm" role="group">
-                                          <button id="state_coasting" type="button" class="btn btn-secondary btn-sm">Coasting</button>
-                                          <span>&emsp;</span>
-
-                                          <button id="state_braking" type="button" class="btn btn-secondary btn-sm">Braking</button>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
+			      </div>
+			  </div>
                           <p />
+                          <h5 class="card-title">State Control</h5>
+			  <div id="state_master" class="state_container">
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm small-bottom-margin" role="group">
+				      <button id="state_poweroff" type="button" class="btn btn-secondary btn-sm">Power Off</button>
+				      <button id="state_idle" type="button" class="btn btn-secondary btn-sm">Idle</button>
+				      <button id="state_ready_for_pumpdown" type="button" class="btn btn-secondary btn-sm">Ready for Pumpdown</button>
+				  </div>
+			      </div>
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm small-bottom-margin" role="group">
+				      <button id="state_pumpdown" type="button" class="btn btn-secondary btn-sm">Pumpdown</button>
+				      <button id="state_ready" type="button" class="btn btn-secondary btn-sm">Ready</button>
+				      <button id="state_postrun" type="button" class="btn btn-secondary btn-sm">Post Run</button>
+				  </div>
+			      </div>
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm small-bottom-margin" role="group">
+				      <button id="state_service_low_speed" type="button" class="btn btn-secondary btn-sm">Service Low Speed</button>
+				      <button id="state_safe_to_approach" type="button" class="btn btn-secondary btn-sm">Safe to Approach</button>
+				  </div>
+			      </div>
+			      <div class="flex-row">
+                                  <h6 class="small-bottom-margin smaller-font">Propulsion Start</h6>
+                              </div>
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm small-bottom-margin" role="group">
+				      <button id="state_prop_start_hyperloop" type="button" class="btn btn-secondary btn-sm">Hyperloop</button>
+				      <button id="state_prop_start_openair" type="button" class="btn btn-secondary btn-sm">Open Air</button>
+				      <button id="state_prop_start_extsub" type="button" class="btn btn-secondary btn-sm">External Subtrack</button>
+				  </div>
+			      </div>
+			      <div class="flex-row">
+                                  <h6 class="small-bottom-margin smaller-font">Propulsion - Distance Sense Active</h6>
+                              </div>
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm small-bottom-margin" role="group">
+				      <button id="state_prop_dsa_hyperloop" type="button" class="btn btn-secondary btn-sm">Hyperloop</button>
+				      <button id="state_prop_dsa_openair" type="button" class="btn btn-secondary btn-sm">Open Air</button>
+				      <button id="state_prop_dsa_extsub" type="button" class="btn btn-secondary btn-sm">External Subtrack</button>
+				  </div>
+			      </div>
+			      <div class="flex-row">
+                                  <h6 class="small-bottom-margin smaller-font">Braking</h6>
+                              </div>
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm small-bottom-margin" role="group">
+				      <button id="state_braking_hyperloop" type="button" class="btn btn-secondary btn-sm">Hyperloop</button>
+				      <button id="state_braking_openair" type="button" class="btn btn-secondary btn-sm">Open Air</button>
+				      <button id="state_braking_extsub" type="button" class="btn btn-secondary btn-sm">External Subtrack</button>
+				  </div>
+			      </div>
+			      <div class="flex-row">
+                                  <h6 class="small-bottom-margin smaller-font">Fault</h6>
+                              </div>
+			      <div class="flex-row">
+				  <div class="btn-group btn-group-sm" role="group">
+				      <button id="state_fault_prerun" type="button" class="btn btn-secondary btn-sm">Pre Run</button>
+				      <button id="state_fault_run" type="button" class="btn btn-secondary btn-sm">During Run</button>
+				      <button id="state_fault_postrun" type="button" class="btn btn-secondary btn-sm">Post Run</button>
+				  </div>
+			      </div>
+			  </div>
+			  <p></p>
                           <!--Below the state control box-->
-                          <h4 class="card-title">Actuation Overrides</h4>
+                          <h5 class="card-title">Actuation Overrides</h5>
                           <div class="container">
                               <div class="row">
                                   <div class="col">
@@ -274,6 +313,7 @@
                           </div>
                       </div>
                   </div>
+
                   <div id="free-space"> <!-- Terminal Here -->
                       <canvas id="new-chart" height="0" width="0" style="display: none"></canvas>
                       <div id="terminal-container">

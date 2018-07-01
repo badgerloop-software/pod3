@@ -21,8 +21,6 @@ if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.len
 let thisChart;
 const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
-defaultIP = "localhost";
-defaultPort = 8008;
 /*Let's each data row create a graph from itself when clicked*/
 for (let i = 0; i < tableRows.length; i++) {
     tableRows[i].addEventListener("click", ()=> {
@@ -63,7 +61,9 @@ for (let i = 0; i < dataLabels.length; i++) {
 /*Polls for new data from the server as often as UPDATE_TIME*/
 setInterval(() => {
     for (let i = 0; i < tableData.length; i++) {
-        comm.sendMessage(dataLabels[i].innerHTML, defaultIP, defaultPort, "data" ,conciseLabels[i]);
+	let serverIP = comm.getServerIP();
+	let serverPort = comm.getServerPort();
+        comm.sendMessage(dataLabels[i].innerHTML, serverIP, serverPort, "data" ,conciseLabels[i]);
     }
 }, UPDATE_TIME);
 

@@ -4,8 +4,6 @@ const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
 
 const eventNameBase = "messageReceived_";
-defaultIP = "localhost";
-defaultPort = 8008;
 function printResponse(response) {
     terminalText.innerHTML +=
         "<br>" +
@@ -55,13 +53,16 @@ function processText(input, optionalArgs) {
         terminalText.innerHTML += "<br>" +
             " &emsp; clear : Clears the entire window" + "<br>" +
             " &emsp; connect [OPTIONAL ARGS: i=[IP address] p=[Port]] : Checks for a response from the server" + "<br>" +
+            " &emsp; set_pod_address [OPTIONAL ARGS: i=[IP address] p=[Port]] : Set the address to talk to the pod" + "<br>" +
             " &emsp; configure [configFileName.*] : Sends the designated config file to the server" +
             "<br> > ";
     }
 
     if (input === "configure") {
         //Add checking for if file exists
-        communication.sendMessage("config", defaultIP, defaultPort, "config", optionalArgs[0]);
+	let podIP = communication.getPodIP();
+	let podPort = communication.getPodPort();
+        communication.sendMessage("config", podIP, podPort, "config", optionalArgs[0]);
     }
 
     if (input === "clear") {
@@ -71,8 +72,8 @@ function processText(input, optionalArgs) {
 
     if (input === "connect") {
         //Make this command establish a connection with the Pi!
-        let newIP = defaultIP;
-        let newPort = defaultPort;
+        let newIP = communication.getServerIP();
+        let newPort = communication.getServerPort();
         for (let i = 0; i < optionalArgs.length; i++){
             if (optionalArgs[i].charAt(0) === "i") {
                 newIP = optionalArgs[i].slice(2);   //cuts off the
@@ -80,9 +81,27 @@ function processText(input, optionalArgs) {
                 newPort = optionalArgs[i].slice(2);
             }
         }
+	communication.setServerIP(newIP);
+	communication.setServerPort(newPort);
         console.log("IP: " + newIP + "   PORT: " + newPort);
         communication.sendMessage("connect", newIP, newPort);
         return;
+    }
+
+    if (input === "set_pod_address") {
+        let newIP = communication.getPodIP();
+        let newPort = communication.getPodPort();
+        for (let i = 0; i < optionalArgs.length; i++){
+            if (optionalArgs[i].charAt(0) === "i") {
+                newIP = optionalArgs[i].slice(2); //cuts off the i=
+            } else if (optionalArgs[i].charAt(0) === "p") {
+                newPort = optionalArgs[i].slice(2); // cuts off the p=
+            }
+        }
+        // change our current state for pod communication
+        communication.setPodIP(newIP);
+        communication.setPodPort(newPort);
+        console.log("changing pod adress to " + newIP + ":" + newPort);
     }
 
     if (input === "query") {
