@@ -28,9 +28,7 @@ void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool i
 	interLine[pin].count = 0;
 	memset(interLine[pin].filter, 0x00, AVERAGE_SIZE*sizeof(uint32_t));
 
-	gpio_setMode(port, pin, INPUT);
-	GPIOC->OSPEEDR |= (0x03<< (2 * pin));    // high speed
-	RCC->APB2ENR |= (1 << 14); 
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
 	SYSCFG->EXTICR[pin / 4] |= (gpio_getGpioPortChar(port) - 65) << (pin % 4 * 4); 	/* SYSCFG external interrupt configuration registers */
 	
