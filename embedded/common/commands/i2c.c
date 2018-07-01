@@ -38,7 +38,7 @@ command_status try_scan(void) {
 
 command_status try_write(uint8_t addr, uint16_t nbytes, const uint8_t *data) {
 	uint32_t ticks_start = ticks;
-	if (i2c_start_write(addr << 1, nbytes, data) != HAL_OK)
+	if (i2c_start_write(addr, nbytes, data) != HAL_OK)
 		return FAIL;
 	if (i2c_block(I2C_WAITING_TX, ticks_start) || i2c_errors_present())
 		return FAIL;
@@ -48,7 +48,7 @@ command_status try_write(uint8_t addr, uint16_t nbytes, const uint8_t *data) {
 command_status try_read(uint8_t addr, uint16_t nbytes) {
 	uint16_t i;
 	uint32_t ticks_start = ticks;
-	if (i2c_start_read(addr << 1, nbytes) != HAL_OK)
+	if (i2c_start_read(addr, nbytes) != HAL_OK)
 		return FAIL;
 	if (i2c_block(I2C_WAITING_RX, ticks_start) || i2c_errors_present())
 		return FAIL;
@@ -61,7 +61,7 @@ command_status try_mem_read(
 ) {
 	uint16_t i;
 	uint32_t ticks_start = ticks;
-	if (i2c_start_mem_read(addr << 1, memAddr, memAddrSize, nbytes) != HAL_OK)
+	if (i2c_start_mem_read(addr, memAddr, memAddrSize, nbytes) != HAL_OK)
 		return FAIL;
 	if (i2c_block(I2C_WAITING_MEM_RX, ticks_start) || i2c_errors_present())
 		return FAIL;
@@ -75,7 +75,7 @@ command_status try_mem_write(
 ) {
 	uint32_t ticks_start = ticks;
 	if (i2c_start_mem_write(
-		addr << 1, memAddr, memAddrSize, nbytes, data
+		addr, memAddr, memAddrSize, nbytes, data
 	) != HAL_OK) return FAIL;
 	if (i2c_block(I2C_WAITING_MEM_TX, ticks_start) || i2c_errors_present())
 		return FAIL;
