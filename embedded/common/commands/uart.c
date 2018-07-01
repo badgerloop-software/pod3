@@ -20,7 +20,7 @@ command_status do_uart(int argc, char *argv[]) {
 		uart_receive();
 	}
 	
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 
@@ -30,7 +30,7 @@ command_status uart_send () {
 	for (i = 0; i < (int)(sizeof(message)/sizeof(message[0])); i++) {
                 _putc(USART1, true, message[i]);
 	}
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 
@@ -45,7 +45,7 @@ command_status uart_receive () {
                 fflush(stdout);
         }
 	//	printf("%s\n\r", rx->array);
-	return SUCCESS;
+	return CMD_SUCCESS;
 }
 
 
