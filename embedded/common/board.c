@@ -53,7 +53,6 @@ int periph_init(void) {
 	ret += usart_config(USB_UART, SYSCLK, init_regs, 115200, true);
 	ret += usart_config(USART1, SYSCLK, init_regs, 115200, true);
 
-	usart_config(USART1, APBX, init_regs, 115200, true);
 	//printf("%d\n\r", test);
 	process_input("i2c init");
 	return ret;
