@@ -1,5 +1,8 @@
 import argparse
+import serial
 import json
+
+from multiprocessing import Lock
 
 from bottle import route, run, request
 
@@ -11,8 +14,17 @@ ROUTE_HIGH_VOLTAGE = '/high_voltage'
 ROUTE_POKE = '/poke'
 ROUTE_BLANK = '/'
 COMMAND_VALUE = 'value'
+UART_PORT = '/dev/ttyS0'
+UART_BAUD = 115200
+UART_CMD_START = '$|'
+UART_CMD_STOP = '\n'
+UART_STATE_CHANGE_TOK = 't'
+UART_OVERRIDE_TOK = 'o'
 
 VALID_STATES = ['state_poweroff', 'state_idle', 'state_ready_for_pumpdown', 'state_pumpdown', 'state_ready', 'state_postrun', 'state_service_low_speed', 'state_safe_to_approach', 'state_prop_start_hyperloop', 'state_prop_start_openair', 'state_prop_start_extsub', 'state_prop_dsa_hyperloop', 'state_prop_dsa_openair', 'state_prop_dsa_extsub', 'state_braking_hyperloop', 'state_braking_openair', 'state_braking_extsub', 'state_fault_prerun', 'state_fault_run', 'state_fault_postrun'];
+
+SERIAL_LOCK = Lock()
+SERIAL_PORT = serial.Serial(UART_PORT, baudrate=UART_BAUD)
 
 ###########
 # HELPERS #
@@ -32,6 +44,16 @@ def json_basic_response(success=False, message=None):
         ret['message'] = message
     return json.dumps(ret)
 
+def write_to_uart(to_write):
+    # make sure we only write one at a time
+    SERIAL_LOCK.acquire()
+    SERIAL_PORT.write(to_write)
+    print('wrote to serial - ' + to_write)
+    SERIAL_LOCK.release()
+
+def package_command(command):
+    return '{0}{1}{2}'.format(UART_CMD_START, command, UART_CMD_STOP)
+
 ####################
 # COMMAND HANDLERS #
 ####################
@@ -40,10 +62,13 @@ def issue_state_change(new_state):
     print('requested state change: {0}'.format(new_state))
     success = True
     message = None
-    # TODO issue the new state change
-    ##########################
-    # STATE CHANGE CODE HERE #
-    ##########################
+    # make the payload (strip the state_ from the beginning)
+    new_state = new_state.replace('state_', '')
+    payload = '{0}{1}'.format(UART_STATE_CHANGE_TOK, new_state)
+    # and package it for uart
+    to_send = package_command(payload)
+    # and send
+    write_to_uart(to_send)
     return success,message
 
 def issue_prim_brake_onoff(onoff):
