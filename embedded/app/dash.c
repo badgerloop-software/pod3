@@ -6,6 +6,7 @@
 #include "usart.h"
 #include "pin_alias.h"
 #include "uart.h"
+#include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
 
@@ -62,18 +63,21 @@ int dash_init() {
 int main(void) {
 
 	PC_Buffer *rx;
+	PC_Buffer *ctrl_rx;
 
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init() || dash_init())
 		fault();
 
 	rx = get_rx(USB_UART);
+	ctrl_rx = get_rx(USART1);
 
 	post("Dashboard");
 	printPrompt();
 
 	while (1) {
 		check_input(rx);
+		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
 	}
 
