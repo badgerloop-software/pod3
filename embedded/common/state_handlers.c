@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "state_machine.h"
-
+#include "state_handlers.h"
 
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
@@ -52,6 +52,9 @@ void set_flag(uint32_t flags) {
 	state_handle.flags |= flags;
 }
 
+void set_propulsion_timeout(uint32_t timeout){
+	propulsion_timeout_ms = timeout;
+}
 /*****************************************************************************/
 /*                              Pre_Run_Fault Handlers                        */
 /*****************************************************************************/
@@ -479,6 +482,7 @@ void from_ready(STATE_NAME to, uint32_t flags){
 /*****************************************************************************/
 /*                                Propulsion_Start Handlers                  */
 /*****************************************************************************/
+uint32_t propulsion_start_ts;
 void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	/*       Braking             */
@@ -498,7 +502,7 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	#endif // end NAV_MODULE
 
 	#ifdef CPP_MODULE
-
+	propulsion_start_ts = ticks;
 	#endif // end CPP_MODULE
 
 	#ifdef DEV_MODULE
@@ -519,7 +523,10 @@ void in_propulsion_start(uint32_t flags) {
 	#endif // end NAV_MODULE
 
 	#ifdef CPP_MODULE
-
+	/* If we pass propulsion timeout enter braking */
+	if (ticks >= propulsion_start_ts + propulsion_timeout){
+		change_state(BRAKING);
+	}
 	#endif // end CPP_MODULE
 
 	#ifdef DEV_MODULE
@@ -572,11 +579,14 @@ void in_propulsion_distance(uint32_t flags) {
 	#endif // end PV_MODULE
 
 	#ifdef NAV_MODULE
-
+	
 	#endif // end NAV_MODULE
 
 	#ifdef CPP_MODULE
-
+	/* If we pass propulsion timeout enter braking */
+	if (ticks >= propulsion_start_ts + propulsion_timeout){
+		change_state(BRAKING);
+	}
 	#endif // end CPP_MODULE
 
 	#ifdef DEV_MODULE
