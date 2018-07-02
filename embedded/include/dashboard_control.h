@@ -4,6 +4,5 @@
 #include "pcbuffer.h"
 
 void check_incoming_controls(PC_Buffer *rx);
-void process_control(char *buf);
 
 #endif
