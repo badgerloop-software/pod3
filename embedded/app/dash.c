@@ -154,7 +154,7 @@ int main(void) {
 	PC_Buffer *rx;
 	PC_Buffer *ctrl_rx;
      	uint16_t ADC5ConvertedValue;
-     	uint16_t ADC6ConvertedValue;
+     	//uint16_t ADC6ConvertedValue;
 
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init() || dash_init())
