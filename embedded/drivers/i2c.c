@@ -7,6 +7,8 @@ uint8_t i2c_rx[I2C_BUF_SIZE];
 uint8_t i2c_tx[I2C_BUF_SIZE];
 uint8_t i2c_transfer[I2C_BUF_SIZE];
 volatile uint32_t i2c_flags;
+uint16_t i2c_read_size;
+uint16_t i2c_mem_read_size;
 
 /*****************************************************************************/
 
@@ -100,6 +102,7 @@ bool i2c_write_ready(void) {
 HAL_StatusTypeDef i2c_start_read(uint8_t addr, uint16_t nbytes) {
 	i2c_flags |= I2C_WAITING_RX;
 	i2c_flags &= I2C_RX_READY;
+	i2c_read_size = nbytes;
 	return HAL_I2C_Master_Receive_IT(
 		&i2c_handle, (addr << 1) | 0x1, i2c_rx, nbytes
 	);
@@ -114,6 +117,7 @@ HAL_StatusTypeDef i2c_start_mem_read(
 ) {
 	i2c_flags |= I2C_WAITING_MEM_RX;
 	i2c_flags &= I2C_MEM_RX_READY;
+	i2c_mem_read_size = nbytes;
 	return HAL_I2C_Mem_Read_IT(
 		&i2c_handle, (addr << 1) | 0x1, memAddr, memAddrSize, i2c_rx, nbytes
 	);

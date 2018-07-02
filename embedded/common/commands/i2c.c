@@ -171,13 +171,42 @@ COMMAND_ENTRY(
 	"init\r\n"
 	"scan\r\n"
 	"dump\r\n"
-	"query <addr>\r\n"
-	"r <addr> <num_bytes>\r\n"
-	"w <addr> <val1 val2 . . .>\r\n"
-	"mr1 <addr> <memAddr> <num_bytes>\r\n"
-	"mw1 <addr> <memAddr> <val1 val2 . . .>\r\n"
-	"mr2 <addr> <memAddr> <num_bytes>\r\n"
-	"mw2 <addr> <memAddr> <val1 val2 . . .>\r\n",
+	"query <addr (hex)>\r\n"
+	"r <addr (hex)> <num_bytes (int)>\r\n"
+	"w <addr (hex)> <val1 val2 . . . (hex)>\r\n"
+	"mr1 <addr (hex)> <memAddr (hex)> <num_bytes (int)>\r\n"
+	"mw1 <addr (hex)> <memAddr (hex)> <val1 val2 . . . (hex)>\r\n"
+	"mr2 <addr (hex)> <memAddr (hex)> <num_bytes (int)>\r\n"
+	"mw2 <addr (hex)> <memAddr (hex)> <val1 val2 . . . (hex)>\r\n",
 	"Interact with the I2C subsystem.",
 	do_i2c
+)
+
+command_status do_iox(int argc, char *argv[]) {
+
+	if (argc == 1) return USAGE;
+
+	if (!strcmp("read", argv[1])) {
+		printf("TODO\r\n");
+		return FAIL;
+	}
+
+	if (argc == 2) return USAGE;
+
+	if (!strcmp("set", argv[1])) {
+		printf("TODO\r\n");
+		return FAIL;
+	} else if (!strcmp("clear", argv[1])) {
+		printf("TODO\r\n");
+		return FAIL;
+	}
+
+	return USAGE;
+}
+
+COMMAND_ENTRY(
+	"iox",
+	"iox {read|set <pin_alias>|clear <pin_alias>}",
+	"Interact with the PCF8574 I/O Expander.",
+	do_iox
 )
