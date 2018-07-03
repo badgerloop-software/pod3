@@ -5,6 +5,7 @@
 #include "commands.h"
 #include "stm32l4xx_hal_conf.h"
 #include "i2c.h"
+#include "iox.h"
 
 command_status do_init(void) {
 	return (i2c_init() == HAL_OK) ? CMD_SUCCESS : FAIL;
@@ -183,30 +184,51 @@ COMMAND_ENTRY(
 )
 
 command_status do_iox(int argc, char *argv[]) {
+	iox_pin_t pin;
 
 	if (argc == 1) return USAGE;
 
 	if (!strcmp("read", argv[1])) {
-		printf("TODO\r\n");
-		return FAIL;
+		if (!iox_start_read()) {
+			printf("%s: couldn't read from i2c:\r\n", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		if (i2c_block(I2C_RX_READY, ticks)) {
+			printf("%s: waiting for read timed out\r\n", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		iox_dump();
+		return CMD_SUCCESS;
+	} else if (!strcmp("dump", argv[1])) {
+		iox_dump();
+		return CMD_SUCCESS;
 	}
 
 	if (argc == 2) return USAGE;
 
-	if (!strcmp("set", argv[1])) {
-		printf("TODO\r\n");
-		return FAIL;
-	} else if (!strcmp("clear", argv[1])) {
-		printf("TODO\r\n");
-		return FAIL;
+	/* validate pin input */
+	pin = str_to_pin(argv[2]);
+	if (pin == IOX_INVALID) {
+		pin = (iox_pin_t) (argv[2][0] - 'a');
+		if (pin >= IOX_INVALID) {
+			printf("Invalid pin valid: %d\r\n", pin);
+			return FAIL;
+		}
 	}
+
+	if (!strcmp("set", argv[1]))
+		return iox_set(pin) ? CMD_SUCCESS : FAIL;
+	else if (!strcmp("clear", argv[1]))
+		return iox_clear(pin) ? CMD_SUCCESS: FAIL;
 
 	return USAGE;
 }
 
 COMMAND_ENTRY(
 	"iox",
-	"iox {read|set <pin_alias>|clear <pin_alias>}",
+	"iox {read|dump|set <pin_alias (int or str)>|clear <pin_alias (int or str)>}",
 	"Interact with the PCF8574 I/O Expander.",
 	do_iox
 )
