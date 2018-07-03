@@ -75,21 +75,39 @@ def issue_prim_brake_onoff(onoff):
     print('requested primary brake: {0}'.format(onoff))
     success = True
     message = None
-    # TODO turn the brakes on or off
+    # make the payload (attach the on or off)
+    control_val = 'prim_brake_{0}'.format(onoff)
+    payload = '{0}{1}'.format(UART_OVERRIDE_TOK, control_val)
+    # and package it for uart
+    to_send = package_command(payload)
+    # and send
+    write_to_uart(to_send)
     return success,message
 
 def issue_prim_brake_vent(onoff):
     print('requested primary brake vent: {0}'.format(onoff))
     success = True
     message = None
-    # TODO issue it over SPI
+    # make the payload (attach the on or off)
+    control_val = 'prim_brake_vent_{0}'.format(onoff)
+    payload = '{0}{1}'.format(UART_OVERRIDE_TOK, control_val)
+    # and package it for uart
+    to_send = package_command(payload)
+    # and send
+    write_to_uart(to_send)
     return success,message
 
 def issue_high_voltage(enable_disable):
     print('requested high voltage: {0}'.format(enable_disable))
     success = True
     message = None
-    # TODO issue it over SPI
+    # make the payload (attach the enable or disable)
+    control_val = 'hv_{0}'.format(enable_disable)
+    payload = '{0}{1}'.format(UART_OVERRIDE_TOK, control_val)
+    # and package it for uart
+    to_send = package_command(payload)
+    # and send
+    write_to_uart(to_send)
     return success,message
 
 #####################
