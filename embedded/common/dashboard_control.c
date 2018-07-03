@@ -79,30 +79,25 @@ void process_state_transition(char *state) {
 }
 
 void process_manual_override(char *override) {
-        /* TODO */
         printf("Hit process_manual_override with override '%s'\n", override);
-	if (!strncmp(override, "hv_enable", 9))
-       	{
+	if (!strncmp(override, "hv_enable", 9)) {
+       	        /* pretend we executed the command from the console */
 		process_input("can hv_enable");
 	}
-       	else if (!strncmp(override, "hv_disable", 10))
-       	{
-		process_input("can hv_disable\r\n");
+       	else if (!strncmp(override, "hv_disable", 10)) {
+       	        /* pretend we executed the command from the console */
+		process_input("can hv_disable");
 	}
-       	else if (!strncmp(override, "prim_brake_on", 13))
-       	{
+       	else if (!strncmp(override, "prim_brake_on", 13)) {
 		
 	}
-	else if (!strncmp(override, "prim_brake_off", 14))
-	{
+	else if (!strncmp(override, "prim_brake_off", 14)) {
 
 	}
-	else if (!strncmp(override, "prim_brake_vent_on", 18))
-	{
+	else if (!strncmp(override, "prim_brake_vent_on", 18)) {
 
 	}
-	else if (!strncmp(override, "prim_brake_vent_off", 19))
-	{
+	else if (!strncmp(override, "prim_brake_vent_off", 19)) {
 
 	}
 		
