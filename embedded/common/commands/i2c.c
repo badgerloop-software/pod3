@@ -195,7 +195,7 @@ command_status do_iox(int argc, char *argv[]) {
 			i2c_dump();
 			return FAIL;
 		}
-		if (i2c_block(I2C_RX_READY, ticks)) {
+		if (i2c_block(I2C_WAITING_RX, ticks)) {
 			printf("%s: waiting for read timed out\r\n", __func__);
 			i2c_dump();
 			return FAIL;
