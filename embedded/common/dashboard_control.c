@@ -89,10 +89,12 @@ void process_manual_override(char *override) {
 		process_input("can hv_disable");
 	}
        	else if (!strncmp(override, "prim_brake_on", 13)) {
-		
+       	        /* pretend we executed the command from the console */
+		process_input("can braking_on");
 	}
 	else if (!strncmp(override, "prim_brake_off", 14)) {
-
+       	        /* pretend we executed the command from the console */
+		process_input("can braking_off");
 	}
 	else if (!strncmp(override, "prim_brake_vent_on", 18)) {
 
