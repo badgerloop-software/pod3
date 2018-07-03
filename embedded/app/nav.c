@@ -156,9 +156,11 @@ void nav_receive_telemetry(uint32_t can_id, uint8_t * RxData){
 	for(i = 0; i < 8; i++){
 		printf("RxData[%d]: %x\r\n", i, RxData[i]);
 	}
-	if(can_id == 0x0d0){
+	if(can_id == 0x00){
+		printf("TODO call  Actuate brakes");
 		//TODO update with State handler update
-	} else if (can_id == 0x0d1){
+	} else if (can_id == 0x001){
+		printf("TODO Call unactaute brakes");
 		//TODO update with State transition start
 	} else if (can_id == 0x0d2){
 		//TODO actuation overwrite
@@ -194,7 +196,13 @@ int main(void) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	
-		nav_telemetry_send();
+		/* Check for incoming CAN messages */
+		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
+			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
+			if((RxHeader.StdId == 0x000 ) || (RxHeader.StdId == 0x001)){
+				nav_receive_telemetry(RxHeader.StdId, RxData);
+			}
+		}
 	}
 
 	return 0;

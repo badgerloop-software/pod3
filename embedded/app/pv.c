@@ -7,6 +7,7 @@
 #include "pin_alias.h"
 #include "can.h"
 #include "badgerloop.h"
+#include "bms.h"
 #define BLINK_INTERVAL	250
 
 #define CCP_MODULE 0
@@ -150,9 +151,13 @@ void pv_receive_telemetry(uint32_t can_id, uint8_t * RxData){
 	for(i = 0; i < 8; i++){
 		printf("RxData[%d]: %x\r\n", i, RxData[i]);
 	}
-	if(can_id == 0x0d0){
+	if(can_id == 0x002){
+		shutdownCircuit_MCUToggle(1);
+
 		//TODO update with State handler update
-	} else if (can_id == 0x0d1){
+	} else if (can_id == 0x003){
+		shutdownCircuit_MCUToggle(0);
+
 		//TODO update with State transition start
 	} else if (can_id == 0x0d2){
 		//TODO actuation overwrite
@@ -190,7 +195,7 @@ int main(void) {
 		/* Check for incoming CAN messages */
 		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
 			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
-			if(RxHeader.StdId == 0x0d6){
+			if((RxHeader.StdId == 0x003 ) || (RxHeader.StdId == 0x004)){
 				pv_receive_telemetry(RxHeader.StdId, RxData);
 			}
 		}

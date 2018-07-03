@@ -297,7 +297,59 @@ command_status do_can(int argc, char *argv[]) {
 
 		can_update(atoi(argv[2]));
 		printf( "Message Number: %d\r\n", message_num);
-	}	
+	
+	} else if (!strcmp("braking_on", argv[1])){
+
+		uint8_t TxData[8];
+		TxData[1] = 0x00;
+		TxData[2] = 0x00;
+		TxData[3] = 0x00;
+		TxData[4] = 0x00;
+		TxData[5] = 0x00;
+		TxData[6] = 0x00;
+		TxData[7] = 0x00;
+		intermodule_can_message(0, 0, 0, 0, TxData, &hcan);
+
+	} else if (!strcmp("braking_off", argv[1])){
+		
+		uint8_t TxData[8];
+		TxData[1] = 0x00;
+		TxData[2] = 0x00;
+		TxData[3] = 0x00;
+		TxData[4] = 0x00;
+		TxData[5] = 0x00;
+		TxData[6] = 0x00;
+		TxData[7] = 0x00;
+		intermodule_can_message(0, 0, 1, 0, TxData, &hcan);
+
+	
+
+	} else if (!strcmp("hv_enable",argv[1])){
+
+
+		uint8_t TxData[8];
+		TxData[1] = 0x00;
+		TxData[2] = 0x00;
+		TxData[3] = 0x00;
+		TxData[4] = 0x00;
+		TxData[5] = 0x00;
+		TxData[6] = 0x00;
+		TxData[7] = 0x00;
+		intermodule_can_message(0, 0, 2, 0, TxData, &hcan);
+		
+	} else if(!strcmp("hv_disable", argv[1])){
+
+		uint8_t TxData[8];
+		TxData[1] = 0x00;
+		TxData[2] = 0x00;
+		TxData[3] = 0x00;
+		TxData[4] = 0x00;
+		TxData[5] = 0x00;
+		TxData[6] = 0x00;
+		TxData[7] = 0x00;
+		intermodule_can_message(0, 0, 3, 0, TxData, &hcan);
+	}
+
 	return CMD_SUCCESS;
 }
 
