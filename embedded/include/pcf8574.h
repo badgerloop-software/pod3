@@ -6,6 +6,7 @@
 
 
 bool iox_set_multiple(uint8_t mask);
+bool iox_clear_multiple(uint8_t mask);
 
 
 #endif

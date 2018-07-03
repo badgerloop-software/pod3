@@ -164,8 +164,8 @@ void nav_receive_telemetry(uint32_t can_id, uint8_t * RxData){
 
 		//TODO update with State handler update
 	} else if (can_id == 0x001){
-		uint8_t primary_brakes_unactuate = 0x0;
-		iox_set_multiple(primary_brakes_unactuate);
+		uint8_t primary_brakes_unactuate = 0x5;
+		iox_clear_multiple(primary_brakes_unactuate);
 		printf("TODO Call unactaute brakes");
 		//TODO update with State transition start
 	} else if (can_id == 0x0d2){
