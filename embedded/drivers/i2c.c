@@ -12,6 +12,14 @@ uint16_t i2c_mem_read_size;
 
 /*****************************************************************************/
 
+inline void i2c_set_flag(uint32_t flag) {
+	i2c_flags |= flag;
+}
+
+inline void i2c_clear_flag(uint32_t flag) {
+	i2c_flags &= ~(flag);
+}
+
 int i2c_block(uint32_t flag, uint32_t ticks_start) {
 	while ((i2c_flags & flag) && I2C_TIMEOUT_CHK) {;}
 	return (I2C_TIMEOUT_CHK) ? 0 : 1;
@@ -91,7 +99,7 @@ HAL_StatusTypeDef i2c_start_write(
 ) {
 	memcpy(i2c_tx, data, nbytes);
 	i2c_flags |= I2C_WAITING_TX;
-	i2c_flags &= I2C_TX_READY;
+	i2c_flags &= ~(I2C_TX_READY);
 	return HAL_I2C_Master_Transmit_IT(&i2c_handle, addr << 1, i2c_tx, nbytes);
 }
 
@@ -101,7 +109,7 @@ bool i2c_write_ready(void) {
 
 HAL_StatusTypeDef i2c_start_read(uint8_t addr, uint16_t nbytes) {
 	i2c_flags |= I2C_WAITING_RX;
-	i2c_flags &= I2C_RX_READY;
+	i2c_flags &= ~(I2C_RX_READY);
 	i2c_read_size = nbytes;
 	return HAL_I2C_Master_Receive_IT(
 		&i2c_handle, (addr << 1) | 0x1, i2c_rx, nbytes
@@ -116,7 +124,7 @@ HAL_StatusTypeDef i2c_start_mem_read(
 	uint8_t addr, uint16_t memAddr, uint16_t memAddrSize, uint16_t nbytes
 ) {
 	i2c_flags |= I2C_WAITING_MEM_RX;
-	i2c_flags &= I2C_MEM_RX_READY;
+	i2c_flags &= ~(I2C_MEM_RX_READY);
 	i2c_mem_read_size = nbytes;
 	return HAL_I2C_Mem_Read_IT(
 		&i2c_handle, (addr << 1) | 0x1, memAddr, memAddrSize, i2c_rx, nbytes
@@ -133,7 +141,7 @@ HAL_StatusTypeDef i2c_start_mem_write(
 ) {
 	memcpy(i2c_tx, data, nbytes);
 	i2c_flags |= I2C_WAITING_MEM_TX;
-	i2c_flags &= I2C_MEM_TX_READY;
+	i2c_flags &= ~(I2C_MEM_TX_READY);
 	return HAL_I2C_Mem_Write_IT(
 		&i2c_handle, addr << 1, memAddr, memAddrSize, i2c_tx, nbytes
 	);

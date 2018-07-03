@@ -58,6 +58,9 @@ void i2c_dump(void);
 
 bool i2c_errors_present(void);
 
+void i2c_set_flag(uint32_t flag);
+void i2c_clear_flag(uint32_t flag);
+
 /*****************************************************************************/
 
 void print_i2c_error(I2C_HandleTypeDef *handle);

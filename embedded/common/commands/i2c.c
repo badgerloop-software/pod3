@@ -185,6 +185,7 @@ COMMAND_ENTRY(
 
 command_status do_iox(int argc, char *argv[]) {
 	iox_pin_t pin;
+	uint8_t read_val;
 
 	if (argc == 1) return USAGE;
 
@@ -194,11 +195,17 @@ command_status do_iox(int argc, char *argv[]) {
 			i2c_dump();
 			return FAIL;
 		}
-		if (i2c_block(I2C_RX_READY, ticks)) {
+		if (i2c_block(I2C_WAITING_RX, ticks)) {
 			printf("%s: waiting for read timed out\r\n", __func__);
 			i2c_dump();
 			return FAIL;
 		}
+		if (!iox_read(&read_val)) {
+			printf("%s: call to 'iox_read' failed\r\n", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		printf("hex value read: 0x%x\r\n", read_val);
 		iox_dump();
 		return CMD_SUCCESS;
 	} else if (!strcmp("dump", argv[1])) {
