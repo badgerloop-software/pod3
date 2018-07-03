@@ -25,6 +25,7 @@ bool iox_start_read(void) {
 bool iox_read(uint8_t *val) {
 	if (!i2c_read_ready()) return false;
 	_iox_read_val = i2c_rx[0];
+	i2c_clear_flag(I2C_RX_READY);
 	*val = _iox_read_val;
 	iox_read_stale = false;
 	return true;
