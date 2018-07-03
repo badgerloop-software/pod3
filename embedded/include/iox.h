@@ -23,7 +23,9 @@ bool iox_read(uint8_t *val);
 bool iox_get_staleness(void);
 
 bool iox_set(iox_pin_t pin);
+bool iox_set_multiple(uint8_t mask);
 bool iox_clear(iox_pin_t pin);
+bool iox_clear_multiple(uint8_t mask);
 
 iox_pin_t str_to_pin(const char *str);
 const char *pin_to_str(iox_pin_t pin);

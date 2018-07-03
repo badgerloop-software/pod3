@@ -40,8 +40,27 @@ bool iox_set(iox_pin_t pin) {
 	return false;
 }
 
+bool iox_set_multiple(uint8_t mask) {
+	_iox_commanded_val |= mask;
+	if (i2c_start_write(PCF8574_ADDR, 1, &_iox_commanded_val) == HAL_OK)  {
+		iox_read_stale = true;
+		return true;
+	}
+	return false;
+
+}
+
 bool iox_clear(iox_pin_t pin) {
 	_iox_commanded_val &= ~(1 << pin);
+	if (i2c_start_write(PCF8574_ADDR, 1, &_iox_commanded_val) == HAL_OK)  {
+		iox_read_stale = true;
+		return true;
+	}
+	return false;
+}
+
+bool iox_clear_multiple(uint8_t mask) {
+	_iox_commanded_val &= ~(mask);
 	if (i2c_start_write(PCF8574_ADDR, 1, &_iox_commanded_val) == HAL_OK)  {
 		iox_read_stale = true;
 		return true;
