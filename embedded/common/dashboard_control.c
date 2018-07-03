@@ -83,11 +83,11 @@ void process_manual_override(char *override) {
         printf("Hit process_manual_override with override '%s'\n", override);
 	if (!strncmp(override, "hv_enable", 9))
        	{
-		process_input("can hv_enable\n\r");
+		process_input("can hv_enable");
 	}
        	else if (!strncmp(override, "hv_disable", 10))
        	{
-		process_input("can hv_disable\n\r");
+		process_input("can hv_disable\r\n");
 	}
        	else if (!strncmp(override, "prim_brake_on", 13))
        	{

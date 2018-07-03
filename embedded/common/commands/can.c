@@ -326,7 +326,7 @@ command_status do_can(int argc, char *argv[]) {
 
 	} else if (!strcmp("hv_enable",argv[1])){
 
-
+		printf("hv_enable has been set! Youre welcome Ryan\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;
 		TxData[2] = 0x00;
@@ -338,7 +338,7 @@ command_status do_can(int argc, char *argv[]) {
 		intermodule_can_message(0, 0, 2, 0, TxData, &hcan);
 		
 	} else if(!strcmp("hv_disable", argv[1])){
-
+		printf("hv_dis\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;
 		TxData[2] = 0x00;
