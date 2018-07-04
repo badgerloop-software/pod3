@@ -17,26 +17,34 @@ extern uint8_t message_num; //defined in can.h
 
 int can_read(CAN_HandleTypeDef *hcan ){
 	int i;
+	
+	//Resetting RxData
+	for(int i = 0; i < 8; i++){
+		RxData[i] = 0;
+	}
+
 	if(HAL_CAN_GetRxFifoFillLevel(hcan, CAN_RX_FIFO0)){
 		printf("CAN Message Received.\r\n");
-	    HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData);
+		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData);
         
-        /* Printing out received data */
-		printf("Received CAN ID: #%lx\r\n", RxHeader.StdId );
+        	/* Printing out received data */
+		printf("Received CAN Message.\r\nCAN ID: #%lx\r\n", RxHeader.StdId );
 		for(i = 0; i < 8; i++){
 			if( RxData[i] != 0){
-				printf("CAN Message Data #%d: %x\r\n", i, RxData[i]);
+				printf("Data #%d: %x\r\n", i, RxData[i]);
 			}
 		}
 	}
-	return 0;
+	return CMD_SUCCESS;
 }
 
+/* Function for sending a CAN Message. 
+ * @param can_id: 11 bit hex value
+ * @param length: number of hex characters input as data
+ * @param TxData: Data for sending
+ * @param hcan: CAN Handle
+ */
 int can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef *hcan){
-
-#if DEBUG_IO
-	printf("\r\nCAN SEND ID: %lx, length: %d\r\n", can_id, length);
-#endif
 
 	TxHeader.StdId = can_id;
 	TxHeader.IDE = 0;
@@ -50,13 +58,13 @@ int can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef 
 		TxHeader.DLC = length/2;
 	}
 
+#if DEBUG_IO
+	printf("\r\nCAN SEND ID: %lx, length: %d\r\n", can_id, TxHeader.DLC);
+#endif
+
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
-		printf("SENDING MESSAGE\r\n");
 		uint32_t TxMailbox = 0;
-		
 		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK) return 0;
-		
-		
 	}
 	return 1;
 }
@@ -88,7 +96,6 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 	TxData[7] = 0x55;
 	printf("In OBD2 Send \r\n");	
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
-		printf("SENDING MESSAGE\r\n");
 		uint32_t TxMailbox = 0;
 		
 		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
@@ -103,7 +110,6 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 
 	
 	if(HAL_CAN_GetRxFifoFillLevel(hcan, CAN_RX_FIFO0)){
-		printf("CAN MESSAGE IN FIFO\r\n");
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData);
 		
 		for(i = 0; i < 8; i++){
@@ -116,62 +122,19 @@ uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, ui
 	return RxData;
 }
 
-
-int can_heartbeat(uint8_t *message_number, CAN_HandleTypeDef *hcan){
+int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
+	
 	int i = 0;
 	TxHeader.StdId = 0xC0; //Always to same CAN ID
 	TxHeader.IDE = 0; //Standard ID length
 	TxHeader.RTR = 0; //Always data frame
 	TxHeader.DLC = (uint8_t) 8; //Always 8
+	
 	uint8_t number = *message_number;
 	uint8_t TxData[8];
-
-	uint32_t TxMailbox = 0;
-
-	if( number == 2){ //Command 5 nm forwardi
-		TxData[0] = 0x32;
-		TxData[1] = 0x00;
-		TxData[2] = 0x00;
-		TxData[3] = 0x00;
-		TxData[4] = 0x00;
-		TxData[5] = 0x01;
-		TxData[6] = 0x00;
-		TxData[7] = 0x00;
-	}
-	else if( number == 3){ //Command 8 nm forward
-		TxData[0] = 0x50;
-		TxData[1] = 0x00;
-		TxData[2] = 0x00;
-		TxData[3] = 0x00;
-		TxData[4] = 0x00;
-		TxData[5] = 0x01;
-		TxData[6] = 0x00;
-		TxData[7] = 0x00;
-	}
-	else if( number == 4){ //Discharge capacitors
-		TxData[0] = 0x00;
-		TxData[1] = 0x00;
-		TxData[2] = 0x00;
-		TxData[3] = 0x00;
-		TxData[4] = 0x01;
-		TxData[5] = 0x02;
-		TxData[6] = 0x00;
-		TxData[7] = 0x00;
-	}
-	else if( number == 5 ){ //Command 16 nm forward
-		TxData[0] = 0xA0;
-		TxData[1] = 0x00;
-		TxData[2] = 0x00;
-		TxData[3] = 0x00;
-		TxData[4] = 0x00;
-		TxData[5] = 0x01;
-		TxData[6] = 0x00;
-		TxData[7] = 0x00;
-	}
-	else{ //In all other cases, TxData will be set to 0
-		for(i = 0; i < 8; i++){
-			TxData[i] = 0;
-		}
+	
+	for(i = 0; i < 8; i++){
+		TxData[i] = 0;
 	}
 
 	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
@@ -181,7 +144,7 @@ int can_heartbeat(uint8_t *message_number, CAN_HandleTypeDef *hcan){
 	}
 }
 
-int can_clearFaults( CAN_HandleTypeDef *hcan ){
+int can_heartbeat_clear_faults( CAN_HandleTypeDef *hcan){
 	
 	TxHeader.StdId = 0xC1; //Always to same CAN ID
 	TxHeader.IDE = 0; //Standard ID length
@@ -207,8 +170,78 @@ int can_clearFaults( CAN_HandleTypeDef *hcan ){
 	}
 }
 
+int can_heartbeat_forward( CAN_HandleTypeDef *hcan, uint8_t torque){
+	
+	int i = 0;
+	TxHeader.StdId = 0xC0; //Always to same CAN ID
+	TxHeader.IDE = 0; //Standard ID length
+	TxHeader.RTR = 0; //Always data frame
+	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint8_t TxData[8];
+	
+	//Torque is stored in the first byte	
+	TxData[0] = (torque*10);
+	TxData[1] = 0x00;
+	TxData[2] = 0x00;
+	TxData[3] = 0x00;
+	TxData[4] = 0x00;
+	TxData[5] = 0x01;
+	TxData[6] = 0x00;
+	TxData[7] = 0x00;
+
+	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
+		return 1; //Returns 1 on error
+	} else {
+		return 0; //Returns 0 on success
+	}
+}
+
+int can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
+	
+	int i = 0;
+	TxHeader.StdId = 0xC0; //Always to same CAN ID
+	TxHeader.IDE = 0; //Standard ID length
+	TxHeader.RTR = 0; //Always data frame
+	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint8_t TxData[8];
+
+	//Discharge Message Data
+	TxData[0] = 0x00;
+	TxData[1] = 0x00;
+	TxData[2] = 0x00;
+	TxData[3] = 0x00;
+	TxData[4] = 0x01;
+	TxData[5] = 0x02;
+	TxData[6] = 0x00;
+	TxData[7] = 0x00;
+
+	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
+		return 1; //Returns 1 on error
+	} else {
+		return 0; //Returns 0 on success
+	}
+}
+
+
+int can_heartbeat( heartbeat_msg_t status, CAN_HandleTypeDef *hcan){
+	if( status == CLEAR_FAULTS ){
+		
+	}
+	else if( status == FORWARD){
+
+	}
+	else if( status == DISCHARGE ){
+		can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
+	}
+	else{
+		can_heartbeat_idle( CAN_HandleTypeDef *hcan){
+	}
+
+}
+
 
 int intermodule_can_message(SENDING_MODULE sending_module, RECEIVING_MODULE receiving_module, int message_num, MESSAGE_TYPE message_type, uint8_t *TxData, CAN_HandleTypeDef *hcan){
+	
 	uint16_t can_id = (sending_module << 8) + (receiving_module << 4) + message_num;
 	printf("CAN_ID %x\r\n", can_id);
 		
@@ -235,15 +268,15 @@ command_status do_can(int argc, char *argv[]) {
 	
 	//Usage: can read
 	if(!strcmp("read", argv[1])){	
-
-		printf("\r\ncalling can_read()\r\n");
+		
+		//Reading CAN Message
 		can_read(&hcan);
 
 	//Usage: can send <can ID> <data>
 	} else if(!strcmp("send", argv[1])){
 		
-		
 		uint32_t can_id = strtol(argv[2], &str, 16);
+			//CAN Id's are 11 bits
 			if(can_id > 0x7ff){
 				printf("Invalid CAN ID.\r\n");
 				return ERROR;
@@ -273,7 +306,6 @@ command_status do_can(int argc, char *argv[]) {
 			printf("Extra string passed in.\r\n");
 		}
 		
-		
 		data[7] = (converted & 0xff00000000000000) >> 56;
 		data[6] = (converted & 0x00ff000000000000) >> 48;
 		data[5] = (converted & 0x0000ff0000000000) >> 40;
@@ -283,10 +315,12 @@ command_status do_can(int argc, char *argv[]) {
 		data[1] = (converted & 0x000000000000ff00) >> 8;
 		data[0] = (converted & 0x00000000000000ff);
 
-		printf("can_id: %lx, length: %d\r\n", can_id, length);
+		//Printing out data
 		for(i = 0; i < 8; i++){
 			printf("Data #%d: %x\r\n", i,data[i]);
 		}
+
+		//Data must be >0 bytes, and <=8 bytes
 		if( length > 0 && length <= 16){
 			can_send(can_id, length, data, &hcan);
 		}
@@ -302,6 +336,7 @@ command_status do_can(int argc, char *argv[]) {
 	
 	} else if (!strcmp("braking_on", argv[1])){
 
+		printf("Brakes Engaged.\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;
 		TxData[2] = 0x00;
@@ -314,6 +349,7 @@ command_status do_can(int argc, char *argv[]) {
 
 	} else if (!strcmp("braking_off", argv[1])){
 		
+		printf("Brakes Disengaged.\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;
 		TxData[2] = 0x00;
@@ -324,11 +360,9 @@ command_status do_can(int argc, char *argv[]) {
 		TxData[7] = 0x00;
 		intermodule_can_message(0, 0, 1, 0, TxData, &hcan);
 
-	
-
 	} else if (!strcmp("hv_enable",argv[1])){
 
-		printf("hv_enable has been set! You're welcome Ryan\r\n");
+		printf("CAUTION: High Voltage Enabled.\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;
 		TxData[2] = 0x00;
@@ -339,7 +373,7 @@ command_status do_can(int argc, char *argv[]) {
 		TxData[7] = 0x00;
 		intermodule_can_message(0, 0, 2, 0, TxData, &hcan);
 		
-	} else if(!strcmp("hv_disable", argv[1])){
+	} else if(!strcmp("High Voltage Disabled\r\n", argv[1])){
 		printf("hv_dis\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;

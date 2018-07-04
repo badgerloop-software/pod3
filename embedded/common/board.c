@@ -90,9 +90,11 @@ int CAN_Config(CAN_HandleTypeDef *hcan, char* board){
    		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	}
 	else if( strcmp(board, "dev") == 0){
-		sFilterConfig0.FilterIdHigh = 0x7ff << 5;
+		sFilterConfig0.FilterIdHigh = 0x29F << 5;
+		//sFilterConfig0.FilterIdHigh = 0x0000;
 		sFilterConfig0.FilterIdLow = 0x0000;
-  		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;
+		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;
+  		//sFilterConfig0.FilterMaskIdHigh = 0x0000;
    		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	}
 	else{
