@@ -14,7 +14,6 @@
 
 /* CAN Globals */
 extern CAN_HandleTypeDef     hcan;
-extern uint8_t               message_num;
 
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
@@ -29,8 +28,6 @@ int dev_init(void) {
 int main(void) {
 	PC_Buffer *rx; /* Serial */
 	int ticks; /* Used for SysTick operation */
-
-	message_num = 0;
 
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init(&hcan, "dev") || dev_init())
@@ -59,17 +56,10 @@ int main(void) {
 		curr = ticks / 250;
 		if (curr != prev){
 			prev = curr;
-			//Handles sending clear faults message only once
-            if(message_num == 1){
-				if( can_clearFaults(&hcan) ){
-					printf( "CAN clear faults error.\r\n");
-				}
-				message_num = 0;
-			}
-			else if( can_heartbeat(&message_num, &hcan) != 0 ){
-				printf("CAN Heartbeat Error.\r\n");
-			}
-		}
+	    
+            //Call the heartbeat handler
+            can_heartbeat_handler(&hcan);
+        }
 	
 	}
 }

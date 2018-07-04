@@ -9,11 +9,13 @@
 #include <unistd.h>
 
 /* Globals */
-extern uint8_t message_num;
 CAN_TxHeaderTypeDef TxHeader;
 CAN_RxHeaderTypeDef RxHeader;
 uint8_t RxData[8];
-extern uint8_t message_num; //defined in can.h
+
+extern uint8_t message_num;
+volatile uint8_t hb_torque; //defined in can.h
+volatile heartbeat_msg_t hb_status; //defined in can.h
 
 int can_read(CAN_HandleTypeDef *hcan ){
 	int i;
@@ -67,12 +69,6 @@ int can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef 
 		if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK) return 0;
 	}
 	return 1;
-}
-
-//Temporary function for updating message_num (heartbeat related) from the command line
-int can_update( uint8_t message_number ){
-	message_num = message_number;
-	return 0;
 }
 
 uint8_t * can_send_obd2(uint16_t can_id, size_t message_length, uint8_t mode, uint16_t pid, CAN_HandleTypeDef *hcan){
@@ -129,8 +125,8 @@ int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
 	TxHeader.IDE = 0; //Standard ID length
 	TxHeader.RTR = 0; //Always data frame
 	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint32_t TxMailbox = 0;
 	
-	uint8_t number = *message_number;
 	uint8_t TxData[8];
 	
 	for(i = 0; i < 8; i++){
@@ -170,9 +166,9 @@ int can_heartbeat_clear_faults( CAN_HandleTypeDef *hcan){
 	}
 }
 
-int can_heartbeat_forward( CAN_HandleTypeDef *hcan, uint8_t torque){
+int can_heartbeat_forward( CAN_HandleTypeDef *hcan ){
 	
-	int i = 0;
+	uint32_t TxMailbox = 0;
 	TxHeader.StdId = 0xC0; //Always to same CAN ID
 	TxHeader.IDE = 0; //Standard ID length
 	TxHeader.RTR = 0; //Always data frame
@@ -180,7 +176,7 @@ int can_heartbeat_forward( CAN_HandleTypeDef *hcan, uint8_t torque){
 	uint8_t TxData[8];
 	
 	//Torque is stored in the first byte	
-	TxData[0] = (torque*10);
+	TxData[0] = (hb_torque*10);
 	TxData[1] = 0x00;
 	TxData[2] = 0x00;
 	TxData[3] = 0x00;
@@ -198,12 +194,12 @@ int can_heartbeat_forward( CAN_HandleTypeDef *hcan, uint8_t torque){
 
 int can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
 	
-	int i = 0;
 	TxHeader.StdId = 0xC0; //Always to same CAN ID
 	TxHeader.IDE = 0; //Standard ID length
 	TxHeader.RTR = 0; //Always data frame
 	TxHeader.DLC = (uint8_t) 8; //Always 8
 	uint8_t TxData[8];
+	uint32_t TxMailbox = 0;
 
 	//Discharge Message Data
 	TxData[0] = 0x00;
@@ -223,19 +219,22 @@ int can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
 }
 
 
-int can_heartbeat( heartbeat_msg_t status, CAN_HandleTypeDef *hcan){
-	if( status == CLEAR_FAULTS ){
-		
+int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
+	
+    if( hb_status == FAULTS_CLEARED ){
+        can_heartbeat_clear_faults( hcan);
+	    hb_status = PRE_RUN;
+    }
+	else if( hb_status == FORWARD){
+        can_heartbeat_forward( hcan);
 	}
-	else if( status == FORWARD){
-
-	}
-	else if( status == DISCHARGE ){
-		can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
-	}
+	else if( hb_status == DISCHARGE ){
+		can_heartbeat_discharge( hcan);
+    }
 	else{
-		can_heartbeat_idle( CAN_HandleTypeDef *hcan){
+		can_heartbeat_idle( hcan);
 	}
+    return 0;
 
 }
 
@@ -329,10 +328,47 @@ command_status do_can(int argc, char *argv[]) {
 			return ERROR;
 		}
 	
-	} else if(!strcmp("update", argv[1])){
+	} else if(!strcmp("hb_torque", argv[1])){
 
-		can_update(atoi(argv[2]));
-		printf( "Message Number: %d\r\n", message_num);
+		hb_torque = atoi(argv[2]);
+		printf( "Torque= %d nm\r\n", hb_torque);
+	
+	} else if(!strcmp("hb_next", argv[1])){
+   
+        switch( hb_status){
+            case IDLE: 
+                printf( "Heartbeat Status: Clear Faults\r\n");
+                hb_status = FAULTS_CLEARED;
+                break;
+            case FAULTS_CLEARED:
+                printf( "Heartbeat Status: Forward\r\n");
+                hb_status = PRE_RUN;
+                break;
+            case PRE_RUN:
+                printf( "Heartbeat Status: Forward\r\n");
+                hb_status = PRE_RUN;
+                break;
+            case FORWARD:
+                printf( "Heartbeat Status: Spin Down\r\n");
+                hb_status = SPIN_DOWN;
+                break;
+            case SPIN_DOWN:
+                printf( "Heartbeat Status: Discharge\r\n");
+                hb_status = DISCHARGE; 
+                break;
+            case DISCHARGE:
+                printf( "Heartbeat Status: Idle\r\n");
+                hb_status = POST_RUN;
+                break;
+            case POST_RUN:
+                printf("Heartbeat Status: Post Run\r\n");
+                break;
+            default: 
+                printf("Unknown Heartbeat state.\r\n" );
+                break;
+        }
+        
+        return CMD_SUCCESS;
 	
 	} else if (!strcmp("braking_on", argv[1])){
 
@@ -393,5 +429,5 @@ COMMAND_ENTRY(
 	"can",
 	"can send",
 	"can read",
-	do_can
+    do_can
 )
