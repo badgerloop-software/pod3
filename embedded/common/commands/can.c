@@ -29,7 +29,6 @@ int can_read(CAN_HandleTypeDef *hcan ){
 			}
 		}
 	}
-
 	return 0;
 }
 
@@ -42,12 +41,15 @@ int can_send(uint32_t can_id, size_t length, uint8_t *TxData, CAN_HandleTypeDef 
 	TxHeader.StdId = can_id;
 	TxHeader.IDE = 0;
 	TxHeader.RTR = 0;
-	if( length % 2 == 1){
+	
+    //Hex input means 2 characters = 1 byte
+    if( length % 2 == 1){
 		TxHeader.DLC = (length/2) + 1;
 	}
 	else{
 		TxHeader.DLC = length/2;
 	}
+
 	if(HAL_CAN_GetTxMailboxesFreeLevel(hcan)){
 		printf("SENDING MESSAGE\r\n");
 		uint32_t TxMailbox = 0;
@@ -326,7 +328,7 @@ command_status do_can(int argc, char *argv[]) {
 
 	} else if (!strcmp("hv_enable",argv[1])){
 
-		printf("hv_enable has been set! Youre welcome Ryan\r\n");
+		printf("hv_enable has been set! You're welcome Ryan\r\n");
 		uint8_t TxData[8];
 		TxData[1] = 0x00;
 		TxData[2] = 0x00;

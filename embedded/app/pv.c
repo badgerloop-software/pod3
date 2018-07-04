@@ -178,7 +178,7 @@ int main(void) {
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init(&hcan) || pv_init())
+	if (io_init() || periph_init(&hcan, "pv") || pv_init())
 		fault();
 
 	rx = get_rx(USB_UART);

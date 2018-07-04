@@ -33,7 +33,7 @@ int main(void) {
 	message_num = 0;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dev_init())
+	if (io_init() || periph_init(&hcan, "dev") || dev_init())
 		fault();
 
 	/* CAN Init */

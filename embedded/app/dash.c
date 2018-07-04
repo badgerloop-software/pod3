@@ -162,7 +162,7 @@ int main(void) {
 	PC_Buffer *ctrl_rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init(&hcan) || dash_init())
+	if (io_init() || periph_init(&hcan, "dash") || dash_init())
 		fault();
 	rx = get_rx(USB_UART);
 	ctrl_rx = get_rx(USART1);

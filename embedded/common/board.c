@@ -138,7 +138,7 @@ int io_init(void) {
 	return ret;
 }
 
-int periph_init() {
+int periph_init( CAN_HandleTypeDef *hcan, char* board ) {
 
 	int ret = 0;
 	uint32_t init_regs[3] = {0, 0, 0};
@@ -149,6 +149,8 @@ int periph_init() {
 	ret += usart_config(USART1, SYSCLK, init_regs, 115200, true);
 
 	process_input("i2c init");
+
+    CAN_Config( hcan, board);
 
 	return ret;
 }
