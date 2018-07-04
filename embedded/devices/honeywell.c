@@ -23,10 +23,9 @@ int honeywell_readTemperature(void){
        retval = retval >> 5;
        retval *=200;
        retval /= 2047;
-       printf("Temperature %d\r\n", (retval-50));
        return retval -50;      
-
 }
+
 int honeywell_readPressure(void){
        
        uint32_t ticks_start = ticks;
