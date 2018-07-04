@@ -242,26 +242,31 @@ COMMAND_ENTRY(
 
 
 command_status do_honeywell(int argc, char *argv[]) {
-
+	uint8_t temp;
+	uint8_t pres;
 	if(argc == 1) return USAGE;
 
 	/* Honeywell ambient pressure sensor reading */
-	if (!strcmp("honeywell", argv[0])){
-		if(honeywell_isAlive()){
-			if(!strcmp("temp", argv[1])){
-				printf("Temperature: %d\r\n", honeywell_readTemperature());	
-				return CMD_SUCCESS;
-			} else if (!strcmp("pres", argv[1])){
-				printf("Pressure: %d mPSI\r\n", honeywell_readPressure());
-				return CMD_SUCCESS;
-			} 
-
-		} else {
-			printf("Honeywell sensor not present at address 0x%x\r\n", HONEYWELL_I2C_ADDR);
-			return CMD_SUCCESS;
+	if(!strcmp("read", argv[1])){
+		if(!honeywell_start_read()){
+			printf("%s: could not read from i2c:\r\n", __func__);
+			return FAIL;
 		}
+		if(i2c_block(I2C_WAITING_RX, ticks)){
+			printf("%s: waiting for read timed out\r\n", __func__);
+			return FAIL;
+		}	
+		if(!honeywell_read(&temp, &pres)){
+			printf("%s: call to honeywell_read failed\r\n", __func__);
+			return FAIL;
+		}
+		
+		printf("Temperature: %d Pressure %d\r\n", temp, pres);	
+		return CMD_SUCCESS;
 	}
 
+	
+	
 	return USAGE;
 }
 
