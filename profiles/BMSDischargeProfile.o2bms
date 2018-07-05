@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.8.0_162" class="java.beans.XMLDecoder">
+<java version="1.8.0_101" class="java.beans.XMLDecoder">
  <object class="bmsapp.DefaultProfile" id="DefaultProfile0">
   <void property="balanceDelay">
    <int>80</int>
@@ -74,15 +74,6 @@
   </void>
   <void property="currentSensorType">
    <int>3</int>
-  </void>
-  <void id="BmsProfile$ProfileCustomFlagArray0" property="customFlags">
-   <void id="BmsProfile$ProfileCustomFlag0" index="3">
-    <void property="typeMatrix">
-     <void index="7">
-      <int>47</int>
-     </void>
-    </void>
-   </void>
   </void>
   <void id="BmsProfile$ProfileCustomMessageArray0" property="customMessages">
    <void id="BmsProfile$ProfileCustomMessage0" index="0">
@@ -470,135 +461,6 @@
      <void index="7">
       <int>41</int>
      </void>
-    </void>
-   </void>
-   <void id="BmsProfile$ProfileCustomMessage7" index="7">
-    <void property="flagMatrix">
-     <void index="0">
-      <int>128</int>
-     </void>
-     <void index="2">
-      <int>128</int>
-     </void>
-     <void index="3">
-      <int>64</int>
-     </void>
-     <void index="4">
-      <int>64</int>
-     </void>
-     <void index="5">
-      <int>64</int>
-     </void>
-    </void>
-    <void property="frequency">
-     <int>100</int>
-    </void>
-    <void property="id">
-     <int>403105268</int>
-    </void>
-    <void property="length">
-     <int>8</int>
-    </void>
-    <void property="messageFlags">
-     <int>209</int>
-    </void>
-    <void property="multMatrix">
-     <void index="2">
-      <int>10</int>
-     </void>
-     <void index="5">
-      <int>10</int>
-     </void>
-    </void>
-    <void property="offMatrix">
-     <void index="4">
-      <int>3</int>
-     </void>
-    </void>
-    <void property="typeMatrix">
-     <void index="0">
-      <int>22</int>
-     </void>
-     <void index="2">
-      <int>10</int>
-     </void>
-     <void index="3">
-      <int>1</int>
-     </void>
-     <void index="4">
-      <int>3</int>
-     </void>
-    </void>
-   </void>
-   <void id="BmsProfile$ProfileCustomMessage8" index="8">
-    <void property="flagMatrix">
-     <void index="0">
-      <int>128</int>
-     </void>
-     <void index="1">
-      <int>64</int>
-     </void>
-     <void index="2">
-      <int>128</int>
-     </void>
-     <void index="3">
-      <int>64</int>
-     </void>
-     <void index="4">
-      <int>64</int>
-     </void>
-    </void>
-    <void property="frequency">
-     <int>100</int>
-    </void>
-    <void property="id">
-     <int>403106292</int>
-    </void>
-    <void property="length">
-     <int>8</int>
-    </void>
-    <void property="messageFlags">
-     <int>209</int>
-    </void>
-    <void property="multMatrix">
-     <void index="2">
-      <int>10</int>
-     </void>
-    </void>
-    <void property="offMatrix">
-     <void index="4">
-      <int>3</int>
-     </void>
-    </void>
-    <void property="typeMatrix">
-     <void index="0">
-      <int>22</int>
-     </void>
-     <void index="2">
-      <int>10</int>
-     </void>
-     <void index="4">
-      <int>3</int>
-     </void>
-    </void>
-   </void>
-   <void id="BmsProfile$ProfileCustomMessage9" index="9">
-    <void property="flagMatrix">
-     <void index="0">
-      <int>16</int>
-     </void>
-    </void>
-    <void property="frequency">
-     <int>99</int>
-    </void>
-    <void property="id">
-     <int>419385573</int>
-    </void>
-    <void property="length">
-     <int>8</int>
-    </void>
-    <void property="messageFlags">
-     <int>195</int>
     </void>
    </void>
   </void>
