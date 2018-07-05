@@ -2,7 +2,7 @@
 #include "pin_alias.h"
 
 const char *GROUP_NAMES[] = {
-	"OTHER", "SENSOR", "VALVE", "RETRO", "LED", "I2C", "PRESSURE"
+	"OTHER", "SENSOR", "VALVE", "RETRO", "LED", "I2C", "PRESSURE", "CAN_GROUP"
 };
 const uint8_t NUM_GROUPS = sizeof(GROUP_NAMES) / sizeof(char *);
 
@@ -27,7 +27,7 @@ int gpioAliasInit(void) {
 
 			if (GPIO_TABLE[i].group == I2C)
 				gpio_openDrainState(port, pin, true);
-
+			
 			//if (GPIO_TABLE[i].group == RETRO)
 			//	exti_config(port, pin, true, false, true);
 
