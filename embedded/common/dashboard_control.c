@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "dashboard_control.h"
+#include "console.h"
 #include "usart.h"
 
 int str_index_of(char *search, char *find) {
@@ -57,7 +58,8 @@ void process_state_transition(char *state) {
 	        puts("prop_dsa_extsub requested");
 	}
 	else if (!strncmp(state, "braking_hyperloop", 17)) {
-	        puts("braking_hyperloop requested");
+	        process_input("uart send\n\r");
+	        puts("braking_hyperloop requested\n\r");
 	}
 	else if (!strncmp(state, "braking_openair", 15)) {
 	        puts("braking_openair requested");
@@ -77,8 +79,30 @@ void process_state_transition(char *state) {
 }
 
 void process_manual_override(char *override) {
-        /* TODO */
         printf("Hit process_manual_override with override '%s'\n", override);
+	if (!strncmp(override, "hv_enable", 9)) {
+       	        /* pretend we executed the command from the console */
+		process_input("can hv_enable");
+	}
+       	else if (!strncmp(override, "hv_disable", 10)) {
+       	        /* pretend we executed the command from the console */
+		process_input("can hv_disable");
+	}
+       	else if (!strncmp(override, "prim_brake_on", 13)) {
+       	        /* pretend we executed the command from the console */
+		process_input("can braking_on");
+	}
+	else if (!strncmp(override, "prim_brake_off", 14)) {
+       	        /* pretend we executed the command from the console */
+		process_input("can braking_off");
+	}
+	else if (!strncmp(override, "prim_brake_vent_on", 18)) {
+
+	}
+	else if (!strncmp(override, "prim_brake_vent_off", 19)) {
+
+	}
+		
 }
 
 void process_control(char *buf) {
@@ -113,7 +137,7 @@ void process_control(char *buf) {
 
 char buffer[USART_BUF];
 void check_incoming_controls(PC_Buffer *rx) {
-
+	
 	/* only something to do if a message is waiting */
 	if (pc_buffer_messageAvailable(rx)) {
 

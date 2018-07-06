@@ -5,8 +5,15 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "can.h"
+#include "iox.h"
 
 #define BLINK_INTERVAL	250
+#define CCP_MODULE 0
+#define NAV_MODULE 1
+#define PV_MODULE 0
+#define DEV_MODULE 0
+
 
 /* Nucleo 32 I/O */
 
@@ -70,6 +77,13 @@ U8 I2C Address: 0x49:
 
  	*/
 
+/* CAN Globals */
+CAN_HandleTypeDef     hcan;
+CAN_TxHeaderTypeDef   TxHeader;
+CAN_RxHeaderTypeDef   RxHeader;
+uint8_t               TxData[8];
+uint8_t               RxData[8];
+uint32_t              TxMailbox;
 
 inline void printPrompt(void) {
 	fputs("[nav-build] $ ", stdout);
@@ -83,12 +97,100 @@ int nav_init(void) {
 	return 0;
 }
 
+
+int nav_telemetry_send(void){
+	uint32_t can_id = 0x106;
+	size_t length = 8;
+	uint8_t TxData[8];
+	
+	// First Telemetry Message Setup
+	TxData[0] = 0; // Position
+	TxData[1] = 0; // Velocity
+	TxData[2] = 0; // Acceleration -X
+	TxData[3] = 0; // Acceleration -Y
+	TxData[4] = 0; // Acceleration -Z
+	TxData[5] = 0; // Tape Count 
+	TxData[6] = 0; // Tape Count (1 bit)
+	TxData[7] = 0; // Not Used
+	
+	can_send(can_id, length, TxData, &hcan);
+
+
+	// Second Telemetry Message Setup
+	can_id = 0x107;
+	TxData[0] = 0; // Pressure 1 (high bytes)
+	TxData[1] = 0; // Pressure 1 (low bytes)
+	TxData[2] = 0; // Pressure 2 (high bytes)
+	TxData[3] = 0; // Pressure 2 (low bytes)
+	TxData[4] = 0; // Pressure 3 (high bytes)
+	TxData[5] = 0; // Pressure 3 (low bytes)
+	TxData[6] = 0; // Pressure 4 (low bytes)
+	TxData[7] = 0; // Pressure 4 (low bytes)
+
+
+	can_send(can_id, length, TxData, &hcan);
+
+
+	can_id = 0x108;
+	TxData[0] = 0; // Pressure 5 (high bytes)
+	TxData[1] = 0; // Pressure 5 (low bytes)
+	TxData[2] = 0; // Pressure 6 (high bytes)
+	TxData[3] = 0; // Pressure 6 (low bytes)
+	TxData[4] = 0; // Solenoid 1 driven (bit 0)... Solenoid 6 Driven (bit 5)
+	TxData[5] = 0; // Should Stop == True if byte 5 == 1
+	TxData[6] = 0; // Unused
+	TxData[7] = 0; // Unused
+
+	can_send(can_id, length, TxData, &hcan);
+
+	return 0;
+}
+
+
+
+
+void nav_receive_telemetry(uint32_t can_id, uint8_t * RxData){
+	//TODO update with incomming CAN messages
+	int i;
+	printf("received telmetry from %lx\r\n", can_id);
+	for(i = 0; i < 8; i++){
+		printf("RxData[%d]: %x\r\n", i, RxData[i]);
+	}
+	if(can_id == 0x00){
+		uint8_t primary_brakes_mask = 0x5;
+		iox_set_multiple(primary_brakes_mask);
+		printf("call  Actuate brakes");
+		
+
+		//TODO update with State handler update
+	} else if (can_id == 0x001){
+		uint8_t primary_brakes_unactuate = 0x5;
+		iox_clear_multiple(primary_brakes_unactuate);
+		printf("TODO Call unactaute brakes");
+		//TODO update with State transition start
+	} else if (can_id == 0x0d2){
+		//TODO actuation overwrite
+	} else if (can_id == 0x0d3){
+		// TODO fault handler
+	} else if (can_id == 0x0d4){
+		// TODO update ccp telemetry vals
+	} else if (can_id == 0x0d6){
+		// TODO update PV telemetry vals
+	} else if (can_id == 0x0d8){
+		// TODO handle PV faults
+	} 
+
+
+
+}
+
+
 int main(void) {
 
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || nav_init())
+	if (io_init() || periph_init(&hcan, "nav") || nav_init())
 		fault();
 
 	rx = get_rx(USB_UART);
@@ -99,6 +201,14 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+	
+		/* Check for incoming CAN messages */
+		if(HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)){
+			HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData);
+			if((RxHeader.StdId == 0x000 ) || (RxHeader.StdId == 0x001)){
+				nav_receive_telemetry(RxHeader.StdId, RxData);
+			}
+		}
 	}
 
 	return 0;

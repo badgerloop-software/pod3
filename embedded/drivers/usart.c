@@ -237,7 +237,7 @@ int usart_config(
 	return 0;
 }
 
-inline void USART_Handler(
+static inline void USART_Handler(
 	USART_TypeDef *usart, PC_Buffer *tx, PC_Buffer *rx,
 	char *prev, char *prev2
 ) {

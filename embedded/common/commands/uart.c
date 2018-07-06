@@ -13,7 +13,7 @@ command_status do_uart(int argc, char *argv[]) {
 	if (!strcmp("send", argv[1])) {
 		printf("SENDING!\n\r");
 		uart_send();
-		fprintf(stdout, "This is where you can find another message\n\r");
+		fprintf(stderr, "This is where you can find another message");
 	}
 	if (!strcmp("receive", argv[1])) {
 		printf("RECEIVING!\n\r");
