@@ -242,8 +242,8 @@ COMMAND_ENTRY(
 
 
 command_status do_honeywell(int argc, char *argv[]) {
-	uint8_t temp;
-	uint8_t pres;
+    int temp;
+	int pres;
 	if(argc == 1) return USAGE;
 
 	/* Honeywell ambient pressure sensor reading */

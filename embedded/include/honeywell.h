@@ -7,7 +7,7 @@
 #define HONEYWELL_I2C_ADDR 0x38
 
 bool honeywell_start_read(void);
-bool honeywell_read(uint8_t *temp, uint8_t *pres);
+bool honeywell_read(int *temp, int *pres);
 bool honeywell_get_staleness(void);
 
 
