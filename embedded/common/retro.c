@@ -5,24 +5,24 @@
 
 
 void initRetro(void) {
-	mainRetro = &FRONT;
+	mainRetro = &RETRO1;
 }
 
 void badRetro(void){
-	if (FRONT.count == MIDDLE.count) {
-		if (mainRetro != &FRONT){ 
-			printf("main retro now front\r\n");
-			mainRetro = &FRONT;
+	if (RETRO1.count == RETRO2.count) {
+		if (mainRetro != &RETRO1){ 
+			printf("main retro now retro1\r\n");
+			mainRetro = &RETRO1;
 		}
-	} else if (MIDDLE.count == REAR.count) {
-		if (mainRetro != &FRONT){
+	} else if (RETRO2.count == RETRO3.count) {
+		if (mainRetro != &RETRO1){
 			printf("main retro now middle\r\n");
-			mainRetro = &MIDDLE;
-		}	
-	} else if (FRONT.count == REAR.count) {
-		if (mainRetro != &FRONT){
+			mainRetro = &RETRO2;
+		}
+	} else if (RETRO1.count == RETRO3.count) {
+		if (mainRetro != &RETRO1){
 			printf("main retro now front\r\n");
-			mainRetro = &FRONT;
+			mainRetro = &RETRO1;
 		}
 	}
 }

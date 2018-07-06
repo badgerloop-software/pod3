@@ -9,7 +9,6 @@
 #define NUMBER_INTERUPT_PINS 16
 #define AVERAGE_SIZE		 3
 
-
 typedef struct{
 		uint32_t prev, curr, count;
 			uint32_t filter[AVERAGE_SIZE];
