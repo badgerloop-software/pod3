@@ -8,14 +8,5 @@
 
 bool honeywell_start_read(void);
 bool honeywell_read(int *temp, int *pres);
-bool honeywell_get_staleness(void);
-
-
-
-int honeywell_readPressure(void);
-int honeywell_readTemperature(void);
-bool honeywell_isAlive(void);
-
-
 
 #endif
