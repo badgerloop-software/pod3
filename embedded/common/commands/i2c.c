@@ -7,6 +7,7 @@
 #include "i2c.h"
 #include "iox.h"
 #include "honeywell.h"
+
 command_status do_init(void) {
 	return (i2c_init() == HAL_OK) ? CMD_SUCCESS : FAIL;
 }
