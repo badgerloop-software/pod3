@@ -5,9 +5,9 @@
 
 timeStamp * mainRetro;
 
-#define FRONT 		interLine[11]
-#define MIDDLE 		interLine[9]
-#define REAR		interLine[13]
+#define RETRO1 		interLine[0]
+#define RETRO2 		interLine[1]
+#define RETRO3		interLine[5]
 
 #define MAINFILTERINDEX 	(mainRetro->count % AVERAGE_SIZE)
 

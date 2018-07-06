@@ -7,9 +7,6 @@
 #include "commands.h"
 #include "exti.h"
 
-//TESTING
-int led = 0;
-
 void printStamp (int pin, timeStamp * stamp) {
 	int i;
 	printf("addr %p\r\n", stamp);
@@ -33,35 +30,28 @@ void printStamp (int pin, timeStamp * stamp) {
 }
 
 command_status do_exti(int argc, char *argv[]) {
-    //TESTING
-    if(!strcmp(argv[1], "test")){
-            if(led == 0){
-                led = 1;
-                gpio_writePin(GPIOB, 3, led);
-            }
-            else{
-                led = 0;
-                gpio_writePin(GPIOB, 3, led);
-            }
+	
+    int pin = 0;
+
+    if (argc < 2) return USAGE;
+
+	pin = atoi((const char *) argv[1]);
+	
+    if ( pin == 0 ) return USAGE;
+
+	printStamp(pin, getTimeStamps(pin));
+	
+    printf("Velocity %d cm/s\r\n", getVelocity());
     
-            return CMD_SUCCESS;
-    }
+    return CMD_SUCCESS;
 
-
-	if (argc < 2) return USAGE;
-	uint8_t pin = 0;
-	GPIO_TypeDef * port; 
-
+    /*
 	if(hasGpioAlias(&port, &pin, argv[1])){
 		printStamp(pin, getTimeStamps(pin));
 		printf("Velocity %d cm/s\r\n", getVelocity());
 		return CMD_SUCCESS;
 	}
-
-	pin = atoi((const char *) argv[1]);
-		 	
-	printStamp(pin, getTimeStamps(pin));
-	printf("Velocity %d cm/s\r\n", getVelocity());
+    */
 
 	return CMD_SUCCESS;
 }
