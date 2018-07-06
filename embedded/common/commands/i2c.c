@@ -272,7 +272,7 @@ command_status do_honeywell(int argc, char *argv[]) {
 
 COMMAND_ENTRY(
 	"honeywell",
-	"honeywell {temp | pres}",
+	"honeywell read",
 	"Interact with the Honeywell SSCMNNN030PA2A3.",
 	do_honeywell
 )
