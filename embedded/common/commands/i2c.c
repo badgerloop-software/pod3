@@ -241,7 +241,6 @@ COMMAND_ENTRY(
 	do_iox
 )
 
-
 command_status do_honeywell(int argc, char *argv[]) {
     int temp;
 	int pres;
@@ -265,9 +264,6 @@ command_status do_honeywell(int argc, char *argv[]) {
 		printf("Temperature: %d Pressure %d\r\n", temp, pres);	
 		return CMD_SUCCESS;
 	}
-
-	
-	
 	return USAGE;
 }
 
