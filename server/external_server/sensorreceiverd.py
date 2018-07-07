@@ -21,8 +21,8 @@ def build_arg_parser():
     parser.add_argument('port', help='the port on which to listen', type=int)
     parser.add_argument('pod_ip', help='the address of the pod')
     parser.add_argument('pod_port', help='the port of the pod', type=int)
-    parser.add_argument('mongo_ip', help='the address of the MongoDB')
-    parser.add_argument('mongo_port', help='the port of the MongoDB', type=int)
+    parser.add_argument('mongo_ip', help='the address of the MongoDB', nargs='?', default='127.0.0.1')
+    parser.add_argument('mongo_port', help='the port of the MongoDB', type=int, nargs='?', default=27017)
     return parser
 
 def build_udp_endpoint(ip, port, pod_ip, pod_port):
