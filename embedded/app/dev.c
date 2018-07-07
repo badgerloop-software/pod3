@@ -4,8 +4,10 @@
 #include "board.h"
 #include "console.h"
 #include "usart.h"
+#include "can.h"
 
 #define BLINK_INTERVAL	100
+uint8_t board_num = 0;
 
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
