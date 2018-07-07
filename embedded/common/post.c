@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "rcc.h"
 #include "stm32l432xx.h"
+#include "i2c.h"
 
 const unsigned int *UID = (const unsigned int *) UID_BASE;
 
@@ -70,6 +71,8 @@ void post(const char *app_name) {
 	printf("HCLK:\t%lu kHz\r\n", rcc_get_AHB() / 1000);
 	printf("APB1:\t%lu kHz\r\n", rcc_get_APB1() / 1000);
 	printf("APB2:\t%lu kHz\r\n", rcc_get_APB2() / 1000);
+	printf("I2C Devices:\r\n");
+	for(int i = 0; i < 128; i++) i2c_scan(i);
 	puts("----------------------------------------------------------------------\r");
 
 	/* clear reset flags */
