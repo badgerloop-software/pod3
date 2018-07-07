@@ -9,6 +9,11 @@ timeStamp * mainRetro;
 #define RETRO2 		interLine[1]
 #define RETRO3		interLine[5]
 
+#define LIM1        interLine[3]
+#define LIM2        interLine[6]
+#define LIM3        interLine[7]
+
+
 #define MAINFILTERINDEX 	(mainRetro->count % AVERAGE_SIZE)
 
 #define MAIN_INTERVAL       (mainRetro->filter[MAINFILTERINDEX])

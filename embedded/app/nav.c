@@ -93,16 +93,25 @@ int nav_init(void) {
 	/* EXTI Init */
 	//void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool ie) {
 		
-	//Pin 0 EXTI Config
+	//Pin 0 EXTI Config (RETRO1)
 	exti_config(gpioa, 0, 0, 1, 1);
 	
-	//Pin 1 EXTI Config
+	//Pin 1 EXTI Config (RETRO2)
 	exti_config(gpioa, 1, 0, 1, 1);
 	
-	//Pin 5 EXTI Config
+	//Pin 5 EXTI Config (RETRO3)
 	exti_config(gpioa, 5, 0, 1, 1);
 	
-	/* Necessary Handlers
+	//Pin 3 EXTI Config (LIM1)
+	exti_config(gpioa, 5, 0, 1, 1);
+	
+	//Pin 6 EXTI Config (LIM2)
+	exti_config(gpioa, 5, 0, 1, 1);
+    
+	//Pin 7 EXTI Config (LIM3)
+	exti_config(gpioa, 5, 0, 1, 1);
+    
+    /* Necessary Handlers
 	void EXTI0_IRQHandler(void) {}
 	void EXTI1_IRQHandler(void) {}
 	void EXTI9_5_IRQHandler(void) {}
