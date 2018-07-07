@@ -134,7 +134,7 @@ HAL_StatusTypeDef can_init(void){
 	} else if (board_num == DEV){ //Read all messages
 		sFilterConfig0.FilterIdHigh = 0x7ff << 5;
 		sFilterConfig0.FilterIdLow = 0x0000;
-		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;
+		sFilterConfig0.FilterMaskIdHigh = 0x7ff << 5;
 		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	} else{
 		return HAL_ERROR;
