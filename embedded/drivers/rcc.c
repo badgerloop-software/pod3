@@ -13,6 +13,8 @@ bool rcc_setClk(clk_src_t clk, bool state) {
 	uint32_t set_mask, ready_mask, result;
 	__IO uint32_t *reg;
 
+    ready_mask = 0;
+
 	/* don't try to modify the system clock source */
 	if (clk == rcc_get_SysClockSrc())
 		return false;
@@ -115,7 +117,8 @@ bool rcc_changeSysClockSrc(clk_src_t clk) {
 		case MSI:
 			set_mask =		RCC_CFGR_SW_MSI;
 			ready_mask = 	RCC_CFGR_SWS_MSI;
-		case HSI:
+		    break;
+        case HSI:
 			set_mask =		RCC_CFGR_SW_HSI;
 			ready_mask =	RCC_CFGR_SWS_HSI;
 			break;
