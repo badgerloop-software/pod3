@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath('..'))
 ###
 import bloop_comms
 import argparse
+import serial
 import random
 import time
 import json
@@ -81,7 +82,7 @@ def send_loop(udp_comm):
     # read and send forever
     while True:
         to_send = read_sensor_data()
-        if to_send not None:
+        if to_send is not None:
             udp_comm.send(to_send)
 
 def main():
