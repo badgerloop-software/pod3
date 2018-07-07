@@ -25,7 +25,10 @@ HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
 	} else {
 		TxHeader.DLC = length/2;
 	}
-	if(HAL_CAN_GetTxMailboxesFreeLevel(&can_handle)){
+	int val = HAL_CAN_GetTxMailboxesFreeLevel(&can_handle);
+	printf("CAN TxMailboxesfree level %d", val);
+	
+	if(val){
 		printf("SENDING MESSAGE\r\n");
 		uint32_t TxMailbox = 0;
 		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, TxData, &TxMailbox);
@@ -38,8 +41,9 @@ HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
 HAL_StatusTypeDef can_read(void){
 	HAL_StatusTypeDef retval = HAL_ERROR;
 	int i;
-	
-	if(can_message_available(CAN_RX_FIFO0)){
+
+	int val = can_message_available(CAN_RX_FIFO0);
+	if(val){
 		printf("CAN Message Received.\r\n");
 		retval =HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		           
@@ -128,7 +132,6 @@ HAL_StatusTypeDef can_init(void){
 		sFilterConfig0.FilterMaskIdHigh = 0x0000;
 		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	} else if (board_num == DEV){ //Read all messages
-		printf("Setting filter to DEV");
 		sFilterConfig0.FilterIdHigh = 0x7ff << 5;
 		sFilterConfig0.FilterIdLow = 0x0000;
 		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;

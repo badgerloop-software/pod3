@@ -4,6 +4,7 @@
 #include "rcc.h"
 #include "pin_alias.h"
 #include "console.h"
+#include "can.h"
 
 /* STM32L432KC */
 // TODO
@@ -55,8 +56,11 @@ int periph_init(void) {
 
 	//printf("%d\n\r", test);
 	process_input("i2c init");
+	can_init();
 	return ret;
 }
+
+
 
 inline void blink_handler(unsigned int blink_int) {
 
