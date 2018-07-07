@@ -16,6 +16,7 @@ HAL_StatusTypeDef can_read(void);
 HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData);
 HAL_StatusTypeDef can_init(void);
 
+
 typedef enum sending_module_val{
 	RMS_SEND = 0,
  	CCP_SEND = 1,

@@ -50,14 +50,26 @@ command_status do_can(int argc, char *argv[]) {
 	if(!strcmp("read", argv[1]))
 		return can_try_read();
 	
-	if(argc == 2 || argc == 3 || argc == 4) return USAGE;
+	//if(argc == 2 || argc == 3 || argc == 4) return USAGE;
 
 	/* send a can message */
-	/*
+	
 	if(!strcmp("send", argv[1])){
-		return try_send(argv[2], argv[2], argv[3]);
+		//TEST MESSAGE SEND
+		uint32_t can_id = 0x123;
+		uint8_t length = 8;
+		uint8_t TxData[8];
+		TxData[0] = 0x55;
+		TxData[1] = 0x55;
+		TxData[2] = 0x55;
+		TxData[3] = 0x55;
+		TxData[4] = 0x55;
+		TxData[5] = 0x55;
+		TxData[6] = 0x55;
+		TxData[7] = 0x55;
+		return try_send(can_id, length, TxData);
 	}
-	*/
+	
 
 	return USAGE;
 }

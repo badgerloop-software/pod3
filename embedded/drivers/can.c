@@ -10,6 +10,50 @@ uint8_t TxData[8];
 uint8_t RxData[8];
 extern uint8_t board_num;
 
+uint32_t can_message_available( uint32_t RxFifo){
+	return HAL_CAN_GetRxFifoFillLevel(&can_handle, RxFifo);
+
+}
+
+HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
+	HAL_StatusTypeDef retval = HAL_ERROR;
+	TxHeader.StdId = can_id;
+	TxHeader.IDE = 0;
+	TxHeader.RTR = 0;
+	if( length % 2 == 1){
+		TxHeader.DLC = (length/2) + 1;
+	} else {
+		TxHeader.DLC = length/2;
+	}
+	if(HAL_CAN_GetTxMailboxesFreeLevel(&can_handle)){
+		printf("SENDING MESSAGE\r\n");
+		uint32_t TxMailbox = 0;
+		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, TxData, &TxMailbox);
+		if(retval != HAL_OK) return retval;
+							
+	} else return HAL_ERROR;
+	return retval;
+}
+
+HAL_StatusTypeDef can_read(void){
+	HAL_StatusTypeDef retval = HAL_ERROR;
+	int i;
+	
+	if(can_message_available(CAN_RX_FIFO0)){
+		printf("CAN Message Received.\r\n");
+		retval =HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
+		           
+		/* Printing out received data */
+		printf("Received CAN ID: #%lx\r\n", RxHeader.StdId );
+		for(i = 0; i < 8; i++){
+			if( RxData[i] != 0){
+				printf("CAN Message Data #%d: %x\r\n", i, RxData[i]);
+			}
+		}
+	}
+	return retval;
+}
+
 HAL_StatusTypeDef can_init(void){
 	HAL_StatusTypeDef retval;	
 	CAN_FilterTypeDef sFilterConfig0;
@@ -26,7 +70,7 @@ HAL_StatusTypeDef can_init(void){
 	can_handle.Init.AutoRetransmission = ENABLE;
 	can_handle.Init.ReceiveFifoLocked = DISABLE;
 	can_handle.Init.TransmitFifoPriority = DISABLE;
-	can_handle.Init.Mode = CAN_MODE_NORMAL;
+	can_handle.Init.Mode = CAN_MODE_LOOPBACK;
 
 	/* CAN Bit Timing Register Init */
 	can_handle.Init.SyncJumpWidth = CAN_SJW_1TQ;
@@ -67,6 +111,7 @@ HAL_StatusTypeDef can_init(void){
 	 *
 	 */
 
+	printf("Setting filters");
 	if(board_num == DASH){
 		sFilterConfig0.FilterIdHigh = 0x0000;
 		sFilterConfig0.FilterIdLow = 0x0000;
@@ -83,6 +128,7 @@ HAL_StatusTypeDef can_init(void){
 		sFilterConfig0.FilterMaskIdHigh = 0x0000;
 		sFilterConfig0.FilterMaskIdLow = 0x0000;
 	} else if (board_num == DEV){ //Read all messages
+		printf("Setting filter to DEV");
 		sFilterConfig0.FilterIdHigh = 0x7ff << 5;
 		sFilterConfig0.FilterIdLow = 0x0000;
 		sFilterConfig0.FilterMaskIdHigh = 0x7FF << 5;

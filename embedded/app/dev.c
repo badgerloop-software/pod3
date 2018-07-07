@@ -37,6 +37,8 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+		can_read();
+
 	}
 
 	return 0;
