@@ -6,6 +6,7 @@
 #include "usart.h"
 #include "pin_alias.h"
 #include "uart.h"
+#include "dashboard_data.h"
 #include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
@@ -69,6 +70,7 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
+		send_data(pod_data);
 		blink_handler(BLINK_INTERVAL);
 	}
 
