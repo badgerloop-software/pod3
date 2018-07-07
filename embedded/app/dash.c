@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <time.h>
 #include "system.h"
 #include "board.h"
 #include "console.h"
@@ -9,6 +9,7 @@
 #include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
+Pod_Data_Handle *pod_data;
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
@@ -41,22 +42,12 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
+	Sensor_Data pressure = {"pressure", 0, time(NULL), NOT_FRESH};	
+	Sensor_Data temperature = {"temperature", 0, time(NULL), NOT_FRESH};
+	pod_data->pressure = pressure;
+	pod_data->temperature = temperature;
+	//pod_data->temperature = {"temperature", 0, time(), 1};
 
-	/* dash specific initializations */
-	/*UartHandle->Instance		 = USART1
-	
-	UartHandle->Init.BaudRate        = 115200;
-	UartHandle->Init.WordLength      = UART_WORDLENGTH_8B;
-	UartHandle->Init.StopBits	 = UART_STOPBITS_1;
-	UartHandle->Init.Parity	 	 = UART_PARITY_NONE;
-	UartHandle->Init.HwFlowCtl	 = UART_HWCONTROL_NONE;
-	UartHandle->Init.Mode		 = UART_MODE_TX_RX;
-	UartHandle->Init.OverSampling	 = UART_OVERSAMPLING_16;
-	
-	if (HAL_UART_DeInit(UartHandle) != HAL_OK) printf("FAILURE TO CHECK DeInit\n\r");
-	*/
-
-	
 	return 0;
 }
 
