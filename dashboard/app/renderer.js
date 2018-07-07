@@ -21,7 +21,16 @@ if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.len
 let thisChart;
 const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
-/*Let's each data row create a graph from itself when clicked*/
+
+function parseData(rawData, sensorName) {
+    console.log(rawData);
+    let jsonData = JSON.parse(rawData);
+    console.log(rawData);
+    console.log(jsonData);
+    return jsonData[sensorName]["sensor_data"][(jsonData[sensorName]["sensor_data"].length - 1)]["value"];
+}
+
+/*Lets each data row create a graph from itself when clicked*/
 for (let i = 0; i < tableRows.length; i++) {
     tableRows[i].addEventListener("click", ()=> {
         if (requestLoop !== undefined) {
@@ -42,7 +51,7 @@ for (let i = 0; i < tableRows.length; i++) {
 /*For each data point, the data is updated when a new point comes in remotely*/
 for (let i = 0; i < dataLabels.length; i++) {
     comm.updater.on(MESSAGE_BASE + dataLabels[i].innerHTML, (data) => {
-        tableData[i].innerHTML = data;
+        tableData[i].innerHTML = parseData(data, conciseLabels[i]);
     });
 }
 
@@ -50,20 +59,20 @@ for (let i = 0; i < dataLabels.length; i++) {
 let conciseLabels = [];
 for (let i = 0; i < dataLabels.length; i++) {
     let tempLabel = dataLabels[i].innerHTML;
-    let cutOff = tempLabel.indexOf("(");
+    let cutOff = tempLabel.indexOf(" (");
     if (cutOff >= 0) {
         tempLabel = tempLabel.substr(0, cutOff);
     }
-    conciseLabels[i] = tempLabel.split(' ').join('');
+    conciseLabels[i] = tempLabel.split(' ').join('_').toLowerCase();
 }
 
 
 /*Polls for new data from the server as often as UPDATE_TIME*/
 setInterval(() => {
     for (let i = 0; i < tableData.length; i++) {
-	let serverIP = comm.getServerIP();
-	let serverPort = comm.getServerPort();
-        comm.sendMessage(dataLabels[i].innerHTML, serverIP, serverPort, "data" ,conciseLabels[i]);
+	    let serverIP = comm.getServerIP();
+	    let serverPort = comm.getServerPort();
+        comm.sendMessage(dataLabels[i].innerHTML, serverIP, serverPort, "sensor" ,conciseLabels[i]);
     }
 }, UPDATE_TIME);
 

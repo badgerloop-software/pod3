@@ -11,7 +11,7 @@ const brake_off = document.getElementById("brake_off");
 const brake_vent_on = document.getElementById("brake_vent_on");
 const brake_vent_off = document.getElementById("brake_vent_off");
 
-const PASSWORD = "The Amp Hour Podcast";  //Super secure, just change the password here
+const PASSWORD = "betsy";  //Super secure, just change the password here
 
 function verificationRequest(e) {
 /*    if (popup.style.display === "none") {
