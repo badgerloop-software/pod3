@@ -12,8 +12,8 @@ extern uint8_t               TxData[8];
 extern uint8_t               RxData[8];
 extern uint32_t TxMailbox;
 
-bool can_read(void);
-bool can_send(uint32_t can_id, size_t length, uint8_t *TxData);
+HAL_StatusTypeDef can_read(void);
+HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData);
 HAL_StatusTypeDef can_init(void);
 
 typedef enum sending_module_val{

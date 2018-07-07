@@ -15,12 +15,12 @@ command_status can_try_init(void){
 }
 
 //TODO
-/*
 command_status try_send(uint32_t can_id, size_t length, uint8_t *TxData){
-	
-	
+	if(can_send(can_id, length, TxData) != HAL_OK)
+		return FAIL;
+
+	return CMD_SUCCESS;	
 }
-*/
 command_status can_try_read(void){
 	HAL_StatusTypeDef retval = FAIL;
 	if(HAL_CAN_GetRxFifoFillLevel(&can_handle, CAN_RX_FIFO0)){
