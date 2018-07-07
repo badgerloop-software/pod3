@@ -21,14 +21,16 @@ def build_arg_parser():
     parser.add_argument('port', help='the port on which to listen', type=int)
     parser.add_argument('pod_ip', help='the address of the pod')
     parser.add_argument('pod_port', help='the port of the pod', type=int)
+    parser.add_argument('mongo_ip', help='the address of the MongoDB', nargs='?', default='127.0.0.1')
+    parser.add_argument('mongo_port', help='the port of the MongoDB', type=int, nargs='?', default=27017)
     return parser
 
 def build_udp_endpoint(ip, port, pod_ip, pod_port):
     ep = bloop_comms.udp_endpoint(pod_ip, pod_port, ip, port)
     return ep
 
-def open_db():
-    client = pymongo.MongoClient()
+def open_db(ip, port):
+    client = pymongo.MongoClient(ip, port)
     db = client[DB_NAME]
     return db
 
@@ -77,7 +79,7 @@ def main():
     args = build_arg_parser().parse_args()
     udp_comm = build_udp_endpoint(args.ip, args.port, args.pod_ip, args.pod_port)
     # and get a connection to our DB
-    db = open_db()
+    db = open_db(args.mongo_ip, args.mongo_port)
     # start listening
     listen_loop(udp_comm, db)
 

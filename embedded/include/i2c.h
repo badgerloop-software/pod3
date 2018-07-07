@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "stm32l4xx_hal_conf.h"
 
-extern volatile uint32_t ticks;
+extern volatile unsigned int ticks;
 
 #define BLOOP_I2C_TIMEOUT	50
 #define I2C_BUF_SIZE		64
@@ -32,6 +32,8 @@ extern volatile uint32_t i2c_flags;
 HAL_StatusTypeDef i2c_init(void);
 
 HAL_StatusTypeDef i2c_query(uint8_t addr);
+
+bool i2c_scan(int addr);
 
 HAL_StatusTypeDef i2c_start_write(
 	uint8_t addr, uint16_t nbytes, const uint8_t *data
