@@ -19,7 +19,7 @@ HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
 	TxHeader.StdId = can_id;
 	TxHeader.IDE = 0;
 	TxHeader.RTR = 0;
-	if( length % 2 == 1){
+	if (length % 2 == 1){
 		TxHeader.DLC = (length/2) + 1;
 	} else {
 		TxHeader.DLC = length/2;
@@ -27,11 +27,11 @@ HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
 	int val = HAL_CAN_GetTxMailboxesFreeLevel(&can_handle);
 	printf("CAN TxMailboxesfree level %d", val);
 	
-	if(val){
+	if (val){
 		printf("SENDING MESSAGE\r\n");
 		uint32_t TxMailbox = 0;
 		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, TxData, &TxMailbox);
-		if(retval != HAL_OK) return retval;
+		if (retval != HAL_OK) return retval;
 							
 	} else return HAL_ERROR;
 	return retval;
@@ -46,8 +46,8 @@ HAL_StatusTypeDef can_read(void){
 		           
 		/* Printing out received data */
 		printf("Received CAN ID: #%lx\r\n", RxHeader.StdId );
-		for(i = 0; i < 8; i++){
-			if( RxData[i] != 0){
+		for (i = 0; i < 8; i++){
+			if (RxData[i] != 0){
 				printf("CAN Message Data #%d: %x\r\n", i, RxData[i]);
 			}
 		}
@@ -71,7 +71,7 @@ HAL_StatusTypeDef can_init(void){
 	can_handle.Init.AutoRetransmission = ENABLE;
 	can_handle.Init.ReceiveFifoLocked = DISABLE;
 	can_handle.Init.TransmitFifoPriority = DISABLE;
-	can_handle.Init.Mode = CAN_MODE_LOOPBACK;
+	can_handle.Init.Mode = CAN_MODE_NORMAL;
 
 	/* CAN Bit Timing Register Init */
 	can_handle.Init.SyncJumpWidth = CAN_SJW_1TQ;
@@ -112,41 +112,43 @@ HAL_StatusTypeDef can_init(void){
 	 *
 	 */
 
-	printf("Setting filters");
-	if(board_num == DASH){
-		sFilterConfig0.FilterIdHigh = 0x0000;
-		sFilterConfig0.FilterIdLow = 0x0000;
-		sFilterConfig0.FilterMaskIdHigh = 0x0000;
-		sFilterConfig0.FilterMaskIdLow = 0x0000;
-	} else if (board_num == NAV){
-		sFilterConfig0.FilterIdHigh = 0x0000;
-		sFilterConfig0.FilterIdLow = 0x0000;
-		sFilterConfig0.FilterMaskIdHigh = 0x0000;
-		sFilterConfig0.FilterMaskIdLow = 0x0000;
-	} else if (board_num == PV){
-		sFilterConfig0.FilterIdHigh = 0x0000;
-		sFilterConfig0.FilterIdLow = 0x0000;
-		sFilterConfig0.FilterMaskIdHigh = 0x0000;
-		sFilterConfig0.FilterMaskIdLow = 0x0000;
-	} else if (board_num == DEV){ //Read all messages
-		sFilterConfig0.FilterIdHigh = 0x7ff << 5;
-		sFilterConfig0.FilterIdLow = 0x0000;
-		sFilterConfig0.FilterMaskIdHigh = 0x7ff << 5;
-		sFilterConfig0.FilterMaskIdLow = 0x0000;
-	} else{
-		return HAL_ERROR;
+	
+	switch (board_num) {
+		case DASH:
+			sFilterConfig0.FilterIdHigh = 0x0000;
+			sFilterConfig0.FilterIdLow = 0x0000;
+			sFilterConfig0.FilterMaskIdHigh = 0x0000;
+			sFilterConfig0.FilterMaskIdLow = 0x0000;
+		case NAV:
+			sFilterConfig0.FilterIdHigh = 0x0000;
+			sFilterConfig0.FilterIdLow = 0x0000;
+			sFilterConfig0.FilterMaskIdHigh = 0x0000;
+			sFilterConfig0.FilterMaskIdLow = 0x0000;
+		case PV:
+			sFilterConfig0.FilterIdHigh = 0x0000;
+			sFilterConfig0.FilterIdLow = 0x0000;
+			sFilterConfig0.FilterMaskIdHigh = 0x0000;
+			sFilterConfig0.FilterMaskIdLow = 0x0000;
+		case DEV:
+			sFilterConfig0.FilterIdHigh = 0x7ff << 5;
+			sFilterConfig0.FilterIdLow = 0x0000;
+			sFilterConfig0.FilterMaskIdHigh = 0x7ff << 5;
+			sFilterConfig0.FilterMaskIdLow = 0x0000;
+		default:
+			return HAL_ERROR;
+
 	}
 	
 	sFilterConfig0.FilterActivation = ENABLE;
 	
 	/* Calling CAN Init Functions */
 	retval = HAL_CAN_Init(&can_handle);
-	if(retval != HAL_OK) return retval;
+	if (retval != HAL_OK) return retval;
 
 	retval = HAL_CAN_ConfigFilter(&can_handle, &sFilterConfig0);
-	if(retval != HAL_OK )return retval;
+	if (retval != HAL_OK )return retval;
 
 	retval = HAL_CAN_Start(&can_handle);
-	if(retval != HAL_OK) return retval; 	
+	if (retval != HAL_OK) return retval; 	
 	return retval;
 }

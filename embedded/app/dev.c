@@ -7,7 +7,7 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	100
-uint8_t board_num = 0;
+uint8_t board_num = DEV;
 
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
@@ -38,7 +38,6 @@ int main(void) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 		can_read();
-
 	}
 
 	return 0;

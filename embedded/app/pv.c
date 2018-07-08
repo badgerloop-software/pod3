@@ -7,7 +7,7 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-uint8_t board_num = 3;
+uint8_t board_num = PV;
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit
