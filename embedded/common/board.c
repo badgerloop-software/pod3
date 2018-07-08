@@ -22,7 +22,6 @@
 	FILL_AFIO(CAN1_TX, GPIOA, 12, ALT, 9, LOW_SPEED, NONE, true, OTHER)
 	FILL_AFIO(CAN1_RX, GPIOA, 11, ALT, 9, LOW_SPEED, NONE, true, OTHER)
 
-
 int io_init(void) {
 
 	int ret = 0;
@@ -50,17 +49,14 @@ int periph_init(void) {
 
 	/* USB UART */
 	init_regs[0] = USART_CR1_RXNEIE;
-	//printf("%d\n\r", (int)init_regs[0]);
+	
 	ret += usart_config(USB_UART, SYSCLK, init_regs, 115200, true);
 	ret += usart_config(USART1, SYSCLK, init_regs, 115200, true);
 
-	//printf("%d\n\r", test);
 	process_input("i2c init");
 	can_init();
 	return ret;
 }
-
-
 
 inline void blink_handler(unsigned int blink_int) {
 

@@ -99,10 +99,7 @@ command_status do_can(int argc, char *argv[]) {
 		data[1] = (converted & 0x000000000000ff00) >> 8;
 		data[0] = (converted & 0x00000000000000ff);
 
-
-
 		can_send(can_id, length, data);
-
 	}
 
 	return USAGE;
