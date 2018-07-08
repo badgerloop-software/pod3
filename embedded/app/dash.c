@@ -7,9 +7,11 @@
 #include "pin_alias.h"
 #include "uart.h"
 #include "dashboard_control.h"
+#include "stm32l4xx_hal_adc.h"
+#include "stm32l4xx_hal_adc_ex.h"
+#include "stm32l4xx_ll_adc.h"
 
 #define BLINK_INTERVAL	250
-
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
@@ -42,7 +44,10 @@ inline void printPrompt(void) {
 }
 
 int dash_init(void) {
-	/* dash specific initializations */
+	return 0;
+}
+
+int dash_init(void) {
 	return 0;
 }
 
@@ -50,8 +55,6 @@ int main(void) {
 
 	PC_Buffer *rx;
 	PC_Buffer *ctrl_rx;
-     
-     	//uint16_t ADC6ConvertedValue;
 
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init() || dash_init())
@@ -67,6 +70,6 @@ int main(void) {
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
-	}
+		}
 	return 0;
 }

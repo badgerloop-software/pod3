@@ -29,11 +29,11 @@ bool i2c_errors_present(void) {
 	return (i2c_flags & I2C_ERROR) ? true : false;
 }
 
-bool i2c_scan(int addr) {
+bool i2c_scan(int addr, bool print_err) {
 	HAL_StatusTypeDef retval = i2c_query(addr);
 	if (retval == HAL_OK)
 		printf("found 0x%x\r\n", addr);
-	else if (retval != HAL_TIMEOUT) {
+	else if ((retval != HAL_TIMEOUT) && print_err) {
 		print_i2c_error(&i2c_handle);
 		print_i2c_state(&i2c_handle);
 	}

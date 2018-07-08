@@ -54,6 +54,7 @@ void print_rst_str(void) {
 
 void post(const char *app_name) {
 
+	int i;
 	uint8_t sernum[3];
 
 	sernum[0] = (UID[0] & 0xff0000) >> 16;
@@ -72,8 +73,8 @@ void post(const char *app_name) {
 	printf("APB1:\t%lu kHz\r\n", rcc_get_APB1() / 1000);
 	printf("APB2:\t%lu kHz\r\n", rcc_get_APB2() / 1000);
 	printf("I2C Devices:\r\n");
-	int i;
-	for(i = 0; i < 128; i++) i2c_scan(i);
+	for(i = 0; i < 128; i++)
+		i2c_scan(i, false);
 	puts("----------------------------------------------------------------------\r");
 
 	/* clear reset flags */
