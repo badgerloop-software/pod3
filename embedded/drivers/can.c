@@ -12,7 +12,6 @@ extern uint8_t board_num;
 
 uint32_t can_message_available( uint32_t RxFifo){
 	return HAL_CAN_GetRxFifoFillLevel(&can_handle, RxFifo);
-
 }
 
 HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
@@ -41,9 +40,7 @@ HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData){
 HAL_StatusTypeDef can_read(void){
 	HAL_StatusTypeDef retval = HAL_ERROR;
 	int i;
-
-	int val = can_message_available(CAN_RX_FIFO0);
-	if(val){
+	if(can_message_available(CAN_RX_FIFO0)){
 		printf("CAN Message Received.\r\n");
 		retval =HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		           
