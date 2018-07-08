@@ -10,7 +10,7 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-uint8_t board_num = 1;
+uint8_t board_num = DASH;
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
