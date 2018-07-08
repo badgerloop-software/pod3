@@ -84,6 +84,7 @@ def send_loop(udp_comm):
     # read and send forever
     while True:
         to_send = read_sensor_data()
+        print to_send
         if to_send is not None:
             udp_comm.send(to_send)
 
