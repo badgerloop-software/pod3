@@ -60,7 +60,9 @@ def convert_command_to_json_payload(cmnd):
     sensor_name = parts[0]
     sensor_value = parts[1]
     # get the current seconds since epoch (use datetime if string preferred)
-    curr_time = int(time.time())
+    curr_time = time.time()
+    # and convert it from float seconds to integer milliseconds
+    curr_time = int(curr_time * 1000)
     # and put those into a dict for json translation
     data = dict()
     data[TIMESTAMP] = curr_time
