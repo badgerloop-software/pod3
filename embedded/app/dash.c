@@ -43,11 +43,10 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
-	Sensor_Data pressure = {"pressure", 0, time(NULL), NOT_FRESH};	
-	Sensor_Data temperature = {"temperature", 0, time(NULL), NOT_FRESH};
+	Sensor_Data pressure = {"current_pressure", 0, 0, 0, time(NULL), FRESH, DT_UINT16};	
+	Sensor_Data temperature = {"lv_battery_temp", 0,0, 0, time(NULL), FRESH, DT_UINT8};
 	pod_data.pressure = pressure;
 	pod_data.temperature = temperature;
-	//pod_data->temperature = {"temperature", 0, time(), 1};
 
 	return 0;
 }
