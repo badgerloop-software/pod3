@@ -3,10 +3,12 @@
 #include "dashboard_data.h"
 #include "uart.h"
 
-#define SEND_BUFFER_SIZE 100
+#define SEND_BUF_SIZE 128
+
+char packetBuffer[SEND_BUF_SIZE];
 
 void send_data(Pod_Data_Handle *pod_data) {
-	Sensor_Data *sensor = NULL;
+	Sensor_Data *sensor;
 	if (pod_data->pressure.freshness == FRESH) {
 		pod_data->pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->pressure);
@@ -23,32 +25,20 @@ void send_data(Pod_Data_Handle *pod_data) {
 }
 
 char *formatPacket(Sensor_Data *sensorData) {
-	uint8_t data = sensorData->data;
-	char packetBuffer[SEND_BUFFER_SIZE];
-	int arrIter = 0;
-	packetBuffer[arrIter++] = '$', packetBuffer[arrIter++] = '|'; // Set up the crazy encoding
-	
-	size_t i;
-	size_t nameLength = strlen(sensorData->name);
-
-	// Add the name to the message
-	for (i = 0; i < nameLength; i++) {
-		if (sensorData->name[i] == '\0') {
-			break;
-		}
-		packetBuffer[arrIter++] = sensorData->name[i];
+	char *sensName;
+	uint8_t sensData;
+	int nChars;
+	/* grab the values we want to send */
+	sensName = sensorData->name;
+	sensData = sensorData->data;
+        /* print the content to the buffer */
+	/* TODO switch goes here to pull the correct data type */
+	/* TODO the format string will be different by type */
+	nChars = snprintf(packetBuffer, SEND_BUF_SIZE, "$|%s,%u\n", sensName, sensData);
+	if (nChars < 0 || nChars > SEND_BUF_SIZE) {
+	        /* TODO this means our print failed or was too big */
+	        /* TODO should do something smarter here */
+	        puts("Problem encountered while creating sensor data payload");
 	}
-	packetBuffer[arrIter++] = ':';
-
-	char dataBuff[20];
-	sprintf(dataBuff, "%d",data);
-	size_t dataLength = strlen(dataBuff);
-	// Add the data to the message
-	for (i = 0; i <= dataLength; i++) {
-		packetBuffer[arrIter++] = dataBuff[i];
-	}
-
-	char *packet = NULL;
-	strcpy(packet, packetBuffer);
-	return packet;
+	return packetBuffer;
 }
