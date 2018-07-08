@@ -10,7 +10,7 @@
 #include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
-Pod_Data_Handle *pod_data;
+Pod_Data_Handle pod_data;
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
@@ -45,8 +45,8 @@ inline void printPrompt(void) {
 int dash_init() {
 	Sensor_Data pressure = {"pressure", 0, time(NULL), NOT_FRESH};	
 	Sensor_Data temperature = {"temperature", 0, time(NULL), NOT_FRESH};
-	pod_data->pressure = pressure;
-	pod_data->temperature = temperature;
+	pod_data.pressure = pressure;
+	pod_data.temperature = temperature;
 	//pod_data->temperature = {"temperature", 0, time(), 1};
 
 	return 0;
@@ -70,7 +70,7 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
-		send_data(pod_data);
+		send_data(&pod_data);
 		blink_handler(BLINK_INTERVAL);
 	}
 
