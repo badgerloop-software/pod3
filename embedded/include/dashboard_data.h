@@ -25,8 +25,12 @@ typedef struct {
 
 
 typedef struct {
-	Sensor_Data pressure;
-	Sensor_Data temperature;	
+	Sensor_Data current_pressure;
+	Sensor_Data lv_battery_temp;
+	Sensor_Data position;
+	Sensor_Data velocity;
+	Sensor_Data acceleration;
+	Sensor_Data tube_pressure;	
 } Pod_Data_Handle;
 
 
