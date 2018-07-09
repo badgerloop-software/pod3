@@ -10,7 +10,14 @@
 #include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
-Pod_Data_Handle pod_data;
+Pod_Data_Handle pod_data = {
+	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
+	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+};
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
@@ -43,10 +50,7 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
-	Sensor_Data pressure = {"current_pressure", 0, 0, 0, time(NULL), FRESH, DT_UINT16};	
-	Sensor_Data temperature = {"lv_battery_temp", 0,0, 0, time(NULL), FRESH, DT_UINT8};
-	pod_data.pressure = pressure;
-	pod_data.temperature = temperature;
+	
 
 	return 0;
 }
