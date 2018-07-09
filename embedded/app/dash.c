@@ -10,7 +10,6 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-uint8_t board_num = DASH;
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
@@ -68,7 +67,7 @@ int main(void) {
 	PC_Buffer *ctrl_rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dash_init())
+	if (io_init() || periph_init(DASH) || dash_init())
 		fault();
 
 	rx = get_rx(USB_UART);

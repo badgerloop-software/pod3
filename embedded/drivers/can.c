@@ -4,8 +4,8 @@
 #include "can.h"
 
 CAN_HandleTypeDef can_handle;
-CAN_TxHeaderTypeDef TxHeader;
 CAN_RxHeaderTypeDef RxHeader;
+CAN_TxHeaderTypeDef TxHeader;
 uint8_t TxData[8];
 uint8_t RxData[8];
 extern uint8_t board_num;
@@ -14,14 +14,12 @@ uint32_t can_message_available(uint32_t RxFifo) {
 	return HAL_CAN_GetRxFifoFillLevel(&can_handle, RxFifo);
 }
 
-HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData) {
-
-	uint32_t TxMailbox = 0;
-
+HAL_StatusTypeDef can_send(
+	uint32_t id, uint32_t TxMailbox, size_t length, uint8_t *data
+) {
 	HAL_StatusTypeDef retval = HAL_ERROR;
-	TxHeader.StdId = can_id;
-	TxHeader.IDE = 0;
-	TxHeader.RTR = 0;
+
+	TxHeader.StdId = id;
 
 	/* TODO: why are we doing this? */
 	if (length % 2 == 1) {
@@ -29,12 +27,10 @@ HAL_StatusTypeDef can_send(uint32_t can_id, size_t length, uint8_t *TxData) {
 	} else {
 		TxHeader.DLC = length / 2;
 	}
-
-	//printf("CAN TxMailboxesfree level %d", val);
 	
 	if (HAL_CAN_GetTxMailboxesFreeLevel(&can_handle)) {
 		printf("SENDING MESSAGE\r\n");
-		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, TxData, &TxMailbox);
+		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, data, &TxMailbox);
 		if (retval != HAL_OK)
 			return retval;
 	} else return HAL_ERROR;
@@ -62,7 +58,7 @@ HAL_StatusTypeDef can_read(void) {
 	return retval;
 }
 
-HAL_StatusTypeDef can_init(void) {
+HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 
 	HAL_StatusTypeDef retval;	
 	CAN_FilterTypeDef sFilterConfig0;
@@ -97,6 +93,11 @@ HAL_StatusTypeDef can_init(void) {
 	 */
 	can_handle.Init.Prescaler				= 12;
 
+	/* Initialize the transmit header to values we'll always use */
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.RTR = CAN_RTR_DATA;
+	TxHeader.TransmitGlobalTime = DISABLE;
+
 	/* CAN Filter Config */
 	sFilterConfig0.FilterBank				= 0;
 	sFilterConfig0.FilterMode				= CAN_FILTERMODE_IDMASK;
@@ -121,7 +122,7 @@ HAL_StatusTypeDef can_init(void) {
 	 *
 	 */
 	
-	switch (board_num) {
+	switch (role) {
 		case DASH:
 			sFilterConfig0.FilterIdHigh			= 0x0000;
 			sFilterConfig0.FilterIdLow			= 0x0000;

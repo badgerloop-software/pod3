@@ -7,7 +7,6 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	100
-uint8_t board_num = DEV;
 
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
@@ -26,7 +25,7 @@ int main(void) {
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dev_init())
+	if (io_init() || periph_init(DEV) || dev_init())
 		fault();
 
 	rx = get_rx(USB_UART);

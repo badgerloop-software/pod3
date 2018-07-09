@@ -3,17 +3,15 @@
 
 #include <stdbool.h>
 
-extern uint8_t board_num;
-
-typedef enum board_type {
+typedef enum _board_role {
 	DEV = 0,
 	DASH = 1,
 	NAV = 2,
 	PV = 3
-} BOARD_TYPE;
+} BOARD_ROLE;
 
 int io_init(void);
-int periph_init(void);
+int periph_init(BOARD_ROLE role);
 void fault(void);
 void blink_handler(unsigned int blink_int);
 void set_led(bool state);
