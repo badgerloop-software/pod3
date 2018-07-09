@@ -42,7 +42,7 @@ int io_init(void) {
 	return ret;
 }
 
-int periph_init(void) {
+int periph_init(BOARD_ROLE role) {
 
 	int ret = 0;
 	uint32_t init_regs[3] = {0, 0, 0};
@@ -54,7 +54,9 @@ int periph_init(void) {
 	ret += usart_config(USART1, SYSCLK, init_regs, 115200, true);
 
 	process_input("i2c init");
-	can_init();
+
+	can_init(role);
+
 	return ret;
 }
 

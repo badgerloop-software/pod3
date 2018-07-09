@@ -11,8 +11,7 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 Pod_Data_Handle pod_data = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
@@ -64,7 +63,7 @@ int main(void) {
 	PC_Buffer *ctrl_rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dash_init())
+	if (io_init() || periph_init(DASH) || dash_init())
 		fault();
 
 	rx = get_rx(USB_UART);

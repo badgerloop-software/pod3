@@ -7,7 +7,6 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-uint8_t board_num = PV;
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit
@@ -55,7 +54,7 @@ int main(void) {
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || pv_init())
+	if (io_init() || periph_init(PV) || pv_init())
 		fault();
 
 	rx = get_rx(USB_UART);

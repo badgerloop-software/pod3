@@ -5,10 +5,6 @@
 #include "commands.h"
 #include "can.h"
 
-command_status try_can_init(void) {
-	return (can_init() == HAL_OK) ? CMD_SUCCESS : FAIL;
-}
-
 command_status try_send(uint32_t can_id, size_t length, uint8_t *TxData) {
 	if (can_send(can_id, length, TxData) != HAL_OK)
 		return FAIL;
@@ -38,10 +34,6 @@ command_status can_try_read(void) {
 command_status do_can(int argc, char *argv[]) {
 	
 	if (argc == 1) return USAGE;
-
-	/* init (or re-init) the can subsystem */
-	if (!strcmp("init", argv[1]))
-		return try_can_init();
 
 	/* read a can message */
 	if (!strcmp("read", argv[1]))
@@ -103,7 +95,6 @@ command_status do_can(int argc, char *argv[]) {
 COMMAND_ENTRY(
 	"can",
 	"can <subcommand> [args...]\r\n\r\n"
-	"init\r\n"
 	"read\r\n"
 	"send_test\r\n"
 	"send <TODO>\r\n",
