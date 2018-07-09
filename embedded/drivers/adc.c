@@ -27,7 +27,7 @@ HAL_StatusTypeDef adc_init(void){
    	adc_handle.Init.ScanConvMode          = DISABLE;                       /* Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1) */ 
    	adc_handle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;           /* EOC flag picked-up to indicate conversion end */ 
    	adc_handle.Init.LowPowerAutoWait      = DISABLE;                       /* Auto-delayed conversion feature disabled */ 
-   	adc_handle.Init.ContinuousConvMode    = DISABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 
+  	adc_handle.Init.ContinuousConvMode    = DISABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 
    	adc_handle.Init.NbrOfConversion       = 1;                             /* Parameter discarded because sequencer is disabled */ 
    	adc_handle.Init.DiscontinuousConvMode = DISABLE;                       /* Parameter discarded because sequencer is disabled */ 
  	adc_handle.Init.NbrOfDiscConversion   = 1;                             /* Parameter discarded because sequencer is disabled */ 
@@ -47,12 +47,14 @@ HAL_StatusTypeDef adc_init(void){
 	/*##-2- Configure ADC regular channel ######################################*/
    	sConfig5.Channel      = ADC_CHANNEL_10;                /* Sampled channel number */
 	sConfig6.Channel      = ADC_CHANNEL_11;                /* Sampled channel number */
- 	sConfig5.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
+    
+    sConfig5.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
 	sConfig5.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;    /* Sampling time (number of clock cycles unit) */
  	sConfig5.SingleDiff   = ADC_SINGLE_ENDED;            /* Single-ended input channel */
    	sConfig5.OffsetNumber = ADC_OFFSET_NONE;             /* No offset subtraction */
    	sConfig5.Offset = 0;                                 /* Parameter discarded because offset correction is disabled */ 
-   	sConfig6.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
+   	
+    sConfig6.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
    	sConfig6.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;    /* Sampling time (number of clock cycles unit) */
    	sConfig6.SingleDiff   = ADC_SINGLE_ENDED;            /* Single-ended input channel */
    	sConfig6.OffsetNumber = ADC_OFFSET_NONE;             /* No offset subtraction */
@@ -96,14 +98,17 @@ HAL_StatusTypeDef adc_init(void){
 
 uint16_t adc_read(void){
 	uint16_t retval = 0;
-	if (HAL_ADC_PollForConversion(&adc_handle, 10) != HAL_OK){
+	
+    uint32_t ADCConvertedValue;
+
+    if (HAL_ADC_PollForConversion(&adc_handle, 10) != HAL_OK){
 		/* End Of Conversion flag not set on time */
 	   	printf("ADC End of conversion error.\r\n");
 	} else {
   		/* ADC conversion completed */
 		/*##-5- Get the converted value of regular channel  #########*/
-		ADC5ConvertedValue = HAL_ADC_GetValue(&adc_handle);
-		printf("Our converted ADC5 Value: %x\r\n", ADC5ConvertedValue);
+		ADCConvertedValue = HAL_ADC_GetValue(&adc_handle);
+		printf("Our converted ADC5 Value: %lu\r\n", ADCConvertedValue);
 	}
 	return retval;
 }

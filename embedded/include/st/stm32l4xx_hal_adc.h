@@ -370,7 +370,7 @@ typedef struct
 
   ADC_InitTypeDef               Init;                   /*!< ADC initialization parameters and regular conversions setting */
 
-//  DMA_HandleTypeDef             *DMA_Handle;            /*!< Pointer DMA Handler */
+  //DMA_HandleTypeDef             *DMA_Handle;            /*!< Pointer DMA Handler */
 
   HAL_LockTypeDef               Lock;                   /*!< ADC locking object */
 

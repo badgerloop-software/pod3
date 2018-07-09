@@ -244,6 +244,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx_hal.h"
+#include "stm32l4xx_hal_adc.h"
+#include "stm32l4xx_hal_adc_ex.h"
+#include "stm32l4xx_ll_adc.h"
 
 /** @addtogroup STM32L4xx_HAL_Driver
   * @{
@@ -1553,7 +1556,10 @@ HAL_StatusTypeDef HAL_ADC_Stop_IT(ADC_HandleTypeDef* hadc)
 HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, uint32_t Length)
 {
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
-  
+ 
+  UNUSED(pData);
+  UNUSED(Length);
+
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
   
@@ -1580,6 +1586,7 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, ui
                           HAL_ADC_STATE_READY | HAL_ADC_STATE_REG_EOC | HAL_ADC_STATE_REG_OVR | HAL_ADC_STATE_REG_EOSMP,
                           HAL_ADC_STATE_REG_BUSY);
         
+
         /* Reset HAL_ADC_STATE_MULTIMODE_SLAVE bit
           - by default if ADC is Master or Independent or if multimode feature is not available
           - if multimode setting is set to independent mode (no dual regular or injected conversions are configured) */
@@ -1601,13 +1608,13 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, ui
         }
         
         /* Set the DMA transfer complete callback */
-        hadc->DMA_Handle->XferCpltCallback = ADC_DMAConvCplt;
+        //hadc->DMA_Handle->XferCpltCallback = ADC_DMAConvCplt;
         
         /* Set the DMA half transfer complete callback */
-        hadc->DMA_Handle->XferHalfCpltCallback = ADC_DMAHalfConvCplt;
+        //hadc->DMA_Handle->XferHalfCpltCallback = ADC_DMAHalfConvCplt;
         
         /* Set the DMA error callback */
-        hadc->DMA_Handle->XferErrorCallback = ADC_DMAError;
+        //hadc->DMA_Handle->XferErrorCallback = ADC_DMAError;
         
         
         /* Manage ADC and DMA start: ADC overrun interruption, DMA start,     */
@@ -1632,7 +1639,7 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, ui
         SET_BIT(hadc->Instance->CFGR, ADC_CFGR_DMAEN);
         
         /* Start the DMA channel */
-        HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&hadc->Instance->DR, (uint32_t)pData, Length);
+        //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&hadc->Instance->DR, (uint32_t)pData, Length);
         
         /* Enable conversion of regular group.                                  */
         /* If software start has been selected, conversion starts immediately.  */
@@ -1697,7 +1704,7 @@ HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef* hadc)
     
     /* Disable the DMA channel (in case of DMA in circular mode or stop       */
     /* while DMA transfer is on going)                                        */
-    tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
+    //tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
     
     /* Check if DMA channel effectively disabled */
     if (tmp_hal_status != HAL_OK)
@@ -2957,104 +2964,24 @@ HAL_StatusTypeDef ADC_Disable(ADC_HandleTypeDef* hadc)
   * @param hdma pointer to DMA handle.
   * @retval None
   */
-void ADC_DMAConvCplt(DMA_HandleTypeDef *hdma)
-{
-  /* Retrieve ADC handle corresponding to current DMA handle */
-  ADC_HandleTypeDef* hadc = ( ADC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  
-  /* Update state machine on conversion status if not in error state */
-  if(HAL_IS_BIT_CLR(hadc->State, (HAL_ADC_STATE_ERROR_INTERNAL | HAL_ADC_STATE_ERROR_DMA)))
-  {
-    /* Set ADC state */
-    SET_BIT(hadc->State, HAL_ADC_STATE_REG_EOC);
-    
-    /* Determine whether any further conversion upcoming on group regular     */
-    /* by external trigger, continuous mode or scan sequence on going         */
-    /* to disable interruption.                                               */
-    /* Is it the end of the regular sequence ? */
-    if(HAL_IS_BIT_SET(hadc->Instance->ISR, ADC_FLAG_EOS))
-    {
-      /* Are conversions software-triggered ? */
-      if(ADC_IS_SOFTWARE_START_REGULAR(hadc))
-      {
-        /* Is CONT bit set ? */
-        if(READ_BIT(hadc->Instance->CFGR, ADC_CFGR_CONT) == RESET)
-        {
-          /* CONT bit is not set, no more conversions expected */
-          CLEAR_BIT(hadc->State, HAL_ADC_STATE_REG_BUSY);
-          if(HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_INJ_BUSY))
-          { 
-            SET_BIT(hadc->State, HAL_ADC_STATE_READY);
-          }
-        }
-      }
-    }
-    else
-    {
-      /* DMA End of Transfer interrupt was triggered but conversions sequence
-         is not over. If DMACFG is set to 0, conversions are stopped. */
-      if(READ_BIT(hadc->Instance->CFGR, ADC_CFGR_DMACFG) == RESET)
-      {
-        /* DMACFG bit is not set, conversions are stopped. */
-        CLEAR_BIT(hadc->State, HAL_ADC_STATE_REG_BUSY);
-        if(HAL_IS_BIT_CLR(hadc->State, HAL_ADC_STATE_INJ_BUSY))
-        { 
-          SET_BIT(hadc->State, HAL_ADC_STATE_READY);
-        }
-      }
-    }
-    
-    /* Conversion complete callback */
-    HAL_ADC_ConvCpltCallback(hadc);
-  }
-  else /* DMA and-or internal error occurred */
-  {
-    if (HAL_IS_BIT_SET(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL))
-    {
-      /* Call HAL ADC Error Callback function */
-      HAL_ADC_ErrorCallback(hadc);
-    }
-    else
-    {
-      /* Call ADC DMA error callback */
-      hadc->DMA_Handle->XferErrorCallback(hdma);
-    }
-  }
-}
+//void ADC_DMAConvCplt(DMA_HandleTypeDef *hdma)
+ // {  FUNCTION REMOVED by BadgerLoop }
 
 /**
   * @brief  DMA half transfer complete callback. 
   * @param hdma pointer to DMA handle.
   * @retval None
   */
-void ADC_DMAHalfConvCplt(DMA_HandleTypeDef *hdma)
-{
-  /* Retrieve ADC handle corresponding to current DMA handle */
-  ADC_HandleTypeDef* hadc = ( ADC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  
-  /* Half conversion callback */
-  HAL_ADC_ConvHalfCpltCallback(hadc); 
-}
+//void ADC_DMAHalfConvCplt(DMA_HandleTypeDef *hdma)
+//{ FUNCTION REMOVED by Badgerloop
 
 /**
   * @brief  DMA error callback.
   * @param hdma pointer to DMA handle.
   * @retval None
   */
-void ADC_DMAError(DMA_HandleTypeDef *hdma)
-{
-  /* Retrieve ADC handle corresponding to current DMA handle */
-  ADC_HandleTypeDef* hadc = ( ADC_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  
-  /* Set ADC state */
-  SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_DMA);
-  
-  /* Set ADC error code to DMA error */
-  SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_DMA);
-  
-  /* Error callback */
-  HAL_ADC_ErrorCallback(hadc); 
-}
+//void ADC_DMAError(DMA_HandleTypeDef *hdma)
+//{ FUNCTION REMOVED BY BADGERLOOP
 
 /**
   * @}

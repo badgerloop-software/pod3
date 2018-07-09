@@ -47,10 +47,6 @@ int dash_init(void) {
 	return 0;
 }
 
-int dash_init(void) {
-	return 0;
-}
-
 int main(void) {
 
 	PC_Buffer *rx;
