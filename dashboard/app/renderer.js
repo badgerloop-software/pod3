@@ -5,6 +5,7 @@ const frameStyle = require('./app/frameStyle');
 const accover = require('./app/activationOverrides');
 const graphs = require("./dataRepresentation");
 const statusCheck = require("./app/statusCheckers");
+const health = require("./app/health");
 /*Get each element of the DOM that will be used*/
 const freeSpace = document.getElementById("free-space");
 const dataLabels = document.getElementsByClassName("micro-data-label");
