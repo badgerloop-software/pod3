@@ -6,6 +6,9 @@
 #include "stm32l4xx_hal_adc_ex.h"
 #include "stm32l4xx_ll_adc.h"
 
+#define PA5_CHANNEL 10
+#define PA6_CHANNEL 11
+
 extern ADC_HandleTypeDef adc_handle;
 extern uint16_t ADC5ConvertedValue;
 
@@ -14,7 +17,7 @@ command_status do_adc_init(void){
 }
 
 command_status adc_try_read(void){
-	printf("ADC %d", adc_read());
+	printf("ADC %d", analogRead(PA5_CHANNEL));
 	return CMD_SUCCESS;
 }
 
