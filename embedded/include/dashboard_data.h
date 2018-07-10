@@ -13,6 +13,7 @@ typedef enum {
 } sensor_dtype;
 
 /* TODO some sensors have different data types */
+/* TODO could also just keep an int and translate as needed */
 typedef struct {
 	char     *name;
 	int8_t   i8data;

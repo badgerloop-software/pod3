@@ -27,14 +27,13 @@ void send_data(Pod_Data_Handle *pod_data) {
 			} else printf("honeywell read fail\r\n");
 		} else printf("failure to block\r\n");
 	} else printf("honeywell start read fail\r\n");
-
 	
 	if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->current_pressure);
 		char *dataToSend = formatPacket(sensor);
-		//printf("%s", dataToSend);
-		uart_send(dataToSend);	
+		/*printf("%s", dataToSend);*/
+		uart_send(dataToSend);
 	}
 
 	if (pod_data->lv_battery_temp.freshness == FRESH) {
