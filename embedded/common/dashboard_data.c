@@ -4,24 +4,28 @@
 #include "uart.h"
 #include "honeywell.h"
 #include "i2c.h"
+#include <time.h>
 #define SEND_BUF_SIZE 128
 
 char packetBuffer[SEND_BUF_SIZE];
 
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
-	/* read pressure and temperature and update freshness */
-	/* TODO time multiplex so not all sensors are read every tick */
 	int pres;
 	int temp;
-	if (!honeywell_start_read()) printf("honeywell start read fail\r\n");
-	if (i2c_block(I2C_WAITING_RX, ticks)) printf("failure to block\r\n");
-	if (!honeywell_read(&temp, &pres)) printf("honeywell read fail\r\n");
-	pod_data->lv_battery_temp.i8data = temp;
-	pod_data->lv_battery_temp.freshness = FRESH;
-	pod_data->current_pressure.ui16data = pres;
-	pod_data->current_pressure.freshness = FRESH;
-	/*printf("PRESSURE: %u : TEMP: %u\r\n", pres, temp);*/
+	if (honeywell_start_read()) {
+	   	if (!i2c_block(I2C_WAITING_RX, ticks)) {
+			if (honeywell_read(&temp, &pres)) {
+				pod_data->lv_battery_temp.freshness = FRESH;
+				pod_data->lv_battery_temp.timestamp = time(NULL);
+				pod_data->lv_battery_temp.i8data    = (int8_t) temp;
+				
+				pod_data->current_pressure.freshness = FRESH;
+				pod_data->current_pressure.timestamp = time(NULL);
+				pod_data->current_pressure.ui16data  = (uint16_t) pres;
+			} else printf("honeywell read fail\r\n");
+		} else printf("failure to block\r\n");
+	} else printf("honeywell start read fail\r\n");
 	
 	if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
