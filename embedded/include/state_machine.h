@@ -68,13 +68,9 @@ extern state_transition_t * to_handlers[];
 extern state_handler_t * in_handlers[];
 extern state_transition_t * from_handlers[];
 
-void initialize_state_machine(state_t *handle, STATE_NAME initial_state,
-					state_transition_t **to_states,
-					state_handler_t **in_states,
-					state_transition_t **from_states,
-					unsigned int *timestamp_table,
-					const unsigned int *interval_table);
-void state_machine_handler(state_t *handle);
+void initialize_state_machine(STATE_NAME initial_state);
+void state_machine_logic();
+void state_machine_handler();
 int check_interval(STATE_NAME state);
 
 #endif

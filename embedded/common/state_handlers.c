@@ -4,24 +4,25 @@
 
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
-	1000,	/* PRE_RUN_FAULT			*/
-	1000,	/* RUN_FAULT 				*/
-	1000,	/* POST_RUN_FAULT 			*/
-	1000,	/* IDLE  				*/
-	1000,	/* READY_FOR_PUMPDOWN 			*/
-	1000,	/* PUMPDOWN 				*/
-	1000,	/* READY				*/
-	1000,	/* PROPULSION_START 			*/
-	1000,	/* PROPULSION_DISTANCE 			*/
-	1000,	/* BRAKING				*/
-	1000,	/* POST_RUN 				*/
+	999999,	/* PRE_RUN_FAULT			*/
+	999999,	/* RUN_FAULT 				*/
+	999999,	/* POST_RUN_FAULT 			*/
+	999999,	/* IDLE  				*/
+	999999,	/* READY_FOR_PUMPDOWN 			*/
+	10000,	/* PUMPDOWN 				*/
+	999999,	/* READY				*/
+	10000,	/* PROPULSION_START 			*/
+	10000,	/* PROPULSION_DISTANCE 			*/
+	10000,	/* BRAKING				*/
+	10000,	/* POST_RUN 				*/
 	1000,	/* SAFE_TO_APPROACH			*/
-	1000, 	/* SERVICE_LOW_SPEED_PROPULSION		*/
+	999999, /* SERVICE_LOW_SPEED_PROPULSION		*/
 };
 
 void change_state(STATE_NAME state) {
 	if(state > NUM_STATES) return;
-
+	printf("Changing state from %s to %s\r\n", state_strings[state_handle.curr_state],
+		state_strings[state]);
 	state_handle.next_state = state;
 	state_handle.change_state = true;
 }
@@ -227,7 +228,7 @@ void from_post_run_fault(STATE_NAME to, uint32_t flags) {
 	#endif // end CPP_MODULE
 
 	#ifdef DEV_MODULE
-
+	
 	#endif // end DEV_MODULE
 	printf("From state: POST_RUN_FAULT (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
 }

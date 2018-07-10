@@ -4,6 +4,7 @@
 #include "board.h"
 #include "console.h"
 #include "usart.h"
+#include "state_machine.h"
 
 #define BLINK_INTERVAL	100
 
@@ -26,13 +27,16 @@ int main(void) {
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init() || dev_init())
 		fault();
-
+	
+	initialize_state_machine(IDLE);
 	rx = get_rx(USB_UART);
 
 	post("Developmental");
 	printPrompt();
 
 	while (1) {
+		state_machine_logic();
+		state_machine_handler();
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}

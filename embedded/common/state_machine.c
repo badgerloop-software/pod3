@@ -18,7 +18,7 @@ int check_interval(STATE_NAME state){
 	if(GET_INTERVAL(state) == 9999) return 0;
 	unsigned int state_start = GET_TIMESTAMP(state);
 
-	// 1 tick = ?? ms
+	// 1 tick = 1 ms
 	if(ticks - state_start >= GET_INTERVAL(state)){
 		// The time limit for a state has been reached
 		return 1;
@@ -27,12 +27,9 @@ int check_interval(STATE_NAME state){
 }
 //*/
 
-void initialize_state_machine(state_t *handle, STATE_NAME initial_state,
-					state_transition_t **to_states,
-					state_handler_t **in_states,
-					state_transition_t **from_states,
-					unsigned int *timestamp_table,
-					const unsigned int *interval_table){
+void initialize_state_machine(STATE_NAME initial_state) {
+
+	state_t *handle = &state_handle;
 
 	/* Set initial state */
 	handle->prev_state = initial_state; 
@@ -40,13 +37,13 @@ void initialize_state_machine(state_t *handle, STATE_NAME initial_state,
 	handle->next_state = initial_state;
 
 	/* Set up table pointers */
-	handle->to_state_table = to_states;
-	handle->in_state_table = in_states;
-	handle->from_state_table = from_states;
+	handle->to_state_table = to_handlers;
+	handle->in_state_table = in_handlers;
+	handle->from_state_table = from_handlers;
 
 	/* Timestamp table for control over event frequency */
-	handle->state_timestamp_table = timestamp_table;
-	handle->event_interval_table = interval_table;
+	handle->state_timestamp_table = state_event_timestamps;
+	handle->event_interval_table = state_intervals;
 
 	/* No flags, no state change assertion */
 	handle->change_state = false;
@@ -72,7 +69,8 @@ void state_machine_logic() {
 	* states. The board in charge of  logic calls a seperate function first then
 	* this one.
   */
-void state_machine_handler(state_t *handle){
+void state_machine_handler(){
+	state_t *handle = &state_handle;
 
 	/* Enter state handler */
 	handle->in_state_table[handle->curr_state](handle->flags);

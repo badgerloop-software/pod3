@@ -8,10 +8,9 @@
 command_status do_state_machine(int argc, char *argv[]) {
 	printf("%s:  (%d args given)\r\n", argv[0], argc);
 	char* str;
+
 	/* Set state to change next time state_machine_handler called */
 	if(!strcmp("change_state", argv[1])){
-
-		printf("setting next state\r\n");
 
 		if(!strcmp("pre_run_fault", argv[2])){
 			change_state(PRE_RUN_FAULT);
