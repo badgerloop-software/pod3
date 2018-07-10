@@ -5,6 +5,8 @@
 #include "console.h"
 #include "usart.h"
 
+#include "retro.h"
+
 #define BLINK_INTERVAL	100
 
 inline void printPrompt(void) {
@@ -29,12 +31,17 @@ int main(void) {
 
 	rx = get_rx(USB_UART);
 
+	initRetro();
+
 	post("Developmental");
 	printPrompt();
+	
+	unitTest();	
 
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+
 	}
 
 	return 0;

@@ -15,6 +15,7 @@
 #define MAIN_INTERVAL       (mainRetro->filter[MAINFILTERINDEX])
 
 timeStamp *mainRetro;
+void unitTest(void);
 void initRetro(void);
 int getVelocity(void);
 #endif /* _RETR0_H*/
