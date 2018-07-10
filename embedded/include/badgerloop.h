@@ -1,6 +1,6 @@
 #ifndef _BADGERLOOP__H__
 #define _BADGERLOOP__H__
 
-extern uint32_t CM_PER_STRIP
+#define CM_PER_STRIP 3048
 
 #endif

@@ -10,13 +10,12 @@
 #define AVERAGE_SIZE		 3
 
 typedef struct{
-		uint32_t prev, curr, count;
-			uint32_t filter[AVERAGE_SIZE];
+	uint32_t prev, curr, count;
+	uint32_t filter[AVERAGE_SIZE];
 }timeStamp;
 
 timeStamp interLine[NUMBER_INTERUPT_PINS];
 
 void exti_config(GPIO_TypeDef * port, uint32_t pin, bool rtsr, bool ftsr, bool ie);
-timeStamp * getTimeStamps(int pin);
-
+timeStamp* getTimeStamps(int pin);
 #endif

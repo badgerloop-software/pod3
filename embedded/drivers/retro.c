@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "retro.h"
 #include "badgerloop.h"
 
@@ -23,11 +24,7 @@ int getVelocity(void) {
 	//badRetro();
 	__disable_irq();
 	if (!MAIN_INTERVAL) return 0;
-		velocity = (1000 * CM_PER_STRIP) / MAIN_INTERVAL;
+	velocity = (1000 * CM_PER_STRIP) / MAIN_INTERVAL;
 	__enable_irq();
 	return velocity;
-	}
-
-
-
-
+}
