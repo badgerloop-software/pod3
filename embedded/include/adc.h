@@ -1,46 +1,20 @@
 #ifndef _ADC__H__
 #define _ADC__H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "stm32l4xx.h"
+#include "stm32l4xx_hal_conf.h"
+#include "stm32l4xx_hal_adc.h"
+#include "stm32l4xx_hal_adc_ex.h"
+#include "stm32l4xx_ll_adc.h"
 
-#define ADC_TARGET_FREQ     36000000 /* TODO: print this out */
-#define ADC_SMP_BITS        5 /* TODO: change */
+HAL_StatusTypeDef adc_init(void);
+uint16_t adc_read(void);
 
-#define FILL_ADC(_adc, _channel, _port, _pin) \
-        {\
-                    .adc = _adc,\
-                    .channel = _channel,\
-                    .port = _port,\
-                    .pin = _pin,\
-                },
-
-
-typedef struct adcInfo{
-    ADC_TypeDef *adc;
-    uint8_t channel;
-    GPIO_TypeDef *port;
-    uint8_t pin;
-} ADC_INFO;
-
-extern const ADC_INFO ADC_LUT[];
-extern const uint8_t NUM_ADC;
-extern uint32_t adcFreq;
-
-typedef struct adc_sample_time {
-
-} adc_sample_time_t;
-
-typedef struct adc_configuration {
-        uint32_t cr[2];
-            /* uint8_t sample_times[18]; */ /* don't need to mess with this for now */
-            uint8_t sequence_channels[16];
-                uint8_t num_conversions;
-} adc_configuration_t;
-
-uint16_t analogRead(uint8_t channel);
-bool adc_init(void);
+/* ADC Info */
+//PA5 is CURR_SENSE, and is connected to ADC1/10
+//PA6 is VOLT_SENSE, and is connected to ADC1/11
+extern ADC_HandleTypeDef    AdcHandle;
+extern ADC_ChannelConfTypeDef sConfig5;
+extern ADC_ChannelConfTypeDef sConfig6;
+extern uint16_t ADC5ConvertedValue;
 
 #endif
-
