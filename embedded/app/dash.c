@@ -1,14 +1,23 @@
 #include <stdio.h>
-
+#include <time.h>
 #include "system.h"
 #include "board.h"
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
 #include "uart.h"
+#include "dashboard_data.h"
 #include "dashboard_control.h"
 
 #define BLINK_INTERVAL	250
+Pod_Data_Handle pod_data = {
+	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
+	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+};
 
 /* Nucleo 32 I/O */
 //THERM1: between batteries 1 and 2
@@ -41,22 +50,8 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
+	
 
-	/* dash specific initializations */
-	/*UartHandle->Instance		 = USART1
-	
-	UartHandle->Init.BaudRate        = 115200;
-	UartHandle->Init.WordLength      = UART_WORDLENGTH_8B;
-	UartHandle->Init.StopBits	 = UART_STOPBITS_1;
-	UartHandle->Init.Parity	 	 = UART_PARITY_NONE;
-	UartHandle->Init.HwFlowCtl	 = UART_HWCONTROL_NONE;
-	UartHandle->Init.Mode		 = UART_MODE_TX_RX;
-	UartHandle->Init.OverSampling	 = UART_OVERSAMPLING_16;
-	
-	if (HAL_UART_DeInit(UartHandle) != HAL_OK) printf("FAILURE TO CHECK DeInit\n\r");
-	*/
-
-	
 	return 0;
 }
 
@@ -78,6 +73,7 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
+		send_data(&pod_data);
 		blink_handler(BLINK_INTERVAL);
 	}
 
