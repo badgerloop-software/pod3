@@ -21,6 +21,12 @@ typedef enum _receiving_boards {
 	ALL = 7
 } RECEIVING_BOARD;
 
+typedef enum _can_message_type {
+	TEST_MESSAGE = 0,
+	
+} CAN_MESSAGE_TYPE;
+
+
 int io_init(void);
 int periph_init(BOARD_ROLE role);
 void fault(void);
