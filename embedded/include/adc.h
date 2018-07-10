@@ -15,6 +15,5 @@ uint16_t adc_read(void);
 extern ADC_HandleTypeDef    AdcHandle;
 extern ADC_ChannelConfTypeDef sConfig5;
 extern ADC_ChannelConfTypeDef sConfig6;
-extern uint16_t ADC5ConvertedValue;
 
 #endif

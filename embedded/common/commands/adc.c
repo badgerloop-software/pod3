@@ -26,8 +26,6 @@ command_status do_adc(int argc, char *argv[]){
 	if (!strcmp("init", argv[1]))
 		return do_adc_init();
 
-	if (argc == 2) return USAGE;
-
 	if (!strcmp("read", argv[1])){
 		return adc_try_read();
 	}
