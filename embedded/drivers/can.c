@@ -111,8 +111,6 @@ HAL_StatusTypeDef can_listen(void){
 		print_incoming_can_message(RxHeader.StdId, RxData);
 	} 
 	return retval;
-	
-	
 }
 
 void print_incoming_can_message(uint32_t id, uint8_t *data){
@@ -130,7 +128,6 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 		case DEV:
 			printf("incoming message from dash\r\n");
 			break;
-
 		case DASH:
 			printf("incoming message from dash\r\n");
 			break;

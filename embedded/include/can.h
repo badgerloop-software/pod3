@@ -22,5 +22,4 @@ HAL_StatusTypeDef can_listen(void);
 void print_incoming_can_message(uint32_t id, uint8_t *data);
 HAL_StatusTypeDef can_init(BOARD_ROLE role);
 
-
 #endif
