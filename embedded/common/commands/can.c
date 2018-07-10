@@ -58,8 +58,12 @@ command_status do_can(int argc, char *argv[]) {
 		uint8_t TxData[8];
 		
 		printf("DASH: %d NAV_REC: %d\r\n", DASH, NAV_REC);
-		can_send_intermodule(DASH, NAV_REC, 1, TxData);
-	
+		return can_send_intermodule(DASH, NAV_REC, CAN_TEST_MESSAGE, TxData);
+			
+	}
+
+	if (!strcmp("listen", argv[1])){
+		return can_listen();
 	}
 
 	if (argc == 2 || argc == 3 || argc == 4) return USAGE;
