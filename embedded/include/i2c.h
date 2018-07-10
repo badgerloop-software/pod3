@@ -33,7 +33,7 @@ HAL_StatusTypeDef i2c_init(void);
 
 HAL_StatusTypeDef i2c_query(uint8_t addr);
 
-bool i2c_scan(int addr);
+bool i2c_scan(int addr, bool print_err);
 
 HAL_StatusTypeDef i2c_start_write(
 	uint8_t addr, uint16_t nbytes, const uint8_t *data
