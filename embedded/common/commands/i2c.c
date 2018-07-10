@@ -6,6 +6,7 @@
 #include "stm32l4xx_hal_conf.h"
 #include "i2c.h"
 #include "iox.h"
+#include "honeywell.h"
 
 command_status do_init(void) {
 	return (i2c_init() == HAL_OK) ? CMD_SUCCESS : FAIL;
@@ -238,4 +239,37 @@ COMMAND_ENTRY(
 	"iox {read|dump|set <pin_alias (int or str)>|clear <pin_alias (int or str)>}",
 	"Interact with the PCF8574 I/O Expander.",
 	do_iox
+)
+
+command_status do_honeywell(int argc, char *argv[]) {
+    int temp;
+	int pres;
+	if(argc == 1) return USAGE;
+
+	/* Honeywell ambient pressure sensor reading */
+	if(!strcmp("read", argv[1])){
+		if(!honeywell_start_read()){
+			printf("%s: could not read from i2c:\r\n", __func__);
+			return FAIL;
+		}
+		if(i2c_block(I2C_WAITING_RX, ticks)){
+			printf("%s: waiting for read timed out\r\n", __func__);
+			return FAIL;
+		}	
+		if(!honeywell_read(&temp, &pres)){
+			printf("%s: call to honeywell_read failed\r\n", __func__);
+			return FAIL;
+		}
+		
+		printf("Temperature: %d Pressure %d\r\n", temp, pres);	
+		return CMD_SUCCESS;
+	}
+	return USAGE;
+}
+
+COMMAND_ENTRY(
+	"honeywell",
+	"honeywell read",
+	"Interact with the Honeywell SSCMNNN030PA2A3.",
+	do_honeywell
 )

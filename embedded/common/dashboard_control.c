@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "dashboard_control.h"
+#include "console.h"
 #include "usart.h"
 
 int str_index_of(char *search, char *find) {
@@ -79,6 +80,28 @@ void process_state_transition(char *state) {
 void process_manual_override(char *override) {
         /* TODO */
         printf("Hit process_manual_override with override '%s'\n", override);
+	if (!strncmp(override, "hv_enable", 9)) {
+	        puts("hv_enable requested");
+	        process_input("can hv_enable");
+	}
+	else if (!strncmp(override, "hv_disable", 10)) {
+	        puts("hv_disable requested");
+	        process_input("can hv_disable");
+	}
+	else if (!strncmp(override, "prim_brake_on", 13)) {
+	        puts("prim_brake_on requested");
+	        process_input("can braking_on");
+	}
+	else if (!strncmp(override, "prim_brake_off", 14)) {
+	        puts("prim_brake_off requested");
+	        process_input("can braking_off");
+	}
+	else if (!strncmp(override, "prim_brake_vent_on", 18)) {
+	        puts("prim_brake_vent_on requested");
+	}
+	else if (!strncmp(override, "prim_brake_vent_off", 19)) {
+	        puts("prim_brake_vent_off requested");
+	}
 }
 
 void process_control(char *buf) {
