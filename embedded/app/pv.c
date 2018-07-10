@@ -4,8 +4,10 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "can.h"
 
 #define BLINK_INTERVAL	250
+uint8_t board_num = 3;
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit
