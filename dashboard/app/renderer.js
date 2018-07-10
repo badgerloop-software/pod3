@@ -24,11 +24,8 @@ const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
 
 function parseData(rawData, sensorName) {
-    console.log(rawData);
     let jsonData = JSON.parse(rawData);
-    console.log(rawData);
-    console.log(jsonData);
-    return jsonData[sensorName]["sensor_data"][(jsonData[sensorName]["sensor_data"].length - 1)]["value"];
+    return jsonData[sensorName]["sensor_data"][0]["value"];
 }
 
 /*Lets each data row create a graph from itself when clicked*/
