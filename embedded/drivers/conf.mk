@@ -5,3 +5,5 @@ SRCS += drivers/rcc.c
 SRCS += drivers/usart.c
 SRCS += drivers/i2c.c
 SRCS += drivers/adc.c
+SRCS += drivers/voltage_sense.c
+SRCS += drivers/current_sense.c

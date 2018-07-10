@@ -8,9 +8,31 @@
 /* ADC Info */
 //PA5 is CURR_SENSE, and is connected to ADC1/10
 ////PA6 is VOLT_SENSE, and is connected to ADC1/11
-ADC_HandleTypeDef    adc_handle;
-ADC_ChannelConfTypeDef sConfig5;
 ADC_ChannelConfTypeDef sConfig6;
+
+HAL_StatusTypeDef adc_start(void){
+	
+    HAL_StatusTypeDef retval;
+
+	/* Run the ADC calibration in single-ended mode */
+	retval = HAL_ADCEx_Calibration_Start(&adc_handle, ADC_SINGLE_ENDED);
+  	if (retval != HAL_OK) {
+     		/* Calibration Error */
+   		printf( "ADC Calibration Error\r\n");
+   		return retval;
+   	}
+	
+
+  	/*##-3- Start the conversion process #######################################*/
+	retval = HAL_ADC_Start(&adc_handle);
+	if (retval != HAL_OK) {
+     		/* Start Conversation Error */
+   		printf( "Start Conversion Error\r\n");
+   		return retval;
+   	}
+
+	return retval;
+}
 
 HAL_StatusTypeDef adc_init(void){
 	HAL_StatusTypeDef retval;
@@ -49,26 +71,14 @@ HAL_StatusTypeDef adc_init(void){
    	}
 
 	/*##-2- Configure ADC regular channel ######################################*/
-   	sConfig5.Channel      = ADC_CHANNEL_10;                /* Sampled channel number */
 	sConfig6.Channel      = ADC_CHANNEL_11;                /* Sampled channel number */
     
-    sConfig5.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
-	sConfig5.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;    /* Sampling time (number of clock cycles unit) */
- 	sConfig5.SingleDiff   = ADC_SINGLE_ENDED;            /* Single-ended input channel */
-   	sConfig5.OffsetNumber = ADC_OFFSET_NONE;             /* No offset subtraction */
-   	sConfig5.Offset = 0;                                 /* Parameter discarded because offset correction is disabled */ 
-   	
     sConfig6.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
    	sConfig6.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;    /* Sampling time (number of clock cycles unit) */
    	sConfig6.SingleDiff   = ADC_SINGLE_ENDED;            /* Single-ended input channel */
    	sConfig6.OffsetNumber = ADC_OFFSET_NONE;             /* No offset subtraction */
    	sConfig6.Offset = 0;                                 /* Parameter discarded because offset correction is disabled */ 
 
-	retval = HAL_ADC_ConfigChannel(&adc_handle, &sConfig5);
-	if (retval != HAL_OK){ /* Channel Configuration Error */
-   		printf( "Channel 10 Configuration Error\r\n");
-		return retval;
-   	}	
 	/*
      	 * if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig6) != HAL_OK) {
 	 * // Channel Configuration Error
@@ -76,41 +86,20 @@ HAL_StatusTypeDef adc_init(void){
 	 * return 1;
 	 * }
 	 */
-
-	/* Run the ADC calibration in single-ended mode */
-	retval = HAL_ADCEx_Calibration_Start(&adc_handle, ADC_SINGLE_ENDED);
-  	if (retval != HAL_OK) {
-     		/* Calibration Error */
-   		printf( "ADC Calibration Error\r\n");
-   		return retval;
-   	}
-	
-
-  	/*##-3- Start the conversion process #######################################*/
-	retval = HAL_ADC_Start(&adc_handle);
-	if (retval != HAL_OK) {
-     		/* Start Conversation Error */
-   		printf( "Start Conversion Error\r\n");
-   		return retval;
-   	}
-
-	return retval;
+    return HAL_OK;
 }
 
 
-uint16_t adc_read(void){
-	uint16_t retval = 0;
-	
-    uint32_t ADCConvertedValue;
+uint32_t adc_read( uint8_t channel ){
+    uint32_t ADCConvertedValue = 0;
 
-    if (HAL_ADC_PollForConversion(&adc_handle, 10) != HAL_OK){
+    if (HAL_ADC_PollForConversion(&adc_handle, channel ) != HAL_OK){
 		/* End Of Conversion flag not set on time */
 	   	printf("ADC End of conversion error.\r\n");
 	} else {
   		/* ADC conversion completed */
 		/*##-5- Get the converted value of regular channel  #########*/
 		ADCConvertedValue = HAL_ADC_GetValue(&adc_handle);
-		printf("Our converted ADC5 Value: %lu\r\n", ADCConvertedValue);
 	}
-	return retval;
+	return ADCConvertedValue;
 }
