@@ -29,7 +29,6 @@ HAL_StatusTypeDef can_send(
 	}
 	
 	if (HAL_CAN_GetTxMailboxesFreeLevel(&can_handle)) {
-		printf("SENDING MESSAGE\r\n");
 		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, data, &TxMailbox);
 		if (retval != HAL_OK)
 			return retval;
@@ -42,7 +41,6 @@ HAL_StatusTypeDef can_read(void) {
 
 	int i;
 	HAL_StatusTypeDef retval = HAL_ERROR;
-
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		           
@@ -69,9 +67,8 @@ HAL_StatusTypeDef can_send_intermodule(
 	data[0] = to_from_id;
 	data[1] = message_id;
 
-	can_send(BADGER_CAN_ID, 0, 8, data);
+	retval = can_send(BADGER_CAN_ID, 0, 8, data);
 	return retval;
-
 }
 
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
@@ -97,39 +94,96 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	}
 }
 
-
 HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
+		BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
+		RECEIVING_BOARD to_modules = data[0] & 0xf;
+		CAN_MESSAGE_TYPE message_num = data[1];
+		
+		printf("CAN_ID: %lx FROM MODULE: %d TO MODULE: %d Message num: %d", can_id, from_module, to_modules, message_num);
 
-		if(can_id == BADGER_CAN_ID){
-			BOARD_ROLE from_module = data[0] & 0xf0;
-			RECEIVING_BOARD to_modules = data[0] & 0xf;
-			CAN_MESSAGE_TYPE message_num = data[1];
-			printf("FROM MODULE %x TO MODULE %x MESSAGE NUM %x", from_module, to_modules, message_num);
-		}
 		return HAL_ERROR;
-
-
-
 }
 
 HAL_StatusTypeDef can_listen(void){
-	HAL_StatusTypeDef retval = HAL_ERROR;	
+	HAL_StatusTypeDef retval = HAL_OK;	
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
-		print_incomming_can_message(RxHeader.StdId, RxData);
-	}
+		print_incoming_can_message(RxHeader.StdId, RxData);
+	} 
 	return retval;
+	
+	
 }
 
-void print_incomming_can_message(uint32_t id, uint8_t *data){
-	printf("INCOMMING CAN ID: %lx", id);
+void print_incoming_can_message(uint32_t id, uint8_t *data){
+
+	BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
+	RECEIVING_BOARD to_modules = data[0] & 0xf;
+	CAN_MESSAGE_TYPE message_num = data[1];
+	
+	if (id == 0x555){
+		printf("CAN ID: %lx (BADGER CAN ID)", id);
+	} else {
+		printf("CAN ID: %lx", id);
+	}
+	switch(from_module) {
+		case DEV:
+			printf("incoming message from dash\r\n");
+			break;
+
+		case DASH:
+			printf("incoming message from dash\r\n");
+			break;
+		case NAV:
+			printf("incoming message from dash\r\n");
+			break;
+		case PV:
+			printf("incoming message from dash\r\n");
+			break;
+		default:
+			printf("incoming message from unknown\r\n");	
+	}
+	switch (to_modules) {
+		case DEV_REC:
+		       printf("Message intended for Dev\r\n");
+		       break;
+	        case DASH_REC:
+			printf("Message intended for DASH\r\n");
+			break;
+	 	case NAV_REC:
+			printf("Message inteneded for nav\r\n");
+			break;
+		case PV_REC:
+			printf("Message intended for pv\r\n");
+			break;
+		case CCP_NAV_REC:
+			printf("message intended for CCP and nav\r\n");
+			break;
+		case CCP_PV_REC:
+			printf("message intended for CCP and PV\r\n");
+			break;
+		case NAV_PV_REC:
+			printf("message intended for nav and pv\r\n");
+			break;
+		case ALL:
+			printf("message intended for all\r\n");
+			break;
+		default:
+			printf("message intended for unknown\r\n");
+	} 
+	switch (message_num) {
+		case CAN_TEST_MESSAGE:
+			printf("this is the can test message\r\n");
+			break;
+		default:
+			printf("unknown message type\r\n");
+			break;
+	}
 	int i;
 	for (i = 0; i < 8; i++){
 		if (data[i] != 0){
 			printf("CAN MESSAGE DATA[%d]: %x\r\n", i, data[i]);
 		}
-
-
 	}
 }
 
@@ -201,25 +255,25 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case DASH:
 			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh 	= 0x7ff << 5;
+			sFilterConfig0.FilterMaskIdHigh 	= 0x0000;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case NAV:
-			sFilterConfig0.FilterIdHigh		= 0x0000;
+			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x0000;
+			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case PV:
-			sFilterConfig0.FilterIdHigh		= 0x0000;
+			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x0000;
+			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case DEV:
 			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterMaskIdHigh		= 0x0000;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		default:

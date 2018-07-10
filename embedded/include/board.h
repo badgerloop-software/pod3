@@ -22,7 +22,7 @@ typedef enum _receiving_boards {
 } RECEIVING_BOARD;
 
 typedef enum _can_message_type {
-	TEST_MESSAGE = 0,
+	CAN_TEST_MESSAGE = 0,
 	
 } CAN_MESSAGE_TYPE;
 

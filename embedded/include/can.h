@@ -19,7 +19,7 @@ HAL_StatusTypeDef can_read(void);
 HAL_StatusTypeDef can_send(uint32_t id, uint32_t TxMailbox, size_t length, uint8_t *TxData);
 HAL_StatusTypeDef can_send_intermodule(BOARD_ROLE sending_board, RECEIVING_BOARD receiving_board, uint8_t message_num, uint8_t *data) ;
 HAL_StatusTypeDef can_listen(void);
-void print_incomming_can_message(uint32_t id, uint8_t *data);
+void print_incoming_can_message(uint32_t id, uint8_t *data);
 HAL_StatusTypeDef can_init(BOARD_ROLE role);
 
 
