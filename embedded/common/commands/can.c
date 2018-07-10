@@ -45,7 +45,7 @@ command_status do_can(int argc, char *argv[]) {
 		//TEST MESSAGE SEND
 		uint32_t can_id = 0x123;
 		uint8_t length = 8;
-		uint64_t data = 0x5555555555555555;		
+		uint64_t data = 0x55555555;		
 		uint8_t TxData[8];
 		memset(TxData, data, 16);
 

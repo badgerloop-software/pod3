@@ -72,18 +72,27 @@ HAL_StatusTypeDef can_send_intermodule(
 }
 
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
-	
 	switch (board) {
 		case DASH:
-	
-			/*TODO Current state/fault message */
+			//TODO dash heartbeat
+			//TODO RMS heartbeat
 			return HAL_ERROR;
 			break;
 		case NAV:
-			/*TODO nav_fault, nav warning, nave should stop, nav imu, nav retros, nav pressure 1, 2,3 nav solenoid */ 
+			//TODO nav heartbeat
+			//TODO nav imu,
+			//TODO nav retros/velocity
+			//TODO nav pressure 1
+			//TODO nav pressure 2
+			//TODO nav pressure 3
+			//TODO nav solenoid 
+			//TODO nav should_stop heartbeat
 			return HAL_ERROR;
 			break;
 		case PV:
+			//TODO pv heartbeat
+			//TODO Shutdown_Circuit_Status
+			//TODO PV Pressure
 			return HAL_ERROR;
 			break;
 		case DEV:
