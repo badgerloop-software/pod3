@@ -45,6 +45,7 @@ class State{
 }
 */
 
+
 // need these two for the confirmation dialog
 const {BrowserWindow} = require('electron').remote;
 const {dialog} = require('electron').remote;
