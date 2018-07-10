@@ -44,11 +44,8 @@ HAL_StatusTypeDef can_read(void) {
 	HAL_StatusTypeDef retval = HAL_ERROR;
 
 	if (can_message_available(CAN_RX_FIFO0)) {
-		printf("CAN Message Received.\r\n");
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		           
-		/* Printing out received data */
-		printf("Received CAN ID: #%lx\r\n", RxHeader.StdId );
 		for (i = 0; i < 8; i++) {
 			if (RxData[i] != 0) {
 				printf("CAN Message Data[%d]: %x\r\n", i, RxData[i]);
@@ -63,13 +60,77 @@ HAL_StatusTypeDef can_send_intermodule(
 	HAL_StatusTypeDef retval = HAL_ERROR;
 	
 	/* Generate CAN ID */
-	uint32_t byte1_id = 0;
-	byte1_id = sending_board << 6;
-	byte1_id |= (receiving_board << 3);
-	byte1_id |= (message_num);
+	uint8_t to_from_id = 0;
+	uint8_t message_id = 0;
+	to_from_id = sending_board << 4;
+	message_id |= (receiving_board);
+	message_id = (message_num);
+
+	data[0] = to_from_id;
+	data[1] = message_id;
+
 	can_send(BADGER_CAN_ID, 0, 8, data);
 	return retval;
 
+}
+
+HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
+	
+	switch (board) {
+		case DASH:
+	
+			/*TODO Current state/fault message */
+			return HAL_ERROR;
+			break;
+		case NAV:
+			/*TODO nav_fault, nav warning, nave should stop, nav imu, nav retros, nav pressure 1, 2,3 nav solenoid */ 
+			return HAL_ERROR;
+			break;
+		case PV:
+			return HAL_ERROR;
+			break;
+		case DEV:
+			return HAL_ERROR;
+			break;
+		default:
+			return HAL_ERROR;
+	}
+}
+
+
+HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
+
+		if(can_id == BADGER_CAN_ID){
+			BOARD_ROLE from_module = data[0] & 0xf0;
+			RECEIVING_BOARD to_modules = data[0] & 0xf;
+			CAN_MESSAGE_TYPE message_num = data[1];
+			printf("FROM MODULE %x TO MODULE %x MESSAGE NUM %x", from_module, to_modules, message_num);
+		}
+		return HAL_ERROR;
+
+
+
+}
+
+HAL_StatusTypeDef can_listen(void){
+	HAL_StatusTypeDef retval = HAL_ERROR;	
+	if (can_message_available(CAN_RX_FIFO0)) {
+		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
+		print_incomming_can_message(RxHeader.StdId, RxData);
+	}
+	return retval;
+}
+
+void print_incomming_can_message(uint32_t id, uint8_t *data){
+	printf("INCOMMING CAN ID: %lx", id);
+	int i;
+	for (i = 0; i < 8; i++){
+		if (data[i] != 0){
+			printf("CAN MESSAGE DATA[%d]: %x\r\n", i, data[i]);
+		}
+
+
+	}
 }
 
 HAL_StatusTypeDef can_init(BOARD_ROLE role) {
@@ -81,19 +142,19 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 	__HAL_RCC_CAN1_CLK_ENABLE();
 
 	/* General CAN Init */
-	can_handle.Instance						= CAN1;
-	can_handle.Init.TimeTriggeredMode		= DISABLE;
-	can_handle.Init.AutoBusOff				= DISABLE;
-	can_handle.Init.AutoWakeUp				= ENABLE;
-	can_handle.Init.AutoRetransmission		= ENABLE;
-	can_handle.Init.ReceiveFifoLocked		= DISABLE;
+	can_handle.Instance			= CAN1;
+	can_handle.Init.TimeTriggeredMode	= DISABLE;
+	can_handle.Init.AutoBusOff		= DISABLE;
+	can_handle.Init.AutoWakeUp		= ENABLE;
+	can_handle.Init.AutoRetransmission	= ENABLE;
+	can_handle.Init.ReceiveFifoLocked	= DISABLE;
 	can_handle.Init.TransmitFifoPriority	= DISABLE;
-	can_handle.Init.Mode					= CAN_MODE_NORMAL;
+	can_handle.Init.Mode			= CAN_MODE_NORMAL;
 
 	/* CAN Bit Timing Register Init */
-	can_handle.Init.SyncJumpWidth			= CAN_SJW_1TQ;
-	can_handle.Init.TimeSeg1				= CAN_BS1_4TQ;
-	can_handle.Init.TimeSeg2				= CAN_BS2_3TQ;
+	can_handle.Init.SyncJumpWidth		= CAN_SJW_1TQ;
+	can_handle.Init.TimeSeg1		= CAN_BS1_4TQ;
+	can_handle.Init.TimeSeg2		= CAN_BS2_3TQ;
 
 	/* Prescaler Calc 
 	 * Figure 452 Page 1369 of the Reference manual
@@ -105,7 +166,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 	 * Tq = (Prescaler + 1) * Tpclk
 	 *
 	 */
-	can_handle.Init.Prescaler				= 12;
+	can_handle.Init.Prescaler		= 12;
 
 	/* Initialize the transmit header to values we'll always use */
 	TxHeader.IDE = CAN_ID_STD;
@@ -113,11 +174,11 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 	TxHeader.TransmitGlobalTime = DISABLE;
 
 	/* CAN Filter Config */
-	sFilterConfig0.FilterBank				= 0;
-	sFilterConfig0.FilterMode				= CAN_FILTERMODE_IDMASK;
-	sFilterConfig0.FilterScale				= CAN_FILTERSCALE_32BIT;
-	sFilterConfig0.FilterFIFOAssignment		= CAN_RX_FIFO0;
-	sFilterConfig0.SlaveStartFilterBank		= 14;
+	sFilterConfig0.FilterBank		= 0;
+	sFilterConfig0.FilterMode		= CAN_FILTERMODE_IDMASK;
+	sFilterConfig0.FilterScale		= CAN_FILTERSCALE_32BIT;
+	sFilterConfig0.FilterFIFOAssignment	= CAN_RX_FIFO0;
+	sFilterConfig0.SlaveStartFilterBank	= 14;
 	
 	/* Board Specific (Filter) Initialization
 	 *
