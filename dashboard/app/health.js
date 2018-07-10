@@ -5,6 +5,7 @@ const comm = require("./communication");
 
 /* some consts for handling messaging and incoming data */
 const UPDATE_TIME = 500;
+const HB_TIME = 250;
 const MESSAGE_BASE = "messageReceived_";
 const HEALTH_KEY = "health"
 const VALUE = "value";
@@ -35,6 +36,13 @@ const SENSORS = [
     "cell_average",
     "lv_battery_temp"
 ];
+
+/* send a heartbeat to the pod to tell it we are still here */
+function podHeartbeat() {
+    let podIP = comm.getPodIP();
+    let podPort = comm.getPodPort();
+    comm.postPayload(podIP, podPort, 'pod_heartbeat', '');
+}
 
 /* pull the relevant telemetry information from the json object */
 function pullData(data, name) {
@@ -75,3 +83,6 @@ comm.updater.on(MESSAGE_BASE + HEALTH_KEY, doHealthCheck);
 
 /* set an interval to get telemetry */
 setInterval(requestAllTelemetry, UPDATE_TIME);
+
+/* set an interval to send a heartbeat to the pod */
+setInterval(podHeartbeat, HB_TIME);
