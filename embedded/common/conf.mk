@@ -8,6 +8,5 @@ SRCS += common/console.c
 SRCS += common/post.c
 SRCS += common/pin_alias.c
 SRCS += common/dashboard_control.c
-SRCS += common/retro.c
 
 include common/commands/conf.mk
