@@ -20,7 +20,7 @@ typedef struct {
 	uint16_t ui16data;
 	time_t   timestamp;
 	uint8_t  freshness;
-        sensor_dtype dtype;
+    sensor_dtype dtype;
 } Sensor_Data;
 
 
