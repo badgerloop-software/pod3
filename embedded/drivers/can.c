@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <board.h>
-#include "can.h"
+#include <can.h>
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -56,6 +56,20 @@ HAL_StatusTypeDef can_read(void) {
 		}
 	}
 	return retval;
+}
+
+HAL_StatusTypeDef can_send_intermodule(
+		BOARD_ROLE sending_board, RECEIVING_BOARD receiving_board, uint8_t message_num, uint8_t *data){
+	HAL_StatusTypeDef retval = HAL_ERROR;
+	
+	/* Generate CAN ID */
+	uint32_t byte1_id = 0;
+	byte1_id = sending_board << 6;
+	byte1_id |= (receiving_board << 3);
+	byte1_id |= (message_num);
+	can_send(BADGER_CAN_ID, 0, 8, data);
+	return retval;
+
 }
 
 HAL_StatusTypeDef can_init(BOARD_ROLE role) {
@@ -124,26 +138,26 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 	
 	switch (role) {
 		case DASH:
-			sFilterConfig0.FilterIdHigh			= 0x0000;
-			sFilterConfig0.FilterIdLow			= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh 	= 0x0000;
+			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterIdLow		= 0x0000;
+			sFilterConfig0.FilterMaskIdHigh 	= 0x7ff << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case NAV:
-			sFilterConfig0.FilterIdHigh			= 0x0000;
-			sFilterConfig0.FilterIdLow			= 0x0000;
+			sFilterConfig0.FilterIdHigh		= 0x0000;
+			sFilterConfig0.FilterIdLow		= 0x0000;
 			sFilterConfig0.FilterMaskIdHigh		= 0x0000;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case PV:
-			sFilterConfig0.FilterIdHigh			= 0x0000;
-			sFilterConfig0.FilterIdLow			= 0x0000;
+			sFilterConfig0.FilterIdHigh		= 0x0000;
+			sFilterConfig0.FilterIdLow		= 0x0000;
 			sFilterConfig0.FilterMaskIdHigh		= 0x0000;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case DEV:
-			sFilterConfig0.FilterIdHigh			= 0x7ff << 5;
-			sFilterConfig0.FilterIdLow			= 0x0000;
+			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterIdLow		= 0x0000;
 			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;

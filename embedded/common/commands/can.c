@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "commands.h"
+#include "board.h"
 #include "can.h"
 
-command_status try_send(uint32_t can_id, size_t length, uint8_t *TxData) {
-	if (can_send(can_id, length, TxData) != HAL_OK)
+command_status try_send(uint32_t can_id, uint32_t mailbox, size_t length, uint8_t *TxData) {
+	if (can_send(can_id, mailbox, length, TxData) != HAL_OK)
 		return FAIL;
 	return CMD_SUCCESS;	
 }
@@ -49,9 +50,18 @@ command_status do_can(int argc, char *argv[]) {
 		memset(TxData, data, 16);
 
 		// TODO, use 'data' as-is
-		return try_send(can_id, length, TxData);
+		return try_send(can_id, 0, length, TxData);
 	}
+
+	if (!strcmp("send_inter", argv[1])){
+		
+		uint8_t TxData[8];
+		
+		printf("DASH: %d NAV_REC: %d\r\n", DASH, NAV_REC);
+		can_send_intermodule(DASH, NAV_REC, 1, TxData);
 	
+	}
+
 	if (argc == 2 || argc == 3 || argc == 4) return USAGE;
 
 	if (!strcmp("send", argv[1])) {
@@ -86,7 +96,7 @@ command_status do_can(int argc, char *argv[]) {
 		data[1] = (converted & 0x000000000000ff00) >> 8;
 		data[0] = (converted & 0x00000000000000ff);
 
-		can_send(can_id, length, data);
+		can_send(can_id, 0, length, data);
 	}
 
 	return USAGE;
