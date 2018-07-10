@@ -10,6 +10,17 @@ typedef enum _board_role {
 	PV = 3
 } BOARD_ROLE;
 
+typedef enum _receiving_boards {
+	DEV_REC = 0,
+	DASH_REC = 1,
+	NAV_REC = 2,
+	PV_REC = 3,
+	CCP_NAV_REC = 4,
+	CCP_PV_REC = 5,
+	NAV_PV_REC = 6,
+	ALL = 7
+} RECEIVING_BOARD;
+
 int io_init(void);
 int periph_init(BOARD_ROLE role);
 void fault(void);
