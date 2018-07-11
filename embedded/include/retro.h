@@ -16,6 +16,8 @@
 
 timeStamp *mainRetro;
 void unitTest(void);
-void initRetro(void);
-int getVelocity(void);
+void initRetro(void); 
+
+// Sets the position in cm and velocity in cm/s
+int getTelemetry (int *pos, int *vel);
 #endif /* _RETR0_H*/
