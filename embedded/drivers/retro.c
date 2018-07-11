@@ -9,24 +9,24 @@ void initRetro(void) {
 void incVel(int retro) {
 	switch (retro) {
 		case 1:
-			printf("Incrementing retro 1\r\n");
+//			printf("Incrementing retro 1\r\n");
 			RETRO1.count++;
 			RETRO1.prev = RETRO1.curr;
-			RETRO1.curr = 1000;
+			RETRO1.curr = 1000*RETRO1.count;
 			RETRO1.filter[MAINFILTERINDEX] = RETRO1.curr-RETRO1.prev;
 			break;
 		case 2:
-			printf("Incrementing retro 2\r\n");
+//			printf("Incrementing retro 2\r\n");
 			RETRO2.count++;
 			RETRO2.prev = RETRO2.curr;
-			RETRO2.curr = 1000;
+			RETRO2.curr = 1000*RETRO2.count;
 			RETRO2.filter[MAINFILTERINDEX] = RETRO2.curr-RETRO2.prev;		
 			break;
 		case 3:
-			printf("Incrementing retro 3\r\n");
+//			printf("Incrementing retro 3\r\n");
 			RETRO3.count++;
 			RETRO3.prev = RETRO3.curr;
-			RETRO3.curr = 1000;
+			RETRO3.curr = 1000*RETRO3.count;
 			RETRO3.filter[MAINFILTERINDEX] = RETRO3.curr-RETRO3.prev;
 			break;
 		default:
@@ -48,6 +48,11 @@ void unitTest(void) {
 	incVel(1); incVel(3);
 	tVel = getVelocity();
 	if(tVel != CM_PER_STRIP) printf("FAILED: only 2 retro case %d\r\n", tVel);
+	
+	// Two retros missed
+	incVel(1);
+	tVel = getVelocity();
+	if(tVel != CM_PER_STRIP) printf("FAILED:\r\n");
 }
 
 // Detects bad retro by confirming counts amoung all retros.
@@ -114,7 +119,7 @@ int getVelocity(void) {
 	diff += RETRO1.filter[MAINFILTERINDEX];
 	diff += RETRO2.filter[MAINFILTERINDEX];
 	diff += RETRO3.filter[MAINFILTERINDEX];
-
+	//printf("# Strip: %d\tdiff: %lu\r\n", numStrips, diff);
 	switch (badRetro) {
 		case 0:
 			diff /= 3;
@@ -137,7 +142,7 @@ int getVelocity(void) {
 	}
 	__enable_irq();
 	if(diff <= 0) return 0;	
-	printf("Number of strips: %d\r\n", numStrips);	
 	velocity = (1000 * CM_PER_STRIP) / diff;
+	//printf("Vel: %dcm/s\t# Strip: %d\r\n", velocity, numStrips);
 	return velocity;
 }
