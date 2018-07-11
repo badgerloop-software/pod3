@@ -104,6 +104,11 @@ void process_manual_override(char *override) {
 	}
 }
 
+void do_pod_heartbeat() {
+        /* TODO  we just got a heartbeat from the dashboard*/
+        puts("Hit do_pod_heartbeat");
+}
+
 void process_control(char *buf) {
         int len;
 	int type_payload_len;
@@ -130,6 +135,9 @@ void process_control(char *buf) {
 		        break;
 	        case 'o': /* manual override */
 	                process_manual_override(payload_start);
+	                break;
+	        case 'h': /* heartbeat from dashboard */
+	                do_pod_heartbeat();
 	                break;
 	}
 }
