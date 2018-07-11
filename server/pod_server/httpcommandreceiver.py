@@ -116,8 +116,8 @@ def issue_pod_heartbeat():
     print('sending a network heartbeat to the pod')
     success = True
     message = None
-    # make the payload (just the command type for this guy)
-    val = ''
+    # make the payload (only command type important but need payload)
+    val = 'finn'
     payload = '{0}{1}'.format(UART_HEARTBEAT_TOK, val)
     # and package it for uart
     to_send = package_command(payload)
