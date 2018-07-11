@@ -15,7 +15,6 @@
 #define MAIN_INTERVAL       (mainRetro->filter[MAINFILTERINDEX])
 
 timeStamp *mainRetro;
-void unitTest(void);
 void initRetro(void); 
 
 // Sets the position in cm and velocity in cm/s
