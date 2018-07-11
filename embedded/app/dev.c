@@ -4,6 +4,7 @@
 #include "board.h"
 #include "console.h"
 #include "usart.h"
+#include "can.h"
 
 #define BLINK_INTERVAL	100
 
@@ -24,7 +25,7 @@ int main(void) {
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || dev_init())
+	if (io_init() || periph_init(DEV) || dev_init())
 		fault();
 
 	rx = get_rx(USB_UART);
@@ -35,6 +36,7 @@ int main(void) {
 	while (1) {
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
+		can_read();
 	}
 
 	return 0;
