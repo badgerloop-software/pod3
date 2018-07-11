@@ -114,32 +114,6 @@ HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
 		return HAL_ERROR;
 }
 
-HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
-	switch (id){
-		case (BMS_PACK_STATE_MESSAGE):
-			printf("data 0: %x", data[0]);
-		case (BMS_PACK_TEMP_MESSAGE):
-
-		case (BMS_RELAY_STATE_MESSAGE):
-
-		case (BMS_PACK_CCL):
-
-		case (BMS_CELL_VOLT_MESSAGE):
-
-		case (BMS_SOC_MESSAGE):
-
-//		case (BMS_PACK_CURRENT_MESSAGE):
-
-//		case (BMS_PACK_VOLT_MESSAGE):
-
-		default:
-			return HAL_ERROR;
-	}
-
-
-}
-
-
 HAL_StatusTypeDef can_listen(void){
 	HAL_StatusTypeDef retval = HAL_OK;	
 	if (can_message_available(CAN_RX_FIFO0)) {
@@ -150,7 +124,6 @@ HAL_StatusTypeDef can_listen(void){
 }
 
 void print_incoming_can_message(uint32_t id, uint8_t *data){
-
 	BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
@@ -222,6 +195,29 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 	int i;
 	for (i = 0; i < 8; i++){
 		printf("Data[%d]:	%x\r\n", i, data[i]);
+	}
+}
+
+HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
+	switch (id){
+		case (BMS_PACK_STATE_MESSAGE):
+			printf("data 0: %x", data[0]);
+		case (BMS_PACK_TEMP_MESSAGE):
+
+		case (BMS_RELAY_STATE_MESSAGE):
+
+		case (BMS_PACK_CCL):
+
+		case (BMS_CELL_VOLT_MESSAGE):
+
+		case (BMS_SOC_MESSAGE):
+
+//		case (BMS_PACK_CURRENT_MESSAGE):
+
+//		case (BMS_PACK_VOLT_MESSAGE):
+
+		default:
+			return HAL_ERROR;
 	}
 }
 
