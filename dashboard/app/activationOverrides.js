@@ -11,6 +11,9 @@ const brake_off = document.getElementById("brake_off");
 const brake_vent_on = document.getElementById("brake_vent_on");
 const brake_vent_off = document.getElementById("brake_vent_off");
 
+const {BrowserWindow} = require('electron').remote;
+const {dialog} = require('electron').remote;
+
 const PASSWORD = "betsy";  //Super secure, just change the password here
 
 // confirm dialog options
@@ -58,13 +61,16 @@ function verificationRequest(e) {
 }
 
 function confirmCommand(cback) {
-    const {dialog} = require("electron").remote;
-    var dialogRes = dialog.showMessageBox({
-        type: "none",
-        message: "Are you sure you want to send that command?",
-        buttons: CONFIRM_BUTTONS,
-	cancelId: CANCEL_IND
-    }, cback);
+    dialog.showMessageBox(
+	BrowserWindow.getFocusedWindow(),
+	{
+            type: "none",
+            message: "Are you sure you want to send that command?",
+            buttons: CONFIRM_BUTTONS,
+	    cancelId: CANCEL_IND
+        },
+	cback
+    );
 }
 
 function checkPassword(e) {
