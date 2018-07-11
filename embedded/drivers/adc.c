@@ -53,7 +53,7 @@ HAL_StatusTypeDef adc_init(void){
    	adc_handle.Init.ScanConvMode          = ENABLE;                       /* Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1) */ 
    	adc_handle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;           /* EOC flag picked-up to indicate conversion end */ 
    	adc_handle.Init.LowPowerAutoWait      = DISABLE;                       /* Auto-delayed conversion feature disabled */ 
-  	adc_handle.Init.ContinuousConvMode    = DISABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 
+  	adc_handle.Init.ContinuousConvMode    = ENABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 
    	adc_handle.Init.NbrOfConversion       = 1;                             /* Parameter discarded because sequencer is disabled */ 
    	adc_handle.Init.DiscontinuousConvMode = DISABLE;                       /* Parameter discarded because sequencer is disabled */ 
  	adc_handle.Init.NbrOfDiscConversion   = 1;                             /* Parameter discarded because sequencer is disabled */ 
@@ -70,22 +70,6 @@ HAL_StatusTypeDef adc_init(void){
    		return retval;
    	}
 
-	/*##-2- Configure ADC regular channel ######################################*/
-	sConfig6.Channel      = ADC_CHANNEL_11;                /* Sampled channel number */
-    
-    sConfig6.Rank         = ADC_REGULAR_RANK_1;          /* Rank of sampled channel number ADCx_CHANNEL */
-   	sConfig6.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;    /* Sampling time (number of clock cycles unit) */
-   	sConfig6.SingleDiff   = ADC_SINGLE_ENDED;            /* Single-ended input channel */
-   	sConfig6.OffsetNumber = ADC_OFFSET_NONE;             /* No offset subtraction */
-   	sConfig6.Offset = 0;                                 /* Parameter discarded because offset correction is disabled */ 
-
-	/*
-     	 * if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig6) != HAL_OK) {
-	 * // Channel Configuration Error
-	 * printf( "Channel 11 Configuration Error\r\n");
-	 * return 1;
-	 * }
-	 */
     return HAL_OK;
 }
 

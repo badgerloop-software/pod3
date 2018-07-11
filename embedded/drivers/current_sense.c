@@ -30,6 +30,6 @@ int current_sense_init(void){
 
 
 double current_sense_read(void){
-    return (double)(adc_read( CURRENT_SENSE_PIN ) * 1000 / (double)(24.414));
+    return (double)(adc_read( CURRENT_SENSE_PIN ) * (double)(24.414) / 1000);
 }
 

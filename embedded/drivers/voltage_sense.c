@@ -30,6 +30,6 @@ int voltage_sense_init(void){
 }
 
 double voltage_sense_read(void){
-    return (double)(adc_read( VOLTAGE_SENSE_PIN ) * 1000 / (double)(0.80566));
+    return (double)(adc_read( VOLTAGE_SENSE_PIN ) * (double)(0.80566) / 1000);
 }
 
