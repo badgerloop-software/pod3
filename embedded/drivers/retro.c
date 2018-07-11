@@ -6,6 +6,7 @@ void initRetro(void) {
 	mainRetro = &RETRO1;
 }
 
+// for testing purposes only. Fakes a retro count
 void incVel(int retro) {
 	switch (retro) {
 		case 1:
@@ -34,24 +35,28 @@ void incVel(int retro) {
 	}
 }
 void unitTest(void) {
-	int tVel = getVelocity();
-	printf("Initial velocity: %d\r\n", tVel);
-	
+	int tPos, tVel;	
+
 	// Nominal case, all 3 strips read
 	for(int i = 0; i < 10; i++) {
 		incVel(1); incVel(2); incVel(3);
-		tVel = getVelocity();
+		getTelemetry(&tPos, &tVel);
 		if(tVel != CM_PER_STRIP) printf("Failed nominal case %d\r\n", tVel);
 	}	
 	
+	// Pass two retros in one read	
+	incVel(1); incVel(1); incVel(2); incVel(2); incVel(3); incVel(3);
+	tVel = getTelemetry(&tPos, &tVel);
+	if(tVel != CM_PER_STRIP) printf("Failed 2 strip case %d\r\n", tVel);
+
 	// One retro missed	
 	incVel(1); incVel(3);
-	tVel = getVelocity();
+	getTelemetry(&tPos, &tVel);
 	if(tVel != CM_PER_STRIP) printf("FAILED: only 2 retro case %d\r\n", tVel);
 	
 	// Two retros missed
 	incVel(1);
-	tVel = getVelocity();
+	getTelemetry(&tPos, &tVel);
 	if(tVel != CM_PER_STRIP) printf("FAILED:\r\n");
 }
 
@@ -109,17 +114,20 @@ int getStripCount(int *badRetro) {
 	return actualCount;
 }
 
-// Return velocity in cm/s
-int getVelocity(void) {
-	int velocity, numStrips, badRetro = 0; 
+// Return 1 on success, 0 on failure
+// sets pos in cm
+// sets vel in cm/s
+int getTelemetry(int *pos, int *vel) {
+	int velocity = 0, numStrips, badRetro = 0; 
 	uint32_t diff = 0; // Time between tape strips in ms
 	// We are getting strip counts, getting a new one would throw it off
 	__disable_irq(); 
 	numStrips = getStripCount(&badRetro);	
-	diff += RETRO1.filter[MAINFILTERINDEX];
+
+	// Average timestamps of all 3 retros
+	diff += RETRO1.filter[MAINFILTERINDEX]; 
 	diff += RETRO2.filter[MAINFILTERINDEX];
 	diff += RETRO3.filter[MAINFILTERINDEX];
-	//printf("# Strip: %d\tdiff: %lu\r\n", numStrips, diff);
 	switch (badRetro) {
 		case 0:
 			diff /= 3;
@@ -139,10 +147,15 @@ int getVelocity(void) {
 		default:
 			printf("No retros agree on counts\r\n");
 			diff = -1;
+			return 0;
 	}
 	__enable_irq();
-	if(diff <= 0) return 0;	
+
+	*pos = numStrips*CM_PER_STRIP;
+	*vel = velocity;
+	if(diff <= 0) return 1;	// No strips read
 	velocity = (1000 * CM_PER_STRIP) / diff;
 	//printf("Vel: %dcm/s\t# Strip: %d\r\n", velocity, numStrips);
+	*vel = velocity;
 	return velocity;
 }

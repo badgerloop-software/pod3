@@ -5,7 +5,6 @@
 #include "pin_alias.h"
 #include "retro.h"
 #include "commands.h"
-#include "exti.h"
 
 void printStamp (int pin, timeStamp * stamp) {
 	int i;
@@ -40,8 +39,9 @@ command_status do_exti(int argc, char *argv[]) {
     if ( pin == 0 ) return USAGE;
 
 	printStamp(pin, getTimeStamps(pin));
-	
-    printf("Velocity %d cm/s\r\n", getVelocity());
+	int vel, pos;
+	getTelemetry(&pos, &vel);	
+    printf("Pos: %dcm\tVelocity: %dcm/s\r\n", pos,vel);
     
     return CMD_SUCCESS;
 
@@ -55,4 +55,21 @@ command_status do_exti(int argc, char *argv[]) {
 
 	return CMD_SUCCESS;
 }
-COMMAND_ENTRY("exti", "exti <pin>", "Prints current and previous time stamp of the External Interrupt. Only on interrupt per pin number", do_exti)
+COMMAND_ENTRY("exti", "exti <pin>", "Prints current and previous time stamp of the External Interrupt. Only on interrupt per pin number", do_exti) 
+
+command_status do_retro(int argc, char *argv[]) {
+	if(argc > 1) return USAGE;
+	
+	int pos, vel;
+	if(!getTelemetry(&pos, &vel)) {
+		printf("Function call failed %s\r\n", argv[1]);
+		return FAIL;
+	}
+
+	printf("Pos: %dcm\tVel: %dcm/s\r\n", pos, vel);
+	return CMD_SUCCESS;
+}
+COMMAND_ENTRY("retro", 
+		"retro", 
+		"Prints retros estimated position and velocity",
+		 do_retro)
