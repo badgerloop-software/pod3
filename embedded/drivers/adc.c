@@ -50,7 +50,7 @@ HAL_StatusTypeDef adc_init(void){
     adc_handle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;          /* Asynchronous clock mode, input ADC clock not divided */ 
    	adc_handle.Init.Resolution            = ADC_RESOLUTION_12B;            /* 12-bit resolution for converted data */ 
    	adc_handle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;           /* Right-alignment for converted data */ 
-   	adc_handle.Init.ScanConvMode          = DISABLE;                       /* Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1) */ 
+   	adc_handle.Init.ScanConvMode          = ENABLE;                       /* Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1) */ 
    	adc_handle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;           /* EOC flag picked-up to indicate conversion end */ 
    	adc_handle.Init.LowPowerAutoWait      = DISABLE;                       /* Auto-delayed conversion feature disabled */ 
   	adc_handle.Init.ContinuousConvMode    = DISABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 

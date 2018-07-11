@@ -4,6 +4,9 @@
 #include "board.h"
 #include "console.h"
 #include "usart.h"
+#include "adc.h"
+#include "current_sense.h"
+#include "voltage_sense.h"
 
 #define BLINK_INTERVAL	100
 
@@ -15,6 +18,11 @@ inline void printPrompt(void) {
 int dev_init(void) {
 
 	/* dev specific initializations */
+
+    adc_init();
+    voltage_sense_init();
+    current_sense_init();
+    adc_start();
 
 	return 0;
 }
