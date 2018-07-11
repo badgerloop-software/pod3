@@ -55,7 +55,6 @@ int periph_init(void) {
 
 	//printf("%d\n\r", test);
 	process_input("i2c init");
-	process_input("adc init");
 	return ret;
 }
 

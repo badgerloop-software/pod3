@@ -3,14 +3,17 @@
 #include <stdlib.h>
 #include "commands.h"
 #include "adc.h"
+#include "current_sense.h"
+#include "voltage_sense.h"
 
 command_status do_adc_init(void){
 	return (adc_init() == HAL_OK) ? CMD_SUCCESS : FAIL;
 }
 
-command_status adc_try_read( uint8_t channel ){
+command_status adc_try_read(){
 	
-    printf("ADC %lu", adc_read( channel ));
+    printf("Current Sensor: %f Amps", current_sense_read());
+    printf("Voltage Sensor: %f Volts", voltage_sense_read());
 	return CMD_SUCCESS;
 }
 
@@ -20,9 +23,8 @@ command_status do_adc(int argc, char *argv[]){
 	if (!strcmp("init", argv[1]))
 		return do_adc_init();
 
-
 	if (!strcmp("read", argv[1])){
-		return adc_try_read( (uint8_t)(atoi(argv[2])) );
+		return adc_try_read();
 	}
 	return USAGE;
 }

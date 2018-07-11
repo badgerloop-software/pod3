@@ -28,7 +28,8 @@ int current_sense_init(void){
     return retval;
 }
 
-uint32_t current_sense_read(void){
-    return adc_read( CURRENT_SENSE_PIN );
+
+double current_sense_read(void){
+    return (double)(adc_read( CURRENT_SENSE_PIN ) * 1000 / (double)(24.414));
 }
 

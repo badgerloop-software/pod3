@@ -7,9 +7,8 @@
 #include "pin_alias.h"
 #include "uart.h"
 #include "dashboard_control.h"
-#include "stm32l4xx_hal_adc.h"
-#include "stm32l4xx_hal_adc_ex.h"
-#include "stm32l4xx_ll_adc.h"
+#include "current_sense.h"
+#include "voltage_sense.h"
 
 #define BLINK_INTERVAL	250
 
@@ -44,7 +43,11 @@ inline void printPrompt(void) {
 }
 
 int dash_init(void) {
-	return 0;
+
+    adc_init();
+    voltage_sense_init();
+    current_sense_init();
+    return 0;
 }
 
 int main(void) {

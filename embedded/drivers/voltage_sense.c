@@ -29,7 +29,7 @@ int voltage_sense_init(void){
     return retval;
 }
 
-uint32_t voltage_sense_read(void){
-    return adc_read( VOLTAGE_SENSE_PIN );
+double voltage_sense_read(void){
+    return (double)(adc_read( VOLTAGE_SENSE_PIN ) * 1000 / (double)(0.80566));
 }
 
