@@ -39,8 +39,8 @@ command_status do_exti(int argc, char *argv[]) {
     if ( pin == 0 ) return USAGE;
 
 	printStamp(pin, getTimeStamps(pin));
-	int vel, pos;
-	getTelemetry(&pos, &vel);	
+	int vel, pos, acc;
+	getTelemetry(&pos, &vel, &acc);	
     printf("Pos: %dcm\tVelocity: %dcm/s\r\n", pos,vel);
     
     return CMD_SUCCESS;
@@ -60,13 +60,13 @@ COMMAND_ENTRY("exti", "exti <pin>", "Prints current and previous time stamp of t
 command_status do_retro(int argc, char *argv[]) {
 	if(argc > 1) return USAGE;
 	
-	int pos, vel;
-	if(!getTelemetry(&pos, &vel)) {
+	int pos, vel, acc;
+	if(!getTelemetry(&pos, &vel, &acc)) {
 		printf("Function call failed %s\r\n", argv[1]);
 		return FAIL;
 	}
 
-	printf("Pos: %dcm\tVel: %dcm/s\r\n", pos, vel);
+	printf("Pos: %dcm\tVel: %dcm/s\tAcc: %dcm/s^2\r\n", pos, vel, acc);
 	return CMD_SUCCESS;
 }
 COMMAND_ENTRY("retro", 

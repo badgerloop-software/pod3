@@ -15,8 +15,9 @@
 #define MAIN_INTERVAL       (mainRetro->filter[MAINFILTERINDEX])
 
 timeStamp *mainRetro;
+int tape_vel;
 void initRetro(void); 
 
 // Sets the position in cm and velocity in cm/s
-int getTelemetry (int *pos, int *vel);
+int getTelemetry (int *pos, int *vel, int *acc);
 #endif /* _RETR0_H*/

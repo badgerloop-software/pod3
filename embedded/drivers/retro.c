@@ -4,6 +4,7 @@
 
 void initRetro(void) {
 	mainRetro = &RETRO1;
+	tape_vel = 0;
 }
 
 // for testing purposes only. Fakes a retro count
@@ -35,28 +36,28 @@ void incVel(int retro) {
 	}
 }
 void unitTest(void) {
-	int tPos, tVel;	
+	int tPos, tVel, tAcc;	
 
 	// Nominal case, all 3 strips read
 	for(int i = 0; i < 10; i++) {
 		incVel(1); incVel(2); incVel(3);
-		getTelemetry(&tPos, &tVel);
+		getTelemetry(&tPos, &tVel, &tAcc);
 		if(tVel != CM_PER_STRIP) printf("Failed nominal case %d\r\n", tVel);
 	}	
 	
 	// Pass two retros in one read	
 	incVel(1); incVel(1); incVel(2); incVel(2); incVel(3); incVel(3);
-	tVel = getTelemetry(&tPos, &tVel);
+	tVel = getTelemetry(&tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("Failed 2 strip case %d\r\n", tVel);
 
 	// One retro missed	
 	incVel(1); incVel(3);
-	getTelemetry(&tPos, &tVel);
+	getTelemetry(&tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("FAILED: only 2 retro case %d\r\n", tVel);
 	
 	// Two retros missed
 	incVel(1);
-	getTelemetry(&tPos, &tVel);
+	getTelemetry(&tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("FAILED:\r\n");
 }
 
@@ -114,20 +115,24 @@ int getStripCount(int *badRetro) {
 	return actualCount;
 }
 
-// Return 1 on success, 0 on failure
+// Return 1 on success, 0 on failure. Updates global velocity.
 // sets pos in cm
 // sets vel in cm/s
-int getTelemetry(int *pos, int *vel) {
-	int velocity = 0, numStrips, badRetro = 0; 
+// sets acc in cm/s^2
+int getTelemetry(int *pos, int *vel, int *acc) {
+	int numStrips, badRetro = 0; 
 	uint32_t diff = 0; // Time between tape strips in ms
 	// We are getting strip counts, getting a new one would throw it off
 	__disable_irq(); 
 	numStrips = getStripCount(&badRetro);	
 
-	// Average timestamps of all 3 retros
+	// FOR VEL: Average timestamps of all 3 retros
+	// FOR ACC: Get difference for the previous count. Averaging again. 
+	// Then by using two counts, time for strip n and time for strip n-1, calc accel
 	diff += RETRO1.filter[MAINFILTERINDEX]; 
 	diff += RETRO2.filter[MAINFILTERINDEX];
 	diff += RETRO3.filter[MAINFILTERINDEX];
+
 	switch (badRetro) {
 		case 0:
 			diff /= 3;
@@ -149,13 +154,16 @@ int getTelemetry(int *pos, int *vel) {
 			diff = -1;
 			return 0;
 	}
+	
 	__enable_irq();
 
 	*pos = numStrips*CM_PER_STRIP;
-	*vel = velocity;
+	*vel = 0;
 	if(diff <= 0) return 1;	// No strips read
-	velocity = (1000 * CM_PER_STRIP) / diff;
+	*vel = (1000 * CM_PER_STRIP) / diff; // dx/dt
+	*acc = (tape_vel - *vel) / diff; //dv/dt 
+	tape_vel = *vel;
 	//printf("Vel: %dcm/s\t# Strip: %d\r\n", velocity, numStrips);
-	*vel = velocity;
-	return velocity;
+
+	return tape_vel;
 }
