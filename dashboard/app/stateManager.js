@@ -45,6 +45,10 @@ class State{
 }
 */
 
+// need these two for the confirmation dialog
+const {BrowserWindow} = require('electron').remote;
+const {dialog} = require('electron').remote;
+
 // confirm dialog options
 const CONFIRM_BUTTONS = ["Confirm", "Cancel"]
 const CANCEL_IND = 1
@@ -62,13 +66,16 @@ function postAndUpdateIfConfirm(response, ip, port, route, payload, newState) {
 }
 
 function confirmDialog(cback) {
-    const {dialog} = require("electron").remote;
-    var dialogRes = dialog.showMessageBox({
-        type: "none",
-        message: "Are you sure you want to set that state?",
-        buttons: CONFIRM_BUTTONS,
-	cancelId: CANCEL_IND
-    }, cback);
+    dialog.showMessageBox(
+	BrowserWindow.getFocusedWindow(),
+	{
+            type: "none",
+            message: "Are you sure you want to set that state?",
+            buttons: CONFIRM_BUTTONS,
+	    cancelId: CANCEL_IND
+        },
+	cback
+    );
 }
 
 //All the states
