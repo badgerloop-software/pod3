@@ -100,6 +100,9 @@
     <void property="length">
      <int>8</int>
     </void>
+    <void property="messageFlags">
+     <int>64</int>
+    </void>
     <void property="offMatrix">
      <void index="7">
       <int>1720</int>
@@ -142,7 +145,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="offMatrix">
      <void index="7">
@@ -195,7 +198,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -254,7 +257,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -319,7 +322,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -381,7 +384,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -446,7 +449,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
