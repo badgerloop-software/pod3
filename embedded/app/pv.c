@@ -4,9 +4,18 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "solenoid.h"
 
 #define BLINK_INTERVAL	250
 #define MODULE_PV
+
+Solenoid_States solenoid_states = {
+	.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},
+	.solenoid_2 = {"prim_braking_2", NOT_ACTUATED},
+	.solenoid_4 = {"sec_venting", NOT_ACTUATED},
+	.solenoid_6 = {"sec_braking_1", NOT_ACTUATED},
+	.solenoid_7 = {"sec_braking_2", NOT_ACTUATED}
+};
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit
@@ -32,7 +41,7 @@ FILL_GPIO(LIM_MCU, 		GPIOA, 2, INPUT, LOW_SPEED, NONE, true, OTHER)
 FILL_GPIO(MCU_HV_EN, 	GPIOA, 6, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
 //MISC
-//High Voltage Disconnect Status	
+//High Voltage Disconnect Status
 FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 //Motor GPIO circuit output
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
@@ -64,6 +73,7 @@ int main(void) {
 
 	while (1) {
 		check_input(rx);
+		solenoid_handler(&solenoid_states);
 		blink_handler(BLINK_INTERVAL);
 	}
 
