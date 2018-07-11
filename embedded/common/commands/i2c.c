@@ -7,6 +7,7 @@
 #include "i2c.h"
 #include "iox.h"
 #include "honeywell.h"
+#include "adcx.h"
 
 command_status do_init(void) {
 	return (i2c_init() == HAL_OK) ? CMD_SUCCESS : FAIL;
@@ -182,6 +183,40 @@ COMMAND_ENTRY(
 	"mw2 <addr (hex)> <memAddr (hex)> <val1 val2 . . . (hex)>\r\n",
 	"Interact with the I2C subsystem.",
 	do_i2c
+)
+
+command_status do_adcx(int argc, char *argv[]) {
+	if (argc == 1) return USAGE;
+
+	if (!strcmp("read", argv[1])){
+		uint8_t read_val;
+		if (!adcx_start_read(0x48)){
+			printf("%s: could not read from i2c:\r\n", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		if ( i2c_block(I2C_WAITING_RX, ticks)){
+			printf("%s:waiting for read timed out\r\n", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		if (!adcx_read(0x48, &read_val)){
+			printf("%s: call to 'adcx_read' failed\r\n", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		printf("hex value read: 0x%x\r\n", read_val);
+		return CMD_SUCCESS;
+	}
+	return USAGE;
+} 
+
+COMMAND_ENTRY(
+	"adcx",
+	"adcx <subcommand> [args ...]\r\n\r\n"
+	"adcx <addr (hex)> <pin (int)>\r\n",
+	"Interact with the PCF8591 subsystem",
+	do_adcx
 )
 
 command_status do_iox(int argc, char *argv[]) {
