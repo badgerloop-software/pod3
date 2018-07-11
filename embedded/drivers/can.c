@@ -60,8 +60,9 @@ HAL_StatusTypeDef can_send_intermodule(
 	/* Generate CAN ID */
 	uint8_t to_from_id = 0;
 	uint8_t message_id = 0;
+	
 	to_from_id = sending_board << 4;
-	message_id |= (receiving_board);
+	to_from_id |= (receiving_board);
 	message_id = (message_num);
 
 	data[0] = to_from_id;
@@ -113,6 +114,32 @@ HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
 		return HAL_ERROR;
 }
 
+HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
+	switch (id){
+		case (BMS_PACK_STATE_MESSAGE):
+			printf("data 0: %x", data[0]);
+		case (BMS_PACK_TEMP_MESSAGE):
+
+		case (BMS_RELAY_STATE_MESSAGE):
+
+		case (BMS_PACK_CCL):
+
+		case (BMS_CELL_VOLT_MESSAGE):
+
+		case (BMS_SOC_MESSAGE):
+
+//		case (BMS_PACK_CURRENT_MESSAGE):
+
+//		case (BMS_PACK_VOLT_MESSAGE):
+
+		default:
+			return HAL_ERROR;
+	}
+
+
+}
+
+
 HAL_StatusTypeDef can_listen(void){
 	HAL_StatusTypeDef retval = HAL_OK;	
 	if (can_message_available(CAN_RX_FIFO0)) {
@@ -127,69 +154,74 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 	BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
-	
+
 	if (id == 0x555){
-		printf("CAN ID: %lx (BADGER CAN ID)", id);
+		printf("CAN ID: %lx (BADGER CAN ID)\r\n", id);
 	} else {
-		printf("CAN ID: %lx", id);
+		printf("CAN ID: %lx\r\n", id);
 	}
-	switch(from_module) {
-		case DEV:
-			printf("incoming message from dash\r\n");
-			break;
-		case DASH:
-			printf("incoming message from dash\r\n");
-			break;
-		case NAV:
-			printf("incoming message from dash\r\n");
-			break;
-		case PV:
-			printf("incoming message from dash\r\n");
-			break;
-		default:
-			printf("incoming message from unknown\r\n");	
-	}
+
+	printf("TO: 		");
 	switch (to_modules) {
 		case DEV_REC:
-		       printf("Message intended for Dev\r\n");
+		       printf("DEV\r\n");
 		       break;
 	        case DASH_REC:
-			printf("Message intended for DASH\r\n");
+			printf("DASH\r\n");
 			break;
 	 	case NAV_REC:
-			printf("Message inteneded for nav\r\n");
+			printf("NAV\r\n");
 			break;
 		case PV_REC:
-			printf("Message intended for pv\r\n");
+			printf("PV\r\n");
 			break;
 		case CCP_NAV_REC:
-			printf("message intended for CCP and nav\r\n");
+			printf("CCP and NAV\r\n");
 			break;
 		case CCP_PV_REC:
-			printf("message intended for CCP and PV\r\n");
+			printf("CCP and PV\r\n");
 			break;
 		case NAV_PV_REC:
-			printf("message intended for nav and pv\r\n");
+			printf("NAV and PV\r\n");
 			break;
 		case ALL:
-			printf("message intended for all\r\n");
+			printf("ALL\r\n");
 			break;
 		default:
-			printf("message intended for unknown\r\n");
-	} 
+			printf("UNKNOWN\r\n");
+	}
+
+	printf("FROM:		");
+	switch(from_module) {
+		case DEV:
+			printf("DEV\r\n");
+			break;
+		case DASH:
+			printf("DASH\r\n");
+			break;
+		case NAV:
+			printf("NAV\r\n");
+			break;
+		case PV:
+			printf("PV\r\n");
+			break;
+		default:
+			printf("UNKNOWN\r\n");	
+	}
+	printf("TYPE:		");
 	switch (message_num) {
 		case CAN_TEST_MESSAGE:
-			printf("this is the can test message\r\n");
+			printf("CAN TEST\r\n");
 			break;
 		default:
-			printf("unknown message type\r\n");
+			printf("UNKNOWN\r\n");
 			break;
 	}
+	printf("SIZE:	 	%d bytes\r\n", sizeof(data)/sizeof(uint8_t)*2); 
+
 	int i;
 	for (i = 0; i < 8; i++){
-		if (data[i] != 0){
-			printf("CAN MESSAGE DATA[%d]: %x\r\n", i, data[i]);
-		}
+		printf("Data[%d]:	%x\r\n", i, data[i]);
 	}
 }
 

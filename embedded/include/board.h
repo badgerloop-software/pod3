@@ -26,6 +26,16 @@ typedef enum _can_message_type {
 	
 } CAN_MESSAGE_TYPE;
 
+typedef enum _bms_telemetry {
+	BMS_PACK_STATE_MESSAGE = 0x6b0,
+	BMS_PACK_TEMP_MESSAGE = 0x6b1,
+	BMS_RELAY_STATE_MESSAGE = 0x653,
+	BMS_PACK_CCL = 0x652,
+	BMS_CELL_VOLT_MESSAGE = 0x651,
+	BMS_SOC_MESSAGE = 0x650,
+//	BMS_PACK_CURRENT_MESSAGE = //TODO extended IDs? 
+//	BMS_PACK_VOLT_MESSAGE = 
+} BMS_MESSAGE_TYPE;
 
 int io_init(void);
 int periph_init(BOARD_ROLE role);
