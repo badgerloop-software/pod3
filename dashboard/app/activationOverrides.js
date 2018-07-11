@@ -11,7 +11,6 @@ const brake_off = document.getElementById("brake_off");
 const brake_vent_on = document.getElementById("brake_vent_on");
 const brake_vent_off = document.getElementById("brake_vent_off");
 
-
 // need these two for the confirmation dialog
 const {BrowserWindow} = require('electron').remote;
 const {dialog} = require('electron').remote;
