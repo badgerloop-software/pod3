@@ -44,7 +44,7 @@ brand.addEventListener('click', () => {
         icon: __dirname + '/assets/icons/png/64x64.png'
     });
 
-    newWindow.loadURL('http://badgerloop.com');
+    newWindow.loadURL(__dirname + "/assets/SecBrakingSchem.JPG");
     newWindow.on('ready-to-show', () => {newWindow.show()})
     newWindow.on('closed', () => {newWindow = null})
 });
