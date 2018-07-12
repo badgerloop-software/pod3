@@ -4,13 +4,13 @@
 #include "i2c.h"
 
 const char *iox_pin_str[] = {
-	"SOL1",
-	"SOL2",
-	"SOL3",
-	"SOL4",
-	"SOL5",
-	"SOL6",
-	"SOL7",
+	"Primary Braking (SOL1)",
+	"Primary Braking (SOL2)",
+	"Unused (SOL3)",
+	"Secondary Venting (SOL4)",
+	"Unused (SOL5)",
+	"Secondary Braking (SOL6)",
+	"Secondary Braking (SOL7)",
 	"SOL8"
 };
 
