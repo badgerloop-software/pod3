@@ -8,6 +8,8 @@
 
 #define BLINK_INTERVAL	100
 
+const int board_type = DEV;
+
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
 	fflush(stdout);
@@ -27,7 +29,7 @@ int main(void) {
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init(DEV) || dev_init())
 		fault();
-
+	
 	rx = get_rx(USB_UART);
 
 	post("Developmental");

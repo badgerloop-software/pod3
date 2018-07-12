@@ -5,9 +5,21 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "solenoid.h"
 #include "can.h"
 
+
 #define BLINK_INTERVAL	250
+
+const int board_type = NAV;
+
+Solenoid_States solenoid_states = {
+	.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},
+	.solenoid_2 = {"prim_braking_2", NOT_ACTUATED},
+	.solenoid_4 = {"sec_venting", NOT_ACTUATED},
+	.solenoid_6 = {"sec_braking_1", NOT_ACTUATED},
+	.solenoid_7 = {"sec_braking_2", NOT_ACTUATED}
+};
 
 /* Nucleo 32 I/O */
 

@@ -12,6 +12,8 @@
 
 #define BLINK_INTERVAL	250
 
+const int board_type = DASH;
+
 Pod_Data_Handle pod_data = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
