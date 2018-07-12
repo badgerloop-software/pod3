@@ -190,7 +190,9 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 			printf("UNKNOWN\r\n");
 			break;
 	}
-	printf("SIZE:	 	%d bytes\r\n", sizeof(data)/sizeof(uint8_t)*2); 
+	// You can't do this... This function does not have the original dec. of
+	// data so it is doing sizeof(int*)/(2*sizeof(int)) = 0
+	printf("SIZE:	 	%d bytes\r\n", 8 );//sizeof(data)/sizeof(uint8_t)*2); 
 
 	int i;
 	for (i = 0; i < 8; i++){
@@ -202,6 +204,7 @@ HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
 	switch (id){
 		case (BMS_PACK_STATE_MESSAGE):
 			printf("data 0: %x", data[0]);
+			return HAL_ERROR;
 		case (BMS_PACK_TEMP_MESSAGE):
 
 		case (BMS_RELAY_STATE_MESSAGE):
