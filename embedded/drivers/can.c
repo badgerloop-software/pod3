@@ -2,6 +2,8 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
+#include "dashboard_data.h"
+#include "uart.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -27,7 +29,7 @@ HAL_StatusTypeDef can_send(
 	} else {
 		TxHeader.DLC = length / 2;
 	}
-	
+
 	if (HAL_CAN_GetTxMailboxesFreeLevel(&can_handle)) {
 		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, data, &TxMailbox);
 		if (retval != HAL_OK)
@@ -43,7 +45,6 @@ HAL_StatusTypeDef can_read(void) {
 	HAL_StatusTypeDef retval = HAL_ERROR;
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
-		           
 		for (i = 0; i < 8; i++) {
 			if (RxData[i] != 0) {
 				printf("CAN Message Data[%d]: %x\r\n", i, RxData[i]);
@@ -56,11 +57,11 @@ HAL_StatusTypeDef can_read(void) {
 HAL_StatusTypeDef can_send_intermodule(
 		BOARD_ROLE sending_board, RECEIVING_BOARD receiving_board, uint8_t message_num, uint8_t *data){
 	HAL_StatusTypeDef retval = HAL_ERROR;
-	
+
 	/* Generate CAN ID */
 	uint8_t to_from_id = 0;
 	uint8_t message_id = 0;
-	
+
 	to_from_id = sending_board << 4;
 	to_from_id |= (receiving_board);
 	message_id = (message_num);
@@ -86,7 +87,7 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			//TODO nav pressure 1
 			//TODO nav pressure 2
 			//TODO nav pressure 3
-			//TODO nav solenoid 
+			//TODO nav solenoid
 			//TODO nav should_stop heartbeat
 			return HAL_ERROR;
 			break;
@@ -108,18 +109,19 @@ HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
 		BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
 		RECEIVING_BOARD to_modules = data[0] & 0xf;
 		CAN_MESSAGE_TYPE message_num = data[1];
-		
+
 		printf("CAN_ID: %lx FROM MODULE: %d TO MODULE: %d Message num: %d", can_id, from_module, to_modules, message_num);
 
 		return HAL_ERROR;
 }
 
 HAL_StatusTypeDef can_listen(void){
-	HAL_StatusTypeDef retval = HAL_OK;	
+	HAL_StatusTypeDef retval = HAL_OK;
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
+		uart_send(formatCANPacket(RxHeader.StdId, RxData));
 		print_incoming_can_message(RxHeader.StdId, RxData);
-	} 
+	}
 	return retval;
 }
 

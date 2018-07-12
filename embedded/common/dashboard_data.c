@@ -47,7 +47,17 @@ void harvest_honeywell(Pod_Data_Handle *pod_data) {
 	} else printf("honeywell start read fail\r\n");
 }
 
+char *formatCANPacket(uint32_t id, uint8_t *data) {
+	memset(packetBuffer, 0, SEND_BUF_SIZE);
+	int nChars = snprintf(packetBuffer, SEND_BUF_SIZE, "$|can%lu,%u\n", id, *data);
+	if (nChars < 0 || nChars > SEND_BUF_SIZE) {
+		printf("CAN message log failure\r\n");
+	}
+	return packetBuffer;
+}
+
 char *formatPacket(Sensor_Data *sensorData) {
+	memset(packetBuffer, 0, SEND_BUF_SIZE);
 	char *sensName;
 	uint8_t u8sensData;
 	uint16_t u16sensData;

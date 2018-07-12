@@ -31,11 +31,12 @@ typedef struct {
 	Sensor_Data position;
 	Sensor_Data velocity;
 	Sensor_Data acceleration;
-	Sensor_Data tube_pressure;	
+	Sensor_Data tube_pressure;
 } Pod_Data_Handle;
 
 
 void send_data(Pod_Data_Handle*);
+char *formatCANPacket(uint32_t, uint8_t*);
 char *formatPacket(Sensor_Data*);
 void harvest_honeywell(Pod_Data_Handle*);
 #endif
