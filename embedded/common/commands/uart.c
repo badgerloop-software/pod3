@@ -24,10 +24,10 @@ command_status do_uart(int argc, char *argv[]) {
 }
 
 
-command_status uart_send () {
+command_status uart_send (char *message) {
         int i = 0;
-	char message[] =  "I am a message";
-	for (i = 0; i < (int)(sizeof(message)/sizeof(message[0])); i++) {
+	int length = strlen(message);
+	for (i = 0; i < length; i++) {
                 _putc(USART1, true, message[i]);
 	}
 	return CMD_SUCCESS;

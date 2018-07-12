@@ -26,7 +26,7 @@ void change_state(STATE_NAME state) {
 	state_handle.next_state = state;
 	state_handle.change_state = true;
 }
-
+in_state_table[handle
 void assert_pre_run_fault(const char *message) {
 	change_state(PRE_RUN_FAULT);
 	printf("%s: %s\r\n", __func__, message);
@@ -272,17 +272,17 @@ void in_idle(uint32_t flags) {
 #endif // end PV_MODULE
 
 #ifdef NAV_MODULE
-	int pres = GET_PRES_TANK_PRI, bUpper = BRAKING_TANK_UPPER;
-	int bLower = BRAKING_TANK_LOWER;
-	if(pres > bUpper){} //TODO Throw warning
-	if(pres < bLower) 
-		assert_pre_run_fault("Primary braking tank underpressure\r\n");
-	pres = GET_PRES_TANK_SEC;
-	if(pres>bUpper){}
-	if(pres<bLower) 
-		assert_pre_run_fault("Secondary braking tank underpressure\r\n");
-	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
-	bLower = BRAKING_LINE__LOWER
+	//int pres = GET_PRES_TANK_PRI, bUpper = BRAKING_TANK_UPPER;
+	//int bLower = BRAKING_TANK_LOWER;
+	//if(pres > bUpper){} //TODO Throw warning
+	//if(pres < bLower) 
+	//	assert_pre_run_fault("Primary braking tank underpressure\r\n");
+	//pres = GET_PRES_TANK_SEC;
+	//if(pres>bUpper){}
+	//if(pres<bLower) 
+	//	assert_pre_run_fault("Secondary braking tank underpressure\r\n");
+//	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
+//	bLower = BRAKING_LINE__LOWER
 
 #endif // end NAV_MODULE 
 #ifdef CPP_MODULE
