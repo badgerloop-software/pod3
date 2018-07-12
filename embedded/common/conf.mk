@@ -10,5 +10,5 @@ SRCS += common/pin_alias.c
 SRCS += common/dashboard_control.c
 SRCS += common/state_handlers.c
 SRCS += common/state_machine.c
-
+SRCS += common/solenoid.c
 include common/commands/conf.mk
