@@ -19,8 +19,9 @@ bool adcx_read(uint8_t addr, uint8_t * val) {
 
 	if (i2c_start_write(addr, 1, &_i2cadc_read_pos) == HAL_OK){
 		if (!i2c_read_ready()) return false;
-        if( i2c_start_read(addr, 2) != HAL_OK ) return false; 
-        _i2cadc_read_val = i2c_rx[0];
+        if( i2c_try_read(addr, 2) != HAL_OK ) return false; 
+		if (i2c_block(I2C_WAITING_TX, ticks_start) || i2c_errors_present()) return FAIL;
+		_i2cadc_read_val = i2c_rx[0];
 		printf("i2c read value %x\r\n", _i2cadc_read_val);
 		*val = i2c_rx[1];
 	}
