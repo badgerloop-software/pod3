@@ -4,9 +4,10 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "system.h"
 
 #define NUM_STATES 13
+
+extern volatile unsigned int ticks;
 
 typedef enum state_name {
 	PRE_RUN_FAULT = 0,

@@ -2,6 +2,7 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
+#include <state_machine.h>
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -123,6 +124,15 @@ HAL_StatusTypeDef can_listen(void){
 	return retval;
 }
 
+HAL_StatusTypeDef lv_heartbeat(STATE_NAME state){
+	BOARD_ROLE current_board = board_type;
+	RECEIVING_BOARD to_send_board = ALL;
+	uint8_t data[8];
+	data[0] = state;
+
+	return can_send_intermodule(current_board, to_send_board, LV_HEARTBEAT, data);
+}
+
 void print_incoming_can_message(uint32_t id, uint8_t *data){
 	BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
@@ -186,11 +196,14 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 		case CAN_TEST_MESSAGE:
 			printf("CAN TEST\r\n");
 			break;
+		case LV_HEARTBEAT:
+			printf("LV Heartbeat\r\n");
+			printf("In state %x", data[2]);
+			break;
 		default:
 			printf("UNKNOWN\r\n");
 			break;
 	}
-	printf("SIZE:	 	%d bytes\r\n", sizeof(data)/sizeof(uint8_t)*2); 
 
 	int i;
 	for (i = 0; i < 8; i++){

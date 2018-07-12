@@ -46,7 +46,7 @@ void initialize_state_machine(STATE_NAME initial_state) {
 	handle->event_interval_table = state_intervals;
 
 	/* No flags, no state change assertion */
-	handle->change_state = false;
+	handle->change_state = true;
 	handle->flags = POWER_ON;
 
 }
@@ -79,8 +79,6 @@ void state_machine_handler(){
 
 		handle->change_state = false;
 		/* see if any action is necessary */
-		if (handle->curr_state == handle->next_state)
-			return;
 
 #if DEBUG_STATE
 		printf("%s -> %s\r\n",
