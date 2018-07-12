@@ -53,7 +53,7 @@ HAL_StatusTypeDef adc_init(void){
    	adc_handle.Init.ScanConvMode          = ENABLE;                       /* Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1) */ 
    	adc_handle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;           /* EOC flag picked-up to indicate conversion end */ 
    	adc_handle.Init.LowPowerAutoWait      = DISABLE;                       /* Auto-delayed conversion feature disabled */ 
-  	adc_handle.Init.ContinuousConvMode    = DISABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 
+  	adc_handle.Init.ContinuousConvMode    = ENABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */ 
    	adc_handle.Init.NbrOfConversion       = 2;                             /* Parameter discarded because sequencer is disabled */ 
    	adc_handle.Init.DiscontinuousConvMode = DISABLE;                       /* Parameter discarded because sequencer is disabled */ 
  	adc_handle.Init.NbrOfDiscConversion   = 1;                             /* Parameter discarded because sequencer is disabled */ 
@@ -74,10 +74,10 @@ HAL_StatusTypeDef adc_init(void){
 }
 
 
-uint32_t adc_read( uint8_t channel ){
+uint32_t adc_read( void  ){
     uint32_t ADCConvertedValue = 0;
 
-    if (HAL_ADC_PollForConversion(&adc_handle, channel ) != HAL_OK){
+    if (HAL_ADC_PollForConversion(&adc_handle, 1000 ) != HAL_OK){
 		/* End Of Conversion flag not set on time */
 	   	printf("ADC End of conversion error.\r\n");
 	} else {

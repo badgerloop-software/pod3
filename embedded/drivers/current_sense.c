@@ -30,6 +30,9 @@ int current_sense_init(void){
 
 
 double current_sense_read(void){
-    return (double)(adc_read( CURRENT_SENSE_PIN ) * (double)(24.414) / 1000);
+    double analog = adc_read();
+    printf("Analog Value C: %f\r\n", analog);
+    return analog;
+	//return (double)(adc_read( CURRENT_SENSE_PIN ) * (double)(24.414) / 1000);
 }
 

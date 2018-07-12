@@ -47,6 +47,7 @@ int dash_init(void) {
     adc_init();
     voltage_sense_init();
     current_sense_init();
+    adc_start();
     return 0;
 }
 

@@ -30,6 +30,10 @@ int voltage_sense_init(void){
 }
 
 double voltage_sense_read(void){
-    return (double)(adc_read( VOLTAGE_SENSE_PIN ) * (double)(0.80566) / 1000);
+    double analog = adc_read( );
+    printf( "Analog Value: %f\r\n", analog);
+    return analog;
+    //return (double)(adc_read( VOLTAGE_SENSE_PIN ) * (double)(0.80566) / 1000);
+    //return (double)(adc_read( VOLTAGE_SENSE_PIN ) * (double)(0.80566) / 1000);
 }
 

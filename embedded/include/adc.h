@@ -7,7 +7,7 @@
 #include "stm32l4xx_ll_adc.h"
 
 HAL_StatusTypeDef adc_init(void);
-uint32_t adc_read( uint8_t channel );
+uint32_t adc_read( void  );
 HAL_StatusTypeDef adc_start(void);
 
 /* ADC Info */

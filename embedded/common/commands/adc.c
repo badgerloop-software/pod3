@@ -12,8 +12,8 @@ command_status do_adc_init(void){
 
 command_status adc_try_read(){
 	
-    printf("Current Sensor: %f Amps", current_sense_read());
-    printf("Voltage Sensor: %f Volts", voltage_sense_read());
+    printf("Current Sensor: %f Amps\r\n", current_sense_read());
+    printf("Voltage Sensor: %f Volts\r\n", voltage_sense_read());
 	return CMD_SUCCESS;
 }
 
