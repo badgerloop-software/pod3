@@ -5,6 +5,7 @@
 #include "pin_alias.h"
 #include "console.h"
 #include "can.h"
+#include "bms.h"
 
 /* STM32L432KC */
 // TODO
@@ -56,6 +57,7 @@ int periph_init(BOARD_ROLE role) {
 	process_input("i2c init");
 
 	can_init(role);
+	bms_init();
 
 	return ret;
 }

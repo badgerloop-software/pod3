@@ -5,3 +5,4 @@ SRCS += drivers/rcc.c
 SRCS += drivers/usart.c
 SRCS += drivers/i2c.c
 SRCS += drivers/can.c
+SRCS += drivers/bms.c
