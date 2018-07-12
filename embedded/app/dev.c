@@ -28,7 +28,6 @@ int main(void) {
 	if (io_init() || periph_init(DEV) || dev_init())
 		fault();
 	
-	initialize_state_machine(IDLE);
 	rx = get_rx(USB_UART);
 
 	post("Developmental");
