@@ -8,6 +8,8 @@
 
 #define BLINK_INTERVAL	100
 
+const int board_type = DEV;
+
 inline void printPrompt(void) {
 	fputs("[dev-build] $ ", stdout);
 	fflush(stdout);

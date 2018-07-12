@@ -7,8 +7,7 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
-#define MODULE_PV
-
+const int board_type = PV;
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit

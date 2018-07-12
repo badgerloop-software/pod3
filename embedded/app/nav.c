@@ -11,7 +11,8 @@
 
 
 #define BLINK_INTERVAL	250
-#define MODULE_NAV
+
+const int board_type = NAV;
 
 Solenoid_States solenoid_states = {
 	.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},

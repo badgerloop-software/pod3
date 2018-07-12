@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "system.h"
 
 #define NUM_STATES 13
 

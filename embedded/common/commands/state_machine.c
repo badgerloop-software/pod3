@@ -6,7 +6,6 @@
 #include "state_machine.h"
 
 command_status do_state_machine(int argc, char *argv[]) {
-	printf("%s:  (%d args given)\r\n", argv[0], argc);
 	char* str;
 
 	/* Set state to change next time state_machine_handler called */
