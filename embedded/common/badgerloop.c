@@ -6,9 +6,7 @@
 
 #define DEBUG_IO	1
 
-
 uint32_t DONT_BRAKnt32_t, DONT_BRAKE_TO = 8000, MUST_BRAKE_TO = 30000, BRAKING_COUNT_THRS = 5, ACCEL_IMPULSE = 100, TARGET_END_POS = 125000, CM_PER_STRIP = 3048, INTERPOLATE = 10;
-
 
 /*****************************************************************************/
 /*                            Get Telemetry Vals                            */
@@ -32,125 +30,9 @@ int thermistor_scalar(uint16_t reading){
 	retval = (1.0 / To) + ((1.0 / B) * log(retval / Ro));
 	return (int) ((1 / retval) - 273);
 
-
 }
 
 void telemetry_setup(void) {
-	//TODO val is a placeholder
-	uint8_t val = 0;
-	uint8_t temp = -1;
-	printf("val %d", val);
-	printf("temp %d", temp);
-
-
-//#if CCP_MODULE
-	SET_VBATT(val);
-	SET_IBATT(val);
-	SET_TBATT(val);
-	SET_TPOD(val);
-	SET_TUBEPRESSURE(val);
-
-//#endif
-
-//#if NAV_MODULE
-	
-	//Pneumatic pressure
-	SET_PRES_TANK_PRI(val);
-#if DEBUG_IO
-	printf("primary tank pressure %d", val);
-#endif
-	SET_PRES_TANK_SEC(val);
-	
-#if DEBUG_IO
-	printf("secondary tank pressure %d", val);
-#endif
-	SET_PRES_LINE_PRI(val);
-	
-#if DEBUG_IO
-	printf("primary line pressure %d", val);
-#endif
-	SET_PRES_LINE_SEC(val);
-	
-#if DEBUG_IO
-	printf("secondary line pressure %d", val);
-#endif
-	SET_PRES_ACTU_PRI(val);
-	
-#if DEBUG_IO
-	printf("primary actuator  pressure %d", val);
-#endif
-	SET_PRES_ACTU_SEC(val);
-	
-#if DEBUG_IO
-	printf("secondary actuator pressure %d", val);
-#endif
-	
-	
-	
-	
-	//Accel, Velocity, Position
-	SET_ACCEL_x(val);
-	SET_ACCEL_y(val);
-	SET_ACCEL_z(val);
-	SET_POS(val);
-	SET_VEL(val);
-
-	//LIMIT
-	temp = gpio_readPin(GPIOA, 3);
-	SET_DLIM;
-	temp = gpio_readPin(GPIOA, 6);
-	SET_BLIM1;
-	temp = gpio_readPin(GPIOA, 7);
-	SET_BLIM2;
-
-
-//#endif
-
-#if PV_MODULE
-	
-
-	temp = gpio_readPin(GPIOB, 0);
-	printf("TEMP 1 %d", temp);
-	if(temp) SET_MSTR_SW_FDBK;
-	else CLR_MSTR_SW_FDBK;
-
-	temp = gpio_readPin(GPIOB, 7);
-	printf("TEMP 2 %d", temp);
-	if(temp) SET_E_STOP_FDBK;
-	else CLR_E_STOP_FDBK;
-
-	temp = gpio_readPin(GPIOB, 6);
-	printf("TEMP 3 %d", temp);
-	if(temp) SET_PV_LIM_FDBK;
-	else CLR_PV_LIM_FDBK;
-
-	temp = gpio_readPin(GPIOB, 1);
-	printf("TEMP 4 %d", temp);
-	if(temp) SET_HVD_FDBK;
-	else CLR_HVD_FDBK;
-
-	temp = gpio_readPin(GPIOC, 14);
-	printf("TEMP 5 %d", temp);
-	if(temp) SET_BMS_STAT_FDBK;
-	else CLR_BMS_STAT_FDBK;
-
-	temp = gpio_readPin(GPIOC, 8);
-	printf("TEMP 6 %d", temp);
-	if(temp) SET_IMD_STAT_FDBK;
-	else CLR_IMD_STAT_FDBK;
-	
-	temp = gpio_readPin(GPIOA, 8);
-	printf("TEMP 7 %d", temp);
-	if(temp) SET_HV_EN_FDBK;
-	else CLR_HV_EN_FDBK;
-
-	printf("Shutdown_Circuit_Status %d",*shutdown_circuit_status);
-
-	//TODO Replace val with I2C sensor reading
-	SET_PVPRESSURE(val);
-
-
-#endif
 
 
 }

@@ -49,7 +49,6 @@ void initialize_state_machine(STATE_NAME initial_state) {
 	handle->change_state = false;
 	handle->flags = POWER_ON;
 
-
 }
 
 /** Performs the logic on when to be in what state */

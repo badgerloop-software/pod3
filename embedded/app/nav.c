@@ -5,7 +5,6 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
-
 #include "solenoid.h"
 #include "can.h"
 
@@ -110,7 +109,6 @@ int main(void) {
 
 	while (1) {
 		check_input(rx);
-		solenoid_handler(&solenoid_states);
 		blink_handler(BLINK_INTERVAL);
 	}
 
