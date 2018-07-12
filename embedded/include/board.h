@@ -37,6 +37,8 @@ typedef enum _bms_telemetry {
 //	BMS_PACK_VOLT_MESSAGE = 
 } BMS_MESSAGE_TYPE;
 
+extern const int board_type;
+
 int io_init(void);
 int periph_init(BOARD_ROLE role);
 void fault(void);
