@@ -3,6 +3,8 @@
 #include <board.h>
 #include <can.h>
 #include <state_machine.h>
+#include <badgerloop.h>
+#include <retro.h>
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -74,6 +76,8 @@ HAL_StatusTypeDef can_send_intermodule(
 }
 
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
+	uint8_t data[8];
+	int retro_count, pos, vel, acc;
 	switch (board) {
 		case DASH:
 			//TODO dash heartbeat
@@ -81,20 +85,30 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			return HAL_ERROR;
 			break;
 		case NAV:
-			//TODO nav heartbeat
-			//TODO nav imu,
-			//TODO nav retros/velocity
-			//TODO nav pressure 1
-			//TODO nav pressure 2
-			//TODO nav pressure 3
-			//TODO nav solenoid 
-			//TODO nav should_stop heartbeat
-			return HAL_ERROR;
+			retro_count = getRetroCount();
+			getRetroTelemetry(&pos, &vel, &acc);
+			data[2] = retro_count;
+			data[3] = pos;
+			data[4] = vel;
+			data[5] = acc;
+
+			can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_SHOULD_STOP, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data);
+			can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data);
+
+			return HAL_OK;
 			break;
 		case PV:
 			//TODO pv heartbeat
 			//TODO Shutdown_Circuit_Status
 			//TODO PV Pressure
+			can_send_intermodule(PV, DASH_REC, PV_SHUTDOWN_CIRCUIT_STATUS, data);
+			can_send_intermodule(PV, DASH_REC, PV_PRESSURE,data);
 			return HAL_ERROR;
 			break;
 		case DEV:

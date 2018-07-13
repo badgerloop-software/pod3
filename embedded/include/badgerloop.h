@@ -11,6 +11,7 @@
 #define CHECK_THRESHOLD(get_macro, upper, lower) \
 	(get_macro > upper || get_macro < lower)
 
+#define CM_PER_STRIP 3048
 /*****************************************************************************/
 /*                          Error checking parameters                        */
 /*****************************************************************************/

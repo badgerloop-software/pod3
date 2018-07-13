@@ -270,8 +270,6 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 void in_idle(uint32_t flags) {
 	printf("In state: IDLE (Flags: 0x%lx)\r\n", flags);
 
-	lv_heartbeat(IDLE);	
-
 	// Pod health check
 if(board_type==PV) {
 	
@@ -352,9 +350,6 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 void in_ready_for_pumpdown(uint32_t flags) {
 	printf("In state: READY_FOR_PUMPDOWN (Flags: 0x%lx)\r\n", flags);
 
-
-	lv_heartbeat(READY_FOR_PUMPDOWN);	
-
 	// Pod health check
 	if(board_type==PV) {
 
@@ -410,8 +405,6 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 
 void in_pumpdown(uint32_t flags) {
 	printf("In state: PUMPDOWN (Flags: 0x%lx)\r\n", flags);
-
-	lv_heartbeat(PUMPDOWN);	
 
 	// Pod health check
 	if(board_type==PV) {
@@ -470,8 +463,6 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 void in_ready(uint32_t flags) {
 	printf("In state: READY (Flags: 0x%lx)\r\n", flags);
 	
-	lv_heartbeat(READY);
-	
 	// Pod health check
 
 	if(board_type==PV) {
@@ -509,8 +500,6 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	/*       Propulsion          */
 	/*****************************/
 	// Set torque to max torque.
-
-	lv_heartbeat(PROPULSION_START);
 
 	if(board_type==PV) {
 
@@ -594,8 +583,6 @@ void in_propulsion_distance(uint32_t flags) {
 	printf("In state: PROPULSION_DISTANCE (Flags: 0x%lx)\r\n", flags);
 	// Pod health check
 	
-	lv_heartbeat(PROPULSION_DISTANCE);
-	
 	if(board_type==PV) {
 
 	} // end PV_MODULE
@@ -654,8 +641,6 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 void in_braking(uint32_t flags) {
 	printf("In state: BRAKING (Flags: 0x%lx)\r\n", flags);
 	
-	lv_heartbeat(BRAKING);	
-
 	// Pod health check
 	if(board_type==PV) {
 
@@ -713,8 +698,6 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 void in_post_run(uint32_t flags) {
 	printf("In state: POST_RUN (Flags: 0x%lx)\r\n", flags);
 	
-	lv_heartbeat(POST_RUN);
-
 	// Pod health check
 	if(board_type==PV) {
 
@@ -771,8 +754,6 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 void in_safe_to_approach(uint32_t flags) {
 	printf("In state: SAFE_TO_APPROACH (Flags: 0x%lx)\r\n", flags);
 
-	lv_heartbeat(SAFE_TO_APPROACH);
-
 	// Pod health check
 	if(board_type==PV) {
 
@@ -828,8 +809,6 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 
 void in_service_low_speed_propulsion(uint32_t flags) {
 	printf("In state: LOW_SPEED_PROPULSION (Flags: 0x%lx)\r\n", flags);
-
-	lv_heartbeat(SERVICE_LOW_SPEED_PROPULSION);
 
 	// pod health check
 
