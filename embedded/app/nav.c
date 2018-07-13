@@ -6,6 +6,7 @@
 #include "usart.h"
 #include "pin_alias.h"
 #include "solenoid.h"
+#include "exti.h"
 #include "can.h"
 
 
@@ -82,6 +83,8 @@ U8 I2C Address: 0x49:
 	AIN3: DUCER8: Distance Sensor
 */
 
+
+
 inline void printPrompt(void) {
 	fputs("[nav-build] $ ", stdout);
 	fflush(stdout);
@@ -90,6 +93,27 @@ inline void printPrompt(void) {
 int nav_init(void) {
 
 	/* nav specific initializations */
+
+GPIO_TypeDef *gpioa = GPIOA;
+
+	/* Retro 1 is on pin PA0
+	 * Retro 2 is on pin PA1
+	 * Retro 3 is on pin PA5 */
+
+	/* EXTI Init */	
+	//Pin 0 EXTI Config (RETRO1)
+	exti_config(gpioa, 0, 0, 1, 1);
+	//Pin 1 EXTI Config (RETRO2)
+	exti_config(gpioa, 1, 0, 1, 1);
+	//Pin 5 EXTI Config (RETRO3)
+	exti_config(gpioa, 5, 0, 1, 1);
+	
+	//Pin 3 EXTI Config (LIM1)
+	exti_config(gpioa, 3, 0, 1, 1);
+	//Pin 6 EXTI Config (LIM2)
+	exti_config(gpioa, 6, 0, 1, 1);
+	//Pin 7 EXTI Config (LIM3)
+	exti_config(gpioa, 7, 0, 1, 1);
 
 	return 0;
 }

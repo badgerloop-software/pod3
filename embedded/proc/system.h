@@ -2,11 +2,12 @@
 #define __SYSTEM_STM32L4XX_H
 
 #include "stm32l432xx.h"
+#include "stm32l4xx_hal_conf.h"
 
-#define HSE_VALUE	8000000U  /* Value of the External oscillator in Hz */
-#define MSI_VALUE	4000000U  /* Value of the Internal oscillator in Hz */
-#define HSI_VALUE	16000000U /* Value of the Internal oscillator in Hz */
-#define LSE_VALUE	32768U
+//#define HSE_VALUE	(uint32_t) 8000000U  /* Value of the External oscillator in Hz */
+//#define MSI_VALUE	(uint32_t) 4000000U  /* Value of the Internal oscillator in Hz */
+//#define HSI_VALUE	(uint32_t) 16000000U /* Value of the Internal oscillator in Hz */
+//#define LSE_VALUE	(uint32_t) 32768U
 
 #define USB_UART	USART2
 

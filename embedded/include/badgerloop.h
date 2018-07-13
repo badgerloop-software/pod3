@@ -11,6 +11,7 @@
 #define CHECK_THRESHOLD(get_macro, upper, lower) \
 	(get_macro > upper || get_macro < lower)
 
+#define CM_PER_STRIP 3048
 /*****************************************************************************/
 /*                          Error checking parameters                        */
 /*****************************************************************************/
@@ -145,4 +146,5 @@ void seconary_brakes(int intensity);
 void vent_primary_brakes(bool open);
 void vent_secondary_brakes(bool open);
 
+void nav_should_stop(int * state);
 #endif

@@ -10,4 +10,5 @@ SRCS += common/commands/memmap.c
 SRCS += common/commands/md.c
 SRCS += common/commands/uart.c
 SRCS += common/commands/state_machine.c
+SRCS += common/commands/retro.c
 SRCS += common/commands/can.c

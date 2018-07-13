@@ -63,8 +63,8 @@ command_status do_can(int argc, char *argv[]) {
 	}
 
 	if (!strcmp("listen", argv[1])){
-        
-        	return can_listen();
+       		while(1)
+		       can_listen();	
 	}
 
 	if (argc == 2 || argc == 3 || argc == 4) return USAGE;
@@ -147,6 +147,8 @@ command_status do_can(int argc, char *argv[]) {
 
         	if(!strcmp("CAN_TEST_MESSAGE", argv[4]))
 		        message_type = CAN_TEST_MESSAGE;
+		else if (!strcmp("LV_HEARTBEAT", argv[4]))
+			message_type = LV_HEARTBEAT;
 	        else printf("Select a valid message type\r\n");
 
         	char * str;
