@@ -9,6 +9,8 @@
 
 char packetBuffer[SEND_BUF_SIZE];
 
+extern volatile unsigned int ticks;
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	harvest_honeywell(pod_data);	
@@ -80,4 +82,13 @@ char *formatPacket(Sensor_Data *sensorData) {
 	        printf("Problem encountered while creating sensor data payload\r\n");
 	}
 	return packetBuffer;
+}
+
+inline int isRightTime(unsigned int interval) {
+	static unsigned int curr = 0, prev = 0;
+	int rightTime = 0;
+	curr = ticks / interval;
+	if (curr != prev) rightTime = 1;
+	prev = curr;
+	return rightTime;
 }
