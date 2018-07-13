@@ -36,28 +36,28 @@ void incVel(int retro) {
 	}
 }
 void unitTest(void) {
-	int tPos, tVel, tAcc;	
+	int tCount, tPos, tVel, tAcc;	
 
 	// Nominal case, all 3 strips read
 	for(int i = 0; i < 10; i++) {
 		incVel(1); incVel(2); incVel(3);
-		getRetroTelemetry(&tPos, &tVel, &tAcc);
+		getRetroTelemetry(&tCount, &tPos, &tVel, &tAcc);
 		if(tVel != CM_PER_STRIP) printf("Failed nominal case %d\r\n", tVel);
 	}	
 	
 	// Pass two retros in one read	
 	incVel(1); incVel(1); incVel(2); incVel(2); incVel(3); incVel(3);
-	tVel = getRetroTelemetry(&tPos, &tVel, &tAcc);
+	tVel = getRetroTelemetry(&tCount, &tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("Failed 2 strip case %d\r\n", tVel);
 
 	// One retro missed	
 	incVel(1); incVel(3);
-	getRetroTelemetry(&tPos, &tVel, &tAcc);
+	getRetroTelemetry(&tCount, &tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("FAILED: only 2 retro case %d\r\n", tVel);
 	
 	// Two retros missed
 	incVel(1);
-	getRetroTelemetry(&tPos, &tVel, &tAcc);
+	getRetroTelemetry(&tCount, &tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("FAILED:\r\n");
 }
 
@@ -123,7 +123,7 @@ int getTapeCount(void){
 // sets pos in cm
 // sets vel in cm/s
 // sets acc in cm/s^2
-int getRetroTelemetry(int *pos, int *vel, int *acc) {
+int getRetroTelemetry(int *retro_count, int *pos, int *vel, int *acc) {
 	int numStrips, badRetro = 0; 
 	uint32_t diff = 0; // Time between tape strips in ms
 	// We are getting strip counts, getting a new one would throw it off
@@ -161,6 +161,7 @@ int getRetroTelemetry(int *pos, int *vel, int *acc) {
 	
 	__enable_irq();
 
+	*retro_count = numStrips;
 	*pos = numStrips*CM_PER_STRIP;
 	*vel = 0;
 	if(diff <= 0) return 1;	// No strips read

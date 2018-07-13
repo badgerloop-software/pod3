@@ -19,6 +19,6 @@ int tape_vel;
 void initRetro(void); 
 
 // Sets the position in cm and velocity in cm/s
-int getRetroTelemetry (int *pos, int *vel, int *acc);
-int getRetroCount(void);
+int getRetroTelemetry (int *retro_count, int *pos, int *vel, int *acc);
+
 #endif

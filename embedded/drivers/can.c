@@ -85,8 +85,7 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			return HAL_ERROR;
 			break;
 		case NAV:
-			retro_count = getRetroCount();
-			getRetroTelemetry(&pos, &vel, &acc);
+			getRetroTelemetry(&retro_count, &pos, &vel, &acc);
 			data[2] = retro_count;
 			data[3] = pos;
 			data[4] = vel;
