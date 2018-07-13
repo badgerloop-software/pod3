@@ -146,4 +146,5 @@ void seconary_brakes(int intensity);
 void vent_primary_brakes(bool open);
 void vent_secondary_brakes(bool open);
 
+void nav_should_stop(int * state);
 #endif

@@ -77,7 +77,7 @@ HAL_StatusTypeDef can_send_intermodule(
 
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	uint8_t data[8];
-	int retro_count, pos, vel, acc;
+	int retro_count, pos, vel, acc, state;
 	switch (board) {
 		case DASH:
 			//TODO dash heartbeat
@@ -85,18 +85,28 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			return HAL_ERROR;
 			break;
 		case NAV:
+			//Tape Data
 			getRetroTelemetry(&retro_count, &pos, &vel, &acc);
 			data[2] = retro_count;
 			data[3] = pos;
 			data[4] = vel;
 			data[5] = acc;
-
 			can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data);
+			memset(&data, 0, sizeof(data));
+
+			// Should Stop Data
+			nav_should_stop(&state);
+			data[2] = state;
 			can_send_intermodule(NAV, DASH_REC, NAV_SHOULD_STOP, data);
+			memset(&data, 0, sizeof(data));
+
+			// Pressure Sensors
 			can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data);
 			can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data);
 			can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data);
 			can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data);
+
+			// Solenoids
 			can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data);
 			can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data);
 

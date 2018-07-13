@@ -88,3 +88,8 @@ void vent_secondary_brakes(bool open) {
 #endif
 	// call I2C Vent function
 }
+
+void nav_should_stop(int *state){
+
+	return 1;
+}
