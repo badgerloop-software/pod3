@@ -41,23 +41,23 @@ void unitTest(void) {
 	// Nominal case, all 3 strips read
 	for(int i = 0; i < 10; i++) {
 		incVel(1); incVel(2); incVel(3);
-		getTelemetry(&tPos, &tVel, &tAcc);
+		getRetroTelemetry(&tPos, &tVel, &tAcc);
 		if(tVel != CM_PER_STRIP) printf("Failed nominal case %d\r\n", tVel);
 	}	
 	
 	// Pass two retros in one read	
 	incVel(1); incVel(1); incVel(2); incVel(2); incVel(3); incVel(3);
-	tVel = getTelemetry(&tPos, &tVel, &tAcc);
+	tVel = getRetroTelemetry(&tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("Failed 2 strip case %d\r\n", tVel);
 
 	// One retro missed	
 	incVel(1); incVel(3);
-	getTelemetry(&tPos, &tVel, &tAcc);
+	getRetroTelemetry(&tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("FAILED: only 2 retro case %d\r\n", tVel);
 	
 	// Two retros missed
 	incVel(1);
-	getTelemetry(&tPos, &tVel, &tAcc);
+	getRetroTelemetry(&tPos, &tVel, &tAcc);
 	if(tVel != CM_PER_STRIP) printf("FAILED:\r\n");
 }
 
@@ -116,7 +116,7 @@ int getStripCount(int *badRetro) {
 }
 
 int getTapeCount(void){
-	return getStrip_count(0);
+	return getStripCount(0);
 }
 
 // Return 1 on success, 0 on failure. Updates global velocity.

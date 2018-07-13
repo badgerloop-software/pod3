@@ -6,6 +6,7 @@
 #include "usart.h"
 #include "pin_alias.h"
 #include "solenoid.h"
+#include "exti.h"
 #include "can.h"
 
 

@@ -55,7 +55,6 @@ command_status do_retro(int argc, char *argv[]) {
 		return FAIL;
 	}
 
-	printf("Count: %d", getRetroCount());
 	printf("Pos: %dcm\tVel: %dcm/s\tAcc: %dcm/s^2\r\n", pos, vel, acc);
 	return CMD_SUCCESS;
 }

@@ -4,6 +4,7 @@
 #include "rcc.h"
 #include "pin_alias.h"
 #include "console.h"
+#include "retro.h"
 #include "can.h"
 #include "state_machine.h"
 
