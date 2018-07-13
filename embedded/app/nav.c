@@ -5,6 +5,7 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "exti.h"
 #include "can.h"
 
 #define BLINK_INTERVAL	250
