@@ -25,6 +25,11 @@ typedef enum{
     POST_RUN        //Also same as IDLE, but represents post run
 }heartbeat_msg_t;
 
+int can_heartbeat_idle( CAN_HandleTypeDef *hcan );
+int can_heartbeat_clear_faults( CAN_HandleTypeDef *hcan );
+int can_heartbeat_forward( CAN_HandleTypeDef *hcan );
+int can_heartbeat_discharge( CAN_HandleTypeDef *hcan );
+int can_heartbeat_handler( CAN_HandleTypeDef *hcan );
 HAL_StatusTypeDef can_read(void);
 HAL_StatusTypeDef can_send(uint32_t id, uint32_t TxMailbox, size_t length, uint8_t *TxData);
 HAL_StatusTypeDef can_send_intermodule(BOARD_ROLE sending_board, RECEIVING_BOARD receiving_board, uint8_t message_num, uint8_t *data) ;
