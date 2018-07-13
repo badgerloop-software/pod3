@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "dashboard_data.h"
 #include "system.h"
 #include "board.h"
 #include "console.h"
@@ -10,15 +11,21 @@
 
 
 #define BLINK_INTERVAL	250
+#define DAQ_INTERVAL    100
+#define STATE_INTERVAL  100 
+#define TELEM_INTERVAL  100
+#define HRTBT_INTERVAL  100
 
 const int board_type = NAV;
-
-Solenoid_States solenoid_states = {
-	.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},
-	.solenoid_2 = {"prim_braking_2", NOT_ACTUATED},
-	.solenoid_4 = {"sec_venting", NOT_ACTUATED},
-	.solenoid_6 = {"sec_braking_1", NOT_ACTUATED},
-	.solenoid_7 = {"sec_braking_2", NOT_ACTUATED}
+extern volatile unsigned int ticks;
+Nav_Data navData = 
+	.solenoidStates = {
+		.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},
+		.solenoid_2 = {"prim_braking_2", NOT_ACTUATED},
+		.solenoid_4 = {"sec_venting",    NOT_ACTUATED},
+		.solenoid_6 = {"sec_braking_1",  NOT_ACTUATED},
+		.solenoid_7 = {"sec_braking_2",  NOT_ACTUATED}
+	}
 };
 
 /* Nucleo 32 I/O */
@@ -101,13 +108,34 @@ int main(void) {
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init(NAV) || nav_init())
 		fault();
-
+	
 	rx = get_rx(USB_UART);
-
+	
 	post("Navigation");
 	printPrompt();
 
+	
+	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
+		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
+			lastDAQ = ticks;
+			if (nav_DAQ(&navData)) printf("DAQ Failure");
+		}
+		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
+			lastState = ticks;
+			//state_machine_logic();
+			//check if new state is needed
+		}
+		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {
+			lastTelem = ticks;
+			//board_telemetry_send(board_type);
+			//Nav sends telem to CCP
+		}
+		if (((ticks + 25) % HRTBT_INTERVAL == 0) && lastHrtbt != ticks) {
+			lastHrtbt = ticks;
+			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
+			//Nav sends heartbeat
+		}
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}

@@ -5,8 +5,11 @@
 #include "usart.h"
 #include "pin_alias.h"
 #include "can.h"
+#include "pv_data.h"
 
 #define BLINK_INTERVAL	250
+
+
 const int board_type = PV;
 
 /* Nucleo 32 I/O */
