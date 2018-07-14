@@ -15,7 +15,7 @@
 
 const int board_type = DASH;
 
-Pod_Data_Handle pod_data = {
+Pod_Data_Handle podData = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
 	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
@@ -78,8 +78,8 @@ int main(void) {
 	while (1) {
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
-			if (dash_DAQ(&navData)) printf("DAQ Failure");
-		}
+			if (dash_DAQ(&podData)) printf("DAQ Failure");
+		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
 			//state_machine_logic();
@@ -87,7 +87,7 @@ int main(void) {
 		}
 		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
 			lastTelem = ticks;
-			sendData(&podData);
+			send_data(&podData);
 			//board_telemetry_send(board_type);
 			//CCP sends telem to Pi
 		}
@@ -100,6 +100,7 @@ int main(void) {
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
 	}
+
 
 	return 0;
 }

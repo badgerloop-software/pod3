@@ -9,7 +9,11 @@
 
 char packetBuffer[SEND_BUF_SIZE];
 
-
+int dash_DAQ(Pod_Data_Handle *podData) {
+	harvest_honeywell(podData);
+	
+	return 0;
+}
 
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
