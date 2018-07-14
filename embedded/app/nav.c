@@ -1,9 +1,6 @@
 #include <stdio.h>
-<<<<<<< 4bd5582784734ef84cf782be8b86415a822de439
 #include "iox.h"
 #include "dashboard_data.h"
-=======
->>>>>>> Pulling retro stuff from can 3
 #include "system.h"
 #include "board.h"
 #include "console.h"
