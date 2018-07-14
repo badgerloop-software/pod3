@@ -37,6 +37,5 @@ typedef struct {
 
 void send_data(Pod_Data_Handle*);
 char *formatPacket(Sensor_Data*);
-int isRightTime(unsigned int interval)
 void harvest_honeywell(Pod_Data_Handle*);
 #endif
