@@ -18,4 +18,5 @@ void harvest_solenoids(Solenoid_States *sol_states) {
 		sol_states->solenoid_2.state = (stateList & 0x02) >> 1;
 		sol_states->solenoid_1.state = (stateList & 0x01);
 	};
+	printf("SOL_7 = %u SOL_6 = %u SOL_4 = %u SOL_2 = %u SOL_1 = %u \r\n", sol_states->solenoid_7.state, sol_states->solenoid_6.state, sol_states->solenoid_4.state, sol_states->solenoid_2.state,sol_states->solenoid_1.state);
 }
