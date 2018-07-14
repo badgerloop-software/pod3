@@ -3,6 +3,30 @@ const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
 
+const solenoids = [
+    document.getElementById("solenoid-1"),
+    document.getElementById("solenoid-2"),
+    document.getElementById("solenoid-3"),
+    document.getElementById("solenoid-4"),
+    document.getElementById("solenoid-5")
+];
+
+solenoids.forEach((solenoid) => {
+    communication.updater.on(solenoid.id + "_activate", () => {
+        solenoid.style.background = "green";
+    });
+    communication.updater.on(solenoid.id + "_deactivate", () => {
+        solenoid.style.background = "red";
+    })
+});
+
+solenoids.forEach((solenoid) => {
+    solenoid.addEventListener("click", () =>
+        solenoid.style.background === "red" ?
+            solenoid.style.background = "green" :  solenoid.style.background = "red");
+});
+
+
 const eventNameBase = "messageReceived_";
 function printResponse(response) {
     terminalText.innerHTML +=
@@ -63,6 +87,14 @@ function processText(input, optionalArgs) {
 	let podIP = communication.getPodIP();
 	let podPort = communication.getPodPort();
         communication.sendMessage("config", podIP, podPort, "config", optionalArgs[0]);
+    }
+
+    if (input === "test_solenoids") {
+        communication.updater.emit("solenoid-1_activate");
+        communication.updater.emit("solenoid-2_deactivate");
+        communication.updater.emit("solenoid-3_activate");
+        communication.updater.emit("solenoid-4_deactivate");
+        communication.updater.emit("solenoid-5_activate");
     }
 
     if (input === "clear") {
