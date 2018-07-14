@@ -23,8 +23,37 @@ let thisChart;
 const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
 
+
 function parseData(rawData, sensorName) {
     let jsonData = JSON.parse(rawData);
+    switch (jsonData[sensorName]) {
+        case "solenoid_1":
+            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
+                comm.updater.emit("solenoid-1_deactivate") : comm.updater.emit("solenoid-1_activate");
+            break;
+
+        case "solenoid_2":
+            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
+                comm.updater.emit("solenoid-2_deactivate") : comm.updater.emit("solenoid-2_activate");
+            break;
+
+        case "solenoid_3":
+            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
+                comm.updater.emit("solenoid-3_deactivate") : comm.updater.emit("solenoid-3_activate");
+            break;
+
+        case "solenoid_4":
+            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
+                comm.updater.emit("solenoid-4_deactivate") : comm.updater.emit("solenoid-4_activate");
+            break;
+
+        case "solenoid_5":
+            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
+                comm.updater.emit("solenoid-5_deactivate") : comm.updater.emit("solenoid-5_activate");
+            break;
+
+
+    }
     return jsonData[sensorName]["sensor_data"][0]["value"];
 }
 
