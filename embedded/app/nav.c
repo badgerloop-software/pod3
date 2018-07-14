@@ -5,8 +5,21 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "solenoid.h"
+#include "can.h"
+
 
 #define BLINK_INTERVAL	250
+
+const int board_type = NAV;
+
+Solenoid_States solenoid_states = {
+	.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},
+	.solenoid_2 = {"prim_braking_2", NOT_ACTUATED},
+	.solenoid_4 = {"sec_venting", NOT_ACTUATED},
+	.solenoid_6 = {"sec_braking_1", NOT_ACTUATED},
+	.solenoid_7 = {"sec_braking_2", NOT_ACTUATED}
+};
 
 /* Nucleo 32 I/O */
 
@@ -67,9 +80,7 @@ U8 I2C Address: 0x49:
 	AIN1: DUCER6: Secondary Downstream
 	AIN2: DUCER7: Primary Brakes
 	AIN3: DUCER8: Distance Sensor
-
- 	*/
-
+*/
 
 inline void printPrompt(void) {
 	fputs("[nav-build] $ ", stdout);
@@ -88,7 +99,7 @@ int main(void) {
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || nav_init())
+	if (io_init() || periph_init(NAV) || nav_init())
 		fault();
 
 	rx = get_rx(USB_UART);

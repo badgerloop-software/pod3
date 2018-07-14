@@ -4,8 +4,10 @@
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
+#include "can.h"
 
 #define BLINK_INTERVAL	250
+const int board_type = PV;
 
 /* Nucleo 32 I/O */
 //Shutdown Circuit
@@ -31,7 +33,7 @@ FILL_GPIO(LIM_MCU, 		GPIOA, 2, INPUT, LOW_SPEED, NONE, true, OTHER)
 FILL_GPIO(MCU_HV_EN, 	GPIOA, 6, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
 //MISC
-//High Voltage Disconnect Status	
+//High Voltage Disconnect Status
 FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 //Motor GPIO circuit output
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
@@ -53,7 +55,7 @@ int main(void) {
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || pv_init())
+	if (io_init() || periph_init(PV) || pv_init())
 		fault();
 
 	rx = get_rx(USB_UART);
