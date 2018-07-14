@@ -34,7 +34,7 @@ typedef struct {
 	Sensor_Data tube_pressure;	
 } Pod_Data_Handle;
 
-
+int dash_DAQ(Pod_Data_Handle *);
 void send_data(Pod_Data_Handle*);
 char *formatPacket(Sensor_Data*);
 void harvest_honeywell(Pod_Data_Handle*);
