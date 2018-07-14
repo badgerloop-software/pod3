@@ -113,12 +113,13 @@ command_status do_can(int argc, char *argv[]) {
 
 		can_send(can_id, 0, length, data);
 	}
-    else if(!strcmp("hb_torque", argv[1])){
+    if(!strcmp("hb_torque", argv[1])){
         hb_torque = atoi(argv[2]);
         /* TESTING */
         printf( "Torque= %d nm\r\n", hb_torque);
     
-    } else if(!strcmp("hb_next", argv[1])){
+    } 
+    if(!strcmp("hb_next", argv[1])){
         switch( hb_status){
             case IDLE: 
                 printf( "Heartbeat Status: Clear Faults\r\n");
