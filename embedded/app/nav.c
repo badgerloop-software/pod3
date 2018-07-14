@@ -1,6 +1,9 @@
 #include <stdio.h>
+<<<<<<< 4bd5582784734ef84cf782be8b86415a822de439
 #include "iox.h"
 #include "dashboard_data.h"
+=======
+>>>>>>> Pulling retro stuff from can 3
 #include "system.h"
 #include "board.h"
 #include "console.h"
@@ -9,6 +12,7 @@
 #include "solenoid.h"
 #include "can.h"
 #include "nav_data.h"
+#include "exti.h"
 
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
@@ -101,7 +105,30 @@ int nav_init(void) {
 
 	/* nav specific initializations */
 
-	return 0;
+    GPIO_TypeDef *gpioa = GPIOA;
+     
+    /* Retro 1 is on pin PA0
+     * Retro 2 is on pin PA1
+     * Retro 3 is on pin PA5 */
+
+    /* EXTI Init */ 
+    //Each Pin falling-edge interrupt enabled
+
+    //Pin 0 EXTI Config (RETRO1)
+    exti_config(gpioa, 0, 0, 1, 1);
+    //Pin 1 EXTI Config (RETRO2)
+    exti_config(gpioa, 1, 0, 1, 1);
+    //Pin 5 EXTI Config (RETRO3)
+    exti_config(gpioa, 5, 0, 1, 1);
+     
+    //Pin 3 EXTI Config (LIM1)
+    exti_config(gpioa, 3, 0, 1, 1);
+    //Pin 6 EXTI Config (LIM2)
+    exti_config(gpioa, 6, 0, 1, 1);
+    //Pin 7 EXTI Config (LIM3)
+    exti_config(gpioa, 7, 0, 1, 1);
+    
+    return 0;
 }
 
 int main(void) {
