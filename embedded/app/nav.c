@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "exti.h"
 #include "system.h"
 #include "board.h"
 #include "console.h"
@@ -91,7 +91,30 @@ int nav_init(void) {
 
 	/* nav specific initializations */
 
-	return 0;
+    GPIO_TypeDef *gpioa = GPIOA;
+     
+    /* Retro 1 is on pin PA0
+     * Retro 2 is on pin PA1
+     * Retro 3 is on pin PA5 */
+
+    /* EXTI Init */ 
+    //Each Pin falling-edge interrupt enabled
+
+    //Pin 0 EXTI Config (RETRO1)
+    exti_config(gpioa, 0, 0, 1, 1);
+    //Pin 1 EXTI Config (RETRO2)
+    exti_config(gpioa, 1, 0, 1, 1);
+    //Pin 5 EXTI Config (RETRO3)
+    exti_config(gpioa, 5, 0, 1, 1);
+     
+    //Pin 3 EXTI Config (LIM1)
+    exti_config(gpioa, 3, 0, 1, 1);
+    //Pin 6 EXTI Config (LIM2)
+    exti_config(gpioa, 6, 0, 1, 1);
+    //Pin 7 EXTI Config (LIM3)
+    exti_config(gpioa, 7, 0, 1, 1);
+    
+    return 0;
 }
 
 int main(void) {
