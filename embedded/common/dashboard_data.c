@@ -9,6 +9,18 @@
 
 char packetBuffer[SEND_BUF_SIZE];
 
+int dash_DAQ(Pod_Data_Handle *podData) {
+	harvest_honeywell(podData);
+	send_data(podData);
+	return 0;
+}
+
+void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
+	podData->retro.ui8data = retroVal;
+	podData->retro.timestamp = time(NULL);
+	podData->retro.freshness = FRESH;
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	harvest_honeywell(pod_data);	
@@ -25,6 +37,12 @@ void send_data(Pod_Data_Handle *pod_data) {
 		sensor = &(pod_data->lv_battery_temp);
 		char *dataToSend = formatPacket(sensor);
 		//printf("%s\r\n", dataToSend);
+		uart_send(dataToSend);
+	}
+
+	if (pod_data->retro.freshness == FRESH) {
+		pod_data->retro.freshness = NOT_FRESH;
+		char *dataToSend = formatPacket(&(pod_data->lv_battery_temp));
 		uart_send(dataToSend);
 	}
 }
