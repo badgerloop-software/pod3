@@ -31,9 +31,11 @@ typedef struct {
 	Sensor_Data position;
 	Sensor_Data velocity;
 	Sensor_Data acceleration;
-	Sensor_Data tube_pressure;	
+	Sensor_Data tube_pressure;
+	Sensor_Data retro;	
 } Pod_Data_Handle;
 
+void set_retro(Pod_Data_Handle*, uint8_t);
 int dash_DAQ(Pod_Data_Handle *);
 void send_data(Pod_Data_Handle*);
 char *formatPacket(Sensor_Data*);
