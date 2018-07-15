@@ -5,13 +5,16 @@
 #include "honeywell.h"
 #include "i2c.h"
 #include <time.h>
+#include "can.h"
+
 #define SEND_BUF_SIZE 128
 
 char packetBuffer[SEND_BUF_SIZE];
 
 int dash_DAQ(Pod_Data_Handle *podData) {
+	if (can_read() != HAL_OK) printf("ERROR");
+	ccp_parse_can_message(BADGER_CAN_ID, RxData, podData);	
 	harvest_honeywell(podData);
-	send_data(podData);
 	return 0;
 }
 

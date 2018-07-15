@@ -36,17 +36,10 @@ HAL_StatusTypeDef can_send(
 }
 
 HAL_StatusTypeDef can_read(void) {
-
-	int i;
+	
 	HAL_StatusTypeDef retval = HAL_ERROR;
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
-		           
-		for (i = 0; i < 8; i++) {
-			if (RxData[i] != 0) {
-				printf("CAN Message Data[%d]: %x\r\n", i, RxData[i]);
-			}
-		}
 	}
 	return retval;
 }
