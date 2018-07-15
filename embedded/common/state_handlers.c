@@ -21,7 +21,9 @@ const unsigned int state_intervals[] = {
 	999999, /* SERVICE_LOW_SPEED_PROPULSION		*/
 };
 
+
 void change_state(STATE_NAME state) {
+	printf("requesting state: %d\r\n", state);
 	if(state > NUM_STATES) return;
 	printf("Changing state from %s to %s\r\n", state_strings[state_handle.curr_state],
 		state_strings[state]);

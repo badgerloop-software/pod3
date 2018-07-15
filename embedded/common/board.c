@@ -5,6 +5,7 @@
 #include "pin_alias.h"
 #include "console.h"
 #include "can.h"
+#include "state_machine.h"
 
 /* STM32L432KC */
 // TODO
@@ -54,7 +55,7 @@ int periph_init(BOARD_ROLE role) {
 	ret += usart_config(USART1, SYSCLK, init_regs, 115200, true);
 
 	process_input("i2c init");
-
+	initialize_state_machine(IDLE);
 	can_init(role);
 
 	return ret;
