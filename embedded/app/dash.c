@@ -9,11 +9,14 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
+#include "state_handlers.h"
+#include "state_machine.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
 
 const int board_type = DASH;
+extern state_t state_handle;
 
 Pod_Data_Handle podData = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -83,7 +86,8 @@ int main(void) {
 		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
-			//state_machine_logic();
+			printf("state: %d\r\n", state_handle.curr_state);	
+			state_machine_handler();
 			//check if new state is needed
 		}
 		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
