@@ -112,18 +112,6 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
             if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
 			    return HAL_ERROR;
 			
-            nav_pressure5_set(data);
-            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_5, data) != HAL_OK)
-			    return HAL_ERROR;
-			
-            nav_solenoid1_set(data);
-            if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
-				return HAL_ERROR;
-			
-            nav_solenoid2_set(data);
-            if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data) != HAL_OK)
-				return HAL_ERROR;
-			
             nav_accel_vel_pos_set(data);
             if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
@@ -193,11 +181,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_PRES_4:
 				break;
-			case NAV_PRES_5:
-				break;
 			case NAV_SOLENOID_1:
-				break;
-			case NAV_SOLENOID_2:
 				break;
 			case NAV_ACCEL_VEL_POS:
 				break;
@@ -267,14 +251,8 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 			case NAV_PRES_4:
 				printf("NAV_PRES_4\r\n");
 				break;
-			case NAV_PRES_5:
-				printf("NAV_PRES_5\r\n");
-				break;
 			case NAV_SOLENOID_1:
 				printf("NAV_SOLENOID_1\r\n");
-				break;
-			case NAV_SOLENOID_2:
-				printf("NAV_SOLENOID_2\r\n");
 				break;
 			case NAV_ACCEL_VEL_POS:
 				printf("NAV_ACCEL_VEL_POS\r\n");
@@ -401,14 +379,8 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 		case NAV_PRES_4:
 			printf("NAV_PRES_4\r\n");
 			break;
-		case NAV_PRES_5:
-			printf("NAV_PRES_5\r\n");
-			break;
 		case NAV_SOLENOID_1:
 			printf("NAV_SOLENOID_1\r\n");
-			break;
-		case NAV_SOLENOID_2:
-			printf("NAV_SOLENOID_2\r\n");
 			break;
 		case NAV_ACCEL_VEL_POS:
 			printf("NAV_ACCEL_VEL_POS\r\n");

@@ -6,7 +6,7 @@
 
 typedef struct {
 	uint8_t topRetroCount;
-       	uint8_t middleRetroCount;
+    uint8_t middleRetroCount;
 	uint8_t bottomRetroCount;
 	uint8_t retroAgreement;
 } Retro_Values;
