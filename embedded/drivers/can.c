@@ -167,7 +167,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				break;
 			case NAV_TAPE:
-				set_retro(pod_data, data[3]);
+				set_retro(&pod_data, data[3]);
 				break;
 			case NAV_SHOULD_STOP:
 				break;
@@ -236,7 +236,6 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case NAV_TAPE:
 				printf("NAV_TAPE\r\n");
-				set_retro(pod_data, data[3]);
 				break;
 			case NAV_SHOULD_STOP:
 				printf("NAV_SHOULD_STOP\r\n");
