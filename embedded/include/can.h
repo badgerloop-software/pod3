@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "board.h"
 #include "stm32l4xx_hal_conf.h"
+#include "dashboard_data.h"
 
 #define BADGER_CAN_ID 0x555
 
@@ -20,6 +21,8 @@ HAL_StatusTypeDef can_send(uint32_t id, uint32_t TxMailbox, size_t length, uint8
 HAL_StatusTypeDef can_send_intermodule(BOARD_ROLE sending_board, RECEIVING_BOARD receiving_board, uint8_t message_num, uint8_t *data) ;
 HAL_StatusTypeDef can_listen(void);
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board_type);
+HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data_Handle *pod_data);
+HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data);
 void print_incoming_can_message(uint32_t id, uint8_t *data);
 HAL_StatusTypeDef can_init(BOARD_ROLE role);
 
