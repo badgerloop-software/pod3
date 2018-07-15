@@ -2,6 +2,7 @@
 #include <string.h>
 #include "stm32l432xx.h"
 #include <stdio.h>
+#include "retro.h"
 
 /* gets interupt vecotor number for pin */
 static IRQn_Type exti_get_irq_num(uint32_t pin) {
@@ -70,7 +71,7 @@ void EXTI0_IRQHandler(void) {
 		interLine[0].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF0;
-		
+
 	    /* TESTING */
         printf( "Retro 1 Count: %lu\r\n", interLine[0].count);
         printf( "Retro 1 Previous Timestamp: %lu\r\n", interLine[0].prev);

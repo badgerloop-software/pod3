@@ -3,6 +3,7 @@
 #include <board.h>
 #include <can.h>
 #include <dashboard_data.h>
+#include "data_set.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -22,7 +23,6 @@ HAL_StatusTypeDef can_send(
 
 	TxHeader.StdId = id;
 
-	/* TODO: why are we doing this? */
 	if (length % 2 == 1) {
 		TxHeader.DLC = (length / 2) + 1;
 	} else {
@@ -87,42 +87,56 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			return HAL_ERROR;
 			break;
 		case NAV:
-		        if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+		    /* Update data, and send out */
+            nav_tape_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
-               		
-			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+            
+            nav_should_stop_set(data);
+            if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
+			
+            nav_pressure1_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
 				return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
+			
+            nav_pressure2_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
 				return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
+			
+            nav_pressure3_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
 				return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
-			       	return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_5, data) != HAL_OK)
-			       	return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
+			
+            nav_pressure4_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
+			    return HAL_ERROR;
+			
+            nav_pressure5_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_5, data) != HAL_OK)
+			    return HAL_ERROR;
+			
+            nav_solenoid1_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data) != HAL_OK)
+			
+            nav_solenoid2_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data) != HAL_OK)
 				return HAL_ERROR;
-		
-			if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
+			
+            nav_accel_vel_pos_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
-		
-			return HAL_OK;
+			
+            return HAL_OK;
 			break;
 		case PV:
+            pv_pressure_set(data);
 			if (can_send_intermodule(PV, DASH_REC, PV_PRESSURE, data) != HAL_OK) 
 				return HAL_ERROR;
-			if (can_send_intermodule(PV, DASH_REC, PV_SHUTDOWN_CIRCUIT_STATUS, data) != HAL_OK) 
+			
+            pv_shutdown_set(data);
+            if (can_send_intermodule(PV, DASH_REC, PV_SHUTDOWN_CIRCUIT_STATUS, data) != HAL_OK) 
 				return HAL_ERROR;
 
 			return HAL_ERROR;

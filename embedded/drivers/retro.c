@@ -4,6 +4,9 @@
 
 #define CM_PER_STRIP 3048
 
+//uint8_t master_retro_count = 0;
+uint8_t freshness = NOT_FRESH;
+
 void initRetro(void) {
 	mainRetro = &RETRO1;
 	tape_vel = 0;
@@ -33,7 +36,22 @@ void incVel(int retro) {
 			RETRO3.curr = 1000*RETRO3.count;
 			RETRO3.filter[MAINFILTERINDEX] = RETRO3.curr-RETRO3.prev;
 			break;
-		default:
+        case 4:
+			RETRO1.count++;
+			RETRO1.prev = RETRO1.curr;
+			RETRO1.curr = 1000*RETRO1.count;
+			RETRO1.filter[MAINFILTERINDEX] = RETRO1.curr-RETRO1.prev;
+			RETRO2.count++;
+			RETRO2.prev = RETRO2.curr;
+			RETRO2.curr = 1000*RETRO2.count;
+			RETRO2.filter[MAINFILTERINDEX] = RETRO2.curr-RETRO2.prev;		
+			RETRO3.count++;
+			RETRO3.prev = RETRO3.curr;
+			RETRO3.curr = 1000*RETRO3.count;
+			RETRO3.filter[MAINFILTERINDEX] = RETRO3.curr-RETRO3.prev;
+			break;
+
+        default:
 			printf("Not a valid retro. Choose 1-3.\r\n");
 	}
 }
@@ -42,7 +60,6 @@ void incVel(int retro) {
 // Which ever count has >=2 votes is determined to be correct.
 int getStripCount(int *badRetro) {
 	int actualCount = 0, agree1 = 0, agree2 = 0, agree3 = 0;
-	
 	
 	if(RETRO1.count == RETRO2.count) {
 		agree1++; agree2++;
@@ -74,7 +91,11 @@ int getStripCount(int *badRetro) {
 	RETRO1.count = actualCount;
 	RETRO2.count = actualCount;
 	RETRO3.count = actualCount;
-	return actualCount;
+
+    /* Data is now fresh */
+    freshness = FRESH; 
+
+    return actualCount;
 }
 
 // Return 1 on success, 0 on failure. Updates global velocity.

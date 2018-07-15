@@ -56,7 +56,13 @@ COMMAND_ENTRY("exti",
 ) 
         
 command_status do_retro(int argc, char *argv[]) {
-        if(argc > 1) return USAGE;
+
+    if( !strcmp( argv[1], "test"){
+        invVel(4);
+        return SUCCESS;
+    }
+    
+    if(argc > 1) return USAGE;
                
         int retro_count, pos, vel, acc;
 
