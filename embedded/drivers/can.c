@@ -2,6 +2,7 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
+#include <dashboard_data.h>
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -88,24 +89,34 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 		case NAV:
 		        if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
-               	        if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+               		
+			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
 				return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
 				return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
 				return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
 			       	return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_5, data) != HAL_OK)
 			       	return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data) != HAL_OK)
 				return HAL_ERROR;
+		
 			if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
+		
 			return HAL_OK;
 			break;
 		case PV:
@@ -124,13 +135,138 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	}
 }
 
-HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
-//	BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
-//	RECEIVING_BOARD to_modules = data[0] & 0xf;
-//	CAN_MESSAGE_TYPE message_num = data[1];
-//	TODO parser
-	printf("can id %lx data1 %d", can_id, data[1]);
+HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data_Handle pod_data){
 	
+	RECEIVING_BOARD to_modules = data[0] & 0xf;
+	CAN_MESSAGE_TYPE message_num = data[1];
+	
+	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){
+		switch (message_num){
+			case CAN_TEST_MESSAGE:
+				break;
+			case LV_HEARTBEAT:
+				break;
+			case CCP_FAULT:
+				break;
+			case CCP_WARNING:
+				break;
+			case CCP_SOLENOID_COMMAND:
+				break;
+			case CCP_MCU_ENABLE:
+				break;
+			case CCP_RMS_POWER:
+				break;
+			case PV_WARNING:
+				break;
+			case PV_PRESSURE:
+				break;
+			case PV_SHUTDOWN_CIRCUIT_STATUS:
+				break;
+			case NAV_FAULT:
+				break;
+			case NAV_WARNING:
+				break;
+			case NAV_TAPE:
+				set_retro(pod_data, data[3]);
+				break;
+			case NAV_SHOULD_STOP:
+				break;
+			case NAV_PRES_1:
+				break;
+			case NAV_PRES_2:
+				break;
+			case NAV_PRES_3:
+				break;
+			case NAV_PRES_4:
+				break;
+			case NAV_PRES_5:
+				break;
+			case NAV_SOLENOID_1:
+				break;
+			case NAV_SOLENOID_2:
+				break;
+			case NAV_ACCEL_VEL_POS:
+				break;
+			}
+		}
+	return HAL_OK;
+}
+
+HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
+	
+	RECEIVING_BOARD to_modules = data[0] & 0xf;
+	CAN_MESSAGE_TYPE message_num = data[1];
+
+	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){	
+		switch (message_num) {
+			case CAN_TEST_MESSAGE:
+				printf("CAN TEST\r\n");
+				break;
+			case LV_HEARTBEAT:
+				printf("HEARTBEAT\r\n");
+				break;
+			case CCP_FAULT:
+				printf("CCP FAULT\r\n");
+				break;
+			case CCP_WARNING:
+				printf("CCP Warning");
+			case CCP_SOLENOID_COMMAND:
+				printf("CCP_SOLENOID_COMMAND\r\n");
+				break;
+			case CCP_MCU_ENABLE:
+				printf("CCP MCU ENABLE\r\n");
+				break;
+			case CCP_RMS_POWER:
+				printf("RMS POWER\r\n");
+				break;
+			case PV_WARNING:
+				printf("PV_SHUTDOWN_CIRCUIT_STATUS\r\n");
+				break;
+			case PV_PRESSURE:
+				printf("PV PRESSURE\r\n");
+				break;
+			case PV_SHUTDOWN_CIRCUIT_STATUS:
+				printf("Shutdown circuit status");
+				break;
+			case NAV_FAULT:
+				printf("nav_fault\r\n");
+				break;
+			case NAV_WARNING:
+				printf("NAV WARNING\r\n");
+				break;
+			case NAV_TAPE:
+				printf("NAV_TAPE\r\n");
+				set_retro(pod_data, data[3]);
+				break;
+			case NAV_SHOULD_STOP:
+				printf("NAV_SHOULD_STOP\r\n");
+				break;
+			case NAV_PRES_1:
+				printf("NAV_PRES_1\r\n");
+				break;
+			case NAV_PRES_2:
+				printf("NAV_PRES_2\r\n");
+				break;
+			case NAV_PRES_3:
+				printf("NAV_PRES_3\r\n");
+				break;
+			case NAV_PRES_4:
+				printf("NAV_PRES_4\r\n");
+				break;
+			case NAV_PRES_5:
+				printf("NAV_PRES_5\r\n");
+				break;
+			case NAV_SOLENOID_1:
+				printf("NAV_SOLENOID_1\r\n");
+				break;
+			case NAV_SOLENOID_2:
+				printf("NAV_SOLENOID_2\r\n");
+				break;
+			case NAV_ACCEL_VEL_POS:
+				printf("NAV_ACCEL_VEL_POS\r\n");
+				break;
+			}
+		}
 	return HAL_OK;
 }
 
