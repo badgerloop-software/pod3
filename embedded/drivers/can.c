@@ -65,7 +65,7 @@ HAL_StatusTypeDef can_send_intermodule(
 	data[0] = to_from_id;
 	data[1] = message_id;
 
-	retval = can_send(BADGER_CAN_ID, 0, 8, data);
+	retval = can_send(BADGER_CAN_ID, 0, 16, data);
 	if(retval != HAL_OK){
 		printf("RETVAL %d", retval);
 	}
@@ -275,7 +275,7 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 
 	int i;
 	for (i = 0; i < 8; i++){
-		//printf("Data[%d]:	%x\r\n", i, data[i]);
+		printf("Data[%d]:	%x\r\n", i, data[i]);
 	}
 }
 
