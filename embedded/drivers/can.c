@@ -83,40 +83,37 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	data[7] = 7;
 	switch (board) {
 		case DASH:
-			//TODO dash heartbeat
-			//TODO RMS heartbeat
 			return HAL_ERROR;
 			break;
 		case NAV:
-			
-			//TODO nav heartbeat
-		        if(can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+		        if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
-               	        if(can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+               	        if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
+			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
 				return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
+			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
 				return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
+			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
 				return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
+			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
 			       	return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_PRES_5, data) != HAL_OK)
+			if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_5, data) != HAL_OK)
 			       	return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
+			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data) != HAL_OK)
+			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_2, data) != HAL_OK)
 				return HAL_ERROR;
-			if(can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
+			if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
-			
 			return HAL_OK;
 			break;
 		case PV:
-			//TODO pv heartbeat
-			//TODO Shutdown_Circuit_Status
-			//TODO PV Pressure
+			if (can_send_intermodule(PV, DASH_REC, PV_PRESSURE, data) != HAL_OK) 
+				return HAL_ERROR;
+			if (can_send_intermodule(PV, DASH_REC, PV_SHUTDOWN_CIRCUIT_STATUS, data) != HAL_OK) 
+				return HAL_ERROR;
+
 			return HAL_ERROR;
 			break;
 		case DEV:
@@ -128,13 +125,13 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 }
 
 HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
-		BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
-		RECEIVING_BOARD to_modules = data[0] & 0xf;
-		CAN_MESSAGE_TYPE message_num = data[1];
-		
-		printf("CAN_ID: %lx FROM MODULE: %d TO MODULE: %d Message num: %d", can_id, from_module, to_modules, message_num);
-
-		return HAL_ERROR;
+//	BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
+//	RECEIVING_BOARD to_modules = data[0] & 0xf;
+//	CAN_MESSAGE_TYPE message_num = data[1];
+//	TODO parser
+	printf("can id %lx data1 %d", can_id, data[1]);
+	
+	return HAL_OK;
 }
 
 HAL_StatusTypeDef can_listen(void){
