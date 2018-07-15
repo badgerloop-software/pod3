@@ -45,7 +45,9 @@ void nav_tape_set(uint8_t data[]){
 void nav_should_stop_set(uint8_t data[]){
     int i;
 
-    for ( i = 0; i < 8; i++ ){
+    data[2] = navData.shouldStop;
+
+    for ( i = 3; i < 8; i++ ){
         data[i] = 0;
     }
     

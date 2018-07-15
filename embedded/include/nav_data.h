@@ -35,6 +35,7 @@ typedef struct {
 	Pressure_Values   linePressures;
 	Retro_Values      retros;
 	Motion_Values     motion;
+    int               shouldStop;
 } Nav_Data;
 
 int nav_DAQ(Nav_Data*);
