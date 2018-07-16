@@ -45,6 +45,8 @@ FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 //Motor GPIO circuit output
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
+FILL_GPIO(HVD_FDBK, 	GPIOB, 4, OUTPUT, LOW_SPEED, NONE, true, OTHER)
+
 inline void printPrompt(void) {
 	fputs("[pv-build] $ ", stdout);
 	fflush(stdout);
