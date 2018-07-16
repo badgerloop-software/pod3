@@ -73,9 +73,6 @@ command_status do_can(int argc, char *argv[]) {
 		return can_listen();
 	}
 
-	if (argc == 2 || argc == 3 || argc == 4) return USAGE;
-
-    
 	if (!strcmp("send", argv[1])) {
 		
 		char * str;
@@ -117,12 +114,12 @@ command_status do_can(int argc, char *argv[]) {
 		can_send(can_id, 0, length, data);
 	}
 
-	if(!strcmp("hb_torque", argv[1])){
+    if(!strcmp("hb_torque", argv[1])){
         hb_torque = atoi(argv[2]);
         
 		/* TESTING */
         printf( "Torque= %d nm\r\n", hb_torque);
-   		return CMD_SUCCESS; 
+   	return CMD_SUCCESS; 
     } 
 
     if(!strcmp("hb_next", argv[1])){
@@ -158,7 +155,7 @@ command_status do_can(int argc, char *argv[]) {
                 printf("Unknown Heartbeat state.\r\n" );
                 break;
         }
-		return CMD_SUCCESS;
+	return CMD_SUCCESS;
     }
 
 	if (argc == 5) return USAGE; 
