@@ -12,12 +12,12 @@ uint8_t TxData[8];
 uint8_t RxData[8];
 extern uint8_t board_num;
 volatile uint8_t hb_torque;
-volatile heartbeat_msg_t hb_status = IDLE;
+volatile heartbeat_msg_t hb_status = IDLE_MSG;
 
 void can_heartbeat_next(){
 	
 	switch( hb_status){
-   		case IDLE: 
+   		case IDLE_MSG: 
         	printf( "Heartbeat Status: Clear Faults\r\n");
             hb_status = FAULTS_CLEARED;
             break;
@@ -39,9 +39,9 @@ void can_heartbeat_next(){
             break;
         case DISCHARGE:
             printf( "Heartbeat Status: Post Run\r\n");
-            hb_status = POST_RUN;
+            hb_status = POST_RUN_MSG;
             break;
-        case POST_RUN:
+        case POST_RUN_MSG:
             printf("Heartbeat Status: Post Run\r\n");
             break;
         case FAULT:
