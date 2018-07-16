@@ -504,8 +504,8 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
-        can_heartbeat_next();
-        can_heartbeat_handler( &can_handle );
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -696,8 +696,8 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
-        can_heartbeat_next();
-        can_heartbeat_handler( &can_handle );
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -757,8 +757,8 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
-        can_heartbeat_next();
-        can_heartbeat_handler( &can_handle );
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -784,8 +784,8 @@ void in_post_run(uint32_t flags) {
 
 	if(board_type==DASH) {
         //Heartbeat next does not advance past post-run
-        can_heartbeat_next();
-        can_heartbeat_handler( &can_handle );
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
