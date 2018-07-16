@@ -6,7 +6,7 @@
 
 typedef struct {
 	uint8_t topRetroCount;
-       	uint8_t middleRetroCount;
+    uint8_t middleRetroCount;
 	uint8_t bottomRetroCount;
 	uint8_t retroAgreement;
 } Retro_Values;
@@ -34,7 +34,8 @@ typedef struct {
 	Solenoid_States   solenoids;
 	Pressure_Values   linePressures;
 	Retro_Values      retros;
-	IMU     motion;
+	Motion_Values     motion;
+    int               shouldStop;
 } Nav_Data;
 
 int nav_DAQ(Nav_Data*);
