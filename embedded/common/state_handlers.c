@@ -3,7 +3,10 @@
 #include "state_handlers.h"
 #include "system.h"
 #include "board.h"
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
 #include "badgerloop.h"
+=======
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 #include "can.h"
 
 //TODO: Some states cannot be transitioned out of by timer
@@ -104,7 +107,11 @@ void in_pre_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -142,8 +149,12 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_fault();
         //can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -163,7 +174,11 @@ void in_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -202,8 +217,12 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_fault();
         //can_heartbeat_handler();
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -223,7 +242,11 @@ void in_post_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -243,7 +266,11 @@ void from_post_run_fault(STATE_NAME to, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -275,7 +302,11 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -309,7 +340,11 @@ if(board_type==NAV) {
 
 } // end NAV_MODULE 
 if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
     can_heartbeat_handler( &can_handle );
+=======
+    can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 		
 } // end CPP_MODULE
 
@@ -379,8 +414,12 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_next();
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -404,7 +443,11 @@ void in_ready_for_pumpdown(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -439,7 +482,11 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -461,7 +508,11 @@ void in_pumpdown(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -497,8 +548,12 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_next();
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -521,7 +576,11 @@ void in_ready(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -558,8 +617,12 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_next();
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 	    propulsion_start_ts = ticks;
 	} // end CPP_MODULE
 
@@ -581,7 +644,11 @@ void in_propulsion_start(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 	    
         /* If we pass propulsion timeout enter braking */
 	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
@@ -622,7 +689,11 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -644,7 +715,11 @@ void in_propulsion_distance(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 	
         /* If we pass propulsion timeout enter braking */
 	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
@@ -682,8 +757,12 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_next();
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -705,7 +784,11 @@ void in_braking(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -740,8 +823,12 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_next();
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -763,9 +850,13 @@ void in_post_run(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         //Heartbeat next does not advance past post-run
         can_heartbeat_next();
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -800,7 +891,11 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -822,7 +917,11 @@ void in_safe_to_approach(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -857,7 +956,11 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
@@ -880,7 +983,11 @@ void in_service_low_speed_propulsion(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+<<<<<<< 17d11f816a61fa97b90304d3c7f667c98fbb8131
         can_heartbeat_handler( &can_handle );
+=======
+        can_heartbeat_handler();
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
 
 	} // end CPP_MODULE
 
