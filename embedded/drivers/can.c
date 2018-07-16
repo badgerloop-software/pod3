@@ -69,12 +69,6 @@ HAL_StatusTypeDef can_send_intermodule(
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	
 	uint8_t data[8];
-	data[2] = 2;
-	data[3] = 3;
-	data[4] = 4;
-	data[5] = 5;
-	data[6] = 6;
-	data[7] = 7;
 	switch (board) {
 		case DASH:
 			return HAL_ERROR;
@@ -82,11 +76,13 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 		case NAV:
 		    /* Update data, and send out */
             nav_tape_set(data);
+			while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
             if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
             
             nav_should_stop_set(data);
-            if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+			while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
+			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
 			
             nav_pressure1_set(data);
@@ -134,8 +130,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
-	
-	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){
+	//printf("%u\r\n", data[2]);	
+	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
 				break;
@@ -163,6 +159,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_TAPE:
 				printf("%u\r\n", data[2]);
+				fflush(stdout);
 				set_retro(pod_data, data[2]);
 				break;
 			case NAV_SHOULD_STOP:
@@ -490,7 +487,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case DASH:
 			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh 	= 0x0000;
+			sFilterConfig0.FilterMaskIdHigh 	= 0x1 << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case NAV:

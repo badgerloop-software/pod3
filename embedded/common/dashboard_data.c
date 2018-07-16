@@ -12,8 +12,7 @@
 char packetBuffer[SEND_BUF_SIZE];
 
 int dash_DAQ(Pod_Data_Handle *podData) {
-	if (can_read() != HAL_OK) printf("ERROR");
-	ccp_parse_can_message(BADGER_CAN_ID, RxData, podData);	
+//	ccp_parse_can_message(BADGER_CAN_ID, RxData, podData);	
 	harvest_honeywell(podData);
 	return 0;
 }
@@ -27,7 +26,6 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
-	harvest_honeywell(pod_data);	
 	if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->current_pressure);

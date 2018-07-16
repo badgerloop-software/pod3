@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include "iox.h"
 #include "dashboard_data.h"
 #include "system.h"
@@ -133,7 +134,6 @@ int main(void) {
 	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
-		
 		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (nav_DAQ(&navData)) printf("DAQ Failure");
