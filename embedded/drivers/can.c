@@ -192,7 +192,11 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	uint8_t data[8];
 	switch (board) {
 		case DASH:
-			return HAL_ERROR;
+			if (can_send_intermodule(DASH, NAV, CURR_STATE, data) != HAL_OK)
+				return HAL_ERROR;
+			if (can_send_intermodule(DASH, PV, CURR_STATE, data) != HAL_OK)
+				return HAL_ERROR;
+			return HAL_OK;
 			break;
 		case NAV:
 		    /* Update data, and send out */
@@ -299,6 +303,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_ACCEL_VEL_POS:
 				break;
+			case CURR_STATE:
+				break;
 			}
 		}
 	return HAL_OK;
@@ -370,6 +376,9 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case NAV_ACCEL_VEL_POS:
 				printf("NAV_ACCEL_VEL_POS\r\n");
+				break;
+			case CURR_STATE:
+				printf("STATE: %u\r\n", data[2]);
 				break;
 			}
 		}
