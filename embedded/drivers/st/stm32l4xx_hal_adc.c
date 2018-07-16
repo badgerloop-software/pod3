@@ -1540,6 +1540,7 @@ HAL_StatusTypeDef HAL_ADC_Stop_IT(ADC_HandleTypeDef* hadc)
   return tmp_hal_status;
 }
 
+
 /**
   * @brief  Get ADC regular group conversion result.
   * @note   Reading register DR automatically clears ADC flag EOC

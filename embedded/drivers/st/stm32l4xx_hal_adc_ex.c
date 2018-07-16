@@ -921,8 +921,6 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t
       __HAL_ADC_ENABLE_IT(hadc, ADC_IT_OVR);
       
       /* Start the DMA channel */
-<<<<<<< 69002c1880fc0971e219e6b3cf60fef83528f04b
-      //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
       //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
           
       /* Enable conversion of regular group.                                    */
