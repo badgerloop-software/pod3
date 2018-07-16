@@ -887,7 +887,6 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t
       ADC_CLEAR_ERRORCODE(hadc);
       
       /* Set the DMA transfer complete callback */
-<<<<<<< 5782659e321ffcdca0adbe781641a05aa640a74d
       //hadc->DMA_Handle->XferCpltCallback = ADC_DMAConvCplt;
          
       /* Set the DMA half transfer complete callback */
@@ -895,15 +894,13 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t
       
       /* Set the DMA error callback */
       //hadc->DMA_Handle->XferErrorCallback = ADC_DMAError ;
-=======
-      hadc->DMA_Handle->XferCpltCallback = ADC_DMAConvCplt;
+      //hadc->DMA_Handle->XferCpltCallback = ADC_DMAConvCplt;
          
       /* Set the DMA half transfer complete callback */
-      hadc->DMA_Handle->XferHalfCpltCallback = ADC_DMAHalfConvCplt;
+      //hadc->DMA_Handle->XferHalfCpltCallback = ADC_DMAHalfConvCplt;
       
       /* Set the DMA error callback */
-      hadc->DMA_Handle->XferErrorCallback = ADC_DMAError ;
->>>>>>> Reverted back to single ADC code, testing now
+      //hadc->DMA_Handle->XferErrorCallback = ADC_DMAError ;
       
       /* Pointer to the common control register  */
       tmpADC_Common = __LL_ADC_COMMON_INSTANCE(hadc->Instance);
@@ -924,11 +921,8 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t
       __HAL_ADC_ENABLE_IT(hadc, ADC_IT_OVR);
       
       /* Start the DMA channel */
-<<<<<<< 5782659e321ffcdca0adbe781641a05aa640a74d
       //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
-=======
-      HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
->>>>>>> Reverted back to single ADC code, testing now
+      //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
           
       /* Enable conversion of regular group.                                    */
       /* If software start has been selected, conversion starts immediately.    */
@@ -1019,11 +1013,9 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStop_DMA(ADC_HandleTypeDef* hadc)
     /* while DMA transfer is on going)                                        */
     /* Note: DMA channel of ADC slave should be stopped after this function   */
     /*       with HAL_ADC_Stop_DMA() API.                                     */
-<<<<<<< 5782659e321ffcdca0adbe781641a05aa640a74d
     //tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
-=======
     tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
->>>>>>> Reverted back to single ADC code, testing now
+    //tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
     
     /* Check if DMA channel effectively disabled */
     if (tmp_hal_status == HAL_ERROR)
@@ -1497,11 +1489,7 @@ HAL_StatusTypeDef HAL_ADCEx_RegularMultiModeStop_DMA(ADC_HandleTypeDef* hadc)
     /* while DMA transfer is on going)                                        */
     /* Note: DMA channel of ADC slave should be stopped after this function   */
     /* with HAL_ADCEx_RegularStop_DMA() API.                                  */
-<<<<<<< 5782659e321ffcdca0adbe781641a05aa640a74d
     //tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
-=======
-    tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
->>>>>>> Reverted back to single ADC code, testing now
     
     /* Check if DMA channel effectively disabled */
     if (tmp_hal_status != HAL_OK)
