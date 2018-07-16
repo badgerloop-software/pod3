@@ -197,12 +197,10 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 		case NAV:
 		    /* Update data, and send out */
             nav_tape_set(data);
-			while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
             if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
             
             nav_should_stop_set(data);
-			while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
 			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
 			
@@ -282,11 +280,9 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_WARNING:
 				break;
-			//case NAV_TAPE:
-			//	printf("%u\r\n", data[2]);
-			//	fflush(stdout);
-			//	set_retro(pod_data, data[2]);
-			//	break;
+			case NAV_TAPE:
+				set_retro(pod_data, data[2]);
+				break;
 			case NAV_SHOULD_STOP:
 				break;
 			case NAV_PRES_1:
@@ -300,8 +296,6 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_SOLENOID_1:
 				printf("%u\r\n", data[2]);
 				set_solenoid_value(pod_data, data[2]);
-				break;
-			case NAV_TAPE: //temp
 				break;
 			case NAV_ACCEL_VEL_POS:
 				break;
