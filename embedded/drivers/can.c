@@ -22,7 +22,6 @@ HAL_StatusTypeDef can_send(
 
 	TxHeader.StdId = id;
 
-	/* TODO: why are we doing this? */
 	if (length % 2 == 1) {
 		TxHeader.DLC = (length / 2) + 1;
 	} else {
@@ -210,7 +209,8 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case CCP_WARNING:
 				printf("CCP Warning");
-			case CCP_SOLENOID_COMMAND:
+                break;
+            case CCP_SOLENOID_COMMAND:
 				printf("CCP_SOLENOID_COMMAND\r\n");
 				break;
 			case CCP_MCU_ENABLE:
@@ -415,15 +415,21 @@ HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
 	switch (id){
 		case (BMS_PACK_STATE_MESSAGE):
 			printf("data 0: %x", data[0]);
-		case (BMS_PACK_TEMP_MESSAGE):
+		    break;
+        case (BMS_PACK_TEMP_MESSAGE):
+		    break;
 
 		case (BMS_RELAY_STATE_MESSAGE):
+		    break;
 
 		case (BMS_PACK_CCL):
+		    break;
 
 		case (BMS_CELL_VOLT_MESSAGE):
+		    break;
 
 		case (BMS_SOC_MESSAGE):
+		    break;
 
 //		case (BMS_PACK_CURRENT_MESSAGE):
 
@@ -432,6 +438,7 @@ HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
 		default:
 			return HAL_ERROR;
 	}
+    return HAL_OK;
 }
 
 HAL_StatusTypeDef can_init(BOARD_ROLE role) {
