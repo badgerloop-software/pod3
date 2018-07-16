@@ -11,6 +11,18 @@ uint32_t DONT_BRAKnt32_t, DONT_BRAKE_TO = 8000, MUST_BRAKE_TO = 30000, BRAKING_C
 /*****************************************************************************/
 /*                            Get Telemetry Vals                            */
 /*****************************************************************************/
+int bms_software_reset_set( bool state ){
+    
+    //PB Reset is on Pin4
+    if ( gpio_writePin( GPIOB, 4, state ) == -1 ){
+        printf( "BMS Software Reset Set Error\r\n");
+        return -1;
+    }
+    
+    return 0;
+
+}
+
 void battery_votlage(void) {
 	//Analog read and scaling
 	SET_VBATT(15000);	//TODO update with read
