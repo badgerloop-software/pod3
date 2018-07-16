@@ -1,7 +1,12 @@
 #include "nav_data.h"
 #include "solenoid.h"
 #include <stdio.h>
+<<<<<<< 10f4d5e586b98bec434f847c7c2c008e53d0103a
 #include "retro.h"
+=======
+#include "gpio.h"
+
+>>>>>>> Initial work for adding Limit switch data sending
 Nav_Data navData = {
      .solenoids = {
          .solenoid_1 = {PRIM_BRAKING_1, NOT_ACTUATED},
@@ -25,6 +30,11 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 	int badRetroGuy;
 	navDataPtr->retros.retroAgreement = getStripCount(&badRetroGuy);
 	printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
+
+    navDataPtr->limits.limitValue1 = gpio_readPin( GPIOA, 3);
+    navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6);
+    navDataPtr->limits.limitValue3 = gpio_readPin( GPIOA, 7);
+
 	harvest_solenoids(&(navDataPtr->solenoids));	
 	if (navDataPtr->solenoids.solenoid_1.state != temp) printf("CHANGE1\r\n");
 	if (navDataPtr->solenoids.solenoid_2.state != temp2) printf("CHANGE2\r\n"); 
