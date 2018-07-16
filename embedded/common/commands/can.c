@@ -124,7 +124,7 @@ command_status do_can(int argc, char *argv[]) {
 
     if(!strcmp("hb_next", argv[1])){
         switch( hb_status){
-            case IDLE: 
+            case IDLE_MSG: 
                 printf( "Heartbeat Status: Clear Faults\r\n");
                 hb_status = FAULTS_CLEARED;
                 break;
@@ -146,9 +146,9 @@ command_status do_can(int argc, char *argv[]) {
                 break;
             case DISCHARGE:
                 printf( "Heartbeat Status: Post Run\r\n");
-                hb_status = POST_RUN;
+                hb_status = POST_RUN_MSG;
                 break;
-            case POST_RUN:
+            case POST_RUN_MSG:
                 printf("Heartbeat Status: Post Run\r\n");
                 break;
             default: 
