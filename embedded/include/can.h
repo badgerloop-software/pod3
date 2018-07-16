@@ -17,13 +17,13 @@ extern uint8_t             RxData[8];
 extern uint32_t            TxMailbox;
 
 typedef enum{
-    IDLE,           //Default message, sends all 0's
+    IDLE_MSG,           //Default message, sends all 0's
     FAULTS_CLEARED, //Clears CAN faults on RMS
     PRE_RUN,        // Same message as IDLE, but represents ready-to-run state
     FORWARD,        //Commands motor forward
     SPIN_DOWN,      //Same message as IDLE, but represents slowing down
     DISCHARGE,      //Discharging capacitors after the run
-    POST_RUN        //Also same as IDLE, but represents post run
+    POST_RUN_MSG        //Also same as IDLE, but represents post run
 }heartbeat_msg_t;
 
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan );
