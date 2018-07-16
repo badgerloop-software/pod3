@@ -3,6 +3,8 @@
 #include "board.h"
 #include "uart.h"
 #include "usart.h"
+#include "nav_data.h"
+
 #include <stdio.h>
  
 #define START_READ_INTERVAL 1000
@@ -21,3 +23,13 @@ void harvest_solenoids(Solenoid_States *sol_states) {
 		sol_states->solenoid_1.state = (stateList & 0x01);
 	}
 }
+
+int change_solenoid(int name, int state) {
+	if (state == ACTUATED) {
+		iox_set(name);	
+	} else if (state == NOT_ACTUATED) {
+		iox_clear(name);	
+	}
+	return 0;
+}
+

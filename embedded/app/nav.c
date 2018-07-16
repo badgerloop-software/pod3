@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include "iox.h"
 #include "dashboard_data.h"
 #include "system.h"
@@ -133,7 +134,6 @@ int main(void) {
 	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
-		
 		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (nav_DAQ(&navData)) printf("DAQ Failure");
@@ -141,12 +141,12 @@ int main(void) {
 		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
 			iox_start_read();
 			lastState = ticks;
-			//state_machine_logic();
+			//state_machine_handler();
 			//check if new state is needed
 		}
 		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {
 			lastTelem = ticks;
-			//board_telemetry_send(board_type);
+			board_telemetry_send(board_type);
 			//Nav sends telem to CCP
 		}
 		if (((ticks + 25) % HRTBT_INTERVAL == 0) && lastHrtbt != ticks) {

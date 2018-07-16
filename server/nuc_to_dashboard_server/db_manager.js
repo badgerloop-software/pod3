@@ -41,7 +41,11 @@ const SENSORS = [
 	"SENSOR_3"
 ];
 
-const url = 'mongodb://192.168.2.112:27017';
+
+const url = 'mongodb://192.168.1.112:27017';  // CONFIGURE HERE
+
+
+
 module.exports.url = url;
 
 let chatClient = function () {
