@@ -244,6 +244,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx_hal.h"
+#include "stm32l4xx_hal_adc_ex.h"
+#include "stm32l4xx_hal_adc.h"
+#include "stm32l4xx_ll_adc.h"
 
 /** @addtogroup STM32L4xx_HAL_Driver
   * @{
@@ -1540,6 +1543,7 @@ HAL_StatusTypeDef HAL_ADC_Stop_IT(ADC_HandleTypeDef* hadc)
 <<<<<<< ca0d5db6d1150e7fb15f84d49577a0cbc1a004de
 =======
 /**
+<<<<<<< 168a21ba563d7ffc06b8e983e70fa8069e873d01
 <<<<<<< 7712d42dcb8046c308b95df4a3368f8b7ef96872
 =======
   * @brief  Enable ADC, start conversion of regular group and transfer result through DMA.
