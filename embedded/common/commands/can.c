@@ -70,9 +70,6 @@ command_status do_can(int argc, char *argv[]) {
         	return can_listen();
 	}
 
-	if (argc == 2 || argc == 3 || argc == 4) return USAGE;
-
-    
 	if (!strcmp("send", argv[1])) {
 		
 		char * str;
@@ -117,7 +114,7 @@ command_status do_can(int argc, char *argv[]) {
         hb_torque = atoi(argv[2]);
         /* TESTING */
         printf( "Torque= %d nm\r\n", hb_torque);
-    
+   	return CMD_SUCCESS; 
     } 
     if(!strcmp("hb_next", argv[1])){
         switch( hb_status){
@@ -131,7 +128,7 @@ command_status do_can(int argc, char *argv[]) {
                 break;
             case PRE_RUN:
                 printf( "Heartbeat Status: Forward\r\n");
-                hb_status = PRE_RUN;
+                hb_status = FORWARD;
                 break;
             case FORWARD:
                 printf( "Heartbeat Status: Spin Down\r\n");
@@ -142,7 +139,7 @@ command_status do_can(int argc, char *argv[]) {
                 hb_status = DISCHARGE; 
                 break;
             case DISCHARGE:
-                printf( "Heartbeat Status: Idle\r\n");
+                printf( "Heartbeat Status: Post Run\r\n");
                 hb_status = POST_RUN;
                 break;
             case POST_RUN:
@@ -152,6 +149,7 @@ command_status do_can(int argc, char *argv[]) {
                 printf("Unknown Heartbeat state.\r\n" );
                 break;
         }
+	return CMD_SUCCESS;
     }
 
 	if (argc == 5) return USAGE; 
