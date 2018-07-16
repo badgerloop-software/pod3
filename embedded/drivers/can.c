@@ -197,12 +197,6 @@ HAL_StatusTypeDef can_send_intermodule(
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	
 	uint8_t data[8];
-	data[2] = 2;
-	data[3] = 3;
-	data[4] = 4;
-	data[5] = 5;
-	data[6] = 6;
-	data[7] = 7;
 	switch (board) {
 		case DASH:
 			return HAL_ERROR;
@@ -290,8 +284,9 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				break;
 			case NAV_TAPE:
-				set_retro(pod_data, data[3]);
-				break;
+				set_retro(pod_data, data[2]);
+                set_lim(pod_data, data);
+                break;
 			case NAV_SHOULD_STOP:
 				break;
 			case NAV_PRES_1:

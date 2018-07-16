@@ -21,6 +21,21 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
+void set_lim(Pod_Data_Handle *podData, uint8_t *data) {
+    podData->lim1.ui8data = data[3];
+    podData->lim2.ui8data = data[4];
+    podData->lim3.ui8data = data[5];
+	
+    podData->lim1.timestamp = time(NULL);
+	podData->lim1.freshness = FRESH;
+
+	podData->lim2.timestamp = time(NULL);
+	podData->lim2.freshness = FRESH;
+
+	podData->lim3.timestamp = time(NULL);
+	podData->lim3.freshness = FRESH;
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	harvest_honeywell(pod_data);	
