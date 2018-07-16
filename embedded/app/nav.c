@@ -9,6 +9,7 @@
 #include "solenoid.h"
 #include "can.h"
 #include "nav_data.h"
+#include "exti.h"
 
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
@@ -18,18 +19,7 @@
 
 const int board_type = NAV;
 extern volatile unsigned int ticks;
-Nav_Data navData = {
-	.solenoids = {
-		.solenoid_1 = {"prim_braking_1", NOT_ACTUATED},
-		.solenoid_2 = {"prim_braking_2", NOT_ACTUATED},
-		.solenoid_4 = {"sec_venting",    NOT_ACTUATED},
-		.solenoid_6 = {"sec_braking_1",  NOT_ACTUATED},
-		.solenoid_7 = {"sec_braking_2",  NOT_ACTUATED}
-	},
-	.retros = {0, 0, 0, 0},
-	.motion = {0, 0, 0, 0, 0},
-	.linePressures = {0, 0, 0, 0, 0, 0, 0, 0}
-};
+extern Nav_Data navData;
 
 /* Nucleo 32 I/O */
 
@@ -101,7 +91,30 @@ int nav_init(void) {
 
 	/* nav specific initializations */
 
-	return 0;
+    GPIO_TypeDef *gpioa = GPIOA;
+     
+    /* Retro 1 is on pin PA0
+     * Retro 2 is on pin PA1
+     * Retro 3 is on pin PA5 */
+
+    /* EXTI Init */ 
+    //Each Pin falling-edge interrupt enabled
+
+    //Pin 0 EXTI Config (RETRO1)
+    exti_config(gpioa, 0, 0, 1, 1);
+    //Pin 1 EXTI Config (RETRO2)
+    exti_config(gpioa, 1, 0, 1, 1);
+    //Pin 5 EXTI Config (RETRO3)
+    exti_config(gpioa, 5, 0, 1, 1);
+     
+    //Pin 3 EXTI Config (LIM1)
+    exti_config(gpioa, 3, 0, 1, 1);
+    //Pin 6 EXTI Config (LIM2)
+    exti_config(gpioa, 6, 0, 1, 1);
+    //Pin 7 EXTI Config (LIM3)
+    exti_config(gpioa, 7, 0, 1, 1);
+    
+    return 0;
 }
 
 int main(void) {
