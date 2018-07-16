@@ -80,8 +80,7 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
 
     if(board_type==NAV) {
 
-    } // end NAV_MODULE
-
+    }//end NAV module
     if(board_type==DASH) {
         can_heartbeat_fault();
         //can_heartbeat_handler( &can_handle );
