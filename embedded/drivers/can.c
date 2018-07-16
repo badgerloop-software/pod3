@@ -60,52 +60,6 @@ void can_heartbeat_fault(){
 	return;
 }
 
-void can_heartbeat_next(){
-	
-	switch( hb_status){
-   		case IDLE_MSG: 
-        	printf( "Heartbeat Status: Clear Faults\r\n");
-            hb_status = FAULTS_CLEARED;
-            break;
-        case FAULTS_CLEARED:
-            printf( "Heartbeat Status: Pre-Run\r\n");
-        	hb_status = PRE_RUN;
-            break;
-        case PRE_RUN:
-        	printf( "Heartbeat Status: Forward\r\n");
-            hb_status = FORWARD;
-            break;
-        case FORWARD:
-            printf( "Heartbeat Status: Spin Down\r\n");
-            hb_status = SPIN_DOWN;
-            break;
-        case SPIN_DOWN:
-            printf( "Heartbeat Status: Discharge\r\n");
-            hb_status = DISCHARGE; 
-            break;
-        case DISCHARGE:
-            printf( "Heartbeat Status: Post Run\r\n");
-            hb_status = POST_RUN_MSG;
-            break;
-        case POST_RUN_MSG:
-            printf("Heartbeat Status: Post Run\r\n");
-            break;
-        case FAULT:
-            printf("Heartbeat Status: Discharge\r\n");
-            break;
-        default: 
-            printf("Unknown Heartbeat state.\r\n" );
-            break;
-	}
-
-}
-
-/* Should only be used for going into Error States, otherwise can_heartbeat_next should be used */
-void can_heartbeat_fault(){
-	hb_status = FAULT;
-	return;
-}
-
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
 	
 	int i = 0;
