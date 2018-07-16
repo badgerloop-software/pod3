@@ -17,7 +17,7 @@ typedef struct {
 	int8_t accX;
 	int8_t accY;
 	int8_t accZ;
-} Motion_Values;
+} IMU;
 
 typedef struct {
 	uint16_t pres_1;
@@ -34,7 +34,7 @@ typedef struct {
 	Solenoid_States   solenoids;
 	Pressure_Values   linePressures;
 	Retro_Values      retros;
-	Motion_Values     motion;
+	IMU     motion;
 } Nav_Data;
 
 int nav_DAQ(Nav_Data*);
