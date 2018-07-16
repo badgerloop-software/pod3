@@ -192,6 +192,7 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	uint8_t data[8];
 	switch (board) {
 		case DASH:
+			state_message_set(data);
 			if (can_send_intermodule(DASH, NAV, CURR_STATE, data) != HAL_OK)
 				return HAL_ERROR;
 			if (can_send_intermodule(DASH, PV, CURR_STATE, data) != HAL_OK)

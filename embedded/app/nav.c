@@ -11,7 +11,7 @@
 #include "can.h"
 #include "nav_data.h"
 #include "exti.h"
-
+#include "state_machine.h"
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
 #define STATE_INTERVAL  100 
@@ -118,6 +118,7 @@ int nav_init(void) {
     return 0;
 }
 
+extern state_t state_handle;
 int main(void) {
 
 	PC_Buffer *rx;
@@ -134,6 +135,7 @@ int main(void) {
 	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
+		if (can_read() == HAL_OK) board_can_message_parse(BADGER_CAN_ID, RxData);
 		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (nav_DAQ(&navData)) printf("DAQ Failure");
@@ -141,6 +143,7 @@ int main(void) {
 		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
 			iox_start_read();
 			lastState = ticks;
+			//printf("NAV STATE: %u\r\n", state_handle.curr_state); 
 			//state_machine_handler();
 			//check if new state is needed
 		}

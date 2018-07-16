@@ -96,7 +96,7 @@ int main(void) {
 		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
 			lastTelem = ticks;
 			send_data(&podData);
-			//board_telemetry_send(board_type);
+			board_telemetry_send(board_type);
 			//CCP sends telem to Pi
 		}
 		if (((ticks + 25) % CTRL_INTERVAL == 0) && lastHrtbt != ticks) {
