@@ -921,6 +921,7 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t
       __HAL_ADC_ENABLE_IT(hadc, ADC_IT_OVR);
       
       /* Start the DMA channel */
+<<<<<<< 69002c1880fc0971e219e6b3cf60fef83528f04b
       //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
       //HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&tmpADC_Common->CDR, (uint32_t)pData, Length);
           
@@ -1013,8 +1014,6 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStop_DMA(ADC_HandleTypeDef* hadc)
     /* while DMA transfer is on going)                                        */
     /* Note: DMA channel of ADC slave should be stopped after this function   */
     /*       with HAL_ADC_Stop_DMA() API.                                     */
-    //tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
-    tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
     //tmp_hal_status = HAL_DMA_Abort(hadc->DMA_Handle);
     
     /* Check if DMA channel effectively disabled */
