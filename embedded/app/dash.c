@@ -24,7 +24,9 @@ Pod_Data_Handle podData = {
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
-	 
+     .lim1 = {"lim1", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+     .lim2 = {"lim2", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+     .lim3 = {"lim3", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
 };
 
 /* Nucleo 32 I/O */
