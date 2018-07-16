@@ -18,7 +18,7 @@ let chatSetup = function () {
 
 const SENSORS = [
 	"STOPPING_DISTANCE",
-	"STRIP_COUNT",
+	"RETRO",
 	"POSITION",
 	"VELOCITY",
 	"ACCELERATION",
@@ -41,7 +41,7 @@ const SENSORS = [
 	"SENSOR_3"
 ];
 
-const url = 'mongodb://192.168.1.112:27017';
+const url = 'mongodb://192.168.2.112:27017';
 module.exports.url = url;
 
 let chatClient = function () {

@@ -37,7 +37,9 @@ app.get('/sensor/:sensor', function (req, res) {
 		// Checks if the request is a valid sensor
 		if (DBManager.SENSORS.includes(sensor)) {
 			DBManager.viewData(db, sensor.toLowerCase(), (data) => {
-					data.forEach((elem) => jsondata[sensor.toLowerCase()] = elem);
+					data.forEach((elem) => {
+							elem.sensor_data = elem.sensor_data[elem.sensor_data.length - 1];
+							jsondata[sensor.toLowerCase()] = elem});
 		});
 			setTimeout(() => res.json(jsondata), 10);	// Delay because otherwise node jumps to the end
 		} else {
