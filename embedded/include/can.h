@@ -23,7 +23,8 @@ typedef enum{
     FORWARD,        //Commands motor forward
     SPIN_DOWN,      //Same message as IDLE, but represents slowing down
     DISCHARGE,      //Discharging capacitors after the run
-    POST_RUN        //Also same as IDLE, but represents post run
+    POST_RUN,       //Also same as IDLE, but represents post run
+    FAULT           //Also same as IDLE, but represents falt state
 }heartbeat_msg_t;
 
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan );
