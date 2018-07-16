@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "current_sense.h"
 #include "stm32l4xx_hal_adc.h"
+#include "stm32l4xx_hal_adc_ex.h"
 
 extern ADC_HandleTypeDef adc_handle;
 
