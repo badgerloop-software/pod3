@@ -12,5 +12,8 @@ SRCS += common/state_handlers.c
 SRCS += common/state_machine.c
 SRCS += common/solenoid.c
 SRCS += common/dashboard_data.c
+SRCS += common/nav_data.c
+SRCS += common/pv_data.c
+SRCS += common/data_set.c
 
 include common/commands/conf.mk

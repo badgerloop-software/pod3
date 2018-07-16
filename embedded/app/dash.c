@@ -11,16 +11,18 @@
 #include "can.h"
 
 #define BLINK_INTERVAL	250
+#define CTRL_INTERVAL   100
 
 const int board_type = DASH;
 
-Pod_Data_Handle pod_data = {
+Pod_Data_Handle podData = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
 	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
 };
 
 /* Nucleo 32 I/O */
@@ -73,13 +75,33 @@ int main(void) {
 
 	post("Dashboard");
 	printPrompt();
-
+	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
+		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
+			lastDAQ = ticks;
+			if (dash_DAQ(&podData)) printf("DAQ Failure");
+		}	
+		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
+			lastState = ticks;
+			//state_machine_logic();
+			//check if new state is needed
+		}
+		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
+			lastTelem = ticks;
+			send_data(&podData);
+			//board_telemetry_send(board_type);
+			//CCP sends telem to Pi
+		}
+		if (((ticks + 25) % CTRL_INTERVAL == 0) && lastHrtbt != ticks) {
+			lastHrtbt = ticks;
+			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
+			//Nav sends heartbeat
+		}
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
-		send_data(&pod_data);
 		blink_handler(BLINK_INTERVAL);
 	}
+
 
 	return 0;
 }

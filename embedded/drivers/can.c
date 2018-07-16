@@ -2,6 +2,8 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
+#include <dashboard_data.h>
+#include "data_set.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -17,11 +19,10 @@ uint32_t can_message_available(uint32_t RxFifo) {
 HAL_StatusTypeDef can_send(
 	uint32_t id, uint32_t TxMailbox, size_t length, uint8_t *data
 ) {
-	HAL_StatusTypeDef retval = HAL_ERROR;
+	HAL_StatusTypeDef retval = HAL_OK;
 
 	TxHeader.StdId = id;
 
-	/* TODO: why are we doing this? */
 	if (length % 2 == 1) {
 		TxHeader.DLC = (length / 2) + 1;
 	} else {
@@ -30,10 +31,7 @@ HAL_StatusTypeDef can_send(
 	
 	if (HAL_CAN_GetTxMailboxesFreeLevel(&can_handle)) {
 		retval = HAL_CAN_AddTxMessage(&can_handle, &TxHeader, data, &TxMailbox);
-		if (retval != HAL_OK)
-			return retval;
-	} else return HAL_ERROR;
-
+	}
 	return retval;
 }
 
@@ -68,32 +66,67 @@ HAL_StatusTypeDef can_send_intermodule(
 	data[0] = to_from_id;
 	data[1] = message_id;
 
-	retval = can_send(BADGER_CAN_ID, 0, 8, data);
+	retval = can_send(BADGER_CAN_ID, 0, 16, data);
+	if(retval != HAL_OK){
+		printf("RETVAL %d", retval);
+	}
 	return retval;
 }
 
 HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
+	
+	uint8_t data[8];
+	data[2] = 2;
+	data[3] = 3;
+	data[4] = 4;
+	data[5] = 5;
+	data[6] = 6;
+	data[7] = 7;
 	switch (board) {
 		case DASH:
-			//TODO dash heartbeat
-			//TODO RMS heartbeat
 			return HAL_ERROR;
 			break;
 		case NAV:
-			//TODO nav heartbeat
-			//TODO nav imu,
-			//TODO nav retros/velocity
-			//TODO nav pressure 1
-			//TODO nav pressure 2
-			//TODO nav pressure 3
-			//TODO nav solenoid 
-			//TODO nav should_stop heartbeat
-			return HAL_ERROR;
+		    /* Update data, and send out */
+            nav_tape_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+				return HAL_ERROR;
+            
+            nav_should_stop_set(data);
+            if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+				return HAL_ERROR;
+			
+            nav_pressure1_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
+				return HAL_ERROR;
+			
+            nav_pressure2_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
+				return HAL_ERROR;
+			
+            nav_pressure3_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
+				return HAL_ERROR;
+			
+            nav_pressure4_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_4, data) != HAL_OK)
+			    return HAL_ERROR;
+			
+            nav_accel_vel_pos_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
+				return HAL_ERROR;
+			
+            return HAL_OK;
 			break;
 		case PV:
-			//TODO pv heartbeat
-			//TODO Shutdown_Circuit_Status
-			//TODO PV Pressure
+            pv_pressure_set(data);
+			if (can_send_intermodule(PV, DASH_REC, PV_PRESSURE, data) != HAL_OK) 
+				return HAL_ERROR;
+			
+            pv_shutdown_set(data);
+            if (can_send_intermodule(PV, DASH_REC, PV_SHUTDOWN_CIRCUIT_STATUS, data) != HAL_OK) 
+				return HAL_ERROR;
+
 			return HAL_ERROR;
 			break;
 		case DEV:
@@ -104,14 +137,129 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	}
 }
 
-HAL_StatusTypeDef board_telemetry_parse(uint32_t can_id, uint8_t *data){
-		BOARD_ROLE from_module = (data[0] & 0xf0) >> 4;
-		RECEIVING_BOARD to_modules = data[0] & 0xf;
-		CAN_MESSAGE_TYPE message_num = data[1];
-		
-		printf("CAN_ID: %lx FROM MODULE: %d TO MODULE: %d Message num: %d", can_id, from_module, to_modules, message_num);
+HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data_Handle *pod_data){
+	
+	RECEIVING_BOARD to_modules = data[0] & 0xf;
+	CAN_MESSAGE_TYPE message_num = data[1];
+	
+	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){
+		switch (message_num){
+			case CAN_TEST_MESSAGE:
+				break;
+			case LV_HEARTBEAT:
+				break;
+			case CCP_FAULT:
+				break;
+			case CCP_WARNING:
+				break;
+			case CCP_SOLENOID_COMMAND:
+				break;
+			case CCP_MCU_ENABLE:
+				break;
+			case CCP_RMS_POWER:
+				break;
+			case PV_WARNING:
+				break;
+			case PV_PRESSURE:
+				break;
+			case PV_SHUTDOWN_CIRCUIT_STATUS:
+				break;
+			case NAV_FAULT:
+				break;
+			case NAV_WARNING:
+				break;
+			case NAV_TAPE:
+				set_retro(pod_data, data[3]);
+				break;
+			case NAV_SHOULD_STOP:
+				break;
+			case NAV_PRES_1:
+				break;
+			case NAV_PRES_2:
+				break;
+			case NAV_PRES_3:
+				break;
+			case NAV_PRES_4:
+				break;
+			case NAV_SOLENOID_1:
+				break;
+			case NAV_ACCEL_VEL_POS:
+				break;
+			}
+		}
+	return HAL_OK;
+}
 
-		return HAL_ERROR;
+HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
+	
+	RECEIVING_BOARD to_modules = data[0] & 0xf;
+	CAN_MESSAGE_TYPE message_num = data[1];
+
+	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){	
+		switch (message_num) {
+			case CAN_TEST_MESSAGE:
+				printf("CAN TEST\r\n");
+				break;
+			case LV_HEARTBEAT:
+				printf("HEARTBEAT\r\n");
+				break;
+			case CCP_FAULT:
+				printf("CCP FAULT\r\n");
+				break;
+			case CCP_WARNING:
+				printf("CCP Warning");
+			    break;
+            case CCP_SOLENOID_COMMAND:
+				printf("CCP_SOLENOID_COMMAND\r\n");
+				break;
+			case CCP_MCU_ENABLE:
+				printf("CCP MCU ENABLE\r\n");
+				break;
+			case CCP_RMS_POWER:
+				printf("RMS POWER\r\n");
+				break;
+			case PV_WARNING:
+				printf("PV_SHUTDOWN_CIRCUIT_STATUS\r\n");
+				break;
+			case PV_PRESSURE:
+				printf("PV PRESSURE\r\n");
+				break;
+			case PV_SHUTDOWN_CIRCUIT_STATUS:
+				printf("Shutdown circuit status");
+				break;
+			case NAV_FAULT:
+				printf("nav_fault\r\n");
+				break;
+			case NAV_WARNING:
+				printf("NAV WARNING\r\n");
+				break;
+			case NAV_TAPE:
+				printf("NAV_TAPE\r\n");
+				break;
+			case NAV_SHOULD_STOP:
+				printf("NAV_SHOULD_STOP\r\n");
+				break;
+			case NAV_PRES_1:
+				printf("NAV_PRES_1\r\n");
+				break;
+			case NAV_PRES_2:
+				printf("NAV_PRES_2\r\n");
+				break;
+			case NAV_PRES_3:
+				printf("NAV_PRES_3\r\n");
+				break;
+			case NAV_PRES_4:
+				printf("NAV_PRES_4\r\n");
+				break;
+			case NAV_SOLENOID_1:
+				printf("NAV_SOLENOID_1\r\n");
+				break;
+			case NAV_ACCEL_VEL_POS:
+				printf("NAV_ACCEL_VEL_POS\r\n");
+				break;
+			}
+		}
+	return HAL_OK;
 }
 
 HAL_StatusTypeDef can_listen(void){
@@ -129,9 +277,9 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 	CAN_MESSAGE_TYPE message_num = data[1];
 
 	if (id == 0x555){
-		printf("CAN ID: %lx (BADGER CAN ID)\r\n", id);
+		printf("CAN ID:          %lx (BADGER CAN ID)\r\n", id);
 	} else {
-		printf("CAN ID: %lx\r\n", id);
+		printf("CAN ID:          %lx\r\n", id);
 	}
 
 	printf("TO: 		");
@@ -186,6 +334,58 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 		case CAN_TEST_MESSAGE:
 			printf("CAN TEST\r\n");
 			break;
+		case LV_HEARTBEAT:
+			printf("HEARTBEAT\r\n");
+			break;
+		case CCP_FAULT:
+			printf("CCP FAULT\r\n");
+			break;
+		case CCP_WARNING:
+			printf("CCP_SOLENOID_COMMAND\r\n");
+			break;
+		case CCP_MCU_ENABLE:
+			printf("CCP MCU ENABLE\r\n");
+			break;
+		case CCP_RMS_POWER:
+			printf("RMS POWER\r\n");
+			break;
+		case PV_WARNING:
+			printf("PV_SHUTDOWN_CIRCUIT_STATUS\r\n");
+			break;
+		case PV_PRESSURE:
+			printf("PV PRESSURE\r\n");
+			break;
+		case NAV_FAULT:
+			printf("nav_fault\r\n");
+			break;
+		case NAV_WARNING:
+			printf("NAV WARNING\r\n");
+			break;
+		case NAV_TAPE:
+			printf("NAV_TAPE\r\n");
+			break;
+		case NAV_SHOULD_STOP:
+			printf("NAV_SHOULD_STOP\r\n");
+			break;
+		case NAV_PRES_1:
+			printf("NAV_PRES_1\r\n");
+			break;
+		case NAV_PRES_2:
+			printf("NAV_PRES_2\r\n");
+			break;
+		case NAV_PRES_3:
+			printf("NAV_PRES_3\r\n");
+			break;
+		case NAV_PRES_4:
+			printf("NAV_PRES_4\r\n");
+			break;
+		case NAV_SOLENOID_1:
+			printf("NAV_SOLENOID_1\r\n");
+			break;
+		case NAV_ACCEL_VEL_POS:
+			printf("NAV_ACCEL_VEL_POS\r\n");
+			break;
+
 		default:
 			printf("UNKNOWN\r\n");
 			break;
@@ -202,15 +402,21 @@ HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
 	switch (id){
 		case (BMS_PACK_STATE_MESSAGE):
 			printf("data 0: %x", data[0]);
-		case (BMS_PACK_TEMP_MESSAGE):
+		    break;
+        case (BMS_PACK_TEMP_MESSAGE):
+		    break;
 
 		case (BMS_RELAY_STATE_MESSAGE):
+		    break;
 
 		case (BMS_PACK_CCL):
+		    break;
 
 		case (BMS_CELL_VOLT_MESSAGE):
+		    break;
 
 		case (BMS_SOC_MESSAGE):
+		    break;
 
 //		case (BMS_PACK_CURRENT_MESSAGE):
 
@@ -219,6 +425,7 @@ HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
 		default:
 			return HAL_ERROR;
 	}
+    return HAL_OK;
 }
 
 HAL_StatusTypeDef can_init(BOARD_ROLE role) {

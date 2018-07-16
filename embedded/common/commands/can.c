@@ -63,8 +63,11 @@ command_status do_can(int argc, char *argv[]) {
 	}
 
 	if (!strcmp("listen", argv[1])){
-        
-        	return can_listen();
+       		while(1){ 
+			if(can_listen() != HAL_OK)
+			       return ERROR;	
+		}	
+		return can_listen();
 	}
 
 	if (argc == 2 || argc == 3 || argc == 4) return USAGE;
