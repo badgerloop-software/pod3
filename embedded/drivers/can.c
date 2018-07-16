@@ -610,7 +610,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case DASH:
 			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh 	= 0x1 << 5;
+			sFilterConfig0.FilterMaskIdHigh 	= 0x0000;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case NAV:
