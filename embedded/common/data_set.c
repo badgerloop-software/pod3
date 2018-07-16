@@ -13,15 +13,9 @@ extern Nav_Data navData;
  * FROM: NAV
  *
  * Data Byte 2: Voted Retro Count
-<<<<<<< 2ffc22610a003595eb429f2c327c9ccb0f9774ed
- * Data Byte 3: Lim 1
- * Data Byte 4: Lim 2
- * Data Byte 5: Lim 3
-=======
  * Data Byte 3: Limit Switch 1 GPIO Value
  * Data Byte 4: Limit Switch 2 GPIO Value
  * Data Byte 5: Limit Switch 3 GPIO Value
->>>>>>> More limit switch stuff
  * Data Byte 6: 0
  * Data Byte 7: 0 */
 void nav_tape_set(uint8_t data[]){
