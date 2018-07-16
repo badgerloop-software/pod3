@@ -11,6 +11,127 @@ CAN_TxHeaderTypeDef TxHeader;
 uint8_t TxData[8];
 uint8_t RxData[8];
 extern uint8_t board_num;
+volatile uint8_t hb_torque;
+volatile heartbeat_msg_t hb_status = IDLE;
+
+int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
+	
+	int i = 0;
+	TxHeader.StdId = 0xC0; //Always to same CAN ID
+	TxHeader.IDE = 0; //Standard ID length
+	TxHeader.RTR = 0; //Always data frame
+	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint32_t TxMailbox = 0;
+	
+	uint8_t TxData[8];
+	
+	for(i = 0; i < 8; i++){
+		TxData[i] = 0;
+	}
+
+	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
+		return 1; //Returns 1 on error
+	} else {
+		return 0; //Returns 0 on success
+	}
+}
+
+int can_heartbeat_clear_faults( CAN_HandleTypeDef *hcan){
+	
+	TxHeader.StdId = 0xC1; //Always to same CAN ID
+	TxHeader.IDE = 0; //Standard ID length
+	TxHeader.RTR = 0; //Always data frame
+	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint8_t TxData[8];
+
+	uint32_t TxMailbox = 0;
+		
+	TxData[0] = 0x14;
+	TxData[1] = 0x00;
+	TxData[2] = 0x01;
+	TxData[3] = 0x00;
+	TxData[4] = 0x00;
+	TxData[5] = 0x00;
+	TxData[6] = 0x00;
+	TxData[7] = 0x00;
+
+	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
+		return 1; //Returns 1 on error
+	} else {
+		return 0; //Returns 0 on success
+	}
+}
+
+int can_heartbeat_forward( CAN_HandleTypeDef *hcan ){
+	
+	uint32_t TxMailbox = 0;
+	TxHeader.StdId = 0xC0; //Always to same CAN ID
+	TxHeader.IDE = 0; //Standard ID length
+	TxHeader.RTR = 0; //Always data frame
+	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint8_t TxData[8];
+	
+	//Torque is stored in the first byte	
+	TxData[0] = (hb_torque*10);
+	TxData[1] = 0x00;
+	TxData[2] = 0x00;
+	TxData[3] = 0x00;
+	TxData[4] = 0x00;
+	TxData[5] = 0x01;
+	TxData[6] = 0x00;
+	TxData[7] = 0x00;
+
+	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
+		return 1; //Returns 1 on error
+	} else {
+		return 0; //Returns 0 on success
+	}
+}
+
+int can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
+	
+	TxHeader.StdId = 0xC0; //Always to same CAN ID
+	TxHeader.IDE = 0; //Standard ID length
+	TxHeader.RTR = 0; //Always data frame
+	TxHeader.DLC = (uint8_t) 8; //Always 8
+	uint8_t TxData[8];
+	uint32_t TxMailbox = 0;
+
+	//Discharge Message Data
+	TxData[0] = 0x00;
+	TxData[1] = 0x00;
+	TxData[2] = 0x00;
+	TxData[3] = 0x00;
+	TxData[4] = 0x01;
+	TxData[5] = 0x02;
+	TxData[6] = 0x00;
+	TxData[7] = 0x00;
+
+	if(HAL_CAN_AddTxMessage(hcan, &TxHeader, TxData, &TxMailbox)!= HAL_OK){
+		return 1; //Returns 1 on error
+	} else {
+		return 0; //Returns 0 on success
+	}
+}
+
+int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
+	
+    if( hb_status == FAULTS_CLEARED ){
+        can_heartbeat_clear_faults( hcan);
+	    hb_status = PRE_RUN;
+    }
+	else if( hb_status == FORWARD){
+        can_heartbeat_forward( hcan);
+	}
+	else if( hb_status == DISCHARGE ){
+		can_heartbeat_discharge( hcan);
+    }
+	else{
+		can_heartbeat_idle( hcan);
+	}
+    return 0;
+
+}
 
 uint32_t can_message_available(uint32_t RxFifo) {
 	return HAL_CAN_GetRxFifoFillLevel(&can_handle, RxFifo);
