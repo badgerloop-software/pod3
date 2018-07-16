@@ -282,11 +282,11 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_WARNING:
 				break;
-			case NAV_TAPE:
-				printf("%u\r\n", data[2]);
-				fflush(stdout);
-				set_retro(pod_data, data[2]);
-				break;
+			//case NAV_TAPE:
+			//	printf("%u\r\n", data[2]);
+			//	fflush(stdout);
+			//	set_retro(pod_data, data[2]);
+			//	break;
 			case NAV_SHOULD_STOP:
 				break;
 			case NAV_PRES_1:
@@ -298,7 +298,10 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_PRES_4:
 				break;
 			case NAV_SOLENOID_1:
+				printf("%u\r\n", data[2]);
 				set_solenoid_value(pod_data, data[2]);
+				break;
+			case NAV_TAPE: //temp
 				break;
 			case NAV_ACCEL_VEL_POS:
 				break;

@@ -56,16 +56,16 @@ void send_data(Pod_Data_Handle *pod_data) {
 
 	if (pod_data->solenoids.freshness == FRESH) {
 		pod_data->solenoids.freshness = NOT_FRESH;
-		Sensor_Data sol = {"solenoid_1", 0, (pod_data->solenoids.ui8data & 0x1), 0, 0, 0, DT_UINT8};
-		char *sol1str = formatPacket(sol);
-		Sensor_Data sol = {"solenoid_2", 0, (pod_data->solenoids.ui8data & 0x2) >> 1, 0, 0, 0, DT_UINT8};
-		char *sol2str = formatPacket(sol);
-		Sensor_Data sol = {"solenoid_4", 0, (pod_data->solenoids.ui8data & 0x8) >> 3, 0, 0, 0, DT_UINT8};
-		char *sol4str = formatPacket(sol);
-		Sensor_Data sol = {"solenoid_5", 0, (pod_data->solenoids.ui8data & 0x20) >> 5, 0, 0, 0, DT_UINT8};
-		char *sol5str = formatPacket(sol);
-		Sensor_Data sol = {"solenoid_6", 0, (pod_data->solenoids.ui8data & 0x40) >> 6, 0, 0, 0, DT_UINT8};
-		char *sol6str = formatPacket(sol);
+		Sensor_Data sol1 = {"solenoid_1", 0, (pod_data->solenoids.ui8data & 0x1), 0, 0, 0, DT_UINT8};
+		char *sol1str = formatPacket(&sol1);
+		Sensor_Data sol2 = {"solenoid_2", 0, (pod_data->solenoids.ui8data & 0x2) >> 1, 0, 0, 0, DT_UINT8};
+		char *sol2str = formatPacket(&sol2);
+		Sensor_Data sol4 = {"solenoid_4", 0, (pod_data->solenoids.ui8data & 0x8) >> 3, 0, 0, 0, DT_UINT8};
+		char *sol4str = formatPacket(&sol4);
+		Sensor_Data sol5 = {"solenoid_5", 0, (pod_data->solenoids.ui8data & 0x20) >> 5, 0, 0, 0, DT_UINT8};
+		char *sol5str = formatPacket(&sol5);
+		Sensor_Data sol6 = {"solenoid_6", 0, (pod_data->solenoids.ui8data & 0x40) >> 6, 0, 0, 0, DT_UINT8};
+		char *sol6str = formatPacket(&sol6);
 
 		uart_send(sol1str);
 		uart_send(sol2str);
