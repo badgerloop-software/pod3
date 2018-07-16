@@ -195,7 +195,8 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			return HAL_ERROR;
 			break;
 		case NAV:
-		    /* Update data, and send out */
+		    
+            /* Update data, and send out */
             nav_tape_set(data);
 		    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
