@@ -19,6 +19,7 @@ int dash_DAQ(Pod_Data_Handle *podData) {
 }
 
 void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
+	//printf("RETRO: %u\r\n", retroVal);
 	podData->retro.ui8data = retroVal;
 	podData->retro.timestamp = time(NULL);
 	podData->retro.freshness = FRESH;
@@ -45,7 +46,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 
 	if (pod_data->retro.freshness == FRESH) {
 		pod_data->retro.freshness = NOT_FRESH;
-		char *dataToSend = formatPacket(&(pod_data->lv_battery_temp));
+		char *dataToSend = formatPacket(&(pod_data->retro));
 		uart_send(dataToSend);
 	}
 }

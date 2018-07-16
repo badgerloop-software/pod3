@@ -18,9 +18,8 @@ extern Nav_Data navData;
  * Data Byte 7: 0 */
 void nav_tape_set(uint8_t data[]){
     int i;
-    
     //TODO: Do error checking with badRetro
-    data[2] = navData.retros.retroAgreement;
+    data[2] = 14;//navData.retros.retroAgreement;
     
     for ( i = 3; i < 8; i++ ){
         data[i] = 0;

@@ -141,12 +141,12 @@ int main(void) {
 		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
 			iox_start_read();
 			lastState = ticks;
-			//state_machine_logic();
+			//state_machine_handler();
 			//check if new state is needed
 		}
 		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {
 			lastTelem = ticks;
-			//board_telemetry_send(board_type);
+			board_telemetry_send(board_type);
 			//Nav sends telem to CCP
 		}
 		if (((ticks + 25) % HRTBT_INTERVAL == 0) && lastHrtbt != ticks) {

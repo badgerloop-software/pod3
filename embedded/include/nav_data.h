@@ -17,7 +17,7 @@ typedef struct {
 	int8_t accX;
 	int8_t accY;
 	int8_t accZ;
-} IMU;
+} Motion_Values;
 
 typedef struct {
 	uint16_t pres_1;
