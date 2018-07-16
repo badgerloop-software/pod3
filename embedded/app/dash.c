@@ -9,6 +9,8 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
+#include "adc.h"
+#include "current_sense.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -56,7 +58,10 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
-	
+
+    adc_init();
+    current_sense_init();
+    adc_start();
 
 	return 0;
 }
