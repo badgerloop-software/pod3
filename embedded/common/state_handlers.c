@@ -133,7 +133,6 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-		set_solenoid
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
