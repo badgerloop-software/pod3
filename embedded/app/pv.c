@@ -76,7 +76,7 @@ int main(void) {
 	while (1) {
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {			
 			lastDAQ = ticks;
-			pv_DAQ(&pvData);
+			//pv_DAQ(&pvData);
 
 			//check if new state is needed
 		}
