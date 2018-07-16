@@ -5,6 +5,7 @@
 #include "console.h"
 #include "usart.h"
 #include "can.h"
+#include "state_machine.h"
 
 #define BLINK_INTERVAL	100
 
@@ -18,6 +19,7 @@ inline void printPrompt(void) {
 int dev_init(void) {
 
 	/* dev specific initializations */
+	initialize_state_machine(IDLE);
 
 	return 0;
 }
@@ -35,7 +37,32 @@ int main(void) {
 	post("Developmental");
 	printPrompt();
 
+	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
+	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
 	while (1) {
+
+		currDAQ = (ticks + 20) / 100;
+		currState = (ticks + 40) / 100;
+		currTelem = (ticks + 60) / 100;
+		currHrtbt = (ticks + 80) / 100;
+	
+		if( currDAQ != lastDAQ ){
+			lastDAQ = currDAQ;
+		}	
+		if( currState != lastState ){
+			state_machine_handler();
+			lastState = currState;
+		}	
+		if( currTelem != lastTelem ){
+				
+			lastTelem = currTelem;
+		}	
+		if( currHrtbt != lastHrtbt ){
+			
+			lastHrtbt = currHrtbt;
+		}	
+		
+
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 		can_read();
