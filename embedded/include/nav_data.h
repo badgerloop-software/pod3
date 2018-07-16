@@ -6,10 +6,16 @@
 
 typedef struct {
 	uint8_t topRetroCount;
-    uint8_t middleRetroCount;
+    	uint8_t middleRetroCount;
 	uint8_t bottomRetroCount;
 	uint8_t retroAgreement;
 } Retro_Values;
+
+typedef struct {
+	uint8_t limitValue1;
+    	uint8_t limitValue2;
+	uint8_t limitValue3;
+} Limit_Values;
 
 typedef struct {
 	int8_t posX;
@@ -35,7 +41,8 @@ typedef struct {
 	Pressure_Values   linePressures;
 	Retro_Values      retros;
 	Motion_Values     motion;
-    int               shouldStop;
+	Limit_Values 	  limits;
+    	int               shouldStop;
 } Nav_Data;
 
 int nav_DAQ(Nav_Data*);
