@@ -322,7 +322,7 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case CCP_WARNING:
 				printf("CCP Warning");
-			    break;
+                break;
             case CCP_SOLENOID_COMMAND:
 				printf("CCP_SOLENOID_COMMAND\r\n");
 				break;
