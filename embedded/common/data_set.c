@@ -1,6 +1,6 @@
 #include "retro.h"
 #include "nav_data.h"
-
+#include "exti.h"
 extern Nav_Data navData;
 
 /*
@@ -11,16 +11,16 @@ extern Nav_Data navData;
  * FROM: NAV
  *
  * Data Byte 2: Voted Retro Count
- * Data Byte 3: TODO: Stalness??
- * Data Byte 4: 0
- * Data Byte 5: 0
+ * Data Byte 3: Lim 1
+ * Data Byte 4: Lim 2
+ * Data Byte 5: Lim 3
  * Data Byte 6: 0
  * Data Byte 7: 0 */
 void nav_tape_set(uint8_t data[]){
     int i;
     //TODO: Do error checking with badRetro
     data[2] = navData.retros.retroAgreement;
-    
+    //data[3] = interLine[3].count;
     for ( i = 3; i < 8; i++ ){
         data[i] = 0;
     }

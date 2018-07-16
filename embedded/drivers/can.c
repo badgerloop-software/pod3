@@ -226,6 +226,10 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
             if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
 			
+			nav_solenoid1_set(data);
+			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
+				return HAL_ERROR;
+
             return HAL_OK;
 			break;
 		case PV:
@@ -294,6 +298,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_PRES_4:
 				break;
 			case NAV_SOLENOID_1:
+				set_solenoid_value(pod_data, data[2]);
 				break;
 			case NAV_ACCEL_VEL_POS:
 				break;

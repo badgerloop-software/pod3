@@ -24,6 +24,12 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
+void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
+	podData->solenoids.ui8data = solenoidsVal;
+	podData->solenoids.timestamp = time(NULL);
+	podData->solenoids.freshness = FRESH;
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	if (pod_data->current_pressure.freshness == FRESH) {
@@ -46,6 +52,27 @@ void send_data(Pod_Data_Handle *pod_data) {
 		pod_data->retro.freshness = NOT_FRESH;
 		char *dataToSend = formatPacket(&(pod_data->retro));
 		uart_send(dataToSend);
+	}
+
+	if (pod_data->solenoids.freshness == FRESH) {
+		pod_data->solenoids.freshness = NOT_FRESH;
+		Sensor_Data sol = {"solenoid_1", 0, (pod_data->solenoids.ui8data & 0x1), 0, 0, 0, DT_UINT8};
+		char *sol1str = formatPacket(sol);
+		Sensor_Data sol = {"solenoid_2", 0, (pod_data->solenoids.ui8data & 0x2) >> 1, 0, 0, 0, DT_UINT8};
+		char *sol2str = formatPacket(sol);
+		Sensor_Data sol = {"solenoid_4", 0, (pod_data->solenoids.ui8data & 0x8) >> 3, 0, 0, 0, DT_UINT8};
+		char *sol4str = formatPacket(sol);
+		Sensor_Data sol = {"solenoid_5", 0, (pod_data->solenoids.ui8data & 0x20) >> 5, 0, 0, 0, DT_UINT8};
+		char *sol5str = formatPacket(sol);
+		Sensor_Data sol = {"solenoid_6", 0, (pod_data->solenoids.ui8data & 0x40) >> 6, 0, 0, 0, DT_UINT8};
+		char *sol6str = formatPacket(sol);
+
+		uart_send(sol1str);
+		uart_send(sol2str);
+		uart_send(sol4str);
+		uart_send(sol5str);
+		uart_send(sol6str);
+
 	}
 }
 
