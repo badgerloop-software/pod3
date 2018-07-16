@@ -17,7 +17,7 @@ volatile heartbeat_msg_t hb_status = IDLE_MSG;
 void can_heartbeat_next(){
 	
 	switch( hb_status){
-   		case IDLE_MSG: 
+   	case IDLE_MSG: 
         	printf( "Heartbeat Status: Clear Faults\r\n");
             hb_status = FAULTS_CLEARED;
             break;
@@ -164,7 +164,6 @@ int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
 	
     if( hb_status == FAULTS_CLEARED ){
         can_heartbeat_clear_faults( hcan);
-	    hb_status = PRE_RUN;
     }
 	else if( hb_status == FORWARD){
         can_heartbeat_forward( hcan);
