@@ -19,13 +19,13 @@ extern Nav_Data navData;
  * Data Byte 6: 0
  * Data Byte 7: 0 */
 void nav_tape_set(uint8_t data[]){
-    int i;
-    //TODO: Do error checking with badRetro
+    
     data[2] = navData.retros.retroAgreement;
-    //data[3] = interLine[3].count;
-    for ( i = 3; i < 8; i++ ){
-        data[i] = 0;
-    }
+    data[3] = navData.limits.limitValue1;
+    data[4] = navData.limits.limitValue2;
+    data[5] = navData.limits.limitValue3;
+    data[6] = 0;
+    data[7] = 0; 
     
     return;
 }
