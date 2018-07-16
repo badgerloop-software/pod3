@@ -23,7 +23,11 @@ typedef enum{
     FORWARD,        //Commands motor forward
     SPIN_DOWN,      //Same message as IDLE, but represents slowing down
     DISCHARGE,      //Discharging capacitors after the run
+<<<<<<< 4e6814bf96236e46bd1c44ed93479d1a9b8bfa4d
     POST_RUN_MSG,       //Also same as IDLE, but represents post run
+=======
+    POST_RUN,       //Also same as IDLE, but represents post run
+>>>>>>> Starting work on integrating RMS Heartbeat with state machine
     FAULT           //Also same as IDLE, but represents falt state
 }heartbeat_msg_t;
 
