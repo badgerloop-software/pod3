@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <adcx.h>
+#include "pcf8591.h"
 #include "i2c.h"
 
 uint8_t _i2cadc_read_val;
@@ -28,3 +29,4 @@ bool adcx_read(uint8_t addr, uint8_t * val) {
 	}
 	return true;
 }
+
