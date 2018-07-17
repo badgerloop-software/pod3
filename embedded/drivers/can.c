@@ -19,11 +19,11 @@ void can_heartbeat_next(){
 	switch( hb_status){
    	case IDLE_MSG: 
         	printf( "Heartbeat Status: Clear Faults\r\n");
-            hb_status = FAULTS_CLEARED;
+            hb_status = CLEAR_FAULTS_MSG;
             break;
         case CLEAR_FAULTS_MSG:
             printf( "Heartbeat Status: Faults Cleared\r\n");
-        	hb_status = PRE_RUN;
+        	hb_status = FAULTS_CLEARED;
             break;
         case FAULTS_CLEARED:
             printf( "Heartbeat Status: Pre-Run\r\n");
@@ -61,6 +61,7 @@ void can_heartbeat_next(){
 
 /* Should only be used for going into Error States, otherwise can_heartbeat_next should be used */
 void can_heartbeat_fault(){
+    printf("Heartbeat Status: Fault\r\n");
 	hb_status = FAULT;
 	return;
 }

@@ -604,6 +604,7 @@ void in_propulsion_start(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        
         can_heartbeat_handler( &can_handle );
 	    
         /* If we pass propulsion timeout enter braking 
@@ -712,8 +713,8 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
-        	can_heartbeat_next();
-        	can_heartbeat_handler( &can_handle );
+        	//can_heartbeat_next();
+        	//can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	printf("To state: BRAKING (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
