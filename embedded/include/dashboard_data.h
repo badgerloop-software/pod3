@@ -37,6 +37,7 @@ typedef struct {
 	Sensor_Data linePressures[8];
 } Pod_Data_Handle;
 
+void set_accel_vel_pos(Pod_Data_Handle*, int8_t, int8_t, int8_t);
 void set_pres_1_2(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_pres_3_4(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_pres_5_6(Pod_Data_Handle*, uint16_t, uint16_t);
