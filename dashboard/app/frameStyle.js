@@ -1,7 +1,9 @@
 // Author: Bloop Software
 // Brief: This has the top right menu controls
 // and other styling choices for the window itself
+const path = require("path");
 
+const url = require("url");
 const electron = require("electron");
 const closer = document.getElementById("close");
 const minimizer = document.getElementById('minimize');
@@ -41,10 +43,19 @@ brand.addEventListener('click', () => {
         width: 600,
         height: 600,
         show: false,
-        icon: __dirname + '/assets/icons/png/64x64.png'
+        icon: __dirname + '/assets/icons/png/64x64.png',
+        webPreferences: {
+            webSecurity: false,
+        }
     });
-
-    newWindow.loadURL(__dirname + "/assets/SecBrakingSchem.JPG");
-    newWindow.on('ready-to-show', () => {newWindow.show()})
+    newWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'solenoids.html'),
+        protocol: 'file:',
+        slashes: true,
+    }));
+    newWindow.on('ready-to-show', () => {
+        newWindow.focus();
+        newWindow.show();
+    });
     newWindow.on('closed', () => {newWindow = null})
 });

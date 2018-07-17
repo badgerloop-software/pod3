@@ -22,39 +22,46 @@ if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.len
 let thisChart;
 const UPDATE_TIME = 500;  // In milliseconds
 let requestLoop;
-
+let dataCache = {};
 
 function parseData(rawData, sensorName) {
-    let jsonData = JSON.parse(rawData);
-    switch (jsonData[sensorName]) {
-        case "solenoid_1":
-            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
-                comm.updater.emit("solenoid-1_deactivate") : comm.updater.emit("solenoid-1_activate");
-            break;
-
-        case "solenoid_2":
-            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
-                comm.updater.emit("solenoid-2_deactivate") : comm.updater.emit("solenoid-2_activate");
-            break;
-
-        case "solenoid_3":
-            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
-                comm.updater.emit("solenoid-3_deactivate") : comm.updater.emit("solenoid-3_activate");
-            break;
-
-        case "solenoid_4":
-            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
-                comm.updater.emit("solenoid-4_deactivate") : comm.updater.emit("solenoid-4_activate");
-            break;
-
-        case "solenoid_5":
-            jsonData[sensorName]["sensor_data"][0]["value"] == 0 ?
-                comm.updater.emit("solenoid-5_deactivate") : comm.updater.emit("solenoid-5_activate");
-            break;
-
-
+    if (!rawData || rawData === null) {
+        return dataCache[sensorName];
     }
-    return jsonData[sensorName]["sensor_data"][0]["value"];
+    let jsonData = JSON.parse(rawData);
+    if (jsonData !== "undefined") {
+        switch (jsonData[sensorName]) {
+            case "solenoid_1":
+                jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+                    comm.updater.emit("solenoid-1_deactivate") : comm.updater.emit("solenoid-1_activate");
+                break;
+
+            case "solenoid_2":
+                jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+                    comm.updater.emit("solenoid-2_deactivate") : comm.updater.emit("solenoid-2_activate");
+                break;
+
+            case "solenoid_3":
+                jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+                    comm.updater.emit("solenoid-3_deactivate") : comm.updater.emit("solenoid-3_activate");
+                break;
+
+            case "solenoid_4":
+                jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+                    comm.updater.emit("solenoid-4_deactivate") : comm.updater.emit("solenoid-4_activate");
+                break;
+
+            case "solenoid_5":
+                jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+                    comm.updater.emit("solenoid-5_deactivate") : comm.updater.emit("solenoid-5_activate");
+                break;
+
+
+        }
+        return jsonData[sensorName]["sensor_data"]["value"];
+    } else {
+        return "not_connected"
+    }
 }
 
 /*Lets each data row create a graph from itself when clicked*/
@@ -78,7 +85,8 @@ for (let i = 0; i < tableRows.length; i++) {
 /*For each data point, the data is updated when a new point comes in remotely*/
 for (let i = 0; i < dataLabels.length; i++) {
     comm.updater.on(MESSAGE_BASE + dataLabels[i].innerHTML, (data) => {
-        tableData[i].innerHTML = parseData(data, conciseLabels[i]);
+        dataCache[conciseLabels[i]] = parseData(data, conciseLabels[i]);
+        tableData[i].innerHTML = dataCache[conciseLabels[i]];
     });
 }
 
@@ -91,6 +99,7 @@ for (let i = 0; i < dataLabels.length; i++) {
         tempLabel = tempLabel.substr(0, cutOff);
     }
     conciseLabels[i] = tempLabel.split(' ').join('_').toLowerCase();
+    dataCache[conciseLabels[i]] = 0;
 }
 
 
