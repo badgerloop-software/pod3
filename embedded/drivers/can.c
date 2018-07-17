@@ -466,7 +466,7 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 
 HAL_StatusTypeDef can_listen(void){
 	HAL_StatusTypeDef retval = HAL_OK;	
-	if (can_message_available(CAN_RX_FIFO0)) {
+	if (can_message_available(CAN_RX_FIFO0) || can_message_available(CAN_RX_FIFO1) ) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		print_incoming_can_message(RxHeader.StdId, RxData);
 	} 
@@ -680,7 +680,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case PV:
 			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterMaskIdHigh		= 0x000 << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case DEV:

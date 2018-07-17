@@ -12,7 +12,7 @@
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
-
+#include "bms.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -87,6 +87,7 @@ int dash_init() {
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
+	bms_init();
 	return 0;
 }
 
