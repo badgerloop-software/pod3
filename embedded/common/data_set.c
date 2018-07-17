@@ -71,8 +71,8 @@ void nav_pressure1_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_1;
     data[3] = 0xFF & (navData.linePressures.pres_1 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_2;
-    data[4] = 0xFF & (navData.linePressures.pres_2 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_2;
+    data[5] = 0xFF & (navData.linePressures.pres_2 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     
@@ -95,8 +95,8 @@ void nav_pressure2_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_3;
     data[3] = 0xFF & (navData.linePressures.pres_3 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_4;
-    data[4] = 0xFF & (navData.linePressures.pres_4 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_4;
+    data[5] = 0xFF & (navData.linePressures.pres_4 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     
@@ -120,8 +120,8 @@ void nav_pressure3_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_5;
     data[3] = 0xFF & (navData.linePressures.pres_5 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_6;
-    data[4] = 0xFF & (navData.linePressures.pres_6 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_6;
+    data[5] = 0xFF & (navData.linePressures.pres_6 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     
@@ -145,8 +145,8 @@ void nav_pressure4_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_7;
     data[3] = 0xFF & (navData.linePressures.pres_7 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_8;
-    data[4] = 0xFF & (navData.linePressures.pres_8 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_8;
+    data[5] = 0xFF & (navData.linePressures.pres_8 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     

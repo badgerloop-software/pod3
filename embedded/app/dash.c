@@ -24,8 +24,29 @@ Pod_Data_Handle podData = {
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
-	 
+	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+	 .linePressures = {{"line_pres_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_3", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 			   {"line_pres_4", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_5", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_6", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+					   {"line_pres_7", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_8", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
+	 .BMSdata = {{"packCurrent", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"packVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"packDCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"packCCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"packResistance", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"packHealth", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"packOpenVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"packCycles", 0, 0, 0 ,0, NOT_FRESH, DT_UINT8},
+		 {"packAh", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"inputVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"Soc", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"relayStatus", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"highTemp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"lowTemp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"cellMaxVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+ 		{"cellMinVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+ 		{"cellAvgVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+ 		{"maxCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 };
 
 /* Nucleo 32 I/O */
