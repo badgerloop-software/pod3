@@ -23,8 +23,10 @@ Pod_Data_Handle podData = {
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
-	 
+	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+	 .linePressures = {{"line_pres_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_3", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 			   {"line_pres_4", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_5", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_6", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+					   {"line_pres_7", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_8", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}}
 };
 
 /* Nucleo 32 I/O */
