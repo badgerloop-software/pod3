@@ -11,7 +11,7 @@ CAN_TxHeaderTypeDef TxHeader;
 uint8_t TxData[8];
 uint8_t RxData[8];
 extern uint8_t board_num;
-volatile uint8_t hb_torque;
+volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE;
 
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
