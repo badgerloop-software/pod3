@@ -5,25 +5,33 @@
 #include "honeywell.h"
 #include "i2c.h"
 #include <time.h>
+#include "can.h"
+
 #define SEND_BUF_SIZE 128
 
 char packetBuffer[SEND_BUF_SIZE];
 
 int dash_DAQ(Pod_Data_Handle *podData) {
+//	ccp_parse_can_message(BADGER_CAN_ID, RxData, podData);	
 	harvest_honeywell(podData);
-	send_data(podData);
 	return 0;
 }
 
 void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
+	//printf("RETRO: %u\r\n", retroVal);
 	podData->retro.ui8data = retroVal;
 	podData->retro.timestamp = time(NULL);
 	podData->retro.freshness = FRESH;
 }
 
+void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
+	podData->solenoids.ui8data = solenoidsVal;
+	podData->solenoids.timestamp = time(NULL);
+	podData->solenoids.freshness = FRESH;
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
-	harvest_honeywell(pod_data);	
 	if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->current_pressure);
@@ -42,8 +50,29 @@ void send_data(Pod_Data_Handle *pod_data) {
 
 	if (pod_data->retro.freshness == FRESH) {
 		pod_data->retro.freshness = NOT_FRESH;
-		char *dataToSend = formatPacket(&(pod_data->lv_battery_temp));
+		char *dataToSend = formatPacket(&(pod_data->retro));
 		uart_send(dataToSend);
+	}
+
+	if (pod_data->solenoids.freshness == FRESH) {
+		pod_data->solenoids.freshness = NOT_FRESH;
+		Sensor_Data sol1 = {"solenoid_1", 0, (pod_data->solenoids.ui8data & 0x1), 0, 0, 0, DT_UINT8};
+		char *sol1str = formatPacket(&sol1);
+		Sensor_Data sol2 = {"solenoid_2", 0, (pod_data->solenoids.ui8data & 0x2) >> 1, 0, 0, 0, DT_UINT8};
+		char *sol2str = formatPacket(&sol2);
+		Sensor_Data sol4 = {"solenoid_4", 0, (pod_data->solenoids.ui8data & 0x8) >> 3, 0, 0, 0, DT_UINT8};
+		char *sol4str = formatPacket(&sol4);
+		Sensor_Data sol5 = {"solenoid_5", 0, (pod_data->solenoids.ui8data & 0x20) >> 5, 0, 0, 0, DT_UINT8};
+		char *sol5str = formatPacket(&sol5);
+		Sensor_Data sol6 = {"solenoid_6", 0, (pod_data->solenoids.ui8data & 0x40) >> 6, 0, 0, 0, DT_UINT8};
+		char *sol6str = formatPacket(&sol6);
+
+		uart_send(sol1str);
+		uart_send(sol2str);
+		uart_send(sol4str);
+		uart_send(sol5str);
+		uart_send(sol6str);
+
 	}
 }
 

@@ -22,7 +22,9 @@ Pod_Data_Handle podData = {
 	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
+	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}
+	 
 };
 
 /* Nucleo 32 I/O */
@@ -77,6 +79,7 @@ int main(void) {
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
+		if (can_read() == HAL_OK) ccp_parse_can_message(BADGER_CAN_ID, RxData, &podData);
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (dash_DAQ(&podData)) printf("DAQ Failure");
