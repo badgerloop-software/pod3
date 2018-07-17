@@ -84,6 +84,33 @@ void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 		podData->linePressures[7].freshness = FRESH;
 };
 
+void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
+		podData->BMSdata[0].i8data  = (int8_t) (bms->packCurrent * 1000);
+		podData->BMSdata[1].ui8data = (uint8_t) (bms->packVoltage * 1000);
+		podData->BMSdata[2].ui16data = bms->packDCL;
+		podData->BMSdata[3].ui16data = bms->packCCL;
+		podData->BMSdata[4].ui16data = bms->packResistance;
+		podData->BMSdata[5].ui8data = bms->packHealth;
+		podData->BMSdata[6].ui16data = (uint8_t) (bms->packOpenVoltage * 1000);
+		podData->BMSdata[7].ui16data = bms->packCycles;
+		podData->BMSdata[8].ui16data = bms->packAh;
+		podData->BMSdata[9].ui8data = (uint8_t) (bms->inputVoltage * 1000);
+		podData->BMSdata[10].ui8data = bms->Soc;
+		podData->BMSdata[11].ui16data = bms->relayStatus;
+		podData->BMSdata[12].ui8data = bms->highTemp;
+		podData->BMSdata[13].ui8data = bms->lowTemp;
+		podData->BMSdata[14].ui16data = bms->cellMaxVoltage;
+		podData->BMSdata[15].ui16data = bms->cellMinVoltage;
+		podData->BMSdata[16].ui16data = bms->cellAvgVoltage;
+		podData->BMSdata[17].ui8data = bms->maxCells;
+		podData->BMSdata[18].ui8data = bms->numCells;
+
+		int i;
+		for (i = 0; i < 19; i++) {
+			podData->BMSdata[i].freshness = FRESH;
+		}
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	if (pod_data->current_pressure.freshness == FRESH) {
@@ -148,6 +175,14 @@ void send_data(Pod_Data_Handle *pod_data) {
 			pod_data->linePressures[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->linePressures[i])));
 		}
+	}
+
+	for (i = 0; i < 19; i++) {
+		if (pod_data->BMSdata[i].freshness == FRESH) {
+			pod_data->BMSdata[i].freshness = NOT_FRESH;
+			uart_send(formatPacket(&(pod_data->BMSdata[i])));
+		}
+
 	}
 }
 

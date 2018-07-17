@@ -35,6 +35,7 @@ typedef struct {
 	Sensor_Data retro;
 	Sensor_Data solenoids;
 	Sensor_Data linePressures[8];
+	Sensor_Data BMSdata[19];
 } Pod_Data_Handle;
 
 void set_accel_vel_pos(Pod_Data_Handle*, int8_t, int8_t, int8_t);
