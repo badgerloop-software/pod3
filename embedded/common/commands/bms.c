@@ -3,6 +3,7 @@
 #include "badgerloop.h"
 #include "string.h"
 #include "gpio.h"
+#include "bms.h"
 
 command_status do_bms(int argc, char *argv[]) {
 
@@ -18,7 +19,12 @@ command_status do_bms(int argc, char *argv[]) {
             } else if( !strcmp( argv[1], "read") ){
             	printf("PB Reset Pin Value: %d\r\n", gpio_readPin(GPIOB, 4)  );
             	return CMD_SUCCESS;
-        }
+            } else if( !strcmp( argv[1], "info") ){
+                    printf("BMS INFO\r\n");
+                    printf("Current: %f A\tVoltage: %f A\tSOC: %d\r\n", bms->packCurrent,
+                                bms->packVoltage, bms->Soc);
+                    return CMD_SUCCESS;
+            }
         return USAGE;
     }
 	
