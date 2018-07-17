@@ -357,7 +357,15 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_PRES_4:
 				break;
 			case NAV_SOLENOID_1:
-				printf("%u\r\n", data[2]);
+					printf("SOLENOID DATA:\r\n");
+					printf("data[0]: %u\r\n", data[0]);
+					printf("data[1]: %u\r\n", data[1]);
+					printf("data[2]: %u\r\n", data[2]);
+					printf("data[3]: %u\r\n", data[3]);
+					printf("data[4]: %u\r\n", data[4]);
+					printf("data[5]: %u\r\n", data[5]);
+					printf("data[6]: %u\r\n", data[6]);
+					printf("data[7]: %u\r\n", data[7]);
 				set_solenoid_value(pod_data, data[2]);
 				break;
 			case NAV_ACCEL_VEL_POS:
