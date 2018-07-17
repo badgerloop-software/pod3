@@ -4,6 +4,7 @@
 #include <can.h>
 #include <dashboard_data.h>
 #include "data_set.h"
+#include "bms.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -299,8 +300,11 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_ACCEL_VEL_POS:
 				break;
-			}
 		}
+	}
+    else if( bms_parser( can_id, data) == 0){
+        printf("Unknown CAN Message Received\r\n");
+    }
 	return HAL_OK;
 }
 
