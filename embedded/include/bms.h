@@ -4,24 +4,24 @@
 #include <stdint.h>
 
 typedef struct {
-	short packCurrent;
-	short packVoltage;
-	short packDCL;
-	short packCCL;
-	short packResistance;
-	short packHealth;
-	short packOpenVoltage;
-	short packCycles;
-	short packAh;
-	short inputVoltage;
+	float packCurrent;
+	float packVoltage;
+	uint16_t packDCL;
+	uint16_t packCCL;
+	uint16_t packResistance;
+	uint8_t packHealth;
+	float packOpenVoltage;
+	uint16_t packCycles;
+	uint16_t packAh;
+	float inputVoltage;
 	uint8_t Soc;
 	uint16_t relayStatus;
 
 	uint8_t highTemp;
 	uint8_t lowTemp;
-	short cellMaxVoltage;
-	short cellMinVoltage;
-	short cellAvgVoltage;
+	uint16_t cellMaxVoltage;
+	uint16_t cellMinVoltage;
+	uint16_t cellAvgVoltage;
 	uint8_t maxCells;
 	uint8_t numCells;
 } Bms;

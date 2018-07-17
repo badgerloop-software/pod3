@@ -47,10 +47,13 @@ HAL_StatusTypeDef can_read(void) {
 		           
 		for (i = 0; i < 8; i++) {
 			if (RxData[i] != 0) {
-			//	printf("CAN Message Data[%d]: %x\r\n", i, RxData[i]);
+				printf("CAN Message Data[%d]: %x\r\n", i, RxData[i]);
 			}
 		}
-		if(RxHeader.StdId == 0x6B0) bms_parser(RxHeader.StdId, RxData);
+		if(RxHeader.StdId == 0x6B0 || RxHeader.StdId == 0x6B1 
+				|| RxHeader.StdId == 0x653) {
+			bms_parser(RxHeader.StdId, RxData);
+		}
 	}
 	return retval;
 }
@@ -121,7 +124,6 @@ HAL_StatusTypeDef can_listen(void){
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		print_incoming_can_message(RxHeader.StdId, RxData);
-		if(RxHeader.StdId == 0x6B0) bms_parser(RxHeader.StdId, RxData);
 	} 
 	return retval;
 }

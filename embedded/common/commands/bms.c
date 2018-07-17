@@ -8,7 +8,7 @@ command_status do_bms(int argc, char *argv[]) {
 
 	printf("\r\n");
 	printf("BMS INFO\r\n");
-	printf("Current: %d A\tVoltage: %d A\tSOC: %d\r\n", bms->packCurrent,
+	printf("Current: %f A\tVoltage: %f A\tSOC: %d\r\n", bms->packCurrent,
 			bms->packVoltage, bms->Soc);
 	return CMD_SUCCESS;
 

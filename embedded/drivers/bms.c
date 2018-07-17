@@ -37,40 +37,41 @@ int bms_parser(uint32_t id, uint8_t *data) {
 	uint8_t offset = 0;
 	switch(id) {
 		case 0x6B0:
+			printf("ID: 0x%3lx\r\n", id);
 			printf("Data: %d, %d, %d, %d, %d, %d, %d, %d\r\n", data[0],
 					data[1], data[2], data[3], data[4], data[5], data[6],
 					data[7]);
-			memcpy(&bms->packCurrent, data, sizeof(bms->packCurrent));
-			offset += sizeof(bms->packCurrent);
-			memcpy(&bms->packVoltage, data+offset, sizeof(bms->packVoltage));
-			offset += sizeof(bms->packVoltage);
-			memcpy(&bms->Soc, data+offset, sizeof(bms->Soc));
-			offset += sizeof(bms->Soc);
-			memcpy(&bms->relayStatus, data+offset, sizeof(bms->relayStatus));
-			offset += sizeof(bms->relayStatus);
-
+			bms->packCurrent = data[1] | data[0] << 8;
 			bms->packCurrent /= 10;
+			bms->packVoltage = data[3] | data[2] << 8;
 			bms->packVoltage /= 10;
-			bms->Soc /= 2;
-			printf("V: %d\r\n", bms->packVoltage);
-			printf("A: %d\r\n", bms->packCurrent);
+			bms->Soc = data[4]/2;
+			bms->relayStatus = data[6] | data[5] << 8;
+
+			printf("V: %f\r\n", bms->packVoltage);
+			printf("A: %f\r\n", bms->packCurrent);
 			printf("Soc: %d\r\n", bms->Soc);
 			printf("Relay: %d\r\n", bms->relayStatus);
 			break;
 		case 0x6B1:
-			memcpy(&bms->packDCL, data, sizeof(bms->packDCL));
-			offset+=sizeof(bms->packDCL);
-			offset += 2; // 2 bytes empty
-			memcpy(&bms->highTemp, data+offset, sizeof(bms->highTemp));
-			offset += sizeof(bms->highTemp);
-			memcpy(&bms->lowTemp, data+offset, sizeof(bms->lowTemp));
+			printf("ID: 0x%3lx\r\n", id);
+			bms->packDCL = data[1] | data[0] << 8;
+			bms->highTemp = data[4];
+			bms->lowTemp = data[5];
+			printf("DCL: %d\r\n", bms->packDCL);
+			printf("High T: %d\r\n", bms->highTemp);
+			printf("Low T: %d\r\n", bms->lowTemp);
+
 			break;
 		case 0x653:
-			memcpy(&bms->relayStatus, data, sizeof(bms->relayStatus));
-			offset+=sizeof(bms->relayStatus);
-			memcpy(&bms->inputVoltage, data+offset, sizeof(bms->inputVoltage));
-			offset += sizeof(bms->inputVoltage);
-
+			printf("ID: 0x%3lx\r\n", id);
+			
+			bms->relayStatus = data[1] | data[0] << 8;
+			bms->inputVoltage = data[3] | data[2] << 8;
+			bms->inputVoltage /= 10;
+			
+			printf("Relay status %d\r\n", bms->relayStatus);
+			printf("Input Source Supply Voltage: %f\r\n", bms->inputVoltage);
 			break;
 		case 0x999://0x652: //TODO 
 			memcpy(&bms->packDCL, data, sizeof(bms->packDCL));
