@@ -3,6 +3,7 @@
 #include "state_handlers.h"
 #include "system.h"
 #include "board.h"
+#include "badgerloop.h"
 
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {

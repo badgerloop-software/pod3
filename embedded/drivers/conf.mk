@@ -7,4 +7,3 @@ SRCS += drivers/i2c.c
 SRCS += drivers/can.c
 SRCS += drivers/exti.c
 SRCS += drivers/retro.c
-SRCS += drivers/shutdown_circuit.c
