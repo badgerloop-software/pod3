@@ -36,13 +36,23 @@ const SENSORS = [
 	"CELL_AVERAGE",
 	"LV_BATTERY_TEMP",
 	"TEST_3",
-	"SENSOR_1",
-	"SENSOR_2",
-	"SENSOR_3"
+	"LINE_PRES_1",
+	"LINE_PRES_2",
+	"LINE_PRES_3",
+	"LINE_PRES_4",
+	"LINE_PRES_5",
+	"LINE_PRES_6",
+	"LINE_PRES_7",
+	"LINE_PRES_8",
+	"SOLENOID_1",
+	"SOLENOID_2",
+	"SOLENOID_4",
+	"SOLENOID_6",
+	"SOLENOID_7",
 ];
 
 
-const url = 'mongodb://192.168.2.112:27017';  // CONFIGURE HERE
+const url = 'mongodb://192.168.2.146:27017';  // CONFIGURE HERE
 
 
 
