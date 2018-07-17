@@ -50,6 +50,7 @@ void can_heartbeat_next(){
             break;
         case FAULT:
             printf("Heartbeat Status: Discharge\r\n");
+            hb_status = DISCHARGE; 
             break;
         default: 
             printf("Unknown Heartbeat state.\r\n" );
