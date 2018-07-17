@@ -3,8 +3,6 @@
 #include <string.h>
 #include "bms.h"
 
-Bms *bms;
-
 void bms_init() {
 	bms = malloc(sizeof(Bms));
 	printf("initialize_bms\r\n");

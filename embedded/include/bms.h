@@ -26,7 +26,7 @@ typedef struct {
 	uint8_t numCells;
 } Bms;
 
-extern Bms *bms;
+Bms *bms;
 void bms_init();
 int bms_parser(uint32_t id, uint8_t *data);
 
