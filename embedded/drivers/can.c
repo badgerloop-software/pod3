@@ -569,36 +569,6 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 	}
 }
 
-HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
-	switch (id){
-		case (BMS_PACK_STATE_MESSAGE):
-			printf("data 0: %x", data[0]);
-		    break;
-        case (BMS_PACK_TEMP_MESSAGE):
-		    break;
-
-		case (BMS_RELAY_STATE_MESSAGE):
-		    break;
-
-		case (BMS_PACK_CCL):
-		    break;
-
-		case (BMS_CELL_VOLT_MESSAGE):
-		    break;
-
-		case (BMS_SOC_MESSAGE):
-		    break;
-
-//		case (BMS_PACK_CURRENT_MESSAGE):
-
-//		case (BMS_PACK_VOLT_MESSAGE):
-
-		default:
-			return HAL_ERROR;
-	}
-    return HAL_OK;
-}
-
 HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 
 	HAL_StatusTypeDef retval;	
