@@ -2,7 +2,7 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
-#include <dashboard_data.h>
+#include "dashboard_data.h"
 #include "data_set.h"
 
 CAN_HandleTypeDef can_handle;
@@ -382,6 +382,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				set_solenoid_value(pod_data, data[2]);
 				break;
 			case NAV_ACCEL_VEL_POS:
+				set_accel_vel_pos(pod_data, data[2], data[3], data[4]);
 				break;
 			}
 		}
