@@ -263,7 +263,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
-	//printf("%u\r\n", data[2]);	
+	//printf("%u\r\n", data[2]);
+	uint16_t pres1, pres2;	
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -296,13 +297,24 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_SHOULD_STOP:
 				break;
 			case NAV_PRES_1:
-
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_1_2(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_2:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_3_4(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_3:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_5_6(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_4:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_7_8(pod_data, pres1, pres2);
 				break;
 			case NAV_SOLENOID_1:
 					printf("SOLENOID DATA:\r\n");
