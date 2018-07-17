@@ -44,6 +44,46 @@ void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
 	podData->solenoids.freshness = FRESH;
 }
 
+void set_pres_1_2(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
+		podData->linePressures[0].ui16data = pres1;
+		podData->linePressures[0].timestamp = time(NULL);
+		podData->linePressures[0].freshness = FRESH;
+
+		podData->linePressures[1].ui16data = pres2;
+		podData->linePressures[1].timestamp = time(NULL);
+		podData->linePressures[1].freshness = FRESH;
+};
+
+void set_pres_3_4(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
+		podData->linePressures[2].ui16data = pres1;
+		podData->linePressures[2].timestamp = time(NULL);
+		podData->linePressures[2].freshness = FRESH;
+
+		podData->linePressures[3].ui16data = pres2;
+		podData->linePressures[3].timestamp = time(NULL);
+		podData->linePressures[3].freshness = FRESH;
+};
+
+void set_pres_5_6(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
+		podData->linePressures[4].ui16data = pres1;
+		podData->linePressures[4].timestamp = time(NULL);
+		podData->linePressures[4].freshness = FRESH;
+
+		podData->linePressures[5].ui16data = pres2;
+		podData->linePressures[5].timestamp = time(NULL);
+		podData->linePressures[5].freshness = FRESH;
+};
+
+void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
+		podData->linePressures[6].ui16data = pres1;
+		podData->linePressures[6].timestamp = time(NULL);
+		podData->linePressures[6].freshness = FRESH;
+
+		podData->linePressures[7].ui16data = pres2;
+		podData->linePressures[7].timestamp = time(NULL);
+		podData->linePressures[7].freshness = FRESH;
+};
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	if (pod_data->current_pressure.freshness == FRESH) {
@@ -100,6 +140,14 @@ void send_data(Pod_Data_Handle *pod_data) {
 	if (pod_data->acceleration.freshness == FRESH) {
 		pod_data->acceleration.freshness = NOT_FRESH;
 		uart_send(formatPacket(&(pod_data->acceleration)));
+	}
+
+	int i;
+	for (i = 0; i < 8; i++) {
+		if (pod_data->linePressures[i].freshness == FRESH) {
+			pod_data->linePressures[i].freshness = NOT_FRESH;
+			uart_send(formatPacket(&(pod_data->linePressures[i])));
+		}
 	}
 }
 
