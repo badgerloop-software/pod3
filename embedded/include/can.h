@@ -18,7 +18,8 @@ extern uint32_t            TxMailbox;
 
 typedef enum{
     IDLE_MSG,           //Default message, sends all 0's
-    FAULTS_CLEARED, //Clears CAN faults on RMS
+    CLEAR_FAULTS_MSG,   //Clears CAN faults
+    FAULTS_CLEARED, //Cleared CAN faults on RMS
     PRE_RUN,        // Same message as IDLE, but represents ready-to-run state
     FORWARD,        //Commands motor forward
     SPIN_DOWN,      //Same message as IDLE, but represents slowing down

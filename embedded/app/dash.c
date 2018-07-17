@@ -60,7 +60,7 @@ inline void printPrompt(void) {
 
 int dash_init() {
 	
-
+    initialize_state_machine(IDLE);
 	return 0;
 }
 

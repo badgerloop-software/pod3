@@ -21,6 +21,10 @@ void can_heartbeat_next(){
         	printf( "Heartbeat Status: Clear Faults\r\n");
             hb_status = FAULTS_CLEARED;
             break;
+        case CLEAR_FAULTS_MSG:
+            printf( "Heartbeat Status: Faults Cleared\r\n");
+        	hb_status = PRE_RUN;
+            break;
         case FAULTS_CLEARED:
             printf( "Heartbeat Status: Pre-Run\r\n");
         	hb_status = PRE_RUN;
@@ -162,8 +166,9 @@ int can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
 
 int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
 	
-    if( hb_status == FAULTS_CLEARED ){
+    if( hb_status == CLEAR_FAULTS_MSG ){
         can_heartbeat_clear_faults( hcan);
+        hb_status = FAULTS_CLEARED;
     }
 	else if( hb_status == FORWARD){
         can_heartbeat_forward( hcan);

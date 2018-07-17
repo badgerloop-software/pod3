@@ -83,17 +83,16 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
     }//end NAV module
     if(board_type==DASH) {
         can_heartbeat_fault();
-        //can_heartbeat_handler( &can_handle );
+        can_heartbeat_handler( &can_handle );
     }
     if(board_type==DEV) {
 
     } // end DEV_MODULE
 
-if(board_type==DASH) {
-    can_heartbeat_fault();
-    //can_heartbeat_handler( &can_handle );
-
-} // end CPP_MODULE
+    if(board_type==DASH) {
+        can_heartbeat_fault();
+        //can_heartbeat_handler( &can_handle );
+    } // end CPP_MODULE
 
 if(board_type==DEV) {
 
@@ -153,7 +152,7 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 
 	if(board_type==DASH) {
         can_heartbeat_fault();
-        //can_heartbeat_handler( &can_handle );
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -320,15 +319,15 @@ if(board_type==NAV) {
 //	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
 //	bLower = BRAKING_LINE__LOWER
 
-} // end NAV_MODULE 
-if(board_type==DASH) {
-    can_heartbeat_handler( &can_handle );
+    } // end NAV_MODULE 
+    if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 		
-} // end CPP_MODULE
+    } // end CPP_MODULE
 
-if(board_type==DEV) {
+    if(board_type==DEV) {
 
-} // end DEV_MODULE
+    } // end DEV_MODULE
 }
 
 void from_idle(STATE_NAME to, uint32_t flags){
@@ -344,6 +343,7 @@ void from_idle(STATE_NAME to, uint32_t flags){
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
