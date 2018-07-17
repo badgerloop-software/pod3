@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bms.h"
+#include "can.h"
 
 void bms_init() {
 	bms = malloc(sizeof(Bms));
@@ -25,6 +26,28 @@ void bms_init() {
 	bms->cellMinVoltage = 0;
 	bms->maxCells = 0;
 	bms->numCells = 0;
+
+	bms_clearFaults();
+}
+
+int bms_clearFaults(void){
+
+	uint16_t can_id = 0x7e3;
+	uint8_t TxData[8];
+	uint8_t length = 16;
+
+	TxData[0] = 0x01;
+	TxData[1] = 0x04;
+	TxData[2] = 0x00;
+	TxData[3] = 0x00;
+	TxData[4] = 0x00;
+	TxData[5] = 0x01;
+	TxData[6] = 0x00;
+	TxData[7] = 0x00;
+	
+	can_send(can_id, 0, length, TxData );
+
+	return 0;
 }
 
 /**
