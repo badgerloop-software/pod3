@@ -30,30 +30,30 @@ int rms_parser(uint32_t id, uint8_t *data){
 	printf("received RMS message\r\n");
 	switch(id){
 		case (0xa0):
-			rms->igbt_temp = data[1] | data[0] <<8;
-			rms->gate_driver_board_temp = data[7] | data[6] << 8;
+			rms->igbt_temp = (data[1] | (data[0] <<8)) / 10; //Deg C
+			rms->gate_driver_board_temp = (data[7] | (data[6] << 8)) / 10; //Deg C
 			break;
 		case (0xa1):
-			rms->control_board_temp = data[1] | data[0] << 8;
+			rms->control_board_temp = (data[1] | (data[0] << 8)); // Deg C
 			break;
 		case (0xa2):
-			rms->motor_temp = data[5] | data[4] << 8;
+			rms->motor_temp = (data[5] | (data[4] << 8)) / 10; //Deg C
 			break;
 
 		case (0xa5):
-			rms->motor_speed = data[3] | data[2];
+			rms->motor_speed = (data[3] | (data[2] << 8)); // RPM
 			break;
 		case (0xa6):
-			rms->phase_a_current = data[7] | data[6] << 8;
+			rms->phase_a_current = (data[7] | (data[6] << 8)) / 10; // Amps
 			break;
 		case (0xa7):
-			rms->dc_bus_voltage = data[1] | data[0] << 8;
-			rms->output_voltage_peak = data[3] | data[2] << 8;
+			rms->dc_bus_voltage = (data[1] | (data[0] << 8))/10;
+			rms->output_voltage_peak = (data[3] | (data[2] << 8)) / 100;
 			break;
 		case (0xa8):
 			break;
 		case (0xa9):
-			rms->lv_voltage = data[7] | data[6];
+			rms->lv_voltage = (data[7] | (data[6] << 8)) / 100;
 			break;
 
 		case (0xaa):
@@ -66,8 +66,8 @@ int rms_parser(uint32_t id, uint8_t *data){
 			break;
 	
 		case (0xac):
-			rms->commanded_torque = data[1] | data[0];
-			rms->actual_torque = data[3] | data[2];
+			rms->commanded_torque = (data[1] | (data[0] << 8)) /10;
+			rms->actual_torque = (data[3] | (data[2] << 8)) / 10;
 			break;
 		case (0xad):
 			break;
