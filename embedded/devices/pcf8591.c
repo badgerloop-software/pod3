@@ -29,3 +29,4 @@ bool adcx_read(uint8_t addr, uint8_t * val) {
 	}
 	return true;
 }
+
