@@ -59,3 +59,31 @@ COMMAND_ENTRY(
 	"Sets or clears the MCU HV EN pin.",
 	do_mcu
 )
+
+command_status do_pv_sol2(int argc, char *argv[]) {
+
+	if (argc != 2) {
+		return USAGE;
+	} else {
+	    if( !strcmp( argv[1], "set")){
+            	pv_solenoid2_set( true );
+            	return CMD_SUCCESS;
+            } else if( !strcmp( argv[1], "clear") ){
+                pv_solenoid2_set( false );
+            	return CMD_SUCCESS;
+            } else if( !strcmp( argv[1], "read") ){
+            	printf("PV Solenoid 2 Value: %d\r\n", gpio_readPin(GPIOA, 1)  );
+            	return CMD_SUCCESS;
+        }
+        return USAGE;
+    }
+	
+    return CMD_SUCCESS;
+}
+
+COMMAND_ENTRY(
+	"pv_sol2",
+	"pv_sol2 <set/clear/read>",
+	"Sets or clears the PV Sol2 pin.",
+	do_pv_sol2
+)

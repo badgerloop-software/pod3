@@ -12,6 +12,18 @@ uint32_t DONT_BRAKnt32_t, DONT_BRAKE_TO = 8000, MUST_BRAKE_TO = 30000, BRAKING_C
 /*                            Get Telemetry Vals                            */
 /*****************************************************************************/
 
+int pv_solenoid2_set( bool state ){
+    
+    //Solenoid 2 is on Pin PA1
+    if ( gpio_writePin( GPIOA, 1, state ) == -1 ){
+        printf( "Solenoid 2 set Error\r\n");
+        return -1;
+    }
+    
+    return 0;
+
+}
+
 int mcu_high_voltage_set( bool state ){
     
     //MCU HV EN is on Pin PA6

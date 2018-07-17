@@ -141,6 +141,7 @@ extern uint8_t *shutdown_circuit_status;
 
 int bms_software_reset_set( bool state );
 int mcu_high_voltage_set( bool state );
+int pv_solenoid2_set( bool state );
 
 /* Actuation Functions */
 void primary_brakes(int intensity);
