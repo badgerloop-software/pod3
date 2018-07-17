@@ -38,10 +38,10 @@ command_status do_mcu(int argc, char *argv[]) {
 		return USAGE;
 	} else {
 	    if( !strcmp( argv[1], "set")){
-            	bms_software_reset_set( true );
+            	mcu_high_voltage_set( true );
             	return CMD_SUCCESS;
             } else if( !strcmp( argv[1], "clear") ){
-            	bms_software_reset_set( false );
+            	mcu_high_voltage_set( false );
             	return CMD_SUCCESS;
             } else if( !strcmp( argv[1], "read") ){
             	printf("MCU HV EN Value: %d\r\n", gpio_readPin(GPIOA, 6)  );
