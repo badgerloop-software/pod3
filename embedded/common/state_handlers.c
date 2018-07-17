@@ -606,10 +606,10 @@ void in_propulsion_start(uint32_t flags) {
 	if(board_type==DASH) {
         can_heartbeat_handler( &can_handle );
 	    
-        /* If we pass propulsion timeout enter braking */
+        /* If we pass propulsion timeout enter braking 
 	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
 		    change_state(BRAKING);
-	    }
+	    } */
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
