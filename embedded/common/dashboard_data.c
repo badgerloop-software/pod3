@@ -29,7 +29,7 @@ void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
 	podData->solenoids.timestamp = time(NULL);
 	podData->solenoids.freshness = FRESH;
 }
-    
+
 void set_lim(Pod_Data_Handle *podData, uint8_t *data) {
     podData->lim1.ui8data = data[3];
     podData->lim2.ui8data = data[4];

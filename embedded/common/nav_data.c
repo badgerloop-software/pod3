@@ -4,7 +4,6 @@
 #include "retro.h"
 #include "gpio.h"
 
->>>>>>> Initial limit switch -> dashboard work
 Nav_Data navData = {
      .solenoids = {
          .solenoid_1 = {PRIM_BRAKING_1, NOT_ACTUATED},
@@ -28,6 +27,10 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 	int badRetroGuy;
 	navDataPtr->retros.retroAgreement = getStripCount(&badRetroGuy);
 	printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
+
+	navDataPtr->limits.limitValue1 = gpio_readPin( GPIOA, 3 );
+	navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6 );
+	navDataPtr->limits.limitValue3 = gpio_readPin( GPIOA, 7 );
 
 	navDataPtr->limits.limitValue1 = gpio_readPin( GPIOA, 3 );
 	navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6 );
