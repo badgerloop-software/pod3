@@ -117,25 +117,25 @@ function doHealthCheck(data) {
     /* then check the appropriate telemetry depending on what state we are in */
     var retMessages;
     if (state === POWEROFF) { retMessages = poweroff_ck(sensorData); }
-    else if (state === IDLE) {}
-    else if (state === READY_FOR_PUMPDOWN) {}
-    else if (state === PUMPDOWN) {}
-    else if (state === READY) {}
-    else if (state === POSTRUN) {}
-    else if (state === SERVICE_LOW_SPEED) {}
-    else if (state === SAFE_TO_APPROACH) {}
-    else if (state === PROP_START_HLOOP) {}
-    else if (state === PROP_START_OPENAIR) {}
-    else if (state === PROP_START_EXTSUB) {}
-    else if (state === PROP_DSA_HLOOP) {}
-    else if (state === PROP_DSA_OPENAIR) {}
-    else if (state === PROP_DSA_EXTSUB) {}
-    else if (state === BRAKE_HLOOP) {}
-    else if (state === BRAKE_OPENAIR) {}
-    else if (state === BRAKE_EXTSUB) {}
-    else if (state === FAULT_PRERUN) {}
-    else if (state === FAULT_RUN) {}
-    else if (state === FAULT_POSTRUN) {}
+    else if (state === IDLE) { retMessages = idle_ck(sensorData); }
+    else if (state === READY_FOR_PUMPDOWN) { retMessages = ready_for_pumpdown_ck(sensorData); }
+    else if (state === PUMPDOWN) { retMessages = pumpdown_ck(sensorData); }
+    else if (state === READY) { retMessages = ready_ck(sensorData); }
+    else if (state === POSTRUN) { retMessages = postrun_ck(sensorData); }
+    else if (state === SERVICE_LOW_SPEED) { retMessages = service_low_speed_ck(sensorData); }
+    else if (state === SAFE_TO_APPROACH) { retMessages = safe_to_approach_ck(sensorData); }
+    else if (state === PROP_START_HLOOP) { retMessages = prop_start_hloop_ck(sensorData); }
+    else if (state === PROP_START_OPENAIR) { retMessages = prop_start_openair_ck(sensorData); }
+    else if (state === PROP_START_EXTSUB) { retMessages = prop_start_extsub_ck(sensorData); }
+    else if (state === PROP_DSA_HLOOP) { retMessages = prop_dsa_hloop_ck(sensorData); }
+    else if (state === PROP_DSA_OPENAIR) { retMessages = prop_dsa_openair_ck(sensorData); }
+    else if (state === PROP_DSA_EXTSUB) { retMessages = prop_dsa_extsub_ck(sensorData); }
+    else if (state === BRAKE_HLOOP) { retMessages = brake_hloop_ck(sensorData); }
+    else if (state === BRAKE_OPENAIR) { retMessages = brake_openair_ck(sensorData); }
+    else if (state === BRAKE_EXTSUB) { retMessages = brake_extsub_ck(sensorData); }
+    else if (state === FAULT_PRERUN) { retMessages = fault_prerun_ck(sensorData); }
+    else if (state === FAULT_RUN) { retMessages = fault_run_ck(sensorData); }
+    else if (state === FAULT_POSTRUN) { retMessages = fault_postrun_ck(sensorData); }
     /* add on all of our newly found problems */
     warningMessages = warningMessages.concat(retMessages);
     /* TODO check for staleness and if telemetry is within bounds for each state */
@@ -144,6 +144,120 @@ function doHealthCheck(data) {
 
 /* do the telemetry bounds checking for poweroff state */
 function poweroff_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for idle state */
+function idle_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for ready-for-pumpdown state */
+function ready_for_pumpdown_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for pumpdown state */
+function pumpdown_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for ready state */
+function ready_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for postrun state */
+function postrun_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for service-low-speed state */
+function service_low_speed_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for safe-to-approach state */
+function safe_to_approach_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for prop-start-hloop state */
+function prop_start_hloop_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for prop-start-openair state */
+function prop_start_openair_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for prop-start-extsub state */
+function prop_start_extsub_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for prop-dsa-hloop state */
+function prop_dsa_hloop_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for prop-dsa-openair state */
+function prop_dsa_openair_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for prop-dsa-extsub state */
+function prop_dsa_extsub_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for brake-hloop state */
+function brake_hloop_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for brake-openair state */
+function brake_openair_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for brake-extsub state */
+function brake_extsub_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for fault-prerun state */
+function fault_prerun_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for fault-run state */
+function fault_run_ck(sensorData) {
+    /* TODO return an array of error messages */
+    return [];
+}
+
+/* do the telemetry bounds checking for fault-postrun state */
+function fault_postrun_ck(sensorData) {
     /* TODO return an array of error messages */
     return [];
 }
