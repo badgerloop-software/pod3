@@ -5,6 +5,8 @@
 #include "board.h"
 #include "solenoid.h"
 #include "nav_data.h"
+#include "badgerloop.h"
+
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/
@@ -73,21 +75,23 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
 	/*       Propulsion          */
 	/*****************************/
 	// Set torque to max 0.
-if(board_type==PV) {
+    if(board_type==PV) {
+        /* De-assert high voltage and RMS */
+        mcu_high_voltage_set(false);
+        pv_solenoid2_set(false);
+    } // end PV_MODULE
 
-} // end PV_MODULE
+    if(board_type==NAV) {
 
-if(board_type==NAV) {
+    } // end NAV_MODULE
 
-} // end NAV_MODULE
+    if(board_type==DASH) {
 
-if(board_type==DASH) {
+    } // end CPP_MODULE
 
-} // end CPP_MODULE
+    if(board_type==DEV) {
 
-if(board_type==DEV) {
-
-} // end DEV_MODULE
+    } // end DEV_MODULE
 
 	printf("To state: PRE_RUN_FAULT (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
 }
@@ -129,6 +133,9 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	// Set torque to 0
 	if(board_type==PV) {
+        /* De-assert high voltage and RMS */
+        mcu_high_voltage_set(false);
+        pv_solenoid2_set(false);
 
 	} // end PV_MODULE
 
@@ -182,6 +189,9 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	// Set torque to 0
 	if(board_type==PV) {
+        /* De-assert high voltage and RMS */
+        mcu_high_voltage_set(false);
+        pv_solenoid2_set(false);
 
 	} // end PV_MODULE
 
@@ -276,7 +286,9 @@ void in_idle(uint32_t flags) {
 	printf("In state: IDLE (Flags: 0x%lx)\r\n", flags);
 	// Pod health check
 if(board_type==PV) {
-	
+    /* BMS Reset gets asserted */
+    bms_software_reset_set( true );
+
 } // end PV_MODULE
 
 if(board_type==NAV) {
@@ -303,7 +315,26 @@ if(board_type==DEV) {
 }
 
 void from_idle(STATE_NAME to, uint32_t flags){
-	printf("From state: IDLE (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
+	if(board_type==PV) {
+	    
+        /* BMS reset de-asserted */
+        bms_software_reset_set( false );
+
+	} // end PV_MODULE
+
+	if(board_type==NAV) {
+
+	} // end NAV_MODULE
+
+	if(board_type==DASH) {
+
+	} // end CPP_MODULE
+
+	if(board_type==DEV) {
+
+	} // end DEV_MODULE
+    
+    printf("From state: IDLE (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
 }
 
 /*****************************************************************************/
@@ -332,6 +363,10 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 	// 	5. Power sol. 1; Braking checklist complete
 
 	if(board_type==PV) {
+
+        /* Enabling high voltage, enabling RMS */
+        mcu_high_voltage_set(true);
+        pv_solenoid2_set(true);
 
 	} // end PV_MODULE
 
