@@ -93,7 +93,13 @@ int nav_init(void) {
 	/* nav specific initializations */
 
     GPIO_TypeDef *gpioa = GPIOA;
-     
+    
+	change_solenoid(PRIM_BRAKING_1, ACTUATED);
+	change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+	change_solenoid(SEC_VENTING, ACTUATED);
+	change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+	change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+
     /* Retro 1 is on pin PA0
      * Retro 2 is on pin PA1
      * Retro 3 is on pin PA5 */
