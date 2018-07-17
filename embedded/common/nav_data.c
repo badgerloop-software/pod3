@@ -24,7 +24,9 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 	
 	int badRetroGuy;
 	navDataPtr->retros.retroAgreement = getStripCount(&badRetroGuy);
-	printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
+	getTelemetry(&(navDataPtr->motion.posX), &(navDataPtr->motion.velX), &(navDataPtr->motion.accX));
+
+	//DEBUG RETRO: printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
 	harvest_solenoids(&(navDataPtr->solenoids));	
 	if (navDataPtr->solenoids.solenoid_1.state != temp) printf("CHANGE1\r\n");
 	if (navDataPtr->solenoids.solenoid_2.state != temp2) printf("CHANGE2\r\n"); 
