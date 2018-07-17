@@ -60,7 +60,6 @@ void can_heartbeat_fault(){
 	return;
 }
 
-
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
 	
 	int i = 0;

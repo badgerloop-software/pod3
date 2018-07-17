@@ -89,6 +89,16 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
 
     } // end DEV_MODULE
 
+if(board_type==DASH) {
+    can_heartbeat_fault();
+    //can_heartbeat_handler( &can_handle );
+
+} // end CPP_MODULE
+
+if(board_type==DEV) {
+
+} // end DEV_MODULE
+
 	printf("To state: PRE_RUN_FAULT (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
 }
 
