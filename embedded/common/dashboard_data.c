@@ -24,6 +24,20 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
+void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_t pos) {
+	podData->position.i8data = pos;
+	podData->position.freshness = FRESH;
+	podData->position.timestamp = time(NULL);
+
+	podData->velocity.i8data = vel;
+	podData->velocity.freshness = FRESH;
+	podData->velocity.timestamp = time(NULL);
+
+	podData->acceleration.i8data = accel;
+	podData->acceleration.freshness = FRESH;
+	podData->acceleration.timestamp = time(NULL);
+}
+
 void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
 	podData->solenoids.ui8data = solenoidsVal;
 	podData->solenoids.timestamp = time(NULL);
@@ -66,13 +80,26 @@ void send_data(Pod_Data_Handle *pod_data) {
 		char *sol5str = formatPacket(&sol5);
 		Sensor_Data sol6 = {"solenoid_6", 0, (pod_data->solenoids.ui8data & 0x40) >> 6, 0, 0, 0, DT_UINT8};
 		char *sol6str = formatPacket(&sol6);
-
 		uart_send(sol1str);
 		uart_send(sol2str);
 		uart_send(sol4str);
 		uart_send(sol5str);
 		uart_send(sol6str);
+	}
 
+	if (pod_data->position.freshness == FRESH) {
+		pod_data->position.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->position)));
+	}
+
+	if (pod_data->velocity.freshness == FRESH) {
+		pod_data->velocity.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->velocity)));
+	}
+
+	if (pod_data->acceleration.freshness == FRESH) {
+		pod_data->acceleration.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->acceleration)));
 	}
 }
 
