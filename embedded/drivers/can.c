@@ -225,6 +225,16 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 				return HAL_ERROR;
 			
 			nav_solenoid1_set(data);
+			if (data[2] == 3) {
+				printf("data[0]: %u\r\n", data[0]);
+				printf("data[1]: %u\r\n", data[1]);
+				printf("data[2]: %u\r\n", data[2]);
+				printf("data[3]: %u\r\n", data[3]);
+				printf("data[4]: %u\r\n", data[4]);
+				printf("data[5]: %u\r\n", data[5]);
+				printf("data[6]: %u\r\n", data[6]);
+				printf("data[7]: %u\r\n", data[7]);
+			}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
 
