@@ -4,7 +4,7 @@
 #include <can.h>
 #include <dashboard_data.h>
 #include "data_set.h"
-
+//#include "state_machine.h"
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
 CAN_TxHeaderTypeDef TxHeader;
@@ -299,7 +299,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_PRES_4:
 				break;
 			case NAV_SOLENOID_1:
-				printf("%u\r\n", data[2]);
+				printf("data[1]: %u\r\n", data[1]);
+				printf("data[2]: %u\r\n", data[2]);
 				set_solenoid_value(pod_data, data[2]);
 				break;
 			case NAV_ACCEL_VEL_POS:
@@ -310,6 +311,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 		}
 	return HAL_OK;
 }
+
+//extern state_t state_handle;
 
 HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 	
@@ -379,7 +382,9 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				printf("NAV_ACCEL_VEL_POS\r\n");
 				break;
 			case CURR_STATE:
-				printf("STATE: %u\r\n", data[2]);
+				//printf("STATE: %u\r\n", data[2]);
+				//change_state(data[2]);
+				//printf("STATE: %u\r\n", state_handle.curr_state);
 				break;
 			}
 		}

@@ -135,7 +135,11 @@ int main(void) {
 	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
-		if (can_read() == HAL_OK) board_can_message_parse(BADGER_CAN_ID, RxData);
+		if (can_read() == HAL_OK){
+		   	if (board_can_message_parse(BADGER_CAN_ID, RxData) == HAL_ERROR) {
+				printf("BIG ERROR");
+			}; 
+		}
 		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (nav_DAQ(&navData)) printf("DAQ Failure");
