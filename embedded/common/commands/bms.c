@@ -31,3 +31,31 @@ COMMAND_ENTRY(
 	"Sets or clears the PB Reset pin.",
 	do_bms
 )
+
+command_status do_mcu(int argc, char *argv[]) {
+
+	if (argc != 2) {
+		return USAGE;
+	} else {
+	    if( !strcmp( argv[1], "set")){
+            	bms_software_reset_set( true );
+            	return CMD_SUCCESS;
+            } else if( !strcmp( argv[1], "clear") ){
+            	bms_software_reset_set( false );
+            	return CMD_SUCCESS;
+            } else if( !strcmp( argv[1], "read") ){
+            	printf("MCU HV EN Value: %d\r\n", gpio_readPin(GPIOA, 6)  );
+            	return CMD_SUCCESS;
+        }
+        return USAGE;
+    }
+	
+    return CMD_SUCCESS;
+}
+
+COMMAND_ENTRY(
+	"mcu_hv",
+	"mcu_hv <set/clear>",
+	"Sets or clears the MCU HV EN pin.",
+	do_mcu
+)

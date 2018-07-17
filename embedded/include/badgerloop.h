@@ -140,6 +140,7 @@ extern uint8_t *shutdown_circuit_status;
 #define GET_HV_EN_FDBK		(*shutdown_circuit_status & HV_EN_FDBK_TEL)
 
 int bms_software_reset_set( bool state );
+int mcu_high_voltage_set( bool state );
 
 /* Actuation Functions */
 void primary_brakes(int intensity);
