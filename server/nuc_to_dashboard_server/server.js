@@ -41,7 +41,7 @@ app.get('/sensor/:sensor', function (req, res) {
 							elem.sensor_data = elem.sensor_data[elem.sensor_data.length - 1];
 							jsondata[sensor.toLowerCase()] = elem});
 		});
-			setTimeout(() => res.json(jsondata), 100);	// Delay because otherwise node jumps to the end
+			setTimeout(() => res.json(jsondata), 50);	// Delay because otherwise node jumps to the end
 		} else {
 			console.log("Sensor not found");
 			res.send("Not a valid sensor");
