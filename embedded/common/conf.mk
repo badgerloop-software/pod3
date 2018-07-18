@@ -8,5 +8,13 @@ SRCS += common/console.c
 SRCS += common/post.c
 SRCS += common/pin_alias.c
 SRCS += common/dashboard_control.c
+SRCS += common/state_handlers.c
+SRCS += common/state_machine.c
+SRCS += common/solenoid.c
+SRCS += common/dashboard_data.c
+SRCS += common/nav_data.c
+SRCS += common/pv_data.c
+SRCS += common/data_set.c
+SRCS += common/badgerloop.c
 
 include common/commands/conf.mk

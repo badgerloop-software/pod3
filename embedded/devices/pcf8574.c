@@ -6,12 +6,12 @@
 const char *iox_pin_str[] = {
 	"SOL1",
 	"SOL2",
-	"SOL3",
+	"Unused (SOL3)",
 	"SOL4",
-	"SOL5",
+	"Unused (SOL5)",
 	"SOL6",
 	"SOL7",
-	"SOL8"
+	"Unused (SOL8)"
 };
 
 uint8_t _iox_commanded_val = 0x0;

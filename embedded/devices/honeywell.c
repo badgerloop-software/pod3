@@ -6,7 +6,7 @@ int _honeywell_pres_read_val;
 int _honeywell_temp_read_val;
 
 bool honeywell_start_read(void){
-	return(i2c_start_read(HONEYWELL_I2C_ADDR, 4) == HAL_OK) ? true : false;
+	return(i2c_start_read(HONEYWELL_I2C_ADDR, 4) == HAL_OK);
 }
 
 bool honeywell_read( int *temp, int *pres){

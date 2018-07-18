@@ -1,13 +1,27 @@
 #include <stdio.h>
-
+#include <time.h>
+#include "iox.h"
+#include "dashboard_data.h"
 #include "system.h"
 #include "board.h"
 #include "console.h"
 #include "usart.h"
 #include "pin_alias.h"
-
+#include "solenoid.h"
+#include "can.h"
+#include "nav_data.h"
+#include "exti.h"
+#include "state_machine.h"
 #define BLINK_INTERVAL	250
+#define DAQ_INTERVAL    100
+#define STATE_INTERVAL  100 
+#define TELEM_INTERVAL  100
+#define HRTBT_INTERVAL  100
 
+const int board_type = NAV;
+extern volatile unsigned int ticks;
+extern Nav_Data navData;
+state_box stateVal = {3, 0};
 /* Nucleo 32 I/O */
 
 //Limit Switches
@@ -67,9 +81,7 @@ U8 I2C Address: 0x49:
 	AIN1: DUCER6: Secondary Downstream
 	AIN2: DUCER7: Primary Brakes
 	AIN3: DUCER8: Distance Sensor
-
- 	*/
-
+*/
 
 inline void printPrompt(void) {
 	fputs("[nav-build] $ ", stdout);
@@ -80,23 +92,81 @@ int nav_init(void) {
 
 	/* nav specific initializations */
 
-	return 0;
+    GPIO_TypeDef *gpioa = GPIOA;
+    
+	change_solenoid(PRIM_BRAKING_1, ACTUATED);
+	change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+	change_solenoid(SEC_VENTING, ACTUATED);
+	change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+	change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+
+    /* Retro 1 is on pin PA0
+     * Retro 2 is on pin PA1
+     * Retro 3 is on pin PA5 */
+
+    /* EXTI Init */ 
+    //Each Pin falling-edge interrupt enabled
+
+    //Pin 0 EXTI Config (RETRO1)
+    exti_config(gpioa, 0, 0, 1, 1);
+    //Pin 1 EXTI Config (RETRO2)
+    exti_config(gpioa, 1, 0, 1, 1);
+    //Pin 5 EXTI Config (RETRO3)
+    exti_config(gpioa, 5, 0, 1, 1);
+     
+    //Pin 3 EXTI Config (LIM1)
+    exti_config(gpioa, 3, 0, 1, 1);
+    //Pin 6 EXTI Config (LIM2)
+    exti_config(gpioa, 6, 0, 1, 1);
+    //Pin 7 EXTI Config (LIM3)
+    exti_config(gpioa, 7, 0, 1, 1);
+    
+    return 0;
 }
 
+extern state_t state_handle;
 int main(void) {
 
 	PC_Buffer *rx;
 
 	/* initialize pins and internal interfaces */
-	if (io_init() || periph_init() || nav_init())
+	if (io_init() || periph_init(NAV) || nav_init())
 		fault();
-
+	
 	rx = get_rx(USB_UART);
-
+	
 	post("Navigation");
 	printPrompt();
 
+	
+	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
+		if (can_read() == HAL_OK){
+		   	if (board_can_message_parse(BADGER_CAN_ID, RxData) == HAL_ERROR) {
+				printf("BIG ERROR");
+			}; 
+		}
+		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
+			lastDAQ = ticks;
+			if (nav_DAQ(&navData)) printf("DAQ Failure");
+		}
+		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
+			iox_start_read();
+			lastState = ticks;
+			//printf("NAV STATE: %u\r\n", state_handle.curr_state); 
+			state_machine_handler();
+			//check if new state is needed
+		}
+		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {
+			lastTelem = ticks;
+			board_telemetry_send(board_type);
+			//Nav sends telem to CCP
+		}
+		if (((ticks + 25) % HRTBT_INTERVAL == 0) && lastHrtbt != ticks) {
+			lastHrtbt = ticks;
+			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
+			//Nav sends heartbeat
+		}
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}
