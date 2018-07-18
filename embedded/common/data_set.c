@@ -180,7 +180,7 @@ void nav_solenoid1_set(uint8_t data[]){
     data[2] |= navData.solenoids.solenoid_4.state << 3;
     data[2] |= navData.solenoids.solenoid_6.state << 5;
     data[2] |= navData.solenoids.solenoid_7.state << 6;
-	printf("SOLENOID VAL: %u\r\n", data[2]);
+	//printf("SOLENOID VAL: %u\r\n", data[2]);
     for( i = 3; i < 8; i++){
         data[i] = 0;
     }
