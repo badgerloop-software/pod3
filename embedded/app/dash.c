@@ -142,7 +142,37 @@ int main(void) {
 	post("Dashboard");
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
+	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
 	while (1) {
+
+		currDAQ = (ticks + 10) / 100;
+		currState = (ticks + 20) / 100;
+		currTelem = (ticks + 30) / 100;
+		currHrtbt = (ticks + 40) / 100;
+		
+		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
+		if( currDAQ != lastDAQ ){
+			
+			if (dash_DAQ(&podData)) printf("DAQ Failure");
+			lastDAQ = currDAQ;
+		}
+		if( currState != lastState ){
+			
+			state_machine_handler();
+			lastState = currState;
+		}
+		if( currTelem != lastTelem ){
+			
+			send_data(&podData);
+			board_telemetry_send(board_type);
+			lastTelem = currTelem;
+		}
+		if( currHrtbt != lastHrtbt ){
+			
+			lastHrtbt = currHrtbt;
+		}
+
+		/*
 		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
@@ -150,6 +180,7 @@ int main(void) {
 		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
+			printf( "State machine\r\n");
 			state_machine_handler();
 			//check if new state is needed
 		}
@@ -164,6 +195,7 @@ int main(void) {
 			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
 			//Nav sends heartbeat
 		}
+		*/
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
