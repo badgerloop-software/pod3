@@ -247,9 +247,10 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 			return HAL_ERROR;
 			break;
 		case NAV:
-		    /* Update data, and send out */
+		    
+            /* Update data, and send out */
             nav_tape_set(data);
-            if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+		    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
             
             nav_should_stop_set(data);
@@ -374,7 +375,7 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case CCP_WARNING:
 				printf("CCP Warning");
-			    break;
+                break;
             case CCP_SOLENOID_COMMAND:
 				printf("CCP_SOLENOID_COMMAND\r\n");
 				break;

@@ -5,10 +5,14 @@
 #include "console.h"
 #include "usart.h"
 #include "can.h"
+#include "adc.h"
+#include "current_sense.h"
+#include "pin_alias.h"
 #include "state_machine.h"
 
 #define BLINK_INTERVAL	100
 
+////////////////FILL_GPIO( CURR_SENSE, GPIOA, 5, INPUT, LOW_SPEED, NONE, true, SENSOR)
 const int board_type = DEV;
 
 inline void printPrompt(void) {
@@ -19,6 +23,10 @@ inline void printPrompt(void) {
 int dev_init(void) {
 
 	/* dev specific initializations */
+
+	adc_init();
+	current_sense_init();
+	adc_start();
 	initialize_state_machine(IDLE);
 
 	return 0;
