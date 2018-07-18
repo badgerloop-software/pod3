@@ -217,7 +217,6 @@ void send_data(Pod_Data_Handle *pod_data) {
 			uart_send(formatPacket(&(pod_data->BMSdata[i])));
 		}
 	}
-/*
 	for (i = 0; i < 22; i++) {
 		if (pod_data->RMSdata[i].freshness == FRESH) {
 			pod_data->RMSdata[i].freshness = NOT_FRESH;
