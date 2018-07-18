@@ -11,7 +11,7 @@
    <int>1200</int>
   </void>
   <void property="balanceVoltage">
-   <int>39000</int>
+   <int>40000</int>
   </void>
   <void property="bmsSettings1">
    <int>32</int>
@@ -49,13 +49,13 @@
    </void>
   </void>
   <void property="chargeRelayCurrentRestoreDelay">
-   <int>1</int>
+   <int>3</int>
   </void>
   <void property="chargeRelayVoltageRestoreDelay">
-   <int>1</int>
+   <int>2</int>
   </void>
   <void property="chargedSOC">
-   <int>95</int>
+   <int>90</int>
   </void>
   <void property="currentSensorDivider1">
    <int>2184</int>
@@ -103,11 +103,17 @@
       <int>128</int>
      </void>
     </void>
+    <void property="frequency">
+     <int>62</int>
+    </void>
     <void property="id">
      <int>1712</int>
     </void>
     <void property="length">
      <int>8</int>
+    </void>
+    <void property="messageFlags">
+     <int>64</int>
     </void>
     <void property="offMatrix">
      <void index="7">
@@ -142,7 +148,7 @@
      </void>
     </void>
     <void property="frequency">
-     <int>12</int>
+     <int>62</int>
     </void>
     <void property="id">
      <int>1713</int>
@@ -151,7 +157,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="offMatrix">
      <void index="7">
@@ -195,7 +201,7 @@
      </void>
     </void>
     <void property="frequency">
-     <int>12</int>
+     <int>62</int>
     </void>
     <void property="id">
      <int>1619</int>
@@ -204,7 +210,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -254,7 +260,7 @@
      </void>
     </void>
     <void property="frequency">
-     <int>12</int>
+     <int>62</int>
     </void>
     <void property="id">
      <int>1618</int>
@@ -263,7 +269,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -319,7 +325,7 @@
      </void>
     </void>
     <void property="frequency">
-     <int>12</int>
+     <int>62</int>
     </void>
     <void property="id">
      <int>1617</int>
@@ -328,7 +334,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -381,7 +387,7 @@
      </void>
     </void>
     <void property="frequency">
-     <int>12</int>
+     <int>62</int>
     </void>
     <void property="id">
      <int>1616</int>
@@ -390,7 +396,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -446,7 +452,7 @@
      </void>
     </void>
     <void property="frequency">
-     <int>12</int>
+     <int>62</int>
     </void>
     <void property="id">
      <int>336</int>
@@ -455,7 +461,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>192</int>
+     <int>64</int>
     </void>
     <void property="typeMatrix">
      <void index="0">
@@ -503,7 +509,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>209</int>
+     <int>145</int>
     </void>
     <void property="multMatrix">
      <void index="2">
@@ -561,7 +567,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>209</int>
+     <int>145</int>
     </void>
     <void property="multMatrix">
      <void index="2">
@@ -601,7 +607,7 @@
      <int>8</int>
     </void>
     <void property="messageFlags">
-     <int>195</int>
+     <int>131</int>
     </void>
    </void>
   </void>
@@ -699,7 +705,7 @@
    <int>10</int>
   </void>
   <void property="derateHighSOCAmperage">
-   <int>1</int>
+   <int>8</int>
   </void>
   <void property="derateHighSOCStart">
    <int>95</int>
@@ -726,7 +732,7 @@
    <int>3</int>
   </void>
   <void property="derateLowTempCCLStart">
-   <int>14</int>
+   <int>15</int>
   </void>
   <void property="derateLowTempDCLAmperage">
    <int>3</int>
@@ -735,10 +741,16 @@
    <int>18</int>
   </void>
   <void property="dischargeRelayCurrentRestoreDelay">
-   <int>1</int>
+   <int>3</int>
+  </void>
+  <void property="dischargeRelayRestore">
+   <int>30</int>
+  </void>
+  <void property="dischargeRelayRestoreSoc">
+   <int>20</int>
   </void>
   <void property="dischargeRelayVoltageRestoreDelay">
-   <int>1</int>
+   <int>3</int>
   </void>
   <void property="displayBcastInterface">
    <int>2</int>
@@ -752,7 +764,7 @@
      <int>16394</int>
     </void>
     <void property="voltage">
-     <int>25000</int>
+     <int>35600</int>
     </void>
    </void>
    <void index="1">
@@ -763,7 +775,7 @@
      <int>16404</int>
     </void>
     <void property="voltage">
-     <int>28000</int>
+     <int>36100</int>
     </void>
    </void>
    <void index="2">
@@ -774,7 +786,7 @@
      <int>32848</int>
     </void>
     <void property="voltage">
-     <int>35000</int>
+     <int>40300</int>
     </void>
    </void>
    <void index="3">
@@ -785,7 +797,26 @@
      <int>32863</int>
     </void>
     <void property="voltage">
-     <int>36000</int>
+     <int>41700</int>
+    </void>
+   </void>
+   <void index="4">
+    <void property="driftUpProhibit">
+     <boolean>true</boolean>
+    </void>
+    <void property="socPercent">
+     <int>16389</int>
+    </void>
+    <void property="voltage">
+     <int>34000</int>
+    </void>
+   </void>
+   <void index="5">
+    <void property="driftUpProhibit">
+     <boolean>true</boolean>
+    </void>
+    <void property="voltage">
+     <int>30000</int>
     </void>
    </void>
   </void>
@@ -909,13 +940,10 @@
    <int>20</int>
   </void>
   <void property="isolationClipping">
-   <int>4500</int>
-  </void>
-  <void property="isolationDelay">
-   <int>4</int>
+   <int>3700</int>
   </void>
   <void property="isolationThreshold">
-   <int>1900</int>
+   <int>3200</int>
   </void>
   <void property="j1772DefaultAcVoltage">
    <int>110</int>
@@ -939,10 +967,10 @@
    <int>4</int>
   </void>
   <void property="maxChargeCellVoltage">
-   <int>42500</int>
+   <int>42000</int>
   </void>
   <void property="maxChargePackVoltage">
-   <int>1530</int>
+   <int>1512</int>
   </void>
   <void property="maxChargeTime">
    <int>600</int>
@@ -950,23 +978,26 @@
   <void property="maxDclTemperature">
    <int>50</int>
   </void>
+  <void property="maxDischargeRelayReenableCount">
+   <int>2</int>
+  </void>
   <void property="maximumCCL">
    <int>4</int>
   </void>
   <void property="maximumCellVoltage">
-   <int>42250</int>
+   <int>42000</int>
   </void>
   <void property="maximumDCL">
    <int>270</int>
   </void>
   <void property="maximumPackVoltage">
-   <int>1521</int>
+   <int>1512</int>
   </void>
   <void property="minDclTemperature">
    <int>-10</int>
   </void>
   <void property="minimumBalanceVoltage">
-   <int>38000</int>
+   <int>39000</int>
   </void>
   <void property="minimumCellVoltage">
    <int>30000</int>
@@ -1014,7 +1045,7 @@
    <int>10</int>
   </void>
   <void property="mpoFunction">
-   <int>11</int>
+   <int>43</int>
   </void>
   <void property="mpoHighTemperature">
    <int>85</int>
@@ -1052,190 +1083,193 @@
   <void property="peakIncRelayDclTime">
    <int>3</int>
   </void>
+  <void property="populatedThermistors">
+   <int>255</int>
+  </void>
   <void id="BmsProfile$ProfilePopulationTableArray0" property="populationTable">
-   <void index="72">
+   <void index="36">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="73">
+   <void index="37">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="74">
+   <void index="38">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="75">
+   <void index="39">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="76">
+   <void index="40">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="77">
+   <void index="41">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="78">
+   <void index="42">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="79">
+   <void index="43">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="80">
+   <void index="44">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="81">
+   <void index="45">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="82">
+   <void index="46">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="83">
+   <void index="47">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="84">
+   <void index="48">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="85">
+   <void index="49">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="86">
+   <void index="50">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="87">
+   <void index="51">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="88">
+   <void index="52">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="89">
+   <void index="53">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="90">
+   <void index="54">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="91">
+   <void index="55">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="92">
+   <void index="56">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="93">
+   <void index="57">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="94">
+   <void index="58">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="95">
+   <void index="59">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="96">
+   <void index="60">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="97">
+   <void index="61">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="98">
+   <void index="62">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="99">
+   <void index="63">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="100">
+   <void index="64">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="101">
+   <void index="65">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="102">
+   <void index="66">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="103">
+   <void index="67">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="104">
+   <void index="68">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="105">
+   <void index="69">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="106">
+   <void index="70">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
-   <void index="107">
+   <void index="71">
     <void property="populated">
      <boolean>true</boolean>
     </void>
    </void>
   </void>
   <void property="relaysPopulated">
-   <int>2</int>
+   <int>34</int>
   </void>
   <void property="resistanceTable">
    <void index="0">

@@ -145,6 +145,18 @@ void package_rms_data(Pod_Data_Handle *podData, Rms *rms) {
 	}
 }
 */
+
+void set_pv_honeywell(Pod_Data_Handle *podData, uint16_t pres, uint16_t temp) {
+	podData->pv_temp.ui16data  = temp;
+	podData->pv_temp.freshness = FRESH;
+	podData->pv_temp.timestamp = time(NULL);
+
+	podData->pv_pres.ui16data = pres;
+	podData->pv_pres.freshness = FRESH;
+	podData->pv_pres.ui16data  = time(NULL);
+
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	if (pod_data->current_pressure.freshness == FRESH) {
@@ -201,6 +213,16 @@ void send_data(Pod_Data_Handle *pod_data) {
 	if (pod_data->acceleration.freshness == FRESH) {
 		pod_data->acceleration.freshness = NOT_FRESH;
 		uart_send(formatPacket(&(pod_data->acceleration)));
+	}
+
+	if (pod_data->pv_pres.freshness == FRESH) {
+		pod_data->pv_pres.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->pv_pres)));
+	}
+
+	if (pod_data->pv_temp.freshness == FRESH) {
+		pod_data->pv_temp.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->pv_temp)));
 	}
 
 	int i;
