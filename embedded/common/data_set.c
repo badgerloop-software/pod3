@@ -2,6 +2,7 @@
 #include "nav_data.h"
 #include "exti.h"
 #include <stdio.h>
+#include "state_machine.h"
 
 extern Nav_Data navData;
 
@@ -179,7 +180,7 @@ void nav_solenoid1_set(uint8_t data[]){
     data[2] |= navData.solenoids.solenoid_4.state << 3;
     data[2] |= navData.solenoids.solenoid_6.state << 5;
     data[2] |= navData.solenoids.solenoid_7.state << 6;
-	printf("%u\r\n", data[2]);
+	//printf("SOLENOID VAL: %u\r\n", data[2]);
     for( i = 3; i < 8; i++){
         data[i] = 0;
     }
@@ -212,7 +213,24 @@ void nav_accel_vel_pos_set(uint8_t data[]){
     
     return;
 }
- 
+
+extern state_t state_handle;
+/*
+ * Message Type:
+ *    Prepares a CAN message with the state
+ *
+ *    Data Byte 2: State
+ *    The rest: UNKNOWN
+ */
+void state_message_set(uint8_t data[]) {
+	data[2] = (uint8_t) state_handle.curr_state;
+
+	int i;
+	for (i = 3; i < 8; i++) {
+		data[i] = 0;
+	}
+}
+
 /*
  * Message Type: 
  *      Updates data with latest value from PV Pressure Sensor

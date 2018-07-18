@@ -2,9 +2,10 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
-#include <dashboard_data.h>
+#include "dashboard_data.h"
 #include "data_set.h"
-
+#include "nav_data.h"
+//#include "state_handlers.h"
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
 CAN_TxHeaderTypeDef TxHeader;
@@ -14,6 +15,7 @@ extern uint8_t board_num;
 volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
 
+extern state_box stateVal;
 void can_heartbeat_next(){
 	
 	switch( hb_status){
@@ -244,7 +246,12 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	uint8_t data[8];
 	switch (board) {
 		case DASH:
-			return HAL_ERROR;
+			state_message_set(data);
+			if (can_send_intermodule(DASH, NAV, CURR_STATE, data) != HAL_OK)
+				return HAL_ERROR;
+			if (can_send_intermodule(DASH, PV, CURR_STATE, data) != HAL_OK)
+				return HAL_ERROR;
+			return HAL_OK;
 			break;
 		case NAV:
 		    
@@ -278,6 +285,16 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 				return HAL_ERROR;
 			
 			nav_solenoid1_set(data);
+			if (data[2] == 3) {
+				printf("data[0]: %u\r\n", data[0]);
+				printf("data[1]: %u\r\n", data[1]);
+				printf("data[2]: %u\r\n", data[2]);
+				printf("data[3]: %u\r\n", data[3]);
+				printf("data[4]: %u\r\n", data[4]);
+				printf("data[5]: %u\r\n", data[5]);
+				printf("data[6]: %u\r\n", data[6]);
+				printf("data[7]: %u\r\n", data[7]);
+			}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
 
@@ -306,7 +323,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
-	//printf("%u\r\n", data[2]);	
+	//printf("%u\r\n", data[2]);
+	uint16_t pres1, pres2;	
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -339,24 +357,47 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_SHOULD_STOP:
 				break;
 			case NAV_PRES_1:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_1_2(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_2:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_3_4(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_3:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_5_6(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_4:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_7_8(pod_data, pres1, pres2);
 				break;
 			case NAV_SOLENOID_1:
-				printf("%u\r\n", data[2]);
 				set_solenoid_value(pod_data, data[2]);
+					printf("SOLENOID DATA:\r\n");
+					printf("data[0]: %u\r\n", data[0]);
+					printf("data[1]: %u\r\n", data[1]);
+					printf("data[2]: %u\r\n", data[2]);
+					printf("data[3]: %u\r\n", data[3]);
+					printf("data[4]: %u\r\n", data[4]);
+					printf("data[5]: %u\r\n", data[5]);
+					printf("data[6]: %u\r\n", data[6]);
+				break;
+			case CURR_STATE:
 				break;
 			case NAV_ACCEL_VEL_POS:
+				set_accel_vel_pos(pod_data, data[2], data[3], data[4]);
 				break;
 			}
 		}
 	return HAL_OK;
 }
 
+//extern state_t state_handle;
 HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
@@ -423,6 +464,12 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case NAV_ACCEL_VEL_POS:
 				printf("NAV_ACCEL_VEL_POS\r\n");
+				break;
+			case CURR_STATE:
+				//printf("STATE: %u\r\n", data[2]);
+				stateVal.stateName = data[2];
+				stateVal.change_state = 1;
+				//printf("STATE: %u\r\n", state_handle.curr_state);
 				break;
 			}
 		}

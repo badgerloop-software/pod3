@@ -3,9 +3,12 @@
 #include "state_handlers.h"
 #include "system.h"
 #include "board.h"
+#include "solenoid.h"
+#include "nav_data.h"
 #include "badgerloop.h"
 #include "can.h"
 
+extern state_box stateVal;
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/
@@ -23,7 +26,9 @@ const unsigned int state_intervals[] = {
 	999999, /* SERVICE_LOW_SPEED_PROPULSION		*/
 };
 
+
 void change_state(STATE_NAME state) {
+	printf("requesting state: %d\r\n", state);
 	if(state > NUM_STATES) return;
 	printf("Changing state from %s to %s\r\n", state_strings[state_handle.curr_state],
 		state_strings[state]);
@@ -147,7 +152,6 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -282,7 +286,11 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -388,7 +396,11 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -451,7 +463,11 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -510,7 +526,12 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
+		change_solenoid(SEC_VENTING,    ACTUATED);
+		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
+			
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -573,8 +594,13 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	else if(board_type==NAV) {
-
+	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
@@ -642,6 +668,11 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 
 	} // end NAV_MODULE
 
@@ -703,6 +734,11 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
 
 	} // end NAV_MODULE
 
@@ -764,6 +800,12 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, NOT_ACTUATED);
+
 
 	} // end NAV_MODULE
 
@@ -829,7 +871,11 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING,    NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -887,7 +933,12 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING,    ACTUATED);
+		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
+	
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
