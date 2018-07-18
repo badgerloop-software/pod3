@@ -17,6 +17,7 @@
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
 
+extern CAN_RxHeaderTypeDef RxHeader;
 const int board_type = DASH;
 
 Pod_Data_Handle podData = {
@@ -84,14 +85,11 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
-<<<<<<< HEAD
+    
     adc_init();
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
-=======
-	
->>>>>>> c5bdb79889b7079a486c90bb1f2e5b5550bf17db
 	bms_init();
 	return 0;
 }
@@ -112,7 +110,7 @@ int main(void) {
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
-		if (can_read() == HAL_OK) ccp_parse_can_message(BADGER_CAN_ID, RxData, &podData);
+		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (dash_DAQ(&podData)) printf("DAQ Failure");
