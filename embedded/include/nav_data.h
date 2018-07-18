@@ -12,6 +12,12 @@ typedef struct {
 } Retro_Values;
 
 typedef struct {
+	uint8_t limitValue1;
+    uint8_t limitValue2;
+	uint8_t limitValue3;
+} Limit_Switches;
+
+typedef struct {
 	int8_t posX;
 	int8_t velX;
 	int8_t accX;
@@ -35,6 +41,7 @@ typedef struct {
 	Pressure_Values   linePressures;
 	Retro_Values      retros;
 	Motion_Values     motion;
+    Limit_Switches    limits;
     int               shouldStop;
 } Nav_Data;
 

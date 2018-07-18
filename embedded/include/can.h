@@ -17,13 +17,15 @@ extern uint8_t             RxData[8];
 extern uint32_t            TxMailbox;
 
 typedef enum{
-    IDLE,           //Default message, sends all 0's
-    FAULTS_CLEARED, //Clears CAN faults on RMS
+    IDLE_MSG,           //Default message, sends all 0's
+    CLEAR_FAULTS_MSG,   //Clears CAN faults
+    FAULTS_CLEARED, //Cleared CAN faults on RMS
     PRE_RUN,        // Same message as IDLE, but represents ready-to-run state
     FORWARD,        //Commands motor forward
     SPIN_DOWN,      //Same message as IDLE, but represents slowing down
     DISCHARGE,      //Discharging capacitors after the run
-    POST_RUN        //Also same as IDLE, but represents post run
+    POST_RUN_MSG,       //Also same as IDLE, but represents post run
+    FAULT           //Also same as IDLE, but represents falt state
 }heartbeat_msg_t;
 
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan );
@@ -31,6 +33,8 @@ int can_heartbeat_clear_faults( CAN_HandleTypeDef *hcan );
 int can_heartbeat_forward( CAN_HandleTypeDef *hcan );
 int can_heartbeat_discharge( CAN_HandleTypeDef *hcan );
 int can_heartbeat_handler( CAN_HandleTypeDef *hcan );
+void can_heartbeat_next(void);
+void can_heartbeat_fault(void);
 
 HAL_StatusTypeDef can_read(void);
 HAL_StatusTypeDef can_send(uint32_t id, uint32_t TxMailbox, size_t length, uint8_t *TxData);

@@ -13,9 +13,9 @@ extern Nav_Data navData;
  * FROM: NAV
  *
  * Data Byte 2: Voted Retro Count
- * Data Byte 3: Lim 1
- * Data Byte 4: Lim 2
- * Data Byte 5: Lim 3
+ * Data Byte 3: Limit Switch 1 GPIO Value
+ * Data Byte 4: Limit Switch 2 GPIO Value
+ * Data Byte 5: Limit Switch 3 GPIO Value
  * Data Byte 6: 0
  * Data Byte 7: 0 */
 void nav_tape_set(uint8_t data[]){
@@ -23,7 +23,11 @@ void nav_tape_set(uint8_t data[]){
     //TODO: Do error checking with badRetro
     data[2] = navData.retros.retroAgreement;
     //data[3] = interLine[3].count;
-    for ( i = 3; i < 8; i++ ){
+    data[3] = navData.limits.limitValue1;
+    data[4] = navData.limits.limitValue2;
+    data[5] = navData.limits.limitValue3;
+
+    for ( i = 6; i < 8; i++ ){
         data[i] = 0;
     }
     
@@ -71,8 +75,8 @@ void nav_pressure1_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_1;
     data[3] = 0xFF & (navData.linePressures.pres_1 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_2;
-    data[4] = 0xFF & (navData.linePressures.pres_2 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_2;
+    data[5] = 0xFF & (navData.linePressures.pres_2 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     
@@ -95,8 +99,8 @@ void nav_pressure2_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_3;
     data[3] = 0xFF & (navData.linePressures.pres_3 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_4;
-    data[4] = 0xFF & (navData.linePressures.pres_4 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_4;
+    data[5] = 0xFF & (navData.linePressures.pres_4 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     
@@ -120,8 +124,8 @@ void nav_pressure3_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_5;
     data[3] = 0xFF & (navData.linePressures.pres_5 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_6;
-    data[4] = 0xFF & (navData.linePressures.pres_6 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_6;
+    data[5] = 0xFF & (navData.linePressures.pres_6 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     
@@ -145,8 +149,8 @@ void nav_pressure4_set(uint8_t data[]){
 
     data[2] = 0xFF & navData.linePressures.pres_7;
     data[3] = 0xFF & (navData.linePressures.pres_7 >> 8);
-    data[3] = 0xFF & navData.linePressures.pres_8;
-    data[4] = 0xFF & (navData.linePressures.pres_8 >> 8);
+    data[4] = 0xFF & navData.linePressures.pres_8;
+    data[5] = 0xFF & (navData.linePressures.pres_8 >> 8);
     data[6] = 0; //TODO
     data[7] = 0;
     

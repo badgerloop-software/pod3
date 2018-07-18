@@ -9,6 +9,7 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
+#include "state_machine.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -59,7 +60,7 @@ inline void printPrompt(void) {
 
 int dash_init() {
 	
-
+    initialize_state_machine(IDLE);
 	return 0;
 }
 
@@ -86,6 +87,7 @@ int main(void) {
 		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
+			state_machine_handler();
 			//state_machine_logic();
 			//check if new state is needed
 		}
