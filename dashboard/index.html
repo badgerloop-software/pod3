@@ -72,25 +72,41 @@
                                                   <h5 class="text-center font-weight-bold data-category">MOTION</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
+                                                          <tr>
+                                                              <th scope="row"></th>
+                                                              <th>min</td>
+                                                              <th>actual</td>
+                                                              <th>max</td>
+                                                          </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Stopping Distance (m)</th>
-                                                              <td class="micro-data">x</td>
+                                                              <td class="micro-data-min" id="stopping_distance_min">x</td>
+                                                              <td class="micro-data table-success" id="stopping_distance">x</td>
+                                                              <td class="micro-data-max" id="stopping_distance_max">x</td>
                                                           </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Retro</th>
-                                                              <td class="micro-data">x</td>
+                                                              <td class="micro-data-min" id="strip_count_min">x</td>
+                                                              <td class="micro-data table-success" id="strip_count">x</td>
+                                                              <td class="micro-data-max" id="strip_count_max">x</td>
                                                           </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Position (m)</th>
-                                                              <td class="micro-data">x</td>
+                                                              <td class="micro-data-min" id="position_min">x</td>
+                                                              <td class="micro-data table-success" id="position">x</td>
+                                                              <td class="micro-data-max" id="position_max">x</td>
                                                           </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Velocity (m/s)</th>
-                                                              <td class="micro-data">x</td>
+                                                              <td class="micro-data-min" id="velocity_min">x</td>
+                                                              <td class="micro-data table-success" id="velocity">x</td>
+                                                              <td class="micro-data-max" id="velocity_max">x</td>
                                                           </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Acceleration (m/(s^2))</th>
-                                                              <td class="micro-data">x</td>
+                                                              <td class="micro-data-min" id="acceleration_min">x</td>
+                                                              <td class="micro-data table-success" id="acceleration">x</td>
+                                                              <td class="micro-data-max" id="acceleration_max">x</td>
                                                           </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Command Torque</th>
@@ -113,15 +129,24 @@
                                                   <h5 class="text-center font-weight-bold data-category">Pressure & Braking</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
+						      <tr>
+							  <th scope="row"></th>
+							  <th>min</td>
+							  <th>actual</td>
+							  <th>max</td>
+						      </tr>
                                                       <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Line Pres 1</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
                                                       <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Current Pressure (PSI)</th>
-                                                          <td class="micro-data">x</td>
+                                                          <td class="micro-data-min" id="current_pressure_min">x</td>
+                                                          <td class="micro-data table-success" id="current_pressure">x</td>
+                                                          <td class="micro-data-max" id="current_pressure_max">x</td>
                                                       </tr>
                                                       <tr class="micro-data-row">
+<<<<<<< HEAD
                                                           <th class="micro-data-label" scope="row">Motor Speed</th>
                                                           <td class="micro-data">x</td>
                                                       </tr>
@@ -131,7 +156,9 @@
                                                       </tr>
                                                       <tr class="micro-data-row">
                                                           <th class="micro-data-label" scope="row">Pressure Vessel Pressure (PSI)</th>
-                                                          <td class="micro-data">x</td>
+                                                          <td class="micro-data-min" id="pressure_vessel_pressure_min">x</td>
+                                                          <td class="micro-data table-success" id="pressure_vessel_pressure">x</td>
+                                                          <td class="micro-data-max" id="pressure_vessel_pressure_max">x</td>
                                                       </tr>
                                                       </tbody>
                                                   </table>
@@ -148,13 +175,23 @@
                                               <h5 class="text-center font-weight-bold data-category">BATTERY PACK</h5>
                                               <table class="table table-sm table-hover table-striped">
                                                   <tbody>
+						  <tr>
+						      <th scope="row"></th>
+						      <th>min</td>
+						      <th>actual</td>
+						      <th>max</td>
+						  </tr>
                                                   <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack Voltage (V)</th>
-                                                      <td class="micro-data">x</td>
+                                                      <td class="micro-data-min" id="pack_voltage_min">x</td>
+                                                      <td class="micro-data table-success" id="pack_voltage">x</td>
+                                                      <td class="micro-data-max" id="pack_voltage_max">x</td>
                                                   </tr>
                                                   <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">Pack Current (A)</th>
-                                                      <td class="micro-data">x</td>
+                                                      <td class="micro-data-min" id="pack_current_min">x</td>
+                                                      <td class="micro-data table-success" id="pack_current">x</td>
+                                                      <td class="micro-data-max" id="pack_current_max">x</td>
                                                   </tr>
                                                   <tr class="micro-data-row">
                                                       <th class="micro-data-label" scope="row">SOC (%)</th>
@@ -177,6 +214,12 @@
                                                   <h5 class="text-center font-weight-bold data-category">BATTERY CELLS</h5>
                                                   <table class="table table-sm table-hover table-striped">
                                                       <tbody>
+							 <tr>
+							     <th scope="row"></th>
+							     <th>min</td>
+							     <th>actual</td>
+							     <th>max</td>
+							 </tr>
                                                           <tr class="micro-data-row">
                                                               <th class="micro-data-label" scope="row">Cell Max Voltage (V)</th>
                                                               <td class="micro-data">x</td>

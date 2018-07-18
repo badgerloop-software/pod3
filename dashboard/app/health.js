@@ -37,26 +37,73 @@ const FAULT_PRERUN = "state_fault_prerun";
 const FAULT_RUN = "state_fault_run";
 const FAULT_POSTRUN = "state_fault_postrun";
 
+/* all the sensor names we care about */
+const STOPPING_DIST = "stopping_distance";
+const STRIP_COUNT = "strip_count";
+const POSITION = "position";
+const VELOCITY = "velocity";
+const ACCELERATION = "acceleration";
+const CURRENT_PRESSURE = "current_pressure";
+const AMBIENT_POD_PRESSURE = "ambient_pod_pressure";
+const ACTUATION_LEFT = "actuations_left";
+const PRESSURE_PV = "pressure_vessel_pressure";
+const PACK_VOLTAGE = "pack_voltage";
+const PACK_CURRENT = "pack_current";
+const PACK_TEMPERATURE = "pack_temperature";
+const PACK_SOC = "pack_soc";
+const PACK_CAPACITY = "pack_capacity";
+const CELL_HIGH = "cell_high";
+const CELL_LOW = "cell_low";
+const CELL_AVG = "cell_average";
+const LV_BATTERY_TEMP = "lv_battery_temp";
+/* put them all in a list for iteration as well */
 const SENSORS = [
-    "stopping_distance",
-    "strip_count",
-    "position",
-    "velocity",
-    "acceleration",
-    "current_pressure",
-    "ambient_pod_pressure",
-    "actuations_left",
-    "pressure_vessel_pressure",
-    "pack_voltage",
-    "pack_current",
-    "pack_temperature",
-    "pack_soc",
-    "pack_capacity",
-    "cell_high",
-    "cell_low",
-    "cell_average",
-    "lv_battery_temp"
+    STOPPING_DIST,
+    STRIP_COUNT,
+    POSITION,
+    VELOCITY,
+    ACCELERATION,
+    CURRENT_PRESSURE,
+    AMBIENT_POD_PRESSURE,
+    ACTUATION_LEFT,
+    PRESSURE_PV,
+    PACK_VOLTAGE,
+    PACK_CURRENT,
+    PACK_TEMPERATURE,
+    PACK_SOC,
+    PACK_CAPACITY,
+    CELL_HIGH,
+    CELL_LOW,
+    CELL_AVG,
+    LV_BATTERY_TEMP
 ];
+
+/* test function */
+function setRandomSensorRed() {
+    let i = Math.floor(Math.random() * SENSORS.length);
+    setSensorDefaultColor(SENSORS[i]);
+    setSensorRed(SENSORS[i]);
+}
+
+function setSensorDefaultColor(sensorName) {
+    let el = document.getElementById(sensorName);
+    el.classList.remove('table-danger');
+    el.classList.remove('table-success');
+}
+
+/* make a sensor cell green (e.g. for a good value) */
+function setSensorGreen(sensorName) {
+    let el = document.getElementById(sensorName);
+    el.classList.remove('table-danger');
+    el.classList.add('table-success');
+}
+
+/* make a sensor cell red (e.g. for a bad value) */
+function setSensorRed(sensorName) {
+    let el = document.getElementById(sensorName);
+    el.classList.remove('table-success');
+    el.classList.add('table-danger');
+}
 
 /* send a heartbeat to the pod to tell it we are still here */
 function podHeartbeat() {
@@ -142,6 +189,73 @@ function doHealthCheck(data) {
     /* TODO need to send fault commands in some cases */
 }
 
+/* **************************** */
+/* Sensor value assert function */
+/* **************************** */
+
+/* every assert function has a fail function parameter that is called when */
+/* it fails the check - use it for nasty failures that require handling */
+
+/* no-op the default assert fail function */
+function noop() {}
+
+/* assert that a sensor value is equal to one specified */
+function sens_assert_eq(sensorData, sensorName, eqVal, failFunc = noop) {
+    var ret = [];
+    let dpoint = sensorData[sensorName];
+    let sVal = dpoint[VALUE];
+    if (sVal != eqVal) {
+	let mesg = sensorName + " [" + sVal + "] != " + eqVal;
+	ret = [mesg];
+	/* call the fail function we were given */
+	failFunc();
+    }
+    return ret;
+}
+
+function sens_assert_within(sensorData, sensorName, loVal, hiVal, failFunc = noop) {
+    var ret = [];
+    let dpoint = sensorData[sensorName];
+    let sVal = dpoint[VALUE];
+    if (sVal < loVal || sVal > hiVal) {
+	let mesg = sensorName + " [" + sVal + "] out of range " + loVal + "-" + hiVal;
+	ret = [mesg];
+	/* call the fail function we were given */
+	failFunc();
+    }
+    return ret;
+}
+
+function sens_assert_lt(sensorData, sensorName, ltVal, failFunc = noop) {
+    var ret = [];
+    let dpoint = sensorData[sensorName];
+    let sVal = dpoint[VALUE];
+    if (sVal >= ltVal) {
+	let mesg = sensorName + " [" + sVal + "] >= " + ltVal;
+	ret = [mesg];
+	/* call the fail function we were given */
+	failFunc();
+    }
+    return ret;
+}
+
+function sens_assert_gt(sensorData, sensorName, gtVal, failFunc = noop) {
+    var ret = [];
+    let dpoint = sensorData[sensorName];
+    let sVal = dpoint[VALUE];
+    if (sVal <= ltVal) {
+	let mesg = sensorName + " [" + sVal + "] <= " + gtVal;
+	ret = [mesg];
+	/* call the fail function we were given */
+	failFunc();
+    }
+    return ret;
+}
+
+/* ****************************** */
+/* Specific state check functions */
+/* ****************************** */
+
 /* do the telemetry bounds checking for poweroff state */
 function poweroff_ck(sensorData) {
     /* TODO return an array of error messages */
@@ -150,8 +264,12 @@ function poweroff_ck(sensorData) {
 
 /* do the telemetry bounds checking for idle state */
 function idle_ck(sensorData) {
-    /* TODO return an array of error messages */
-    return [];
+    var ret = [];
+    ret = ret.concat(sens.assert_eq(sensorData, STOPPING_DIST, 0));
+    ret = ret.concat(sens_assert_eq(sensorData, STRIP_COUNT, 0));
+    ret = ret.concat(sens_assert_lt(sensorData, ACCELERATION, 0.1));
+    /* TODO fill in any others */
+    return ret;
 }
 
 /* do the telemetry bounds checking for ready-for-pumpdown state */
@@ -277,3 +395,6 @@ setInterval(requestAllTelemetry, UPDATE_TIME);
 
 /* set an interval to send a heartbeat to the pod */
 setInterval(podHeartbeat, HB_TIME);
+
+/* test coloration */
+/* setInterval(setRandomSensorRed, 1000); */

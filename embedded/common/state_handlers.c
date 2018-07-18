@@ -3,7 +3,12 @@
 #include "state_handlers.h"
 #include "system.h"
 #include "board.h"
+#include "solenoid.h"
+#include "nav_data.h"
+#include "badgerloop.h"
+#include "can.h"
 
+extern state_box stateVal;
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/
@@ -21,7 +26,9 @@ const unsigned int state_intervals[] = {
 	999999, /* SERVICE_LOW_SPEED_PROPULSION		*/
 };
 
+
 void change_state(STATE_NAME state) {
+	printf("requesting state: %d\r\n", state);
 	if(state > NUM_STATES) return;
 	printf("Changing state from %s to %s\r\n", state_strings[state_handle.curr_state],
 		state_strings[state]);
@@ -70,17 +77,27 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
 	/*       Propulsion          */
 	/*****************************/
 	// Set torque to max 0.
-if(board_type==PV) {
+    if(board_type==PV) {
+        /* De-assert high voltage and RMS */
+        mcu_high_voltage_set(false);
+        pv_solenoid2_set(false);
+    } // end PV_MODULE
 
-} // end PV_MODULE
+    if(board_type==NAV) {
 
-if(board_type==NAV) {
+    }//end NAV module
+    if(board_type==DASH) {
+        can_heartbeat_fault();
+        can_heartbeat_handler( &can_handle );
+    }
+    if(board_type==DEV) {
 
-} // end NAV_MODULE
+    } // end DEV_MODULE
 
-if(board_type==DASH) {
-
-} // end CPP_MODULE
+    if(board_type==DASH) {
+        can_heartbeat_fault();
+        //can_heartbeat_handler( &can_handle );
+    } // end CPP_MODULE
 
 if(board_type==DEV) {
 
@@ -100,13 +117,15 @@ void in_pre_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
 
 	} // end DEV_MODULE
-	printf("In state: PRE_RUN_FAULT (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
+	//printf("In state: PRE_RUN_FAULT (Flags: 0x%lx)\r\n", flags);
 }
 
 void from_pre_run_fault(STATE_NAME to, uint32_t flags) {
@@ -126,14 +145,18 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	// Set torque to 0
 	if(board_type==PV) {
+        /* De-assert high voltage and RMS */
+        mcu_high_voltage_set(false);
+        pv_solenoid2_set(false);
 
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_fault();
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -153,13 +176,15 @@ void in_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
 
 	} // end DEV_MODULE
-	printf("In state: RUN_FAULT (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
+	//printf("In state: RUN_FAULT (Flags: 0x%lx)\r\n", flags);
 
 }
 
@@ -180,6 +205,9 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	// Set torque to 0
 	if(board_type==PV) {
+        /* De-assert high voltage and RMS */
+        mcu_high_voltage_set(false);
+        pv_solenoid2_set(false);
 
 	} // end PV_MODULE
 
@@ -188,6 +216,8 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_fault();
+        //can_heartbeat_handler();
 
 	} // end CPP_MODULE
 
@@ -207,13 +237,15 @@ void in_post_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
 
 	} // end DEV_MODULE
-	printf("In state: POST_RUN_FAULT (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
+	//printf("In state: POST_RUN_FAULT (Flags: 0x%lx)\r\n", flags);
 }
 
 void from_post_run_fault(STATE_NAME to, uint32_t flags) {
@@ -226,6 +258,7 @@ void from_post_run_fault(STATE_NAME to, uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -253,10 +286,15 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -267,10 +305,13 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 }
 
 void in_idle(uint32_t flags) {
-	printf("In state: IDLE (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
+	//printf("In state: IDLE (Flags: 0x%lx)\r\n", flags);
 	// Pod health check
 if(board_type==PV) {
-	
+    /* BMS Reset gets asserted */
+    bms_software_reset_set( true );
+
 } // end PV_MODULE
 
 if(board_type==NAV) {
@@ -286,18 +327,39 @@ if(board_type==NAV) {
 //	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
 //	bLower = BRAKING_LINE__LOWER
 
-} // end NAV_MODULE 
-if(board_type==DASH) {
+    } // end NAV_MODULE 
+    if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 		
-} // end CPP_MODULE
+    } // end CPP_MODULE
 
-if(board_type==DEV) {
+    if(board_type==DEV) {
 
-} // end DEV_MODULE
+    } // end DEV_MODULE
 }
 
 void from_idle(STATE_NAME to, uint32_t flags){
-	printf("From state: IDLE (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
+	if(board_type==PV) {
+	    
+        /* BMS reset de-asserted */
+        bms_software_reset_set( false );
+
+	} // end PV_MODULE
+
+	if(board_type==NAV) {
+
+	} // end NAV_MODULE
+
+	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
+
+	} // end CPP_MODULE
+
+	if(board_type==DEV) {
+
+	} // end DEV_MODULE
+    
+    printf("From state: IDLE (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
 }
 
 /*****************************************************************************/
@@ -327,17 +389,29 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 
 	if(board_type==PV) {
 
+        /* Enabling high voltage, enabling RMS */
+        mcu_high_voltage_set(true);
+        pv_solenoid2_set(true);
+
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_next();
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	
@@ -346,7 +420,8 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 }
 
 void in_ready_for_pumpdown(uint32_t flags) {
-	printf("In state: READY_FOR_PUMPDOWN (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: READY_FOR_PUMPDOWN (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -357,6 +432,7 @@ void in_ready_for_pumpdown(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -387,10 +463,15 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -401,7 +482,8 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 }
 
 void in_pumpdown(uint32_t flags) {
-	printf("In state: PUMPDOWN (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: PUMPDOWN (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -412,6 +494,7 @@ void in_pumpdown(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -443,21 +526,31 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
+		change_solenoid(SEC_VENTING,    ACTUATED);
+		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
+			
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	printf("To state: READY (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
 }
 
 void in_ready(uint32_t flags) {
-	printf("In state: READY (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: READY (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 
 	if(board_type==PV) {
@@ -469,6 +562,7 @@ void in_ready(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -501,21 +595,31 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-	propulsion_start_ts = ticks;
+	else if(board_type==DASH) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
+	    	propulsion_start_ts = ticks;
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	printf("To state: PROPULSION_START (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
 }
 
 void in_propulsion_start(uint32_t flags) {
-	printf("In state: PROPULSION_START (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: PROPULSION_START (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -526,10 +630,13 @@ void in_propulsion_start(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
-	/* If we pass propulsion timeout enter braking */
-	if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
-		change_state(BRAKING);
-	}
+        
+        can_heartbeat_handler( &can_handle );
+	    
+        /* If we pass propulsion timeout enter braking 
+	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
+		    change_state(BRAKING);
+	    } */
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
@@ -561,10 +668,16 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -575,7 +688,8 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 }
 
 void in_propulsion_distance(uint32_t flags) {
-	printf("In state: PROPULSION_DISTANCE (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: PROPULSION_DISTANCE (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -586,10 +700,12 @@ void in_propulsion_distance(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
-	/* If we pass propulsion timeout enter braking */
-	if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
-		change_state(BRAKING);
-	}
+        can_heartbeat_handler( &can_handle );
+	
+        /* If we pass propulsion timeout enter braking 
+	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
+		    change_state(BRAKING);
+	    } */
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
@@ -618,21 +734,31 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, ACTUATED);
 
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
+        	//can_heartbeat_next();
+        	//can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	printf("To state: BRAKING (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
 }
 
 void in_braking(uint32_t flags) {
-	printf("In state: BRAKING (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: BRAKING (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -643,6 +769,7 @@ void in_braking(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -673,21 +800,32 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING, NOT_ACTUATED);
+
 
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	printf("To state: POST_RUN (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
 }
 
 void in_post_run(uint32_t flags) {
-	printf("In state: POST_RUN (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: POST_RUN (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -698,10 +836,15 @@ void in_post_run(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        //Heartbeat next does not advance past post-run
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 }
@@ -728,10 +871,15 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING,    NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -742,7 +890,8 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 }
 
 void in_safe_to_approach(uint32_t flags) {
-	printf("In state: SAFE_TO_APPROACH (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: SAFE_TO_APPROACH (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
@@ -753,6 +902,7 @@ void in_safe_to_approach(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -783,10 +933,16 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-
+		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_VENTING,    ACTUATED);
+		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
+	
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -797,7 +953,8 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 }
 
 void in_service_low_speed_propulsion(uint32_t flags) {
-	printf("In state: LOW_SPEED_PROPULSION (Flags: 0x%lx)\r\n", flags);
+	//printf("In state: LOW_SPEED_PROPULSION (Flags: 0x%lx)\r\n", flags);
+	UNUSED( flags );
 	// pod health check
 
 	if(board_type==PV) {
@@ -809,6 +966,7 @@ void in_service_low_speed_propulsion(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 

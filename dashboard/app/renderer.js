@@ -34,10 +34,9 @@ function parseData(rawData, sensorName) {
             case "cell_max_voltage":
                 jsonData[sensorName]["sensor_data"]["value"] /= 1000;
             break;
-            case "current_pressure":
-                //jsonData[sensorName]["sensor_data"]["value"];
             case "cell_min_voltage":
                 jsonData[sensorName]["sensor_data"]["value"] /= 1000;
+                break;
             case "solenoid_1":
                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
                     comm.updater.emit("solenoid-1_deactivate") : comm.updater.emit("solenoid-1_activate");
@@ -65,7 +64,6 @@ function parseData(rawData, sensorName) {
 
 
         }
-        console.log("SENSOR: " + jsonData[sensorName] + "val: " + jsonData[sensorName]["sensor_data"]["value"]);
         return jsonData[sensorName]["sensor_data"]["value"];
     } else {
         return "not_connected"
