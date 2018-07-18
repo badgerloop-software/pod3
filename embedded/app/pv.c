@@ -12,7 +12,7 @@
 
 const int board_type = PV;
 
-PV_Data pvData = {MCU_DISABLED, 0};
+PV_Data pvData = {MCU_DISABLED, 0, 0};
 
 /* Nucleo 32 I/O */
 
