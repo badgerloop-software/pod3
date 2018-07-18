@@ -52,7 +52,7 @@
    <int>1</int>
   </void>
   <void property="chargedSOC">
-   <int>95</int>
+   <int>90</int>
   </void>
   <void property="currentSensorDivider1">
    <int>2184</int>
@@ -623,7 +623,7 @@
      <int>16394</int>
     </void>
     <void property="voltage">
-     <int>25000</int>
+     <int>35600</int>
     </void>
    </void>
    <void index="1">
@@ -634,7 +634,7 @@
      <int>16404</int>
     </void>
     <void property="voltage">
-     <int>28000</int>
+     <int>36100</int>
     </void>
    </void>
    <void index="2">
@@ -645,7 +645,7 @@
      <int>32848</int>
     </void>
     <void property="voltage">
-     <int>35000</int>
+     <int>40300</int>
     </void>
    </void>
    <void index="3">
@@ -656,7 +656,26 @@
      <int>32863</int>
     </void>
     <void property="voltage">
-     <int>36000</int>
+     <int>41700</int>
+    </void>
+   </void>
+   <void index="4">
+    <void property="driftUpProhibit">
+     <boolean>true</boolean>
+    </void>
+    <void property="socPercent">
+     <int>16389</int>
+    </void>
+    <void property="voltage">
+     <int>34000</int>
+    </void>
+   </void>
+   <void index="5">
+    <void property="driftUpProhibit">
+     <boolean>true</boolean>
+    </void>
+    <void property="voltage">
+     <int>30000</int>
     </void>
    </void>
   </void>
@@ -807,10 +826,10 @@
    <int>4</int>
   </void>
   <void property="maxChargeCellVoltage">
-   <int>42500</int>
+   <int>42000</int>
   </void>
   <void property="maxChargePackVoltage">
-   <int>3060</int>
+   <int>3024</int>
   </void>
   <void property="maxChargeTime">
    <int>600</int>
@@ -825,19 +844,19 @@
    <int>4</int>
   </void>
   <void property="maximumCellVoltage">
-   <int>42250</int>
+   <int>42000</int>
   </void>
   <void property="maximumDCL">
    <int>270</int>
   </void>
   <void property="maximumPackVoltage">
-   <int>3042</int>
+   <int>3024</int>
   </void>
   <void property="minDclTemperature">
    <int>-10</int>
   </void>
   <void property="minimumBalanceVoltage">
-   <int>38000</int>
+   <int>39000</int>
   </void>
   <void property="minimumCellVoltage">
    <int>30000</int>
