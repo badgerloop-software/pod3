@@ -28,6 +28,7 @@ typedef struct {
 
 Bms *bms;
 void bms_init();
+int bms_clearFaults();
 int bms_parser(uint32_t id, uint8_t *data);
 
 #endif
