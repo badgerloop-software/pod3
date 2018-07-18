@@ -13,7 +13,7 @@ typedef struct {
 	uint16_t phase_b_current;
 	uint16_t phase_c_current;
 	uint16_t dc_bus_voltage;
-	uint16_t output_voltage_peak;
+	//uint16_t output_voltage_peak;
 	uint16_t lv_voltage;
 	uint64_t can_code_1;
 	uint64_t can_code_2;
@@ -22,6 +22,9 @@ typedef struct {
 	uint16_t commanded_torque;
 	uint16_t actual_torque;
 	uint16_t relay_state;
+	uint16_t electrical_freq;
+	uint16_t dc_bus_current;
+	uint16_t output_voltage_ln;
 
 } Rms;
 
