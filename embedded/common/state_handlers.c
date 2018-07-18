@@ -83,21 +83,17 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
         pv_solenoid2_set(false);
     } // end PV_MODULE
 
-    if(board_type==NAV) {
+    else if(board_type==NAV) {
 
     }//end NAV module
-    if(board_type==DASH) {
+    else if(board_type==DASH) {
         can_heartbeat_fault();
         can_heartbeat_handler( &can_handle );
     }
-    if(board_type==DEV) {
+    else if(board_type==DEV) {
 
     } // end DEV_MODULE
 
-    if(board_type==DASH) {
-        can_heartbeat_fault();
-        //can_heartbeat_handler( &can_handle );
-    } // end CPP_MODULE
 
 if(board_type==DEV) {
 
@@ -211,17 +207,17 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_fault();
-        //can_heartbeat_handler();
+	else if(board_type==DASH) {
+        	can_heartbeat_fault();
+        	can_heartbeat_handler(&can_handle);
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: POST_RUN_FAULT (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -232,16 +228,16 @@ void in_post_run_fault(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	UNUSED( flags );
@@ -253,16 +249,16 @@ void from_post_run_fault(STATE_NAME to, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 	
 	} // end DEV_MODULE
 	printf("From state: POST_RUN_FAULT (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
@@ -285,7 +281,7 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
@@ -293,12 +289,12 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
+	else if(board_type==DASH) {
         can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: IDLE (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -308,13 +304,13 @@ void in_idle(uint32_t flags) {
 	UNUSED( flags );
 	//printf("In state: IDLE (Flags: 0x%lx)\r\n", flags);
 	// Pod health check
-if(board_type==PV) {
-    /* BMS Reset gets asserted */
-    bms_software_reset_set( true );
+	if(board_type==PV) {
+    		/* BMS Reset gets asserted */
+    		bms_software_reset_set( true );
 
-} // end PV_MODULE
+	} // end PV_MODULE
 
-if(board_type==NAV) {
+	else if(board_type==NAV) {
 	//int pres = GET_PRES_TANK_PRI, bUpper = BRAKING_TANK_UPPER;
 	//int bLower = BRAKING_TANK_LOWER;
 	//if(pres > bUpper){} //TODO Throw warning
@@ -327,15 +323,15 @@ if(board_type==NAV) {
 //	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
 //	bLower = BRAKING_LINE__LOWER
 
-    } // end NAV_MODULE 
-    if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+    	} // end NAV_MODULE 
+    	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 		
-    } // end CPP_MODULE
+    	} // end CPP_MODULE
 
-    if(board_type==DEV) {
+	else if(board_type==DEV) {
 
-    } // end DEV_MODULE
+    	} // end DEV_MODULE
 }
 
 void from_idle(STATE_NAME to, uint32_t flags){
@@ -346,16 +342,16 @@ void from_idle(STATE_NAME to, uint32_t flags){
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
     
@@ -389,13 +385,13 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 
 	if(board_type==PV) {
 
-        /* Enabling high voltage, enabling RMS */
-        mcu_high_voltage_set(true);
-        pv_solenoid2_set(true);
+	        /* Enabling high voltage, enabling RMS */
+        	mcu_high_voltage_set(true);
+        	pv_solenoid2_set(true);
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
@@ -403,15 +399,13 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_next();
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_next();
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
-        	can_heartbeat_next();
-        	can_heartbeat_handler( &can_handle );
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	
@@ -427,16 +421,16 @@ void in_ready_for_pumpdown(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -462,7 +456,7 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
@@ -470,12 +464,12 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: PUMPDOWN (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -489,16 +483,16 @@ void in_pumpdown(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -525,7 +519,7 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, ACTUATED);
 		change_solenoid(SEC_VENTING,    ACTUATED);
@@ -534,15 +528,13 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 			
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
+	else if(board_type==DASH) {
         	can_heartbeat_next();
         	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
-        	can_heartbeat_next();
-        	can_heartbeat_handler( &can_handle );
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: READY (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -557,16 +549,16 @@ void in_ready(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -594,7 +586,7 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
@@ -610,8 +602,6 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	} // end CPP_MODULE
 
 	else if(board_type==DEV) {
-        	can_heartbeat_next();
-        	can_heartbeat_handler( &can_handle );
 
 	} // end DEV_MODULE
 	printf("To state: PROPULSION_START (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -625,13 +615,13 @@ void in_propulsion_start(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
+	else if(board_type==DASH) {
         
-        can_heartbeat_handler( &can_handle );
+        	can_heartbeat_handler( &can_handle );
 	    
         /* If we pass propulsion timeout enter braking 
 	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
@@ -639,7 +629,7 @@ void in_propulsion_start(uint32_t flags) {
 	    } */
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -667,7 +657,7 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
@@ -676,12 +666,12 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+       		can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: PROPULSION_DISTANCE (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -695,12 +685,12 @@ void in_propulsion_distance(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 	
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+	        can_heartbeat_handler( &can_handle );
 	
         /* If we pass propulsion timeout enter braking 
 	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
@@ -708,7 +698,7 @@ void in_propulsion_distance(uint32_t flags) {
 	    } */
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -733,7 +723,7 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
@@ -742,15 +732,13 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
+	else if(board_type==DASH) {
         	can_heartbeat_next();
         	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
-        	//can_heartbeat_next();
-        	//can_heartbeat_handler( &can_handle );
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: BRAKING (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -764,16 +752,16 @@ void in_braking(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+	        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -799,7 +787,7 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
@@ -809,15 +797,13 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
+	else if(board_type==DASH) {
         	can_heartbeat_next();
         	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
-        	can_heartbeat_next();
-        	can_heartbeat_handler( &can_handle );
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: POST_RUN (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -831,20 +817,18 @@ void in_post_run(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
+	else if(board_type==DASH) {
         //Heartbeat next does not advance past post-run
         	can_heartbeat_next();
         	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
-        	can_heartbeat_next();
-        	can_heartbeat_handler( &can_handle );
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -870,7 +854,7 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING,    NOT_ACTUATED);
@@ -878,12 +862,12 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: SAFE_TO_APPROACH (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -897,16 +881,16 @@ void in_safe_to_approach(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
@@ -932,7 +916,7 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING,    ACTUATED);
@@ -941,12 +925,12 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 	
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 	printf("To state: LOW_SPEED_PROPULSION (From: %s Flags: 0x%lx)\r\n", state_strings[from], flags);
@@ -961,16 +945,16 @@ void in_service_low_speed_propulsion(uint32_t flags) {
 
 	} // end PV_MODULE
 
-	if(board_type==NAV) {
+	else if(board_type==NAV) {
 
 	} // end NAV_MODULE
 
-	if(board_type==DASH) {
-        can_heartbeat_handler( &can_handle );
+	else if(board_type==DASH) {
+        	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
-	if(board_type==DEV) {
+	else if(board_type==DEV) {
 
 	} // end DEV_MODULE
 }
