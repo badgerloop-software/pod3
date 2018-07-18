@@ -8,6 +8,7 @@
 #include "badgerloop.h"
 #include "can.h"
 
+extern state_box stateVal;
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/

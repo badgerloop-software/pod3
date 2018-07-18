@@ -21,7 +21,7 @@
 const int board_type = NAV;
 extern volatile unsigned int ticks;
 extern Nav_Data navData;
-
+state_box stateVal = {3, 0};
 /* Nucleo 32 I/O */
 
 //Limit Switches
@@ -154,7 +154,7 @@ int main(void) {
 			iox_start_read();
 			lastState = ticks;
 			//printf("NAV STATE: %u\r\n", state_handle.curr_state); 
-			//state_machine_handler();
+			state_machine_handler();
 			//check if new state is needed
 		}
 		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {

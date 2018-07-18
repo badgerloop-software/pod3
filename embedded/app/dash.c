@@ -9,15 +9,11 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
-<<<<<<< HEAD
 #include "state_handlers.h"
-#include "state_machine.h"
-=======
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
 
->>>>>>> b83d41850c23b8af7c71c87168813178b480e47a
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -55,7 +51,7 @@ Pod_Data_Handle podData = {
  		{"cellMinVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"cellAvgVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"maxCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
- 		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
 	 .RMSdata = {
 		{"igbt_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		{"gate_driver_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -142,13 +138,7 @@ int main(void) {
 		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
-<<<<<<< HEAD
-			printf("state: %d\r\n", state_handle.curr_state);	
 			state_machine_handler();
-=======
-			state_machine_handler();
-			//state_machine_logic();
->>>>>>> b83d41850c23b8af7c71c87168813178b480e47a
 			//check if new state is needed
 		}
 		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
@@ -166,7 +156,5 @@ int main(void) {
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
 	}
-
-
 	return 0;
 }
