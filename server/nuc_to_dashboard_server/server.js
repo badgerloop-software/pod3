@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const DBManager = require("./db_manager.js");
-const PORT = 7779;
+const PORT = 7781;
 
 let client;
 let url = DBManager.url;
@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
 
 //Gets data from a specified sensor
 app.get('/sensor/:sensor', function (req, res) {
-		console.log(`Retrieved: ${req.params.sensor}`);
+		//console.log(`Retrieved: ${req.params.sensor}`);
 		let sensor = req.params.sensor.toUpperCase();	// Formatting the incoming name
 		let jsondata = {};
 		// Checks if the request is a valid sensor
@@ -41,11 +41,11 @@ app.get('/sensor/:sensor', function (req, res) {
 							elem.sensor_data = elem.sensor_data[elem.sensor_data.length - 1];
 							jsondata[sensor.toLowerCase()] = elem});
 		});
-			setTimeout(() => res.json(jsondata), 10);	// Delay because otherwise node jumps to the end
+			setTimeout(() => res.json(jsondata), 100);	// Delay because otherwise node jumps to the end
 		} else {
 			console.log("Sensor not found");
 			res.send("Not a valid sensor");
-		}
+		};
 });
 
 app.get("/server", function (req, res) {
@@ -73,7 +73,7 @@ app.get('/all', function (req, res) {
 					   	{
 						console.log(count);
 						resolve(jsonData)
-						}, 50);
+						}, 100);
 			});
 		prom.then((data) => {
 				console.log("FINAL DATA: " + data);

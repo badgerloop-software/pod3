@@ -327,7 +327,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
 	//printf("%u\r\n", data[2]);
-	uint16_t pres1, pres2;	
+	uint16_t pres1, pres2, pvPres, pvTemp;
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -347,6 +347,9 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case PV_WARNING:
 				break;
 			case PV_PRESSURE:
+				pvPres = (data[2] << 8) | data[3];
+				pvTemp = (data[4] << 8) | data[5];
+				set_pv_honeywell(pod_data, pvPres, pvTemp);
 				break;
 			case PV_SHUTDOWN_CIRCUIT_STATUS:
 				break;

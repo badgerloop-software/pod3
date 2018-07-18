@@ -904,7 +904,7 @@
    <int>10</int>
   </void>
   <void property="mpoFunction">
-   <int>11</int>
+   <int>43</int>
   </void>
   <void property="mpoHighTemperature">
    <int>85</int>

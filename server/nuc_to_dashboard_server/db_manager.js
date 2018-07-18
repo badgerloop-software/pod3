@@ -52,7 +52,7 @@ const SENSORS = [
 ];
 
 
-const url = 'mongodb://192.168.2.146:27017';  // CONFIGURE HERE
+const url = 'mongodb://192.168.2.112:27017';  // CONFIGURE HERE
 
 
 

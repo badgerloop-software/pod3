@@ -36,11 +36,13 @@ typedef struct {
 	Sensor_Data retro;
 	Sensor_Data solenoids;
 	Sensor_Data linePressures[8];
+	Sensor_Data pv_pres;
+	Sensor_Data pv_temp;
 	Sensor_Data BMSdata[19];
 	Sensor_Data RMSdata[22];
 } Pod_Data_Handle;
 
-
+void set_pv_honeywell(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_accel_vel_pos(Pod_Data_Handle*, int8_t, int8_t, int8_t);
 void package_bms_data(Pod_Data_Handle*, Bms*);
 void package_rms_data(Pod_Data_Handle*, Rms*);
