@@ -7,7 +7,7 @@ typedef struct {
 	float packCurrent;
 	float packVoltage;
 	uint16_t packDCL;
-	uint16_t packCCL;
+	int16_t packCCL;
 	uint16_t packResistance;
 	uint8_t packHealth;
 	float packOpenVoltage;
@@ -22,7 +22,7 @@ typedef struct {
 	uint16_t cellMaxVoltage;
 	uint16_t cellMinVoltage;
 	uint16_t cellAvgVoltage;
-	uint8_t maxCells;
+	//uint8_t maxCells;
 	uint8_t numCells;
 } Bms;
 
