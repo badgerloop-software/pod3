@@ -245,12 +245,13 @@ void state_message_set(uint8_t data[]) {
  * Data Byte 6: TODO: Staleness??
  * Data Byte 7: 0 */
 void pv_pressure_set(uint8_t data[]){
-	data[2] = 0xFF & pvData->pres;
+/*	data[2] = 0xFF & pvData->pres;
     data[3] = 0xFF & (pvData->pres >> 8);
 	data[4] = 0xFF & (pvData->temp);
-	data[5] = 0xFF & (pvData->temp >> 8);
+	data[5] = 0xFF & (pvData->temp >> 8);*/
+
 	int i;	
-    for ( i = 6; i < 8; i++ ){
+    for ( i = 0; i < 8; i++ ){
         data[i] = 0;
     }
     

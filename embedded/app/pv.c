@@ -73,29 +73,28 @@ int main(void) {
 
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
+	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
 	while (1) {
-		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {			
-			lastDAQ = ticks;
-			//pv_DAQ(&pvData);
 
-			//check if new state is needed
-		}
-		if (((ticks + 25) % CTRL_INTERVAL == 0) && lastState != ticks) {
-			lastState = ticks;
-			//state_machine_logic();
-			//check if new state is needed
-		}
-		if (((ticks + 35) % CTRL_INTERVAL == 0) && lastTelem != ticks) {
-			lastTelem = ticks;
-			//can_telem(&data);
-			//check if new state is needed
-		}
-		if (((ticks + 45) % CTRL_INTERVAL == 0) && lastHrtbt != ticks) {
-			lastHrtbt = ticks;
-			//send_hrtbt();
-			//check if new state is needed
-		}
+		currDAQ = (ticks + 10) / 100;
+		currState = (ticks + 20) / 100;
+		currTelem = (ticks + 30) / 100;
+		currHrtbt = (ticks + 40) / 100;
 
+		if( can_read() == HAL_OK) board_can_message_parse( BADGER_CAN_ID, RxData);
+		if( currDAQ != lastDAQ ){
+			lastDAQ = currDAQ;
+		}
+		if( currState != lastState ){
+			lastState = currState;
+		}
+		if( currTelem != lastTelem ){
+			lastTelem = currTelem;
+		}
+		if( currHrtbt != lastHrtbt ){
+			lastHrtbt = currHrtbt;
+		}
+		
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}
