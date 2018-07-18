@@ -403,6 +403,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	    	printf("Unknown CAN Message Received\r\n");
 	    }
     }
+    package_bms_data( pod_data, bms);
+    package_rms_data( pod_data, rms);
 	return HAL_OK;
 }
 

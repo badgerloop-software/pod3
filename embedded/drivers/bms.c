@@ -44,7 +44,7 @@ int bms_clearFaults(void){
 	TxData[5] = 0x01;
 	TxData[6] = 0x00;
 	TxData[7] = 0x00;
-	
+
 	can_send(can_id, 0, length, TxData );
 
 	return 0;
@@ -81,20 +81,22 @@ int bms_parser(uint32_t id, uint8_t *data) {
 
 			break;
 		case 0x653:
-			
+			//printf("ID: 0x%3lx\r\n", id);
 			//bms->relayStatus = data[1] | data[0] << 8;
 			bms->relayStatus = data[0];
 			bms->inputVoltage = data[2] | (data[3] << 8);
 			bms->inputVoltage /= 10;
-			
 			//printf("Relay status %d\r\n", bms->relayStatus);
 			//printf("Input Source Supply Voltage: %f\r\n", bms->inputVoltage);
 			break;
-		case 0x652:		
-			
+		case 0x652:
+
 			bms->packCCL = data[0] | (data[1] << 8);
 			bms->packDCL = data[2] | (data[3] << 8);
-
+			bms->cellMaxVoltage = data[4] | (data[5] << 8);
+			bms->cellMaxVoltage /= 10000;
+			bms->cellMinVoltage = data[6] | (data[7] << 8);
+			bms->cellMinVoltage /= 10000;
 			//printf("DCL %d\r\n", bms->packDCL);
 			//printf("Cell Min V:  %d, Cell Max V: %d\r\n", bms->cellMinVoltage, bms->cellMaxVoltage);
 			break;
@@ -103,19 +105,22 @@ int bms_parser(uint32_t id, uint8_t *data) {
 			bms->cellMaxVoltage = data[2] | (data[3] << 8);
 			bms->cellMinVoltage = data[0] | (data[1] << 8);
 			bms->cellAvgVoltage = data[5] | (data[4] << 8);
+			bms->cellAvgVoltage /= 10000;
 			//bms->maxCells = data[6];
 			bms->numCells = data[7];
 
 			//printf("Num Cells %d\r\n", bms->numCells);
 			//printf("Cell Avg V:  %d\r\n", bms->cellAvgVoltage);
-			
 			break;
-		case 0x650: 
-			
+		case 0x650:
+
 			bms->Soc = data[0];
+			bms->Soc /= 2;
 			bms->packResistance = data[1] | (data[2] << 8);
+			bms->packResistance /= 100;
 			bms->packHealth = data[3];
 			bms->packOpenVoltage = data[4] | (data[5] << 8);
+			bms->packOpenVoltage /= 10;
 			bms->packCycles = data[6] | (data[7] << 8);
 
 			//printf("SOC %d\r\n", bms->Soc);
@@ -124,11 +129,14 @@ int bms_parser(uint32_t id, uint8_t *data) {
 			//printf("Pack Open Voltage  %f\r\n", bms->packOpenVoltage);
 			//printf("Pack Cycles  %d\r\n", bms->packCycles);
 			break;
-		case 0x150: 
-			
+		case 0x150:
+
 			bms->packCurrent = data[0] | (data[1] << 8);
+			bms->packCurrent /= 10;
 			bms->packVoltage = data[2] | (data[3] << 8);
+			bms->packVoltage /= 10;
 			bms->packAh = data[4] | (data[5] << 8);
+			bms->packAh /= 10;
 			bms->highTemp = data[6];
 			bms->lowTemp = data[7];
 
@@ -147,4 +155,3 @@ int bms_parser(uint32_t id, uint8_t *data) {
 	}
 	return 1;
 }
-
