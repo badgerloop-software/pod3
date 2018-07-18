@@ -1,14 +1,24 @@
 #include "pv_data.h"
 #include <stdio.h>
-//int pv_DAQ(PV_Data *pvData) {
+#include "honeywell.h"
+#include "i2c.h"
+int pv_DAQ(PV_Data *pvData) {
 //	printf("%u", pvData->pvPressure);
 	//MCU_reader(pvData);
-	////pv_pressure_reader(pvData);
-//	return 0;
-//}
+	harvest_pv_honeywell(pvData);
+	return 0;
+}
 
 
-int pv_harvest_honeywell(PV_Data *pvData) {
+int harvest_pv_honeywell(PV_Data *pvData) {
 	int pres, temp;
-
+	if (honeywell_start_read()) {
+		if (!i2c_block(I2C_WAITING_RX, ticks)) {
+			if (honeywell_read(&temp, &pres)) {
+				pvData->temp = temp;
+				pvData->pres = pres;
+			} else printf("pv honeywell fail\r\n");
+		} else printf("failure to block\r\n");
+	} else printf("honeywell start read fail\r\n");
+	return 0;
 }
