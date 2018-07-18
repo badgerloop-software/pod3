@@ -178,7 +178,7 @@ int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
         hb_status = FAULTS_CLEARED;
     }
 	else if( hb_status == FORWARD){
-        can_heartbeat_forward( hcan);
+        	can_heartbeat_forward( hcan);
 	}
 	else if( hb_status == DISCHARGE ){
 		can_heartbeat_discharge( hcan);
