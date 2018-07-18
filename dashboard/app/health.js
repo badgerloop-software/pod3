@@ -78,6 +78,33 @@ const SENSORS = [
     LV_BATTERY_TEMP
 ];
 
+/* test function */
+function setRandomSensorRed() {
+    let i = Math.floor(Math.random() * SENSORS.length);
+    setSensorDefaultColor(SENSORS[i]);
+    setSensorRed(SENSORS[i]);
+}
+
+function setSensorDefaultColor(sensorName) {
+    let el = document.getElementById(sensorName);
+    el.classList.remove('table-danger');
+    el.classList.remove('table-success');
+}
+
+/* make a sensor cell green (e.g. for a good value) */
+function setSensorGreen(sensorName) {
+    let el = document.getElementById(sensorName);
+    el.classList.remove('table-danger');
+    el.classList.add('table-success');
+}
+
+/* make a sensor cell red (e.g. for a bad value) */
+function setSensorRed(sensorName) {
+    let el = document.getElementById(sensorName);
+    el.classList.remove('table-success');
+    el.classList.add('table-danger');
+}
+
 /* send a heartbeat to the pod to tell it we are still here */
 function podHeartbeat() {
     let podIP = comm.getPodIP();
@@ -368,3 +395,6 @@ setInterval(requestAllTelemetry, UPDATE_TIME);
 
 /* set an interval to send a heartbeat to the pod */
 setInterval(podHeartbeat, HB_TIME);
+
+/* test coloration */
+/* setInterval(setRandomSensorRed, 1000); */
