@@ -20,7 +20,7 @@ if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.len
     console.log("ERROR: # of Labels != # of data entries");
 
 let thisChart;
-const UPDATE_TIME = 500;  // In milliseconds
+const UPDATE_TIME = 1000;  // In milliseconds
 let requestLoop;
 let dataCache = {};
 
@@ -30,7 +30,14 @@ function parseData(rawData, sensorName) {
     }
     let jsonData = JSON.parse(rawData);
     if (jsonData !== "undefined") {
-        switch (jsonData[sensorName]) {
+        switch (jsonData[sensorName].sensor_name) {
+            case "cell_max_voltage":
+                jsonData[sensorName]["sensor_data"]["value"] /= 1000;
+            break;
+            case "current_pressure":
+                //jsonData[sensorName]["sensor_data"]["value"];
+            case "cell_min_voltage":
+                jsonData[sensorName]["sensor_data"]["value"] /= 1000;
             case "solenoid_1":
                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
                     comm.updater.emit("solenoid-1_deactivate") : comm.updater.emit("solenoid-1_activate");
@@ -58,6 +65,7 @@ function parseData(rawData, sensorName) {
 
 
         }
+        console.log("SENSOR: " + jsonData[sensorName] + "val: " + jsonData[sensorName]["sensor_data"]["value"]);
         return jsonData[sensorName]["sensor_data"]["value"];
     } else {
         return "not_connected"
@@ -99,6 +107,7 @@ for (let i = 0; i < dataLabels.length; i++) {
         tempLabel = tempLabel.substr(0, cutOff);
     }
     conciseLabels[i] = tempLabel.split(' ').join('_').toLowerCase();
+    console.log(conciseLabels[i]);
     dataCache[conciseLabels[i]] = 0;
 }
 
