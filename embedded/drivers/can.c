@@ -2,9 +2,11 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
-#include <dashboard_data.h>
+#include "dashboard_data.h"
 #include "data_set.h"
 #include "bms.h"
+#include "nav_data.h"
+//#include "state_handlers.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -15,6 +17,7 @@ extern uint8_t board_num;
 volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
 
+extern state_box stateVal;
 void can_heartbeat_next(){
 	
 	switch( hb_status){
@@ -245,7 +248,12 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 	uint8_t data[8];
 	switch (board) {
 		case DASH:
-			return HAL_ERROR;
+			state_message_set(data);
+			if (can_send_intermodule(DASH, NAV, CURR_STATE, data) != HAL_OK)
+				return HAL_ERROR;
+			if (can_send_intermodule(DASH, PV, CURR_STATE, data) != HAL_OK)
+				return HAL_ERROR;
+			return HAL_OK;
 			break;
 		case NAV:
 		    
@@ -371,6 +379,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				set_pres_7_8(pod_data, pres1, pres2);
 				break;
 			case NAV_SOLENOID_1:
+				set_solenoid_value(pod_data, data[2]);
 					printf("SOLENOID DATA:\r\n");
 					printf("data[0]: %u\r\n", data[0]);
 					printf("data[1]: %u\r\n", data[1]);
@@ -379,10 +388,11 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 					printf("data[4]: %u\r\n", data[4]);
 					printf("data[5]: %u\r\n", data[5]);
 					printf("data[6]: %u\r\n", data[6]);
-					printf("data[7]: %u\r\n", data[7]);
-				set_solenoid_value(pod_data, data[2]);
+				break;
+			case CURR_STATE:
 				break;
 			case NAV_ACCEL_VEL_POS:
+				set_accel_vel_pos(pod_data, data[2], data[3], data[4]);
 				break;
 		}
 	}
@@ -392,6 +402,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	return HAL_OK;
 }
 
+//extern state_t state_handle;
 HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
@@ -458,6 +469,12 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case NAV_ACCEL_VEL_POS:
 				printf("NAV_ACCEL_VEL_POS\r\n");
+				break;
+			case CURR_STATE:
+				//printf("STATE: %u\r\n", data[2]);
+				stateVal.stateName = data[2];
+				stateVal.change_state = 1;
+				//printf("STATE: %u\r\n", state_handle.curr_state);
 				break;
 			}
 		}

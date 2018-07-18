@@ -83,7 +83,7 @@ void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 		podData->linePressures[7].timestamp = time(NULL);
 		podData->linePressures[7].freshness = FRESH;
 };
-
+/*
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 	podData->BMSdata[0].i8data  = (int8_t) (bms->packCurrent * 1000);
 	podData->BMSdata[1].ui8data = (uint8_t) (bms->packVoltage * 1000);
@@ -110,7 +110,7 @@ void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 		podData->BMSdata[i].freshness = FRESH;
 	}
 }
-/*
+
 void package_rms_data(Pod_Data_Handle *podData, Rms *rms) {
 	podData->RMSdata[0].ui16data = rms->igbt_temp;
 	podData->RMSdata[1].ui16data = rms->gate_driver_board_temp;
@@ -210,7 +210,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 			uart_send(formatPacket(&(pod_data->linePressures[i])));
 		}
 	}
-
+/*
 	for (i = 0; i < 19; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
