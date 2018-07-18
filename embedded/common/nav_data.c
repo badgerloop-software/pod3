@@ -38,7 +38,7 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 	if (navDataPtr->solenoids.solenoid_2.state != temp2) printf("CHANGE2\r\n");
 	if (navDataPtr->solenoids.solenoid_4.state != temp3) printf("CHANGE4\r\n");
 	if (navDataPtr->solenoids.solenoid_6.state != temp4) printf("CHANGE6\r\n");
-	if (navDataPtr->solenoids.solenoid_7.state != temp5) printf("CHANGE7\r\n");*/
+	if (navDataPtr->solenoids.solenoid_7.state != temp5) printf("CHANGE7\r\n");
 	
     return 0; // on Success
 }

@@ -3,7 +3,7 @@
 
 #include <time.h>
 //#include "rms.h"
-//#include "bms.h"
+#include "bms.h"
 #define FRESH 		0
 #define NOT_FRESH 	1
 

@@ -9,12 +9,9 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
-<<<<<<< HEAD
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
-=======
->>>>>>> c5bdb79889b7079a486c90bb1f2e5b5550bf17db
 #include "bms.h"
 
 #define BLINK_INTERVAL	250
@@ -53,6 +50,7 @@ Pod_Data_Handle podData = {
  		{"cellAvgVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"maxCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
  		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+    }
 };
 
 /* Nucleo 32 I/O */
