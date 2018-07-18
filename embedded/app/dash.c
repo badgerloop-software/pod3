@@ -13,11 +13,13 @@
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
-
+#include "bms.h"
+#include "rms.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
 
+extern CAN_RxHeaderTypeDef RxHeader;
 const int board_type = DASH;
 extern state_t state_handle;
 
@@ -115,11 +117,14 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
+    
     adc_init();
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
-	return 0;
+    bms_init();
+    rms_init();
+    return 0;
 }
 
 int main(void) {
@@ -138,7 +143,7 @@ int main(void) {
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
-		if (can_read() == HAL_OK) ccp_parse_can_message(BADGER_CAN_ID, RxData, &podData);
+		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (dash_DAQ(&podData)) printf("DAQ Failure");
