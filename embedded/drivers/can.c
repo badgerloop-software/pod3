@@ -420,16 +420,12 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){	
 		switch (message_num) {
 			case CAN_TEST_MESSAGE:
-				printf("CAN TEST\r\n");
 				break;
 			case LV_HEARTBEAT:
-				printf("HEARTBEAT\r\n");
 				break;
 			case CCP_FAULT:
-				printf("CCP FAULT\r\n");
 				break;
 			case CCP_WARNING:
-				printf("CCP Warning");
                 break;
             case CCP_SOLENOID_COMMAND:
 				printf("CCP_SOLENOID_COMMAND\r\n");

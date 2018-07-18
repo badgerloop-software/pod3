@@ -126,7 +126,6 @@ void process_manual_override(char *override) {
 
 void do_pod_heartbeat() {
         /* TODO  we just got a heartbeat from the dashboard*/
-        puts("Hit do_pod_heartbeat");
 }
 
 void process_control(char *buf) {
