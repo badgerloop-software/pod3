@@ -50,6 +50,29 @@ Pod_Data_Handle podData = {
  		{"cellAvgVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"maxCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
  		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+	 .RMSdata = {
+		{"igbt_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"gate_driver_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"control_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"motor_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"motor_speed", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"phase_a_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"phase_b_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"phase_c_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"dc_bus_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"output_voltage_peak", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"lv_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_1_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_1_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_2_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_2_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_1_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_1_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_2_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_2_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"command_torque", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"actual_torque", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"relay_state", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}}	
 };
 
 /* Nucleo 32 I/O */

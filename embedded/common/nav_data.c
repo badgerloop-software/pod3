@@ -28,7 +28,6 @@ int nav_DAQ(Nav_Data *navDataPtr) {
     navDataPtr->limits.limitValue1 = gpio_readPin( GPIOA, 3);
     navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6);
     navDataPtr->limits.limitValue3 = gpio_readPin( GPIOA, 7);
-
 	int successCheck;
 	navDataPtr->retros.retroAgreement = getStripCount(&successCheck);
 	// DEBUG RETRO printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
