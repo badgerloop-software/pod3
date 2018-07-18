@@ -93,10 +93,10 @@ int bms_parser(uint32_t id, uint8_t *data) {
 
 			bms->packCCL = data[0] | (data[1] << 8);
 			bms->packDCL = data[2] | (data[3] << 8);
-			bms->cellMaxVoltage = data[4] | (data[5] << 8);
-			bms->cellMaxVoltage /= 10000;
-			bms->cellMinVoltage = data[6] | (data[7] << 8);
-			bms->cellMinVoltage /= 10000;
+			//bms->cellMaxVoltage = data[4] | (data[5] << 8);
+			//bms->cellMaxVoltage /= 10000;
+			//bms->cellMinVoltage = data[6] | (data[7] << 8);
+			//bms->cellMinVoltage /= 10000;
 			//printf("DCL %d\r\n", bms->packDCL);
 			//printf("Cell Min V:  %d, Cell Max V: %d\r\n", bms->cellMinVoltage, bms->cellMaxVoltage);
 			break;
@@ -105,22 +105,24 @@ int bms_parser(uint32_t id, uint8_t *data) {
 			bms->cellMaxVoltage = data[2] | (data[3] << 8);
 			bms->cellMinVoltage = data[0] | (data[1] << 8);
 			bms->cellAvgVoltage = data[5] | (data[4] << 8);
-			bms->cellAvgVoltage /= 10000;
+			//bms->cellAvgVoltage /= 1000;
+			//bms->cellMaxVoltage /= 1000;
+			//bms->cellMinVoltage /= 1000;
 			//bms->maxCells = data[6];
 			bms->numCells = data[7];
 
 			//printf("Num Cells %d\r\n", bms->numCells);
 			//printf("Cell Avg V:  %d\r\n", bms->cellAvgVoltage);
+			//printf("Cell Min V:  %d, Cell Max V: %d\r\n", bms->cellMinVoltage, bms->cellMaxVoltage);
 			break;
 		case 0x650:
 
 			bms->Soc = data[0];
 			bms->Soc /= 2;
 			bms->packResistance = data[1] | (data[2] << 8);
-			bms->packResistance /= 100;
 			bms->packHealth = data[3];
 			bms->packOpenVoltage = data[4] | (data[5] << 8);
-			bms->packOpenVoltage /= 10;
+			//bms->packOpenVoltage /= 10;
 			bms->packCycles = data[6] | (data[7] << 8);
 
 			//printf("SOC %d\r\n", bms->Soc);
@@ -136,7 +138,6 @@ int bms_parser(uint32_t id, uint8_t *data) {
 			bms->packVoltage = data[2] | (data[3] << 8);
 			bms->packVoltage /= 10;
 			bms->packAh = data[4] | (data[5] << 8);
-			bms->packAh /= 10;
 			bms->highTemp = data[6];
 			bms->lowTemp = data[7];
 
