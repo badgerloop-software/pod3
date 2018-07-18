@@ -213,7 +213,7 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 
 	else if(board_type==DASH) {
         	can_heartbeat_fault();
-        	can_heartbeat_handler();
+        	can_heartbeat_handler(&can_handle);
 
 	} // end CPP_MODULE
 
@@ -417,7 +417,7 @@ void in_ready_for_pumpdown(uint32_t flags) {
 	//printf("In state: READY_FOR_PUMPDOWN (Flags: 0x%lx)\r\n", flags);
 	UNUSED( flags );
 	// Pod health check
-	else if(board_type==PV) {
+	if(board_type==PV) {
 
 	} // end PV_MODULE
 
@@ -877,7 +877,7 @@ void in_safe_to_approach(uint32_t flags) {
 	//printf("In state: SAFE_TO_APPROACH (Flags: 0x%lx)\r\n", flags);
 	UNUSED( flags );
 	// Pod health check
-	else if(board_type==PV) {
+	if(board_type==PV) {
 
 	} // end PV_MODULE
 
