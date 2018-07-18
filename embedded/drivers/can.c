@@ -12,7 +12,59 @@ uint8_t TxData[8];
 uint8_t RxData[8];
 extern uint8_t board_num;
 volatile uint8_t hb_torque = 0;
-volatile heartbeat_msg_t hb_status = IDLE;
+volatile heartbeat_msg_t hb_status = IDLE_MSG;
+
+void can_heartbeat_next(){
+	
+	switch( hb_status){
+   	case IDLE_MSG: 
+        	printf( "Heartbeat Status: Clear Faults\r\n");
+            hb_status = CLEAR_FAULTS_MSG;
+            break;
+        case CLEAR_FAULTS_MSG:
+            printf( "Heartbeat Status: Faults Cleared\r\n");
+        	hb_status = FAULTS_CLEARED;
+            break;
+        case FAULTS_CLEARED:
+            printf( "Heartbeat Status: Pre-Run\r\n");
+        	hb_status = PRE_RUN;
+            break;
+        case PRE_RUN:
+        	printf( "Heartbeat Status: Forward\r\n");
+            hb_status = FORWARD;
+            break;
+        case FORWARD:
+            printf( "Heartbeat Status: Spin Down\r\n");
+            hb_status = SPIN_DOWN;
+            break;
+        case SPIN_DOWN:
+            printf( "Heartbeat Status: Discharge\r\n");
+            hb_status = DISCHARGE; 
+            break;
+        case DISCHARGE:
+            printf( "Heartbeat Status: Post Run\r\n");
+            hb_status = POST_RUN_MSG;
+            break;
+        case POST_RUN_MSG:
+            printf("Heartbeat Status: Post Run\r\n");
+            break;
+        case FAULT:
+            printf("Heartbeat Status: Discharge\r\n");
+            hb_status = DISCHARGE; 
+            break;
+        default: 
+            printf("Unknown Heartbeat state.\r\n" );
+            break;
+	}
+
+}
+
+/* Should only be used for going into Error States, otherwise can_heartbeat_next should be used */
+void can_heartbeat_fault(){
+    printf("Heartbeat Status: Fault\r\n");
+	hb_status = FAULT;
+	return;
+}
 
 int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
 	
@@ -38,7 +90,7 @@ int can_heartbeat_idle( CAN_HandleTypeDef *hcan){
 
 int can_heartbeat_clear_faults( CAN_HandleTypeDef *hcan){
 	
-	TxHeader.StdId = 0xC1; //Always to same CAN ID
+	TxHeader.StdId = 0xC1; 
 	TxHeader.IDE = 0; //Standard ID length
 	TxHeader.RTR = 0; //Always data frame
 	TxHeader.DLC = (uint8_t) 8; //Always 8
@@ -72,7 +124,7 @@ int can_heartbeat_forward( CAN_HandleTypeDef *hcan ){
 	uint8_t TxData[8];
 	
 	//Torque is stored in the first byte	
-	TxData[0] = (hb_torque*10);
+	TxData[0] = 0xFF & (hb_torque*10);
 	TxData[1] = 0x00;
 	TxData[2] = 0x00;
 	TxData[3] = 0x00;
@@ -116,9 +168,9 @@ int can_heartbeat_discharge( CAN_HandleTypeDef *hcan){
 
 int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
 	
-    if( hb_status == FAULTS_CLEARED ){
+    if( hb_status == CLEAR_FAULTS_MSG ){
         can_heartbeat_clear_faults( hcan);
-	    hb_status = PRE_RUN;
+        hb_status = FAULTS_CLEARED;
     }
 	else if( hb_status == FORWARD){
         can_heartbeat_forward( hcan);

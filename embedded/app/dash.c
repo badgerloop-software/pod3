@@ -11,6 +11,8 @@
 #include "can.h"
 #include "adc.h"
 #include "current_sense.h"
+#include "state_machine.h"
+
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -60,11 +62,10 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
-
     adc_init();
     current_sense_init();
     adc_start();
-
+    initialize_state_machine(IDLE);
 	return 0;
 }
 
@@ -91,6 +92,7 @@ int main(void) {
 		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
+			state_machine_handler();
 			//state_machine_logic();
 			//check if new state is needed
 		}
