@@ -54,14 +54,11 @@ int bms_clearFaults(void){
   * Recieves a CAN Message and updates global BMS_Data struct
   */
 int bms_parser(uint32_t id, uint8_t *data) {
-	printf("Recieved bms message\r\n");
-	uint8_t offset = 0;
+	//printf("Recieved bms message\r\n");
 	switch(id) {
 		case 0x6B0:
-			printf("ID: 0x%3lx\r\n", id);
-			printf("Data: %d, %d, %d, %d, %d, %d, %d, %d\r\n", data[0],
-					data[1], data[2], data[3], data[4], data[5], data[6],
-					data[7]);
+			//printf("ID: 0x%3lx\r\n", id);
+			//printf("Data: %d, %d, %d, %d, %d, %d, %d, %d\r\n", data[0],
 			bms->packCurrent = data[1] | data[0] << 8;
 			bms->packCurrent /= 10;
 			bms->packVoltage = data[3] | data[2] << 8;
@@ -87,39 +84,66 @@ int bms_parser(uint32_t id, uint8_t *data) {
 		case 0x653:
 			printf("ID: 0x%3lx\r\n", id);
 			
-			bms->relayStatus = data[1] | data[0] << 8;
-			bms->inputVoltage = data[3] | data[2] << 8;
+			//bms->relayStatus = data[1] | data[0] << 8;
+			bms->relayStatus = data[0];
+			bms->inputVoltage = data[2] | (data[3] << 8);
 			bms->inputVoltage /= 10;
 			
 			printf("Relay status %d\r\n", bms->relayStatus);
 			printf("Input Source Supply Voltage: %f\r\n", bms->inputVoltage);
 			break;
-		case 0x999://0x652: //TODO 
-			memcpy(&bms->packDCL, data, sizeof(bms->packDCL));
-			offset+=sizeof(bms->packDCL);
-			offset += 2; // 2 bytes empty
-			memcpy(&bms->highTemp, data+offset, sizeof(bms->highTemp));
-			offset += sizeof(bms->highTemp);
-			memcpy(&bms->lowTemp, data+offset, sizeof(bms->lowTemp));
+		case 0x652:		
+			
+			bms->packCCL = data[0] | (data[1] << 8);
+			bms->packDCL = data[2] | (data[3] << 8);
+			bms->cellMaxVoltage = data[4] | (data[5] << 8);
+			bms->cellMinVoltage = data[6] | (data[7] << 8);
+
+			printf("DCL %d\r\n", bms->packDCL);
+			printf("Cell Min V:  %d, Cell Max V: %d\r\n", bms->cellMinVoltage, bms->cellMaxVoltage);
 			break;
-		case 0x998: //TODO
-			memcpy(&bms->packDCL, data, sizeof(bms->packDCL));
-			offset+=sizeof(bms->packDCL);
-			offset += 2; // 2 bytes empty
-			memcpy(&bms->highTemp, data+offset, sizeof(bms->highTemp));
-			offset += sizeof(bms->highTemp);
-			memcpy(&bms->lowTemp, data+offset, sizeof(bms->lowTemp));
+		case 0x651:
+			printf( "Low Cell Voltage %d\r\n", data[0] | (data[1] << 8) );
+			
+			bms->cellAvgVoltage = data[5] | (data[4] << 8);
+			//bms->maxCells = data[6];
+			bms->numCells = data[7];
+
+			printf("Num Cells %d\r\n", bms->numCells);
+			printf("Cell Avg V:  %d\r\n", bms->cellAvgVoltage);
+			
 			break;
-		case 0x997: //TODO
-			memcpy(&bms->packDCL, data, sizeof(bms->packDCL));
-			offset+=sizeof(bms->packDCL);
-			offset += 2; // 2 bytes empty
-			memcpy(&bms->highTemp, data+offset, sizeof(bms->highTemp));
-			offset += sizeof(bms->highTemp);
-			memcpy(&bms->lowTemp, data+offset, sizeof(bms->lowTemp));
+		case 0x650: 
+			
+			bms->Soc = data[0];
+			bms->packResistance = data[1] | (data[2] << 8);
+			bms->packHealth = data[3];
+			bms->packOpenVoltage = data[4] | (data[5] << 8);
+			bms->packCycles = data[6] | (data[7] << 8);
+
+			printf("SOC %d\r\n", bms->Soc);
+			printf("Pack Resistance %d\r\n", bms->packResistance);
+			printf("Pack Health %d\r\n", bms->packHealth);
+			printf("Pack Open Voltage  %f\r\n", bms->packOpenVoltage);
+			printf("Pack Cycles  %d\r\n", bms->packCycles);
+			break;
+		case 0x150: 
+			
+			bms->packCurrent = data[0] | (data[1] << 8);
+			bms->packVoltage = data[2] | (data[3] << 8);
+			bms->packAh = data[4] | (data[5] << 8);
+			bms->highTemp = data[6];
+			bms->lowTemp = data[7];
+
+			printf("Pack Current %f\r\n", bms->packCurrent);
+			printf("Pack Voltage  %f\r\n", bms->packVoltage);
+			printf("Pack Amp Hours  %d\r\n", bms->packAh);
+			printf("High Temp  %d\r\n", bms->highTemp);
+			printf("Low Temp  %d\r\n", bms->lowTemp);
 			break;
 		default:
-			printf("BMS CAN command not found 0x%08lx\r\n", id);
+			return 0;
+			//printf("BMS CAN command not found 0x%08lx\r\n", id);
 
 	}
 	return 1;
