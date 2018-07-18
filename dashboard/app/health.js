@@ -78,6 +78,9 @@ const SENSORS = [
     LV_BATTERY_TEMP
 ];
 
+/******************************************/
+/* functions to set telemetry cell colors */
+/******************************************/
 /* test function */
 function setRandomSensorRed() {
     let i = Math.floor(Math.random() * SENSORS.length);
@@ -104,6 +107,23 @@ function setSensorRed(sensorName) {
     el.classList.remove('table-success');
     el.classList.add('table-danger');
 }
+
+/* some shortcuts for me to pass as success/failure callbacks */
+const fPackVoltGreen = function() { setSensorGreen(PACK_VOLTAGE); };
+const fPackCurrGreen = function() { setSensorGreen(PACK_CURRENT); };
+const fPackSOCGreen = function() { setSensorGreen(PACK_SOC); };
+const fCellHighGreen = function() { setSensorGreen(CELL_HIGH); };
+const fCellLowGreen = function() { setSensorGreen(CELL_LOW); };
+const fCellAvgGreen = function() { setSensorGreen(CELL_AVG); };
+
+const fPackVoltRed = function() { setSensorRed(PACK_VOLTAGE); };
+const fPackCurrRed = function() { setSensorRed(PACK_CURRENT); };
+const fPackSOCRed = function() { setSensorRed(PACK_SOC); };
+const fCellHighRed = function() { setSensorRed(CELL_HIGH); };
+const fCellLowRed = function() { setSensorRed(CELL_LOW); };
+const fCellAvgRed = function() { setSensorRed(CELL_AVG); };
+
+/*******************************************/
 
 /* send a heartbeat to the pod to tell it we are still here */
 function podHeartbeat() {
@@ -200,7 +220,7 @@ function doHealthCheck(data) {
 function noop() {}
 
 /* assert that a sensor value is equal to one specified */
-function sens_assert_eq(sensorData, sensorName, eqVal, failFunc = noop) {
+function sens_assert_eq(sensorData, sensorName, eqVal, failFunc = noop, succFunc = noop) {
     var ret = [];
     let dpoint = sensorData[sensorName];
     let sVal = dpoint[VALUE];
@@ -210,10 +230,12 @@ function sens_assert_eq(sensorData, sensorName, eqVal, failFunc = noop) {
 	/* call the fail function we were given */
 	failFunc();
     }
+    /* otherwise call the success function */
+    else { succFunc(); }
     return ret;
 }
 
-function sens_assert_within(sensorData, sensorName, loVal, hiVal, failFunc = noop) {
+function sens_assert_within(sensorData, sensorName, loVal, hiVal, failFunc = noop, succFunc = noop) {
     var ret = [];
     let dpoint = sensorData[sensorName];
     let sVal = dpoint[VALUE];
@@ -223,10 +245,12 @@ function sens_assert_within(sensorData, sensorName, loVal, hiVal, failFunc = noo
 	/* call the fail function we were given */
 	failFunc();
     }
+    /* otherwise call the success function */
+    else { succFunc(); }
     return ret;
 }
 
-function sens_assert_lt(sensorData, sensorName, ltVal, failFunc = noop) {
+function sens_assert_lt(sensorData, sensorName, ltVal, failFunc = noop, succFunc = noop) {
     var ret = [];
     let dpoint = sensorData[sensorName];
     let sVal = dpoint[VALUE];
@@ -236,10 +260,12 @@ function sens_assert_lt(sensorData, sensorName, ltVal, failFunc = noop) {
 	/* call the fail function we were given */
 	failFunc();
     }
+    /* otherwise call the success function */
+    else { succFunc(); }
     return ret;
 }
 
-function sens_assert_gt(sensorData, sensorName, gtVal, failFunc = noop) {
+function sens_assert_gt(sensorData, sensorName, gtVal, failFunc = noop, succFunc = noop) {
     var ret = [];
     let dpoint = sensorData[sensorName];
     let sVal = dpoint[VALUE];
@@ -249,6 +275,8 @@ function sens_assert_gt(sensorData, sensorName, gtVal, failFunc = noop) {
 	/* call the fail function we were given */
 	failFunc();
     }
+    /* otherwise call the success function */
+    else { succFunc(); }
     return ret;
 }
 
@@ -258,14 +286,23 @@ function sens_assert_gt(sensorData, sensorName, gtVal, failFunc = noop) {
 
 /* do the telemetry bounds checking for poweroff state */
 function poweroff_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for idle state */
 function idle_ck(sensorData) {
     var ret = [];
-    ret = ret.concat(sens.assert_eq(sensorData, STOPPING_DIST, 0));
+    /* battery checks from Tristan */
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_eq(sensorData, PACK_CURRENT, 0.0, fPackCurrRed, fPackCurrGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 50.0, 90.0, fPackSOCRed, fPackSOCGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 3.7, 4.2, fCellHighRed, fCellHighGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_AVG, 3.7, 4.2, fCellAvgRed, fCellAvgGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 3.7, 4.2, fCellLowRed, fCellLowGreen));
+    /* end Tristan battery checks */
+    ret = ret.concat(sens_assert_eq(sensorData, STOPPING_DIST, 0));
     ret = ret.concat(sens_assert_eq(sensorData, STRIP_COUNT, 0));
     ret = ret.concat(sens_assert_lt(sensorData, ACCELERATION, 0.1));
     /* TODO fill in any others */
@@ -274,110 +311,173 @@ function idle_ck(sensorData) {
 
 /* do the telemetry bounds checking for ready-for-pumpdown state */
 function ready_for_pumpdown_ck(sensorData) {
+    var ret = [];
+    /* battery checks from Tristan */
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_eq(sensorData, PACK_CURRENT, 0.0, fPackCurrRed, fPackCurrGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 50.0, 90.0, fPackSOCRed, fPackSOCGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 3.7, 4.2, fCellHighRed, fCellHighGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_AVG, 3.7, 4.2, fCellAvgRed, fCellAvgGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 3.7, 4.2, fCellLowRed, fCellLowGreen));
+    /* end Tristan battery checks */
+
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for pumpdown state */
 function pumpdown_ck(sensorData) {
+    var ret = [];
+    /* battery checks from Tristan */
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_eq(sensorData, PACK_CURRENT, 0.0, fPackCurrRed, fPackCurrGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 50.0, 90.0, fPackSOCRed, fPackSOCGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 3.7, 4.2, fCellHighRed, fCellHighGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_AVG, 3.7, 4.2, fCellAvgRed, fCellAvgGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 3.7, 4.2, fCellLowRed, fCellLowGreen));
+    /* end Tristan battery checks */
+
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for ready state */
 function ready_ck(sensorData) {
+    var ret = [];
+    /* battery checks from Tristan */
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_eq(sensorData, PACK_CURRENT, 0.0, fPackCurrRed, fPackCurrGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 50.0, 90.0, fPackSOCRed, fPackSOCGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 3.7, 4.2, fCellHighRed, fCellHighGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_AVG, 3.7, 4.2, fCellAvgRed, fCellAvgGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 3.7, 4.2, fCellLowRed, fCellLowGreen));
+    /* end Tristan battery checks */
+
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for postrun state */
 function postrun_ck(sensorData) {
+    var ret = [];
+    /* battery checks from Tristan */
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 216.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_eq(sensorData, PACK_CURRENT, 0.0, fPackCurrRed, fPackCurrGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 20.0, 90.0, fPackSOCRed, fPackSOCGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 3.0, 4.2, fCellHighRed, fCellHighGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_AVG, 3.0, 4.2, fCellAvgRed, fCellAvgGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 3.0, 4.2, fCellLowRed, fCellLowGreen));
+    /* end Tristan battery checks */
+
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for service-low-speed state */
 function service_low_speed_ck(sensorData) {
+    var ret = [];
+    /* battery checks from Tristan */
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 216.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_eq(sensorData, PACK_CURRENT, 0.0, fPackCurrRed, fPackCurrGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 20.0, 90.0, fPackSOCRed, fPackSOCGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 3.0, 4.2, fCellHighRed, fCellHighGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_AVG, 3.0, 4.2, fCellAvgRed, fCellAvgGreen));
+    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 3.0, 4.2, fCellLowRed, fCellLowGreen));
+    /* end Tristan battery checks */
+
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for safe-to-approach state */
 function safe_to_approach_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for prop-start-hloop state */
 function prop_start_hloop_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for prop-start-openair state */
 function prop_start_openair_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for prop-start-extsub state */
 function prop_start_extsub_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for prop-dsa-hloop state */
 function prop_dsa_hloop_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for prop-dsa-openair state */
 function prop_dsa_openair_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for prop-dsa-extsub state */
 function prop_dsa_extsub_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for brake-hloop state */
 function brake_hloop_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for brake-openair state */
 function brake_openair_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for brake-extsub state */
 function brake_extsub_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for fault-prerun state */
 function fault_prerun_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for fault-run state */
 function fault_run_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* do the telemetry bounds checking for fault-postrun state */
 function fault_postrun_ck(sensorData) {
+    var ret = [];
     /* TODO return an array of error messages */
-    return [];
+    return ret;
 }
 
 /* send a request for all pod telemetry */
