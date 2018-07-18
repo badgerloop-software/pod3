@@ -32,4 +32,5 @@ extern Rms *rms;
 void bms_init();
 int rms_parser(uint32_t id, uint8_t *data);
 
+#endif 
 
