@@ -6,6 +6,7 @@
 #include "i2c.h"
 #include <time.h>
 #include "can.h"
+#include "rms.h"
 
 #define SEND_BUF_SIZE 128
 
@@ -83,7 +84,7 @@ void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 		podData->linePressures[7].timestamp = time(NULL);
 		podData->linePressures[7].freshness = FRESH;
 };
-/*
+
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 	podData->BMSdata[0].i8data  = (int8_t) (bms->packCurrent * 1000);
 	podData->BMSdata[1].ui8data = (uint8_t) (bms->packVoltage * 1000);
@@ -121,19 +122,17 @@ void package_rms_data(Pod_Data_Handle *podData, Rms *rms) {
 	podData->RMSdata[6].ui16data = rms->phase_b_current;
 	podData->RMSdata[7].ui16data = rms->phase_c_current;
 	podData->RMSdata[8].ui16data = rms->dc_bus_voltage;
-	podData->RMSdata[9].ui16data = rms->ouput_voltage_peak;
+//	podData->RMSdata[9].ui16data = rms->ouput_voltage_peak;
 	podData->RMSdata[10].ui16data = rms->lv_voltage;
 
-	// BIG
-	//podData->RMSdata[11].ui16data = 0xFFFF & (rms->can_code_1 >> 16);
-	//podData->RMSdata[12].ui16data = 0xFFFF & (rms->can_code_1);
-	//podData->RMSdata[13].ui16data = 0xFFFF & (rms->can_code_2 >> 16);
-	//podData->RMSdata[14].ui16data = 0xFFFF & (rms->can_code_2);
-	//podData->RMSdata[15].ui16data = 0xFFFF & (rms->can_fault_1 >> 16);
-	//podData->RMSdata[16].ui16data = 0xFFFF & (rms->can_fault_1);
-	//podData->RMSdata[17].ui16data = 0xFFFF & (rms->can_fault_2 >> 16);
-	//podData->RMSdata[18].ui16data = 0xFFFF & (rms->can_fault_2);
-	//
+	podData->RMSdata[11].ui16data = 0xFFFF & (rms->can_code_1 >> 16);
+	podData->RMSdata[12].ui16data = 0xFFFF & (rms->can_code_1);
+	podData->RMSdata[13].ui16data = 0xFFFF & (rms->can_code_2 >> 16);
+	podData->RMSdata[14].ui16data = 0xFFFF & (rms->can_code_2);
+	podData->RMSdata[15].ui16data = 0xFFFF & (rms->fault_code_1 >> 16);
+	podData->RMSdata[16].ui16data = 0xFFFF & (rms->fault_code_1);
+	podData->RMSdata[17].ui16data = 0xFFFF & (rms->fault_code_2 >> 16);
+	podData->RMSdata[18].ui16data = 0xFFFF & (rms->fault_code_2);
 
 	podData->RMSdata[19].ui16data = rms->commanded_torque;
 	podData->RMSdata[20].ui16data = rms->actual_torque;
@@ -144,7 +143,18 @@ void package_rms_data(Pod_Data_Handle *podData, Rms *rms) {
 		podData->RMSdata[i].freshness = FRESH;
 	}
 }
-*/
+
+void set_pv_honeywell(Pod_Data_Handle *podData, uint16_t pres, uint16_t temp) {
+	podData->pv_temp.ui16data  = temp;
+	podData->pv_temp.freshness = FRESH;
+	podData->pv_temp.timestamp = time(NULL);
+
+	podData->pv_pres.ui16data = pres;
+	podData->pv_pres.freshness = FRESH;
+	podData->pv_pres.ui16data  = time(NULL);
+
+}
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	if (pod_data->current_pressure.freshness == FRESH) {
@@ -203,6 +213,16 @@ void send_data(Pod_Data_Handle *pod_data) {
 		uart_send(formatPacket(&(pod_data->acceleration)));
 	}
 
+	if (pod_data->pv_pres.freshness == FRESH) {
+		pod_data->pv_pres.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->pv_pres)));
+	}
+
+	if (pod_data->pv_temp.freshness == FRESH) {
+		pod_data->pv_temp.freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->pv_temp)));
+	}
+
 	int i;
 	for (i = 0; i < 8; i++) {
 		if (pod_data->linePressures[i].freshness == FRESH) {
@@ -210,20 +230,19 @@ void send_data(Pod_Data_Handle *pod_data) {
 			uart_send(formatPacket(&(pod_data->linePressures[i])));
 		}
 	}
-/*
+
 	for (i = 0; i < 19; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->BMSdata[i])));
 		}
 	}
-
 	for (i = 0; i < 22; i++) {
 		if (pod_data->RMSdata[i].freshness == FRESH) {
 			pod_data->RMSdata[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->RMSdata[i])));
 		}
-	}*/
+	}
 }
 
 void harvest_honeywell(Pod_Data_Handle *pod_data) {

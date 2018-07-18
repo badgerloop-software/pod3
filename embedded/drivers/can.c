@@ -4,8 +4,11 @@
 #include <can.h>
 #include "dashboard_data.h"
 #include "data_set.h"
+#include "bms.h"
 #include "nav_data.h"
 //#include "state_handlers.h"
+#include "rms.h"
+
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
 CAN_TxHeaderTypeDef TxHeader;
@@ -324,7 +327,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
 	//printf("%u\r\n", data[2]);
-	uint16_t pres1, pres2;	
+	uint16_t pres1, pres2, pvPres, pvTemp;
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -344,6 +347,9 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case PV_WARNING:
 				break;
 			case PV_PRESSURE:
+				pvPres = (data[2] << 8) | data[3];
+				pvTemp = (data[4] << 8) | data[5];
+				set_pv_honeywell(pod_data, pvPres, pvTemp);
 				break;
 			case PV_SHUTDOWN_CIRCUIT_STATUS:
 				break;
@@ -392,8 +398,16 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_ACCEL_VEL_POS:
 				set_accel_vel_pos(pod_data, data[2], data[3], data[4]);
 				break;
-			}
 		}
+	}
+	//TODO make this better
+    else if( bms_parser( can_id, data) == 0){
+	    if(rms_parser( can_id, data) == 0){
+	    	printf("Unknown CAN Message Received\r\n");
+	    }
+    }
+    package_bms_data( pod_data, bms);
+    package_rms_data( pod_data, rms);
 	return HAL_OK;
 }
 
@@ -478,7 +492,7 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 
 HAL_StatusTypeDef can_listen(void){
 	HAL_StatusTypeDef retval = HAL_OK;	
-	if (can_message_available(CAN_RX_FIFO0)) {
+	if (can_message_available(CAN_RX_FIFO0) || can_message_available(CAN_RX_FIFO1) ) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 		print_incoming_can_message(RxHeader.StdId, RxData);
 	} 
@@ -612,36 +626,6 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 	}
 }
 
-HAL_StatusTypeDef bms_telemetry_parse(uint32_t id, uint8_t *data){
-	switch (id){
-		case (BMS_PACK_STATE_MESSAGE):
-			printf("data 0: %x", data[0]);
-		    break;
-        case (BMS_PACK_TEMP_MESSAGE):
-		    break;
-
-		case (BMS_RELAY_STATE_MESSAGE):
-		    break;
-
-		case (BMS_PACK_CCL):
-		    break;
-
-		case (BMS_CELL_VOLT_MESSAGE):
-		    break;
-
-		case (BMS_SOC_MESSAGE):
-		    break;
-
-//		case (BMS_PACK_CURRENT_MESSAGE):
-
-//		case (BMS_PACK_VOLT_MESSAGE):
-
-		default:
-			return HAL_ERROR;
-	}
-    return HAL_OK;
-}
-
 HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 
 	HAL_StatusTypeDef retval;	
@@ -722,7 +706,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case PV:
 			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterMaskIdHigh		= 0x000 << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case DEV:

@@ -73,4 +73,4 @@ COMMAND_ENTRY(
 	"state_machine { change_state | timeout }",
 	"Signal a state change to the state machine and set propulsion timeout",
 	do_state_machine
-)
+    )

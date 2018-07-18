@@ -13,11 +13,13 @@
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
-
+#include "bms.h"
+#include "rms.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
 
+extern CAN_RxHeaderTypeDef RxHeader;
 const int board_type = DASH;
 extern state_t state_handle;
 
@@ -30,28 +32,35 @@ Pod_Data_Handle podData = {
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-	 .linePressures = {{"line_pres_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_3", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
-		 			   {"line_pres_4", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_5", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_6", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-					   {"line_pres_7", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_8", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
+	 .pv_pres = {"pv_ambient_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+	 .pv_temp = {"pv_ambient_temperature", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+	 .linePressures = {{"line_pres_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 {"line_pres_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 {"line_pres_3", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 {"line_pres_4", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 {"line_pres_5", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 {"line_pres_6", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"line_pres_7", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
+		 {"line_pres_8", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
 	 .BMSdata = {{"packCurrent", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
-		 {"packVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
-		 {"packDCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-		 {"packCCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-		 {"packResistance", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-		 {"packHealth", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-		 {"packOpenVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-		 {"packCycles", 0, 0, 0 ,0, NOT_FRESH, DT_UINT8},
-		 {"packAh", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-		 {"inputVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
-		 {"Soc", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-		 {"relayStatus", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
-		 {"highTemp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
- 		{"lowTemp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
- 		{"cellMaxVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
- 		{"cellMinVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
- 		{"cellAvgVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
- 		{"maxCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
- 		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
+		 {"pack_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"pack_DCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"pack_CCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"pack_resistance", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"pack_health", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"pack_open_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"pack_cycles", 0, 0, 0 ,0, NOT_FRESH, DT_UINT8},
+		 {"pack_ah", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"input_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"SOC", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"relay_status", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		 {"high_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"low_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"cell_max_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+ 		{"cell_min_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+ 		{"cell_avg_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+ 		{"max_cells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"num_cells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
 	 .RMSdata = {
 		{"igbt_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		{"gate_driver_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -108,11 +117,14 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
+    
     adc_init();
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
-	return 0;
+    bms_init();
+    rms_init();
+    return 0;
 }
 
 int main(void) {
@@ -131,7 +143,7 @@ int main(void) {
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
-		if (can_read() == HAL_OK) ccp_parse_can_message(BADGER_CAN_ID, RxData, &podData);
+		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (dash_DAQ(&podData)) printf("DAQ Failure");
