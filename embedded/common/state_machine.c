@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include "state_machine.h"
 #include "state_handlers.h"
+#include "nav_data.h"
+
 
 /* Globals */
 state_t state_handle;
 const char *fault_message = "INITIAL_VALUE";
-
+state_box stateVal;
 /**
   * @p STATE_NAME state, checking time in current state
   * Basic functionality of states, call check_interval for determination if we
@@ -70,13 +72,17 @@ void state_machine_logic() {
   */
 void state_machine_handler(){
 	state_t *handle = &state_handle;
-
+	
+	if (stateVal.change_state) {
+		handle->next_state = stateVal.stateName;
+		handle->change_state = true;
+		stateVal.change_state = 0;
+	}
 	/* Enter state handler */
 	handle->in_state_table[handle->curr_state](handle->flags);
 
 	/* Check if we are transitioning */
 	if (handle->change_state) {
-
 		handle->change_state = false;
 		/* see if any action is necessary */
 		if (handle->curr_state == handle->next_state)
