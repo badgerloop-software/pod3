@@ -3,9 +3,9 @@
 #include "exti.h"
 #include <stdio.h>
 #include "state_machine.h"
-
+#include "pv_data.h"
 extern Nav_Data navData;
-
+extern PV_Data pvData;
 /*
  * Message Type:
  *      Updates data with current voted-on retro count
@@ -240,15 +240,17 @@ void state_message_set(uint8_t data[]) {
  *
  * Data Byte 2: Pressure [7:0]
  * Data Byte 3: Pressure [15:8]
- * Data Byte 4: Pressure [23:16]
- * Data Byte 5: Pressure [31:24]
+ * Data Byte 4: Temperature [23:16]
+ * Data Byte 5: Temperature [31:24]
  * Data Byte 6: TODO: Staleness??
  * Data Byte 7: 0 */
 void pv_pressure_set(uint8_t data[]){
-
-    int i;
-
-    for ( i = 0; i < 8; i++ ){
+	data[2] = 0xFF & pvData->pres;
+    data[3] = 0xFF & (pvData->pres >> 8);
+	data[4] = 0xFF & (pvData->temp);
+	data[5] = 0xFF & (pvData->temp >> 8);
+	int i;	
+    for ( i = 6; i < 8; i++ ){
         data[i] = 0;
     }
     
