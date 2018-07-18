@@ -71,8 +71,6 @@ void EXTI0_IRQHandler(void) {
 		interLine[0].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF0;
-
-	    /* TESTING */
     }
 }
 
@@ -108,7 +106,6 @@ void EXTI3_IRQHandler(void) {
 		interLine[3].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF3;
-	
 	}
 }
 
