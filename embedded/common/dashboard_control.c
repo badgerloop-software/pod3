@@ -3,6 +3,7 @@
 #include "dashboard_control.h"
 #include "console.h"
 #include "usart.h"
+#include "state_handlers.h"
 
 int str_index_of(char *search, char *find) {
 	char *start;
@@ -20,60 +21,79 @@ void process_state_transition(char *state) {
 	}
 	else if (!strncmp(state, "idle", 4)) {
 	        puts("idle requested");
+		change_state(IDLE);
 	}
 	else if (!strncmp(state, "ready_for_pumpdown", 18)) {
 	        puts("ready_for_pumpdown requested");
+		change_state(READY_FOR_PUMPDOWN);
 	}
 	else if (!strncmp(state, "pumpdown", 8)) {
 	        puts("pumpdown requested");
+		change_state(PUMPDOWN);
 	}
 	else if (!strncmp(state, "ready", 5)) {
 	        puts("ready requested");
+		change_state(READY);
 	}
 	else if (!strncmp(state, "postrun", 7)) {
 	        puts("postrun requested");
+		change_state(POST_RUN);
 	}
 	else if (!strncmp(state, "service_low_speed", 17)) {
 	        puts("service_low_speed requested");
+		change_state(SERVICE_LOW_SPEED_PROPULSION);
 	}
 	else if (!strncmp(state, "safe_to_approach", 16)) {
 	        puts("safe_to_approach requested");
+		change_state(SAFE_TO_APPROACH);
 	}
 	else if (!strncmp(state, "prop_start_hyperloop", 20)) {
 	        puts("prop_start_hyperloop requested");
+		change_state(PROPULSION_START);
 	}
 	else if (!strncmp(state, "prop_start_openair", 18)) {
 	        puts("prop_start_openair requested");
+		change_state(PROPULSION_START);
 	}
 	else if (!strncmp(state, "prop_start_extsub", 17)) {
 	        puts("prop_start_extsub requested");
+		change_state(PROPULSION_START);
 	}
 	else if (!strncmp(state, "prop_dsa_hyperloop", 18)) {
 	        puts("prop_dsa_hyperloop requested");
+		change_state(PROPULSION_DISTANCE);
 	}
 	else if (!strncmp(state, "prop_dsa_openair", 16)) {
 	        puts("prop_dsa_openair requested");
+		change_state(PROPULSION_DISTANCE);
 	}
 	else if (!strncmp(state, "prop_dsa_extsub", 15)) {
 	        puts("prop_dsa_extsub requested");
+		change_state(PROPULSION_DISTANCE);
 	}
 	else if (!strncmp(state, "braking_hyperloop", 17)) {
 	        puts("braking_hyperloop requested");
+		change_state(BRAKING);
 	}
 	else if (!strncmp(state, "braking_openair", 15)) {
 	        puts("braking_openair requested");
+		change_state(BRAKING);
 	}
 	else if (!strncmp(state, "braking_extsub", 14)) {
 	        puts("braking_extsub requested");
+		change_state(BRAKING);
 	}
 	else if (!strncmp(state, "fault_prerun", 12)) {
 	        puts("fault_prerun requested");
+		change_state(PRE_RUN_FAULT);
 	}
 	else if (!strncmp(state, "fault_run", 9)) {
 	        puts("fault_run requested");
+		change_state(RUN_FAULT);
 	}
 	else if (!strncmp(state, "fault_postrun", 13)) {
 	        puts("fault_postrun requested");
+		change_state(POST_RUN_FAULT);
 	}
 }
 

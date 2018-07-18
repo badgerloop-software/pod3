@@ -11,7 +11,7 @@
 #include "can.h"
 #include "nav_data.h"
 #include "exti.h"
-
+#include "state_machine.h"
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
 #define STATE_INTERVAL  100 
@@ -21,7 +21,7 @@
 const int board_type = NAV;
 extern volatile unsigned int ticks;
 extern Nav_Data navData;
-
+state_box stateVal = {3, 0};
 /* Nucleo 32 I/O */
 
 //Limit Switches
@@ -93,7 +93,13 @@ int nav_init(void) {
 	/* nav specific initializations */
 
     GPIO_TypeDef *gpioa = GPIOA;
-     
+    
+	change_solenoid(PRIM_BRAKING_1, ACTUATED);
+	change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+	change_solenoid(SEC_VENTING, ACTUATED);
+	change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
+	change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+
     /* Retro 1 is on pin PA0
      * Retro 2 is on pin PA1
      * Retro 3 is on pin PA5 */
@@ -118,6 +124,7 @@ int nav_init(void) {
     return 0;
 }
 
+extern state_t state_handle;
 int main(void) {
 
 	PC_Buffer *rx;
@@ -134,6 +141,11 @@ int main(void) {
 	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	while (1) {
+		if (can_read() == HAL_OK){
+		   	if (board_can_message_parse(BADGER_CAN_ID, RxData) == HAL_ERROR) {
+				printf("BIG ERROR");
+			}; 
+		}
 		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
 			if (nav_DAQ(&navData)) printf("DAQ Failure");
@@ -141,7 +153,8 @@ int main(void) {
 		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
 			iox_start_read();
 			lastState = ticks;
-			//state_machine_handler();
+			//printf("NAV STATE: %u\r\n", state_handle.curr_state); 
+			state_machine_handler();
 			//check if new state is needed
 		}
 		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {

@@ -45,6 +45,12 @@ typedef struct {
     int               shouldStop;
 } Nav_Data;
 
+typedef struct {
+	int stateName;
+	int change_state;
+} state_box;
+
+extern state_box stateVal;
 int nav_DAQ(Nav_Data*);
 
 #endif
