@@ -14,6 +14,7 @@
 #include "current_sense.h"
 #include "state_machine.h"
 #include "bms.h"
+#include "rms.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -34,6 +35,7 @@ Pod_Data_Handle podData = {
 	 .linePressures = {{"line_pres_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_3", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
 		 			   {"line_pres_4", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_5", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_6", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 					   {"line_pres_7", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, {"line_pres_8", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
+	//TODO Format BMS data
 	 .BMSdata = {{"packCurrent", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
 		 {"packVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
 		 {"packDCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -114,8 +116,9 @@ int dash_init() {
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
-	bms_init();
-	return 0;
+    bms_init();
+    rms_init();
+    return 0;
 }
 
 int main(void) {

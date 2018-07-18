@@ -7,6 +7,7 @@
 #include "bms.h"
 #include "nav_data.h"
 //#include "state_handlers.h"
+#include "rms.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -396,8 +397,11 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 		}
 	}
+	//TODO make this better
     else if( bms_parser( can_id, data) == 0){
-        //printf("Unknown CAN Message Received\r\n");
+	    if(rms_parser( can_id, data) == 0){
+	    	printf("Unknown CAN Message Received\r\n");
+	    }
     }
 	return HAL_OK;
 }
