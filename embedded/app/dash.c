@@ -9,9 +9,12 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
+<<<<<<< HEAD
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
+=======
+>>>>>>> c5bdb79889b7079a486c90bb1f2e5b5550bf17db
 #include "bms.h"
 
 #define BLINK_INTERVAL	250
@@ -83,10 +86,14 @@ inline void printPrompt(void) {
 }
 
 int dash_init() {
+<<<<<<< HEAD
     adc_init();
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
+=======
+	
+>>>>>>> c5bdb79889b7079a486c90bb1f2e5b5550bf17db
 	bms_init();
 	return 0;
 }

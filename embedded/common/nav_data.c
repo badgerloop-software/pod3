@@ -18,6 +18,7 @@ Nav_Data navData = {
 };
 
 int nav_DAQ(Nav_Data *navDataPtr) {
+	/* DEBUG SOLENOIDS */
 	int temp = navDataPtr->solenoids.solenoid_1.state;
 	int temp2 = navDataPtr->solenoids.solenoid_2.state;
 	int temp3 = navDataPtr->solenoids.solenoid_4.state;
@@ -32,12 +33,12 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 	navDataPtr->retros.retroAgreement = getStripCount(&successCheck);
 	// DEBUG RETRO printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
 	harvest_solenoids(&(navDataPtr->solenoids));
-	//harvest_adc(&(navDataPtr->
 
 	if (navDataPtr->solenoids.solenoid_1.state != temp) printf("CHANGE1\r\n");
 	if (navDataPtr->solenoids.solenoid_2.state != temp2) printf("CHANGE2\r\n");
 	if (navDataPtr->solenoids.solenoid_4.state != temp3) printf("CHANGE4\r\n");
 	if (navDataPtr->solenoids.solenoid_6.state != temp4) printf("CHANGE6\r\n");
 	if (navDataPtr->solenoids.solenoid_7.state != temp5) printf("CHANGE7\r\n");*/
-	return 0; // on Success
+	
+    return 0; // on Success
 }
