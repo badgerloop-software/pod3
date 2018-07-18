@@ -2,7 +2,7 @@
 #include <string.h>
 #include <board.h>
 #include <can.h>
-#include <dashboard_data.h>
+#include "dashboard_data.h"
 #include "data_set.h"
 //#include "state_machine.h"
 CAN_HandleTypeDef can_handle;
@@ -283,6 +283,16 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 				return HAL_ERROR;
 			
 			nav_solenoid1_set(data);
+			if (data[2] == 3) {
+				printf("data[0]: %u\r\n", data[0]);
+				printf("data[1]: %u\r\n", data[1]);
+				printf("data[2]: %u\r\n", data[2]);
+				printf("data[3]: %u\r\n", data[3]);
+				printf("data[4]: %u\r\n", data[4]);
+				printf("data[5]: %u\r\n", data[5]);
+				printf("data[6]: %u\r\n", data[6]);
+				printf("data[7]: %u\r\n", data[7]);
+			}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
 
@@ -311,7 +321,8 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
-	//printf("%u\r\n", data[2]);	
+	//printf("%u\r\n", data[2]);
+	uint16_t pres1, pres2;	
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -344,12 +355,24 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_SHOULD_STOP:
 				break;
 			case NAV_PRES_1:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_1_2(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_2:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_3_4(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_3:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_5_6(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_4:
+				pres1 = data[2] | (data[3] << 8);
+				pres2 = data[4] | (data[5] << 8);
+				set_pres_7_8(pod_data, pres1, pres2);
 				break;
 			case NAV_SOLENOID_1:
 				set_solenoid_value(pod_data, data[2]);
@@ -358,6 +381,19 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				set_motion(pod_data, data[2], data[3], data[4]);
 				break;
 			case CURR_STATE:
+					printf("SOLENOID DATA:\r\n");
+					printf("data[0]: %u\r\n", data[0]);
+					printf("data[1]: %u\r\n", data[1]);
+					printf("data[2]: %u\r\n", data[2]);
+					printf("data[3]: %u\r\n", data[3]);
+					printf("data[4]: %u\r\n", data[4]);
+					printf("data[5]: %u\r\n", data[5]);
+					printf("data[6]: %u\r\n", data[6]);
+					printf("data[7]: %u\r\n", data[7]);
+				set_solenoid_value(pod_data, data[2]);
+				break;
+			case NAV_ACCEL_VEL_POS:
+				set_accel_vel_pos(pod_data, data[2], data[3], data[4]);
 				break;
 			}
 		}
