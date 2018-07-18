@@ -403,7 +403,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	//TODO make this better
     else if( bms_parser( can_id, data) == 0){
 	    if(rms_parser( can_id, data) == 0){
-	    	printf("Unknown CAN Message Received\r\n");
+	    	//printf("Unknown CAN Message Received\r\n");
 	    }
     }
     package_bms_data( pod_data, bms);
