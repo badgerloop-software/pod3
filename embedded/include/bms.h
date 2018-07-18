@@ -22,7 +22,7 @@ typedef struct {
 	uint16_t cellMaxVoltage;
 	uint16_t cellMinVoltage;
 	uint16_t cellAvgVoltage;
-	//uint8_t maxCells;
+	uint8_t maxCells;
 	uint8_t numCells;
 } Bms;
 

@@ -71,7 +71,6 @@ void EXTI0_IRQHandler(void) {
 		interLine[0].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF0;
-
     }
 }
 
@@ -82,9 +81,7 @@ void EXTI1_IRQHandler(void) {
 		interLine[1].filter[(interLine[1].count) % AVERAGE_SIZE]
 			= interLine[1].curr - interLine[1].prev;
 		interLine[1].count ++;
-
 		EXTI->PR1 |= EXTI_PR1_PIF1;
-		
 	}
 }
 

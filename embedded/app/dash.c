@@ -9,6 +9,7 @@
 #include "dashboard_data.h"
 #include "dashboard_control.h"
 #include "can.h"
+#include "state_handlers.h"
 #include "adc.h"
 #include "current_sense.h"
 #include "state_machine.h"
@@ -19,6 +20,7 @@
 
 extern CAN_RxHeaderTypeDef RxHeader;
 const int board_type = DASH;
+extern state_t state_handle;
 
 Pod_Data_Handle podData = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -50,8 +52,30 @@ Pod_Data_Handle podData = {
  		{"cellMinVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"cellAvgVoltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"maxCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
- 		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
-    }
+ 		{"numCells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
+	 .RMSdata = {
+		{"igbt_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"gate_driver_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"control_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"motor_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"motor_speed", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"phase_a_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"phase_b_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"phase_c_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"dc_bus_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"output_voltage_peak", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"lv_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_1_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_1_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_2_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"can_2_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_1_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_1_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_2_1", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"fault_2_2", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"command_torque", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"actual_torque", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+		{"relay_state", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}}	
 };
 
 /* Nucleo 32 I/O */
@@ -118,13 +142,12 @@ int main(void) {
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
 			state_machine_handler();
-			//state_machine_logic();
 			//check if new state is needed
 		}
 		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
 			lastTelem = ticks;
 			send_data(&podData);
-			//board_telemetry_send(board_type);
+			board_telemetry_send(board_type);
 			//CCP sends telem to Pi
 		}
 		if (((ticks + 25) % CTRL_INTERVAL == 0) && lastHrtbt != ticks) {
@@ -136,7 +159,5 @@ int main(void) {
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
 	}
-
-
 	return 0;
 }
