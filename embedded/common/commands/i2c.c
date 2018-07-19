@@ -190,6 +190,7 @@ command_status do_adcx(int argc, char *argv[]){
 	int i;
     uint8_t adcx_val[4];
 	uint8_t addr;
+	float volts;
 
 	if (!strcmp("read", argv[1])){
 		
@@ -221,12 +222,14 @@ command_status do_adcx(int argc, char *argv[]){
 		}
 		if( addr == 0x48 ){
 			for( i = 0; i < 4; i++){
-				printf("ADCx value read 0x%x from Channel #%d\r\n", adcx_val[i], i);
+				volts = adcx_val[i] *12.89 /1000;
+				printf("ADCx value read %f Volts from Channel #%d\r\n", volts, i);
 			}
 		}
 		if( addr == 0x49 ){
 		    for( i = 0; i < 4; i++){
-			printf("ADCx value read 0x%x from Channel #%d\r\n", adcx_val[i], i+4);
+			volts = adcx_val[i] *12.89 /1000;
+			printf("ADCx value read %f Volts from Channel #%d\r\n", volts, i+4);
 		    }
 		}
 
