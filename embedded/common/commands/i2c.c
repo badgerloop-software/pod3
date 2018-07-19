@@ -189,9 +189,23 @@ command_status do_adcx(int argc, char *argv[]){
 	if (argc == 1) return USAGE;
 	int i;
     	uint8_t adcx_val[4];
+	uint8_t addr;
 
 	if (!strcmp("read", argv[1])){
-		if(!adcx_start_read(0x48) ){
+		
+		addr = atoi( argv[2] );
+		if(addr != 48 && addr != 49 ){
+			return USAGE;
+		}
+
+		if( addr == 48){
+			addr = 0x48;
+		}
+		else{
+			addr = 0x49;
+		}
+
+		if(!adcx_start_read(addr) ){
 			printf("%s: could not read from i2c:\r\n",__func__);
 			i2c_dump();
 			return FAIL;
@@ -205,13 +219,34 @@ command_status do_adcx(int argc, char *argv[]){
 			printf("%s call to adcx_read failed\r\n", __func__);
 			return FAIL;
 		}
-		for( i = 0; i < 4; i++){
-			printf("ADCx value read 0x%x from Channel #%d\r\n", adcx_val[i], i);
+		if( addr == 0x48 ){
+			for( i = 0; i < 4; i++){
+				printf("ADCx value read 0x%x from Channel #%d\r\n", adcx_val[i], i);
+			}
 		}
+		if( addr == 0x49 ){
+		    for( i = 0; i < 4; i++){
+			printf("ADCx value read 0x%x from Channel #%d\r\n", adcx_val[i], i+4);
+		    }
+		}
+
 		return CMD_SUCCESS;
 	}
 	else if( !strcmp( "write", argv[1]) ){
-		if(!adcx_write( 0x48 ) ){
+		
+		addr = atoi( argv[2] );
+		if(addr != 48 && addr != 49 ){
+			return USAGE;
+		}
+
+		if( addr == 48){
+			addr = 0x48;
+		}
+		else{
+			addr = 0x49;
+		}
+
+		if(!adcx_write( addr ) ){
 			printf("ADCx Write Error\r\n");
 			return FAIL;
 		}
@@ -223,7 +258,7 @@ command_status do_adcx(int argc, char *argv[]){
 
 COMMAND_ENTRY(
 	"adcx",
-	"adcx <subcommand>"
+	"adcx <read/write> <48/49>"
 	"adcx <addr (hex)> <pin (int)>",
 	"Interace with the PCF8591 subsystem",
 	do_adcx
