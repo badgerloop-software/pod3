@@ -4,13 +4,44 @@
 #include "pcf8591.h"
 #include "i2c.h"
 
-uint8_t _i2cadc_read_val;
-uint8_t _i2cadc_read_pos;
+//IDEA:
+//
+// Before reading certain channel, write new control byte to the channel, then read from it
 
-bool adcx_start_read(uint8_t addr){
-	return (i2c_start_read(addr, 1) == HAL_OK) ? true : false;
+uint16_t _i2cadc_read_val;
+uint8_t _i2cadc_read_pos;
+bool adcx_read_stale = true;
+
+bool adcx_write( uint8_t addr, uint8_t channel ){
+    if( i2c_start_write( addr, 1, &channel) == HAL_OK) {
+        adcx_read_stale = true;
+        return true;
+    }
+    printf("ADCx Write Failure");
+    return false;
 }
 
+bool adcx_start_read(uint8_t addr, uint8_t channel ){
+    if( !adcx_write( addr, channel ) ){
+        return false;
+    }
+
+    return (i2c_start_read(addr, 2) == HAL_OK) ? true : false;
+}
+
+bool adcx_read(uint16_t * val) {
+    if (!i2c_read_ready() ){
+        printf("ADCx Read Ready\r\n");
+        return false;
+    }
+    _i2cadc_read_val = i2c_rx[0];
+    i2c_clear_flag(I2C_RX_READY);
+    *val = _i2cadc_read_val;
+    adcx_read_stale = false;
+    return true;
+}
+
+/*
 bool adcx_read(uint8_t addr, uint8_t * val) {
 		
 	_i2cadc_read_pos = *val;
@@ -29,4 +60,4 @@ bool adcx_read(uint8_t addr, uint8_t * val) {
 	}
 	return true;
 }
-
+*/

@@ -188,9 +188,10 @@ COMMAND_ENTRY(
 command_status do_adcx(int argc, char *argv[]){
 	if (argc == 1) return USAGE;
 
+    uint16_t adcx_val;
+
 	if (!strcmp("read", argv[1])){
-		uint8_t read_val;
-		if(!adcx_start_read(0x48)){
+		if(!adcx_start_read(0x48, atoi(argv[2])) ){
 			printf("%s: could not read from i2c:\r\n",__func__);
 			i2c_dump();
 			return FAIL;
@@ -200,11 +201,11 @@ command_status do_adcx(int argc, char *argv[]){
 			i2c_dump();
 			return FAIL;
 		}
-		if (!adcx_read(0x48, &read_val)){
+		if (!adcx_read(&adcx_val)){
 			printf("%s call to adcx_read failed\r\n", __func__);
 			return FAIL;
 		}
-		printf("hex value read 0x%x\r\n", read_val);
+		printf("hex value read 0x%x\r\n", adcx_val);
 		return CMD_SUCCESS;
 	}
 	return USAGE;
