@@ -8,14 +8,15 @@
 //
 // Before reading certain channel, write new control byte to the channel, then read from it
 
-uint16_t _i2cadc_read_val;
+//uint8_t _i2cadc_read_val;
 uint8_t _i2cadc_read_pos;
 bool adcx_read_stale = true;
-uint8_t adcx_channel = 0;
 
-bool adcx_write( uint8_t addr, uint8_t channel ){
-    adcx_channel = channel;
-    if( i2c_start_write( addr, 1, &adcx_channel) == HAL_OK) {
+bool adcx_write( uint8_t addr ){
+    
+    uint8_t adcx_data = 4;
+
+    if( i2c_start_write( addr, 1, &adcx_data) == HAL_OK) {
         adcx_read_stale = true;
         return true;
     }
@@ -23,24 +24,25 @@ bool adcx_write( uint8_t addr, uint8_t channel ){
     return false;
 }
 
-bool adcx_start_read(uint8_t addr, uint8_t* channel_num ){
+bool adcx_start_read(uint8_t addr ){
     
-    *channel_num = adcx_channel;
-
-    HAL_StatusTypeDef status = i2c_start_read(addr,1);
-    printf( "ADCx Read Status: %d\r\n", status );
-    return false;
-    //return (i2c_start_read(addr, 1) == HAL_OK) ? true : false;
+    //*channel_num = adcx_channel;
+    //adcx_channel = (adcx_channel + 1) % 4;
+    //HAL_StatusTypeDef status = i2c_start_read(addr,1);
+    //printf( "ADCx Read Status: %d\r\n", status );
+    //return false;
+    return (i2c_start_read(addr, 5) == HAL_OK) ? true : false;
 }
 
-bool adcx_read(uint16_t * val) {
-    if (!i2c_read_ready() ){
-        printf("ADCx Read Ready\r\n");
-        return false;
+bool adcx_read(uint8_t * val) {
+    while (!i2c_read_ready() ){}
+    int i;
+    
+    for( i = 0; i < 4; i++){
+    	val[i] = i2c_rx[i+1];
     }
-    _i2cadc_read_val = i2c_rx[0];
+
     i2c_clear_flag(I2C_RX_READY);
-    *val = _i2cadc_read_val;
     adcx_read_stale = false;
     return true;
 }
