@@ -29,6 +29,7 @@ Pod_Data_Handle podData = {
 	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .stopping_dist = {"stopping_dist", 0, 0, 3460, 0, NOT_FRESH, DT_UINT16},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
