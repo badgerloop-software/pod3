@@ -6,6 +6,8 @@
 #include "pin_alias.h"
 #include "can.h"
 #include "pv_data.h"
+#include "nav_data.h"
+#include "state_machine.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -13,7 +15,7 @@
 const int board_type = PV;
 
 PV_Data pvData = {MCU_DISABLED, 0, 0};
-
+state_box pv_stateVal = {3, 0};
 /* Nucleo 32 I/O */
 
 //Shutdown Circuit
@@ -87,6 +89,7 @@ int main(void) {
 		}
 		if( currState != lastState ){
 			lastState = currState;
+			state_machine_handler();
 		}
 		if( currTelem != lastTelem ){
 			lastTelem = currTelem;

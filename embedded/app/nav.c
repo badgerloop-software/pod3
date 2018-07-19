@@ -21,7 +21,7 @@
 const int board_type = NAV;
 extern volatile unsigned int ticks;
 extern Nav_Data navData;
-state_box stateVal = {3, 0};
+state_box nav_stateVal = {3, 0};
 /* Nucleo 32 I/O */
 
 //Limit Switches

@@ -8,6 +8,7 @@
 #include "nav_data.h"
 //#include "state_handlers.h"
 #include "rms.h"
+#include "pv_data.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -17,7 +18,7 @@ uint8_t RxData[8];
 extern uint8_t board_num;
 volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
-
+extern state_box pv_stateVal;
 extern state_box stateVal;
 void can_heartbeat_next(){
 	
@@ -476,9 +477,11 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				printf("NAV_ACCEL_VEL_POS\r\n");
 				break;
 			case CURR_STATE:
-				//printf("STATE: %u\r\n", data[2]);
+				printf("STATE: %u\r\n", data[2]);
 				stateVal.stateName = data[2];
 				stateVal.change_state = 1;
+				pv_stateVal.stateName = data[2];
+				pv_stateVal.change_state = 1;
 				//printf("STATE: %u\r\n", state_handle.curr_state);
 				break;
 			}
