@@ -95,6 +95,10 @@ int getStripCount(int *badRetro) {
     /* Data is now fresh */
     freshness = FRESH; 
 
+	printf( "Retro 1 Count: %d\r\n", RETRO1.count);
+	printf( "Retro 2 Count: %d\r\n", RETRO2.count);
+	printf( "Retro 3 Count: %d\r\n", RETRO3.count);
+
     return actualCount;
 }
 
