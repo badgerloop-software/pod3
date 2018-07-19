@@ -32,17 +32,17 @@ void rms_init() {
 int rms_parser(uint32_t id, uint8_t *data){
 	switch(id){
 		case (0xa0):
-			rms->igbt_temp = (data[1] | (data[0] <<8)) / 10; //Deg C
-			rms->gate_driver_board_temp = (data[7] | (data[6] << 8)) / 10; //Deg C
+			rms->igbt_temp = (data[0] | (data[1] <<8)) / 10; //Deg C
+			rms->gate_driver_board_temp = (data[6] | (data[7] << 8)) / 10; //Deg C
 			//printf("IGBT: %d\r\n", rms->igbt_temp);
 			//printf("Gate Driver Board Temp: %d\r\n", rms->gate_driver_board_temp);
 			break;
 		case (0xa1):
-			rms->control_board_temp = (data[1] | (data[0] << 8)) / 10; // Deg C
+			rms->control_board_temp = (data[0] | (data[1] << 8)) / 10; // Deg C
 			//printf("Control Board Temp: %d\r\n", rms->control_board_temp);
 			break;
 		case (0xa2):
-			rms->motor_temp = (data[5] | (data[4] << 8)) / 10; //Deg C
+			rms->motor_temp = (data[4] | (data[5] << 8)) / 10; //Deg C
 			//printf("Motor Temp: %d\r\n", rms->motor_temp);
 			break;
 		case (0xa3):
@@ -50,45 +50,45 @@ int rms_parser(uint32_t id, uint8_t *data){
 		case (0xa4): 
 			break;
 		case (0xa5):
-			rms->motor_speed = (data[3] | (data[2] << 8)); // RPM
-			rms->electrical_freq = (data[5] | data[4] << 8 ) / 10; //electrical frequency Hz
+			rms->motor_speed = (data[2] | (data[3] << 8)); // RPM
+			rms->electrical_freq = (data[4] | (data[5] << 8 )) / 10; //electrical frequency Hz
 			//printf("Motor Speed: %d\r\n", rms->motor_speed);
 			//printf("Elect. Freq: %d\r\n", rms->electrical_freq);
 			break;
 		case (0xa6):
-			rms->phase_a_current = (data[1] | (data[0] << 8)) / 10; // Phase A current
-			rms->dc_bus_current = (data[7] | (data[6] << 8)) / 10; //DC Bus current
+			rms->phase_a_current = (data[0] | (data[1] << 8)) / 10; // Phase A current
+			rms->dc_bus_current = (data[6] | (data[7] << 8)) / 10; //DC Bus current
 			//printf("Phase A Current: %d\r\n", rms->phase_a_current);
 			//printf("Phase B Current: %d\r\n", rms->phase_b_current);
 			break;
 		case (0xa7):
-			rms->dc_bus_voltage = (data[1] | (data[0] << 8))/10; //DC Bus voltage
-			rms->output_voltage_ln = (data[3] | (data[2] << 8)) / 10; //Voltage line to netural 
+			rms->dc_bus_voltage = (data[0] | (data[1] << 8))/10; //DC Bus voltage
+			rms->output_voltage_ln = (data[2] | (data[3] << 8)) / 10; //Voltage line to netural 
 			//printf("DC Bus Voltage: %d\r\n", rms->dc_bus_voltage);
 			//printf("Output Voltage line: %d\r\n", rms->output_voltage_ln);
 			break;
 		case (0xa8):
 			break;
 		case (0xa9):
-			rms->lv_voltage = (data[7] | (data[6] << 8)) / 100;
+			rms->lv_voltage = (data[6] | (data[7] << 8)) / 100;
 			//printf("LV Voltage: %d\r\n", rms->lv_voltage);
 			break;
 
 		case (0xaa):
-			rms->can_code_1 = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
-			rms->can_code_2 = (data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7];
+			rms->can_code_1 = (data[3] << 24) | (data[2] << 16) | (data[1] << 8) | data[0];
+			rms->can_code_2 = (data[7] << 24) | (data[6] << 16) | (data[5] << 8) | data[4];
 			//printf("CAN Code 1: %lld\r\n", rms->can_code_1);
 			//printf("CAN Code 2: %lld\r\n", rms->can_code_2);
 			break;
 		case (0xab):
-			rms->fault_code_1 = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
-			rms->fault_code_2 = (data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7];
+			rms->fault_code_1 = (data[3] << 24) | (data[2] << 16) | (data[1] << 8) | data[0];
+			rms->fault_code_2 = (data[7] << 24) | (data[6] << 16) | (data[5] << 8) | data[4];
 			//printf("Fault Code 1: %lld\r\n", rms->fault_code_1);
 			//printf("Fault Code 2: %lld\r\n", rms->fault_code_2);
 			break;
 		case (0xac):
-			rms->commanded_torque = (data[1] | (data[0] << 8)) /10;
-			rms->actual_torque = (data[3] | (data[2] << 8)) / 10;
+			rms->commanded_torque = (data[0] | (data[1] << 8)) /10;
+			rms->actual_torque = (data[2] | (data[3] << 8)) / 10;
 			//printf("Commanded Torque: %d\r\n", rms->commanded_torque);
 			//printf("Actual Torque: %d\r\n", rms->actual_torque);
 			break;
