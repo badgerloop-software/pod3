@@ -31,7 +31,7 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 
 	int successCheck;
 	navDataPtr->retros.retroAgreement = getStripCount(&successCheck);
-	// DEBUG RETRO printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
+	printf("Strip Count: %u\r\n", navDataPtr->retros.retroAgreement);
 	harvest_solenoids(&(navDataPtr->solenoids));
 
 	if (navDataPtr->solenoids.solenoid_1.state != temp) printf("CHANGE1\r\n");

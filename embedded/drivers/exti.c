@@ -3,7 +3,7 @@
 #include "stm32l432xx.h"
 #include <stdio.h>
 #include "retro.h"
-
+#define RETRO_BUFFER 3000
 /* gets interupt vecotor number for pin */
 static IRQn_Type exti_get_irq_num(uint32_t pin) {
 	switch(pin) {
@@ -64,14 +64,13 @@ timeStamp * getTimeStamps(int pin) {
 /*need to get time stamps*/
 void EXTI0_IRQHandler(void) {
 	if (EXTI->PR1 & EXTI_PR1_PIF0) {
-		interLine[0].prev = interLine[0].curr;
-		interLine[0].curr = ticks;
-		interLine[0].filter[(interLine[0].count) % AVERAGE_SIZE]
-			= interLine[0].curr - interLine[0].prev;
-
         //Handles the case where tape strip is detected twice
-        if( interLine[0].curr - interLine[0].prev >= 100 ){
+        if( ticks - interLine[0].curr >= RETRO_BUFFER ){
+			interLine[0].prev = interLine[0].curr;
+			interLine[0].curr = ticks;
             interLine[0].count ++;
+			interLine[0].filter[(interLine[0].count) % AVERAGE_SIZE]
+				= interLine[0].curr - interLine[0].prev;
         }
 
 		EXTI->PR1 |= EXTI_PR1_PIF0;
@@ -80,14 +79,14 @@ void EXTI0_IRQHandler(void) {
 
 void EXTI1_IRQHandler(void) {
 	if (EXTI->PR1 & EXTI_PR1_PIF1) {
-		interLine[1].prev = interLine[1].curr;
-		interLine[1].curr = ticks;
-		interLine[1].filter[(interLine[1].count) % AVERAGE_SIZE]
-			= interLine[1].curr - interLine[1].prev;
         
         //Handles the case where tape strip is detected twice
-        if( interLine[1].curr - interLine[1].prev >= 100 ){
+        if( ticks - interLine[1].curr >= RETRO_BUFFER ){
+			interLine[1].prev = interLine[1].curr;
+			interLine[1].curr = ticks;
             interLine[1].count ++;
+			interLine[1].filter[(interLine[1].count) % AVERAGE_SIZE]
+				= interLine[1].curr - interLine[1].prev;
         }
 		
         EXTI->PR1 |= EXTI_PR1_PIF1;
@@ -144,15 +143,15 @@ void EXTI4_IRQHandler(void) {
 
 void EXTI9_5_IRQHandler(void) {
 	if (EXTI->PR1 & EXTI_PR1_PIF5) {
-		interLine[5].prev = interLine[5].curr;
-		interLine[5].curr = ticks;
-		interLine[5].filter[(interLine[5].count) % AVERAGE_SIZE]
-			= interLine[5].curr - interLine[5].prev;
-
         //Handles the case where tape strip is detected twice
-        if( interLine[5].curr - interLine[5].prev >= 100 ){
+        if( ticks - interLine[5].curr >= RETRO_BUFFER ){
+			interLine[5].prev = interLine[5].curr;
+			interLine[5].curr = ticks;
             interLine[5].count ++;
+			interLine[5].filter[(interLine[5].count) % AVERAGE_SIZE]
+				= interLine[5].curr - interLine[5].prev;
         }
+
 
 		EXTI->PR1 |= EXTI_PR1_PIF5;
     }
