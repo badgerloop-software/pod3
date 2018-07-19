@@ -153,9 +153,9 @@ int getTelemetry(int *pos, int *vel, int *acc) {
 
 void unitTest(void) {
 	int tPos, tVel, tAcc;	
-
+	int i;
 	// Nominal case, all 3 strips read
-	for(int i = 0; i < 10; i++) {
+	for( i = 0; i < 10; i++) {
 		incVel(1); incVel(2); incVel(3);
 		getTelemetry(&tPos, &tVel, &tAcc);
 		if(tVel != CM_PER_STRIP) printf("Failed nominal case %d\r\n", tVel);

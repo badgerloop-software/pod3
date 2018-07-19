@@ -1,7 +1,7 @@
 let MongoClient = require('mongodb').MongoClient;
 let DBManager = require('./db_manager.js');
 
-let url = 'mongodb://192.168.1.112:27017';
+let url = 'mongodb://192.168.2.112:27017';
 
 MongoClient.connect(url, (err, client) => {
 	let db = client.db("pod_data");

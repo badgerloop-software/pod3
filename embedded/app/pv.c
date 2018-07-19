@@ -12,7 +12,7 @@
 
 const int board_type = PV;
 
-PV_Data pvData = {MCU_DISABLED, 0};
+PV_Data pvData = {MCU_DISABLED, 0, 0};
 
 /* Nucleo 32 I/O */
 
@@ -45,6 +45,8 @@ FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 //Motor GPIO circuit output
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
+FILL_GPIO(HVD_FDBK, 	GPIOB, 4, OUTPUT, LOW_SPEED, NONE, true, OTHER)
+
 inline void printPrompt(void) {
 	fputs("[pv-build] $ ", stdout);
 	fflush(stdout);
@@ -74,7 +76,7 @@ int main(void) {
 	while (1) {
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {			
 			lastDAQ = ticks;
-			pv_DAQ(&pvData);
+			//pv_DAQ(&pvData);
 
 			//check if new state is needed
 		}

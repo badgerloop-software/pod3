@@ -71,11 +71,6 @@ void EXTI0_IRQHandler(void) {
 		interLine[0].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF0;
-
-	    /* TESTING */
-        printf( "Retro 1 Count: %lu\r\n", interLine[0].count);
-        printf( "Retro 1 Previous Timestamp: %lu\r\n", interLine[0].prev);
-        printf( "Retro 1 Current Timestamp: %lu\r\n", interLine[0].curr);
     }
 }
 
@@ -86,13 +81,7 @@ void EXTI1_IRQHandler(void) {
 		interLine[1].filter[(interLine[1].count) % AVERAGE_SIZE]
 			= interLine[1].curr - interLine[1].prev;
 		interLine[1].count ++;
-
 		EXTI->PR1 |= EXTI_PR1_PIF1;
-		
-	    /* TESTING */
-        printf( "Retro 2 Count: %lu\r\n", interLine[1].count);
-        printf( "Retro 2 Previous Timestamp: %lu\r\n", interLine[1].prev);
-        printf( "Retro 2 Current Timestamp: %lu\r\n", interLine[1].curr);
 	}
 }
 
@@ -117,7 +106,6 @@ void EXTI3_IRQHandler(void) {
 		interLine[3].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF3;
-	
 	}
 }
 
@@ -142,11 +130,6 @@ void EXTI9_5_IRQHandler(void) {
 		interLine[5].count ++;
 
 		EXTI->PR1 |= EXTI_PR1_PIF5;
-
-	    /* TESTING */
-        printf( "Retro 3 Count: %lu\r\n", interLine[5].count);
-        printf( "Retro 3 Previous Timestamp: %lu\r\n", interLine[5].prev);
-        printf( "Retro 3 Current Timestamp: %lu\r\n", interLine[5].curr);
     }
 	if (EXTI->PR1 & EXTI_PR1_PIF6) {
 		interLine[6].prev = interLine[6].curr;

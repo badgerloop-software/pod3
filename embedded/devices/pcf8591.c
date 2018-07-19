@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <adcx.h>
 #include "pcf8591.h"
 #include "i2c.h"
 
