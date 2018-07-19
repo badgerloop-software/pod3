@@ -19,19 +19,14 @@ uint8_t pSense[8];
 double pVolt[8];
 
 bool i2adc_read( uint8_t addr ){
-    int i;
     int j;
-        for( i = 0; i < 8; i++){
-            pSense[i] = 0;
-        }
 
         if( addr != 0x48 && addr != 0x49){
             printf("Wrong Address passed in.\r\n");
             return false;
         }
 
-    for( j = 0; j < 4; j++ ){
-        if(!adcx_start_read(addr, 1) ){
+        if(!adcx_start_read(addr, 4) ){
             printf("%s: could not read from i2c:\r\n",__func__);
             i2c_dump();
             return false;
@@ -43,22 +38,25 @@ bool i2adc_read( uint8_t addr ){
         }
 
         if( addr == 0x48 ){
-            if (!adcx_read( pSense, 1 )){
+            if (!adcx_read( pSense, 4 )){
                 printf("%s call to adcx_read failed\r\n", __func__);
                 return false;
             }
-            pVolt[j] = pSense[j] * 12.89 /1000;
-            printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j], j);
+            for( j = 0; j < 4; j++){
+                pVolt[j] = pSense[j] * 12.89 /1000;
+                printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j], j);
+            }
         }
         else{
-            if (!adcx_read( &(pSense[j+4]), 1 )){
+            if (!adcx_read( &(pSense[4]), 4 )){
                 printf("%s call to adcx_read failed\r\n", __func__);
                 return false;
             }
-            pVolt[j+4] = pSense[j+4] * 12.89 /1000;
-            printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j+4], j+4);
-    	}
-    }
+            for( j = 4; j < 8; j++){
+                pVolt[j] = pSense[j] * 12.89 /1000;
+                printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j], j);
+    	    }
+        }
 	
     sAct = pVolt[7];
     sLine = pVolt[4];
@@ -73,6 +71,7 @@ bool i2adc_read( uint8_t addr ){
     printf("ADCx value read %f Volts from Prim. Actuator \r\n", pAct);
     printf("ADCx value read %f Volts from Prim. Line \r\n", pLine);
     printf("ADCx value read %f Volts from Prim. Tank \r\n", pTank);
+    
     return true;
 }
 
