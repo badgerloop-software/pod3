@@ -15,11 +15,12 @@ char packetBuffer[SEND_BUF_SIZE];
 int dash_DAQ(Pod_Data_Handle *podData) {
 //	ccp_parse_can_message(BADGER_CAN_ID, RxData, podData);	
 	harvest_honeywell(podData);
+
 	return 0;
 }
 
 void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
-	//printf("RETRO: %u\r\n", retroVal);
+	printf("RETRO: %u\r\n", retroVal);
 	podData->retro.ui8data = retroVal;
 	podData->retro.timestamp = time(NULL);
 	podData->retro.freshness = FRESH;
@@ -37,6 +38,11 @@ void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_
 	podData->acceleration.i8data = accel;
 	podData->acceleration.freshness = FRESH;
 	podData->acceleration.timestamp = time(NULL);
+}
+
+
+void set_stopping_dist(Pod_Data_Handle *podData) {
+	podData->stopping_dist.ui16data = podData->stopping_dist.ui16data - (100 * podData->retro.ui8data);	
 }
 
 void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
@@ -175,6 +181,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 	}
 
 	if (pod_data->retro.freshness == FRESH) {
+		printf("Retro send\r\n");
 		pod_data->retro.freshness = NOT_FRESH;
 		char *dataToSend = formatPacket(&(pod_data->retro));
 		uart_send(dataToSend);

@@ -242,6 +242,7 @@ HAL_StatusTypeDef can_send_intermodule(
 	if(retval != HAL_OK){
 		printf("RETVAL %d", retval);
 	}
+	
 	return retval;
 }
 
@@ -261,11 +262,12 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 		    
             /* Update data, and send out */
             nav_tape_set(data);
-		    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+	    printf("NAV TAPE SEND\r\n");
+	    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
             
             nav_should_stop_set(data);
-			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+	    if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
 			
             nav_pressure1_set(data);
@@ -327,9 +329,12 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
-	//printf("%u\r\n", data[2]);
+	printf("CAN ID: %lu\r\n", can_id);
 	uint16_t pres1, pres2, pvPres, pvTemp;
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
+		
+		printf( "Message Num: %d\r\n", message_num);
+
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
 				break;
@@ -359,7 +364,9 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				break;
 			case NAV_TAPE:
+				printf( "Retro Data: %d\r\n", data[2]);
 				set_retro(pod_data, data[2]);
+				set_stopping_dist(pod_data);
 				break;
 			case NAV_SHOULD_STOP:
 				break;
@@ -691,9 +698,9 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 	
 	switch (role) {
 		case DASH:
-			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh 	= 0x0000;
+			sFilterConfig0.FilterMaskIdHigh 	= 0x000 << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case NAV:
@@ -705,7 +712,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case PV:
 			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x000 << 5;
+			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case DEV:
