@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 uint8_t pSense[8];
+double pVolt[8];
 
 bool i2adc_read( uint8_t addr ){
     int i;
@@ -35,7 +36,8 @@ bool i2adc_read( uint8_t addr ){
             return false;
         }
         for( i = 0; i < 4; i++){
-            printf("ADCx value read 0x%x from Channel #%d\r\n", pSense[i], i);
+            pVolt[i] = pSense[i] * 12.89 /1000;
+            printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[i], i);
         }
     }
     else{
@@ -43,9 +45,9 @@ bool i2adc_read( uint8_t addr ){
             printf("%s call to adcx_read failed\r\n", __func__);
             return false;
         }
-
         for( i = 4; i < 8; i++){
-            printf("ADCx value read 0x%x from Channel #%d\r\n", pSense[i], i);
+            pVolt[i] = pSense[i] * 12.89 /1000;
+            printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[i], i);
         }
 
     }
