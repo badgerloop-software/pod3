@@ -11,3 +11,4 @@ SRCS += drivers/adc.c
 SRCS += drivers/voltage_sense.c
 SRCS += drivers/current_sense.c
 SRCS += drivers/bms.c
+SRCS += drivers/adcx.c

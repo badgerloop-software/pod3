@@ -188,7 +188,7 @@ COMMAND_ENTRY(
 command_status do_adcx(int argc, char *argv[]){
 	if (argc == 1) return USAGE;
 	int i;
-    	uint8_t adcx_val[4];
+    uint8_t adcx_val[4];
 	uint8_t addr;
 
 	if (!strcmp("read", argv[1])){
@@ -205,7 +205,7 @@ command_status do_adcx(int argc, char *argv[]){
 			addr = 0x49;
 		}
 
-		if(!adcx_start_read(addr) ){
+		if(!adcx_start_read(addr,4) ){
 			printf("%s: could not read from i2c:\r\n",__func__);
 			i2c_dump();
 			return FAIL;
@@ -215,7 +215,7 @@ command_status do_adcx(int argc, char *argv[]){
 			i2c_dump();
 			return FAIL;
 		}
-		if (!adcx_read(adcx_val)){
+		if (!adcx_read(adcx_val, 4)){
 			printf("%s call to adcx_read failed\r\n", __func__);
 			return FAIL;
 		}
@@ -246,7 +246,9 @@ command_status do_adcx(int argc, char *argv[]){
 			addr = 0x49;
 		}
 
-		if(!adcx_write( addr ) ){
+        uint8_t data = 4;
+
+		if(!adcx_write( addr, 1, &data ) ){
 			printf("ADCx Write Error\r\n");
 			return FAIL;
 		}

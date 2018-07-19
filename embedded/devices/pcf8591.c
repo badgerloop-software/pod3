@@ -3,67 +3,69 @@
 #include <adcx.h>
 #include "pcf8591.h"
 #include "i2c.h"
+#include <stdbool.h>
 
-//IDEA:
-//
-// Before reading certain channel, write new control byte to the channel, then read from it
+uint8_t pSense[8];
 
-//uint8_t _i2cadc_read_val;
-uint8_t _i2cadc_read_pos;
-bool adcx_read_stale = true;
-
-bool adcx_write( uint8_t addr ){
-    
-    uint8_t adcx_data = 4;
-
-    if( i2c_start_write( addr, 1, &adcx_data) == HAL_OK) {
-        adcx_read_stale = true;
-        return true;
-    }
-    printf("ADCx Write Failure");
-    return false;
-}
-
-bool adcx_start_read(uint8_t addr ){
-    
-    //*channel_num = adcx_channel;
-    //adcx_channel = (adcx_channel + 1) % 4;
-    //HAL_StatusTypeDef status = i2c_start_read(addr,1);
-    //printf( "ADCx Read Status: %d\r\n", status );
-    //return false;
-    return (i2c_start_read(addr, 5) == HAL_OK) ? true : false;
-}
-
-bool adcx_read(uint8_t * val) {
-    while (!i2c_read_ready() ){}
+bool i2adc_read( uint8_t addr ){
     int i;
-    
-    for( i = 0; i < 4; i++){
-    	val[i] = i2c_rx[i+1];
+    for( i = 0; i < 8; i++){
+        pSense[i] = 0;
     }
 
-    i2c_clear_flag(I2C_RX_READY);
-    adcx_read_stale = false;
+    if( addr != 0x48 && addr != 0x49){
+        printf("Wrong Address passed in.\r\n");
+        return false;
+    }
+
+    if(!adcx_start_read(addr, 4) ){
+        printf("%s: could not read from i2c:\r\n",__func__);
+        i2c_dump();
+        return false;
+    }
+    if (i2c_block(I2C_WAITING_RX, ticks)){
+        printf("%s waiting for read timed out", __func__);
+        i2c_dump();
+        return false;
+    }
+
+    if( addr == 0x48 ){
+        if (!adcx_read( pSense, 4 )){
+            printf("%s call to adcx_read failed\r\n", __func__);
+            return false;
+        }
+        for( i = 0; i < 4; i++){
+            printf("ADCx value read 0x%x from Channel #%d\r\n", pSense[i], i);
+        }
+    }
+    else{
+        if (!adcx_read( &(pSense[4]), 4 )){
+            printf("%s call to adcx_read failed\r\n", __func__);
+            return false;
+        }
+
+        for( i = 4; i < 8; i++){
+            printf("ADCx value read 0x%x from Channel #%d\r\n", pSense[i], i);
+        }
+
+    }
     return true;
 }
 
-/*
-bool adcx_read(uint8_t addr, uint8_t * val) {
-		
-	_i2cadc_read_pos = *val;
-	_i2cadc_read_val = 0;
-	uint32_t ticks_start = ticks;
+bool i2adc_write(uint8_t addr){
+        
+    uint8_t control_byte = 4;
 
-	printf("in function\r\n");
-
-	if (i2c_start_write(addr, 1, &_i2cadc_read_pos) == HAL_OK){
-		if (!i2c_read_ready()) return false;
-        if( i2c_start_read(addr, 2) != HAL_OK ) return false; 
-		if (i2c_block(I2C_WAITING_RX, ticks_start) || i2c_errors_present()) return false;
-		_i2cadc_read_val = i2c_rx[0];
-		printf("i2c read value %x\r\n", _i2cadc_read_val);
-		*val = i2c_rx[1];
-	}
-	return true;
+    if( addr != 0x48 && addr != 0x49){
+        printf("Wrong Address passed in.\r\n");
+        return false;
+    }
+    
+    if(!adcx_write( addr, 1, &control_byte ) ){
+        printf("ADCx Write Error\r\n");
+        return false;
+    }
+    return true;
 }
-*/
+
+
