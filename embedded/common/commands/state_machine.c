@@ -5,6 +5,8 @@
 #include "state_handlers.h"
 #include "state_machine.h"
 
+
+extern state_t state_handle;
 command_status do_state_machine(int argc, char *argv[]) {
 	char* str;
 
@@ -55,6 +57,8 @@ command_status do_state_machine(int argc, char *argv[]) {
 		}
 	}
 	
+	if(!strcmp("curr_state", argv[1])) printf("CURR STATE: %d", state_handle.curr_state);
+
 	/* Set propulsion timeout and next state */
 	if(!strcmp("set_timeout", argv[1])){
 		if (argc == 3) {
