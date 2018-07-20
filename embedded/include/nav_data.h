@@ -50,6 +50,7 @@ typedef struct {
 	int change_state;
 } state_box;
 
+extern uint32_t brake_timestamp;
 extern state_box stateVal;
 int nav_DAQ(Nav_Data*);
 

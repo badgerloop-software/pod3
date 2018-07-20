@@ -10,9 +10,11 @@
 #include "solenoid.h"
 #include "can.h"
 #include "nav_data.h"
+#include "adc.h"
 #include "exti.h"
 #include "state_machine.h"
 #include "state_handlers.h"
+#include "voltage_sense.h"
 
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
@@ -28,6 +30,7 @@ state_box nav_stateVal = {3, 0};
 uint32_t dash_timestamp = 0;
 uint32_t pv_timestamp = 0;
 uint32_t nav_timestamp = 0;
+uint32_t brake_timestamp = 0;
 
 /* Nucleo 32 I/O */
 
@@ -41,9 +44,9 @@ FILL_GPIO(LIM3,	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, SENSOR);
 
 //Retros
 // Retros 1 2 and 3
-FILL_GPIO(RETRO1, GPIOA, 0, INPUT, LOW_SPEED, NONE, true, SENSOR);
-FILL_GPIO(RETRO2, GPIOA, 1, INPUT, LOW_SPEED, NONE, true, SENSOR);
-FILL_GPIO(RETRO3, GPIOA, 5, INPUT, LOW_SPEED, NONE, true, SENSOR);
+FILL_GPIO(RET1, GPIOA, 0, INPUT, LOW_SPEED, NONE, true, SENSOR);
+FILL_GPIO(RET2, GPIOA, 1, INPUT, LOW_SPEED, NONE, true, SENSOR);
+FILL_GPIO(RET3, GPIOA, 5, INPUT, LOW_SPEED, NONE, true, SENSOR);
 
 //IMU
 FILL_GPIO(IMU_nRST,	GPIOB, 1, OUTPUT, LOW_SPEED, NONE, true, SENSOR);
@@ -150,16 +153,33 @@ int main(void) {
 	post("Navigation");
 	printPrompt();
 
-	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
 	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
-	while (1) {
+	
+    while (1) {
 		currDAQ = (ticks + 15) / 100;
 		currState = (ticks + 30) / 100;
 		currTelem = (ticks + 45) / 100;
 		currHrtbt = (ticks + 60) / 100;
 
-        if(  dash_timestamp - ticks >= 500 ){
+        //LIM1: if not low .5 s after braking trigger secondary brakes
+        if( brake_timestamp != 0){
+            if( (ticks - brake_timestamp > 500) && gpio_readPin(GPIOA, 3) ){
+                
+                //Trigger Secondary Brakes
+
+            }
+        }
+
+        //if 20 seconds without detecting a retro, change to post_run
+        if ( (ticks - interLine[0].curr >= 20000) && (ticks - interLine[1].curr >= 20000) 
+                && (ticks - interLine[5].curr >= 20000) && state_handle.curr_state == BRAKING ){
+            
+            change_state( POST_RUN );
+        }
+
+        //if loss of CAN heartbeat
+        if(  ticks - dash_timestamp >= 500 ){
             if( state_handle.curr_state <= READY ){
                 change_state( PRE_RUN_FAULT );
             }else if( state_handle.curr_state > READY && state_handle.curr_state < POST_RUN ){
@@ -174,7 +194,7 @@ int main(void) {
 		if (can_read() == HAL_OK){
 		   	if (board_can_message_parse(BADGER_CAN_ID, RxData) == HAL_ERROR) {
 				printf("BIG ERROR");
-			}; 
+			}
 		}
 		if(currDAQ != lastDAQ){
 			if (nav_DAQ(&navData)) printf("DAQ Failure");

@@ -157,7 +157,7 @@ int main(void) {
 		currTelem = (ticks + 30) / 100;
 		currHrtbt = (ticks + 40) / 100;
 		
-        if( (pv_timestamp - ticks >= 500) || (nav_timestamp - ticks >= 500) ){
+        if( (ticks -pv_timestamp >= 500) || (ticks - nav_timestamp >= 500) ){
             if( state_handle.curr_state <= READY ){
                 change_state( PRE_RUN_FAULT );
             }else if( state_handle.curr_state > READY && state_handle.curr_state < POST_RUN ){

@@ -87,7 +87,7 @@ int main(void) {
 		currTelem = (ticks + 30) / 100;
 		currHrtbt = (ticks + 40) / 100;
 
-        if( dash_timestamp - ticks >= 500) {
+        if( ticks - dash_timestamp >= 500) {
         
             if( state_handle.curr_state <= READY ){
                 change_state( PRE_RUN_FAULT );

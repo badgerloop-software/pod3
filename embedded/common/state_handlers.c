@@ -9,6 +9,7 @@
 #include "can.h"
 
 extern state_box stateVal;
+
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/
@@ -730,7 +731,9 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
 
-	} // end NAV_MODULE
+        brake_timestamp = ticks;
+	
+    } // end NAV_MODULE
 
 	else if(board_type==DASH) {
         	can_heartbeat_next();
