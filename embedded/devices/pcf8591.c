@@ -62,12 +62,12 @@ bool i2adc_read( uint8_t addr ){
     	    }
         }
 	
-    navData.linePressures.pres_1 = pVolt[7] * 8.8 / 1000; //sAct
-    navData.linePressures.pres_2 = pVolt[4] * 8.8 / 1000; //sLine
-    navData.linePressures.pres_3 = pVolt[5] * 2.4 / 1000; //sTank
-    navData.linePressures.pres_4 = pVolt[1] * 8.8 / 1000; //pAct
-    navData.linePressures.pres_5 = pVolt[2] * 8.8 / 1000; //pLine
-    navData.linePressures.pres_6 = pVolt[3] * 2.4 / 1000; //pTank
+    navData.linePressures.pres_1 = pVolt[7] * 1.1718; //sAct
+    navData.linePressures.pres_2 = pVolt[4] * 1.1718; //sLine
+    navData.linePressures.pres_3 = pVolt[5] * 7.8125; //sTank
+    navData.linePressures.pres_4 = pVolt[1] * 1.1718; //pAct
+    navData.linePressures.pres_5 = pVolt[2] * 1.1718; //pLine
+    navData.linePressures.pres_6 = pVolt[3] * 7.8125; //pTank
             
     //printf("ADCx value read %f PSI from Sec. Actuator\r\n", navData.linePressures.pres_1 );
     //printf("ADCx value read %f PSI from Sec. Line\r\n", navData.linePressures.pres_2 );
