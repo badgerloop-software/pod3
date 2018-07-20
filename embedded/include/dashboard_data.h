@@ -54,7 +54,6 @@ void set_pres_3_4(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_pres_5_6(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_solenoid_value(Pod_Data_Handle*, uint8_t);
 void set_retro(Pod_Data_Handle*, uint8_t);
-void set_curr_adc(Pod_Data_Handle*, uint16_t);
 void set_volt_adc(Pod_Data_Handle*, uint16_t);
 void set_limit(Pod_Data_Handle*, uint8_t, uint8_t, uint8_t);
 void set_stopping_dist(Pod_Data_Handle*);

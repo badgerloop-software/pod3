@@ -26,11 +26,11 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
-void set_curr_adc(Pod_Data_Handle *podData, uint16_t val) {
+void set_volt_adc(Pod_Data_Handle *podData, uint16_t val) {
 	//printf("RETRO: %u\r\n", retroVal);
-	podData->adc[0].ui16data = val;
-	podData->adc[0].timestamp = time(NULL);
-	podData->adc[0].freshness = FRESH;
+	podData->adc[1].ui16data = val;
+	podData->adc[1].timestamp = time(NULL);
+	podData->adc[1].freshness = FRESH;
 }
 
 void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim3) {
