@@ -17,6 +17,7 @@ double sAct; //AIN0
 
 uint8_t pSense[8];
 double pVolt[8];
+double pPres[8];
 
 bool i2adc_read( uint8_t addr ){
     int j;
@@ -54,18 +55,19 @@ bool i2adc_read( uint8_t addr ){
             }
             for( j = 4; j < 8; j++){
                 pVolt[j] = pSense[j] * 12.89 /1000;
+
                 printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j], j);
     	    }
         }
 	
-    sAct = pVolt[7];
-    sLine = pVolt[4];
-    sTank = pVolt[5];
-    pAct = pVolt[1];
-    pLine = pVolt[2];
-    pTank = pVolt[3];
+    sAct = pVolt[7] * 33.3333;
+    sLine = pVolt[4] * 33.3333;
+    sTank = pVolt[5] * 244.444;
+    pAct = pVolt[1] * 33.3333;
+    pLine = pVolt[2] * 33.3333;
+    pTank = pVolt[3] * 244.444;
             
-    printf("ADCx value read %f Volts from Sec. Actuator\r\n", sAct);
+    printf("ADCx value read %f PSI from Sec. Actuator\r\n", sAct);
     printf("ADCx value read %f Volts from Sec. Line\r\n", sLine);
     printf("ADCx value read %f Volts from Sec Tank\r\n", sTank);
     printf("ADCx value read %f Volts from Prim. Actuator \r\n", pAct);
