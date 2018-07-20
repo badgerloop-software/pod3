@@ -2,12 +2,13 @@
 #include "state_machine.h"
 #include "state_handlers.h"
 #include "nav_data.h"
-
+#include "pv_data.h"
 
 /* Globals */
 state_t state_handle;
 const char *fault_message = "INITIAL_VALUE";
 state_box stateVal;
+state_box pv_stateVal;
 /**
   * @p STATE_NAME state, checking time in current state
   * Basic functionality of states, call check_interval for determination if we
@@ -77,6 +78,12 @@ void state_machine_handler(){
 		handle->next_state = stateVal.stateName;
 		handle->change_state = true;
 		stateVal.change_state = 0;
+	}
+
+	if (pv_stateVal.change_state) {
+		handle->next_state = pv_stateVal.stateName;
+		handle->change_state = true;
+		pv_stateVal.change_state = 0;
 	}
 	/* Enter state handler */
 	handle->in_state_table[handle->curr_state](handle->flags);

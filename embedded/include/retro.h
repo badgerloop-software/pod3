@@ -23,5 +23,5 @@ void initRetro(void);
 int getStripCount(int* badRetro );
 void incVel(int);
 // Sets the position in cm and velocity in cm/s
-// int getTelemetry (int *pos, int *vel, int *acc);
+int getTelemetry (int *pos, int *vel, int *acc);
 #endif /* _RETR0_H*/
