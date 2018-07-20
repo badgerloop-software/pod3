@@ -8,6 +8,7 @@
 #include "nav_data.h"
 //#include "state_handlers.h"
 #include "rms.h"
+#include "pv_data.h"
 
 CAN_HandleTypeDef can_handle;
 CAN_RxHeaderTypeDef RxHeader;
@@ -17,7 +18,7 @@ uint8_t RxData[8];
 extern uint8_t board_num;
 volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
-
+extern state_box pv_stateVal;
 extern state_box stateVal;
 void can_heartbeat_next(){
 	
@@ -178,7 +179,7 @@ int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
         hb_status = FAULTS_CLEARED;
     }
 	else if( hb_status == FORWARD){
-        can_heartbeat_forward( hcan);
+        	can_heartbeat_forward( hcan);
 	}
 	else if( hb_status == DISCHARGE ){
 		can_heartbeat_discharge( hcan);
@@ -241,6 +242,7 @@ HAL_StatusTypeDef can_send_intermodule(
 	if(retval != HAL_OK){
 		printf("RETVAL %d", retval);
 	}
+	
 	return retval;
 }
 
@@ -260,11 +262,12 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 		    
             /* Update data, and send out */
             nav_tape_set(data);
-		    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+	    printf("NAV TAPE SEND\r\n");
+	    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
             
             nav_should_stop_set(data);
-			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+	    if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
 		
             nav_adc_set(data);
@@ -333,6 +336,9 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	//printf("%u\r\n", data[2]);
 	uint16_t pres1, pres2, pvPres, pvTemp, adc;
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
+		
+		printf( "Message Num: %d\r\n", message_num);
+
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
 				break;
@@ -366,8 +372,10 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				break;
 			case NAV_TAPE:
+				printf( "Retro Data: %d\r\n", data[2]);
 				set_retro(pod_data, data[2]);
                 set_limit( pod_data, data[3],data[4],data[5]);
+				set_stopping_dist(pod_data);
 				break;
 			case NAV_SHOULD_STOP:
 				break;
@@ -412,7 +420,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	//TODO make this better
     else if( bms_parser( can_id, data) == 0){
 	    if(rms_parser( can_id, data) == 0){
-	    	printf("Unknown CAN Message Received\r\n");
+	    	//printf("Unknown CAN Message Received\r\n");
 	    }
     }
     package_bms_data( pod_data, bms);
@@ -429,16 +437,12 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 	if((can_id == BADGER_CAN_ID) && (to_modules == board_type || to_modules == ALL)){	
 		switch (message_num) {
 			case CAN_TEST_MESSAGE:
-				printf("CAN TEST\r\n");
 				break;
 			case LV_HEARTBEAT:
-				printf("HEARTBEAT\r\n");
 				break;
 			case CCP_FAULT:
-				printf("CCP FAULT\r\n");
 				break;
 			case CCP_WARNING:
-				printf("CCP Warning");
                 break;
             case CCP_SOLENOID_COMMAND:
 				printf("CCP_SOLENOID_COMMAND\r\n");
@@ -492,9 +496,11 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				printf("NAV_ACCEL_VEL_POS\r\n");
 				break;
 			case CURR_STATE:
-				//printf("STATE: %u\r\n", data[2]);
+				printf("STATE: %u\r\n", data[2]);
 				stateVal.stateName = data[2];
 				stateVal.change_state = 1;
+				pv_stateVal.stateName = data[2];
+				pv_stateVal.change_state = 1;
 				//printf("STATE: %u\r\n", state_handle.curr_state);
 				break;
 			}
@@ -704,9 +710,9 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 	
 	switch (role) {
 		case DASH:
-			sFilterConfig0.FilterIdHigh		= 0x7ff << 5;
+			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh 	= 0x0000;
+			sFilterConfig0.FilterMaskIdHigh 	= 0x000 << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case NAV:
@@ -718,7 +724,7 @@ HAL_StatusTypeDef can_init(BOARD_ROLE role) {
 		case PV:
 			sFilterConfig0.FilterIdHigh		= 0x555 << 5;
 			sFilterConfig0.FilterIdLow		= 0x0000;
-			sFilterConfig0.FilterMaskIdHigh		= 0x000 << 5;
+			sFilterConfig0.FilterMaskIdHigh		= 0x7ff << 5;
 			sFilterConfig0.FilterMaskIdLow		= 0x0000;
 			break;
 		case DEV:

@@ -29,6 +29,7 @@ Pod_Data_Handle podData = {
 	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .stopping_dist = {"stopping_dist", 0, 0, 3460, 0, NOT_FRESH, DT_UINT16},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
      .limit = {{"lim1", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
@@ -145,28 +146,36 @@ int main(void) {
 	post("Dashboard");
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
+	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
 	while (1) {
+
+		currDAQ = (ticks + 10) / 100;
+		currState = (ticks + 20) / 100;
+		currTelem = (ticks + 30) / 100;
+		currHrtbt = (ticks + 40) / 100;
+		
 		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
-		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
-			lastDAQ = ticks;
+		if( currDAQ != lastDAQ ){
+			
 			if (dash_DAQ(&podData)) printf("DAQ Failure");
-		}	
-		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
-			lastState = ticks;
-			state_machine_handler();
-			//check if new state is needed
+			lastDAQ = currDAQ;
 		}
-		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
-			lastTelem = ticks;
+		if( currState != lastState ){
+			
+			state_machine_handler();
+			lastState = currState;
+		}
+		if( currTelem != lastTelem ){
+			
 			send_data(&podData);
 			board_telemetry_send(board_type);
-			//CCP sends telem to Pi
+			lastTelem = currTelem;
 		}
-		if (((ticks + 25) % CTRL_INTERVAL == 0) && lastHrtbt != ticks) {
-			lastHrtbt = ticks;
-			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
-			//Nav sends heartbeat
+		if( currHrtbt != lastHrtbt ){
+			
+			lastHrtbt = currHrtbt;
 		}
+
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);

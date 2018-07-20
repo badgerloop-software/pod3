@@ -21,7 +21,7 @@
 const int board_type = NAV;
 extern volatile unsigned int ticks;
 extern Nav_Data navData;
-state_box stateVal = {3, 0};
+state_box nav_stateVal = {3, 0};
 /* Nucleo 32 I/O */
 
 //Limit Switches
@@ -140,33 +140,36 @@ int main(void) {
 
 	
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
+	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
 	while (1) {
+		currDAQ = (ticks + 15) / 100;
+		currState = (ticks + 30) / 100;
+		currTelem = (ticks + 45) / 100;
+		currHrtbt = (ticks + 60) / 100;
+		
 		if (can_read() == HAL_OK){
 		   	if (board_can_message_parse(BADGER_CAN_ID, RxData) == HAL_ERROR) {
 				printf("BIG ERROR");
 			}; 
 		}
-		if (((ticks + 10) % DAQ_INTERVAL == 0) && lastDAQ != ticks) {
-			lastDAQ = ticks;
+		if(currDAQ != lastDAQ){
 			if (nav_DAQ(&navData)) printf("DAQ Failure");
+			lastDAQ = currDAQ;
 		}
-		if (((ticks + 15) % STATE_INTERVAL == 0) && lastState != ticks) {
+		if(currState != lastState){
 			iox_start_read();
-			lastState = ticks;
 			//printf("NAV STATE: %u\r\n", state_handle.curr_state); 
 			state_machine_handler();
-			//check if new state is needed
+			lastState = currState;
 		}
-		if (((ticks + 20) % TELEM_INTERVAL == 0) && lastTelem != ticks ) {
-			lastTelem = ticks;
-			board_telemetry_send(board_type);
-			//Nav sends telem to CCP
+		if(currTelem != lastTelem){
+			//board_telemetry_send(board_type);
+			lastTelem = currTelem;
 		}
-		if (((ticks + 25) % HRTBT_INTERVAL == 0) && lastHrtbt != ticks) {
-			lastHrtbt = ticks;
-			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
-			//Nav sends heartbeat
+		if(currHrtbt != lastHrtbt){
+			lastHrtbt = currHrtbt;
 		}
+
 		check_input(rx);
 		blink_handler(BLINK_INTERVAL);
 	}

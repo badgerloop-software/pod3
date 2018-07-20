@@ -339,7 +339,7 @@ void from_idle(STATE_NAME to, uint32_t flags){
 	    
         /* BMS reset de-asserted */
         bms_software_reset_set( false );
-
+        bms_clearFaults();
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {

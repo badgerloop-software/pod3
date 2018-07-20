@@ -60,6 +60,9 @@ void incVel(int retro) {
 // Which ever count has >=2 votes is determined to be correct.
 int getStripCount(int *badRetro) {
 	int actualCount = 0, agree1 = 0, agree2 = 0, agree3 = 0;
+	printf( "Retro 1 Count: %lu\r\n", RETRO1.count);
+	printf( "Retro 2 Count: %lu\r\n", RETRO2.count);
+	printf( "Retro 3 Count: %lu\r\n", RETRO3.count);
 	
 	if(RETRO1.count == RETRO2.count) {
 		agree1++; agree2++;
@@ -95,9 +98,6 @@ int getStripCount(int *badRetro) {
     /* Data is now fresh */
     freshness = FRESH; 
 
-	printf( "Retro 1 Count: %lu\r\n", RETRO1.count);
-	printf( "Retro 2 Count: %lu\r\n", RETRO2.count);
-	printf( "Retro 3 Count: %lu\r\n", RETRO3.count);
 
     return actualCount;
 }
