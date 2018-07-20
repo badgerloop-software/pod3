@@ -35,6 +35,7 @@ typedef struct {
 	Sensor_Data tube_pressure;
     Sensor_Data limit[3];
 	Sensor_Data retro;
+    Sensor_Data adc[2];
 	Sensor_Data solenoids;
 	Sensor_Data linePressures[8];
 	Sensor_Data pv_pres;
@@ -53,6 +54,8 @@ void set_pres_5_6(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_pres_7_8(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_solenoid_value(Pod_Data_Handle*, uint8_t);
 void set_retro(Pod_Data_Handle*, uint8_t);
+void set_curr_adc(Pod_Data_Handle*, uint16_t);
+void set_volt_adc(Pod_Data_Handle*, uint16_t);
 void set_limit(Pod_Data_Handle*, uint8_t, uint8_t, uint8_t);
 int dash_DAQ(Pod_Data_Handle *);
 void send_data(Pod_Data_Handle*);

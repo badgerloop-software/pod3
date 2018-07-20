@@ -4,6 +4,7 @@
 /* Telemetry data setup functions */
 void nav_tape_set(uint8_t data[]);
 void nav_should_stop_set(uint8_t data[]);
+void nav_adc_set(uint8_t data[]);
 void nav_pressure1_set(uint8_t data[]);
 void nav_pressure2_set(uint8_t data[]);
 void nav_pressure3_set(uint8_t data[]);

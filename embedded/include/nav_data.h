@@ -42,6 +42,7 @@ typedef struct {
 	Retro_Values      retros;
 	Motion_Values     motion;
     Limit_Switches    limits;
+    uint16_t          volt_adc;
     int               shouldStop;
 } Nav_Data;
 

@@ -266,7 +266,11 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
             nav_should_stop_set(data);
 			if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
-			
+		
+            nav_adc_set(data);
+			if (can_send_intermodule(NAV, DASH_REC, NAV_ADC, data) != HAL_OK) 
+				return HAL_ERROR;
+
             nav_pressure1_set(data);
             if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
 				return HAL_ERROR;
@@ -327,7 +331,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	RECEIVING_BOARD to_modules = data[0] & 0xf;
 	CAN_MESSAGE_TYPE message_num = data[1];
 	//printf("%u\r\n", data[2]);
-	uint16_t pres1, pres2, pvPres, pvTemp;
+	uint16_t pres1, pres2, pvPres, pvTemp, adc;
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -352,7 +356,11 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				set_pv_honeywell(pod_data, pvPres, pvTemp);
 				break;
 			case PV_SHUTDOWN_CIRCUIT_STATUS:
-				break;
+                break;
+            case NAV_ADC:
+                adc = (data[2] | (data[3] << 8)); 
+				set_curr_adc(pod_data, adc);
+                break;
 			case NAV_FAULT:
 				break;
 			case NAV_WARNING:
@@ -449,6 +457,9 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				break;
 			case PV_SHUTDOWN_CIRCUIT_STATUS:
 				printf("Shutdown circuit status");
+				break;
+			case NAV_ADC:
+				printf("nav_adc\r\n");
 				break;
 			case NAV_FAULT:
 				printf("nav_fault\r\n");

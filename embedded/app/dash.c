@@ -34,6 +34,8 @@ Pod_Data_Handle podData = {
      .limit = {{"lim1", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
          {"lim2", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
          {"lim3", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
+     .adc = {{"curr_sense", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+         {"volt_sense", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
 	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 	 .pv_pres = {"pv_ambient_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .pv_temp = {"pv_ambient_temperature", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},

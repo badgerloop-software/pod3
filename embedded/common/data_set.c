@@ -36,6 +36,32 @@ void nav_tape_set(uint8_t data[]){
 }
 
 /*
+ * Message Type:
+ *      Updates data with current voted-on retro count
+ *
+ * TO:   CCP
+ * FROM: NAV
+ *
+ * Data Byte 2: Current Sense ADC value [7:0]
+ * Data Byte 3: Current Sense ADC value [15:8]
+ * Data Byte 4: 0
+ * Data Byte 5: 0
+ * Data Byte 6: 0
+ * Data Byte 7: 0 */
+void nav_adc_set(uint8_t data[]){
+    int i;
+    //TODO: Do error checking with badRetro
+    data[2] = 0xFF & navData.volt_adc;
+    data[3] = 0xFF & (navData.volt_adc >> 8 );
+
+    for ( i = 6; i < 8; i++ ){
+        data[i] = 0;
+    }
+    
+    return;
+}
+
+/*
  * Message Type: 
  *      Updates data with current status whether we should stop or not
  *

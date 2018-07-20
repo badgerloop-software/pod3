@@ -25,6 +25,13 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
+void set_curr_adc(Pod_Data_Handle *podData, uint16_t val) {
+	//printf("RETRO: %u\r\n", retroVal);
+	podData->adc[0].ui16data = val;
+	podData->adc[0].timestamp = time(NULL);
+	podData->adc[0].freshness = FRESH;
+}
+
 void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim3) {
 	//printf("RETRO: %u\r\n", retroVal);
 	podData->limit[0].ui8data = lim1;
@@ -245,6 +252,13 @@ void send_data(Pod_Data_Handle *pod_data) {
 		}
 	}
 	
+    for (i = 0; i < 2; i++) {
+		if (pod_data->adc[i].freshness == FRESH) {
+			pod_data->adc[i].freshness = NOT_FRESH;
+			uart_send(formatPacket(&(pod_data->adc[i])));
+		}
+	}
+
     for (i = 0; i < 3; i++) {
 		if (pod_data->limit[i].freshness == FRESH) {
 			pod_data->limit[i].freshness = NOT_FRESH;

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "retro.h"
 #include "gpio.h"
+#include "adc.h"
 
 Nav_Data navData = {
      .solenoids = {
@@ -28,6 +29,8 @@ int nav_DAQ(Nav_Data *navDataPtr) {
     navDataPtr->limits.limitValue1 = gpio_readPin( GPIOA, 3);
     navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6);
     navDataPtr->limits.limitValue3 = gpio_readPin( GPIOA, 7);
+
+    navDataPtr->volt_adc = adc_read( );
 
 	int successCheck;
 	navDataPtr->retros.retroAgreement = getStripCount(&successCheck);
