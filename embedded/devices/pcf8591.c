@@ -9,14 +9,14 @@
 extern Nav_Data navData;
 
 //Address 0x48
-double pTank; //AIN3
-double pLine; //AIN2
-double pAct; //AIN1
+//AIN3 double pTank;
+//AIN2 double  pLine; 
+//AIN1 double pAct;
 
 //Address 0x49
-double sTank; //AIN2
-double sLine; //AIN1
-double sAct; //AIN0
+//AIN2: double sTank;
+//AIN1: double sLine; 
+//AIN0: double sAct;
 
 uint8_t pSense[8];
 double pVolt[8];
@@ -62,12 +62,12 @@ bool i2adc_read( uint8_t addr ){
     	    }
         }
 	
-    navData.linePressures.pres_1 = pVolt[7] * 33.3333 * 1000; //sAct
-    navData.linePressures.pres_2 = pVolt[4] * 33.3333 * 1000; //sLine
-    navData.linePressures.pres_3 = pVolt[5] * 244.444 * 1000; //sTank
-    navData.linePressures.pres_4 = pVolt[1] * 33.3333 * 1000; //pAct
-    navData.linePressures.pres_5 = pVolt[2] * 33.3333 * 1000; //pLine
-    navData.linePressures.pres_6 = pVolt[3] * 244.444 * 1000; //pTank
+    navData.linePressures.pres_1 = pVolt[7] * 8.8 / 1000; //sAct
+    navData.linePressures.pres_2 = pVolt[4] * 8.8 / 1000; //sLine
+    navData.linePressures.pres_3 = pVolt[5] * 2.4 / 1000; //sTank
+    navData.linePressures.pres_4 = pVolt[1] * 8.8 / 1000; //pAct
+    navData.linePressures.pres_5 = pVolt[2] * 8.8 / 1000; //pLine
+    navData.linePressures.pres_6 = pVolt[3] * 2.4 / 1000; //pTank
             
     //printf("ADCx value read %f PSI from Sec. Actuator\r\n", navData.linePressures.pres_1 );
     //printf("ADCx value read %f PSI from Sec. Line\r\n", navData.linePressures.pres_2 );
