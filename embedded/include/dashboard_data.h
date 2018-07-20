@@ -38,7 +38,7 @@ typedef struct {
 	Sensor_Data retro;
     Sensor_Data adc[2];
 	Sensor_Data solenoids;
-	Sensor_Data linePressures[8];
+	Sensor_Data linePressures[6];
 	Sensor_Data pv_pres;
 	Sensor_Data pv_temp;
 	Sensor_Data BMSdata[19];
@@ -52,7 +52,6 @@ void package_rms_data(Pod_Data_Handle*, Rms*);
 void set_pres_1_2(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_pres_3_4(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_pres_5_6(Pod_Data_Handle*, uint16_t, uint16_t);
-void set_pres_7_8(Pod_Data_Handle*, uint16_t, uint16_t);
 void set_solenoid_value(Pod_Data_Handle*, uint8_t);
 void set_retro(Pod_Data_Handle*, uint8_t);
 void set_curr_adc(Pod_Data_Handle*, uint16_t);

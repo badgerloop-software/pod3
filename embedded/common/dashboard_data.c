@@ -102,16 +102,7 @@ void set_pres_5_6(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 		podData->linePressures[5].freshness = FRESH;
 };
 
-void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
-		podData->linePressures[6].ui16data = pres1;
-		podData->linePressures[6].timestamp = time(NULL);
-		podData->linePressures[6].freshness = FRESH;
-
-		podData->linePressures[7].ui16data = pres2;
-		podData->linePressures[7].timestamp = time(NULL);
-		podData->linePressures[7].freshness = FRESH;
-};
-
+/*
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 	podData->BMSdata[0].i8data  = (int8_t) (bms->packCurrent * 1000);
 //	podData->BMSdata[1].ui8data = (uint8_t) (bms->packVoltage * 1000);
@@ -182,7 +173,7 @@ void set_pv_honeywell(Pod_Data_Handle *podData, uint16_t pres, uint16_t temp) {
 	podData->pv_pres.ui16data  = time(NULL);
 
 }
-
+*/
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	if (pod_data->current_pressure.freshness == FRESH) {
@@ -252,12 +243,10 @@ void send_data(Pod_Data_Handle *pod_data) {
 		uart_send(formatPacket(&(pod_data->pv_temp)));
 	}
 
-	int i;
-	for (i = 0; i < 8; i++) {
-		if (pod_data->linePressures[i].freshness == FRESH) {
-			pod_data->linePressures[i].freshness = NOT_FRESH;
-			uart_send(formatPacket(&(pod_data->linePressures[i])));
-		}
+    //Line Pressures
+	if (pod_data->linePressures[0].freshness == FRESH) {
+		pod_data->linePressures[0].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[0])));
 	}
 	
     for (i = 0; i < 2; i++) {
@@ -274,7 +263,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 		}
 	}
 
-	for (i = 0; i < 19; i++) {
+    for (i = 0; i < 19; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->BMSdata[i])));

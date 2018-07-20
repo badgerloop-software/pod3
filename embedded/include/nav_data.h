@@ -32,8 +32,6 @@ typedef struct {
 	uint16_t pres_4;
 	uint16_t pres_5;
 	uint16_t pres_6;
-	uint16_t pres_7;
-	uint16_t pres_8;
 } Pressure_Values;
 
 typedef struct {

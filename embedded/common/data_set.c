@@ -161,31 +161,6 @@ void nav_pressure3_set(uint8_t data[]){
 
 /*
  * Message Type: 
- *      Updates data with latest value from Pressure Sensor 4
- *
- * TO:   CCP
- * FROM: NAV
- *
- * Data Byte 2: Pressure 7 [7:0]
- * Data Byte 3: Pressure 7 [15:8]
- * Data Byte 4: Pressure 8 [7:0]
- * Data Byte 5: Pressure 8 [15:8]
- * Data Byte 6: TODO: Staleness??
- * Data Byte 7: 0 */
-void nav_pressure4_set(uint8_t data[]){
-
-    data[2] = 0xFF & navData.linePressures.pres_7;
-    data[3] = 0xFF & (navData.linePressures.pres_7 >> 8);
-    data[4] = 0xFF & navData.linePressures.pres_8;
-    data[5] = 0xFF & (navData.linePressures.pres_8 >> 8);
-    data[6] = 0; //TODO
-    data[7] = 0;
-    
-    return;
-}
-
-/*
- * Message Type: 
  *      Updates data with latest value from Solenoid 1
  *
  * TO:   CCP
