@@ -30,7 +30,10 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 
 	getTelemetry( &pos, &vel, &acc);
 
-	navDataPtr->motion.accX = acc;
+    i2adc_read(0x48);
+    i2adc_read(0x49);
+    
+    navDataPtr->motion.accX = acc;
 	navDataPtr->motion.velX = vel;
 	navDataPtr->motion.posX = pos;
 

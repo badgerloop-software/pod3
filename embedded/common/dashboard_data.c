@@ -26,11 +26,11 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
-void set_curr_adc(Pod_Data_Handle *podData, uint16_t val) {
+void set_volt_adc(Pod_Data_Handle *podData, uint16_t val) {
 	//printf("RETRO: %u\r\n", retroVal);
-	podData->adc[0].ui16data = val;
-	podData->adc[0].timestamp = time(NULL);
-	podData->adc[0].freshness = FRESH;
+	podData->adc[1].ui16data = val;
+	podData->adc[1].timestamp = time(NULL);
+	podData->adc[1].freshness = FRESH;
 }
 
 void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim3) {
@@ -48,7 +48,10 @@ void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim
 	podData->limit[2].freshness = FRESH;
 }
 void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_t pos) {
-	podData->position.i8data = pos;
+
+    printf( "Setting vals\r\n");
+    
+    podData->position.i8data = pos;
 	podData->position.freshness = FRESH;
 	podData->position.timestamp = time(NULL);
 
@@ -244,7 +247,6 @@ void send_data(Pod_Data_Handle *pod_data) {
 		uart_send(formatPacket(&(pod_data->pv_temp)));
 	}
 
-	
 	for (i = 0; i < 6; i++){
 		if (pod_data->linePressures[i].freshness == FRESH) {
 			pod_data->linePressures[i].freshness = NOT_FRESH;
@@ -265,7 +267,11 @@ void send_data(Pod_Data_Handle *pod_data) {
 			uart_send(formatPacket(&(pod_data->limit[i])));
 		}
 	}
-
+	if (pod_data->linePressures[5].freshness == FRESH) {
+		pod_data->linePressures[5].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[5])));
+    }	
+    
     for (i = 0; i < 19; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
@@ -332,3 +338,4 @@ char *formatPacket(Sensor_Data *sensorData) {
 	}
 	return packetBuffer;
 }
+

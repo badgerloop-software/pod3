@@ -12,6 +12,10 @@
 #include "nav_data.h"
 #include "exti.h"
 #include "state_machine.h"
+#include "adc.h"
+#include "voltage_sense.h"
+#include "pcf8591.h"
+
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
 #define STATE_INTERVAL  100 
@@ -91,6 +95,7 @@ inline void printPrompt(void) {
 int nav_init(void) {
 
 	/* nav specific initializations */
+    i2adc_write(0x48);
 
     GPIO_TypeDef *gpioa = GPIOA;
     
@@ -120,7 +125,14 @@ int nav_init(void) {
     exti_config(gpioa, 6, 0, 1, 1);
     //Pin 7 EXTI Config (LIM3)
     exti_config(gpioa, 7, 0, 1, 1);
-    
+   
+    //Volt Sense is on PA4
+    adc_init();
+    voltage_sense_init();
+    adc_start();
+
+    i2adc_write(0x49);
+
     return 0;
 }
 
