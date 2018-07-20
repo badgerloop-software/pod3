@@ -47,7 +47,7 @@ Pod_Data_Handle podData = {
 		 {"prim_line", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
 		 {"prim_actuate", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
 	 .BMSdata = {{"pack_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
-		 {"pack_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"pack_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
 		 {"pack_DCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"pack_CCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"pack_resistance", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},

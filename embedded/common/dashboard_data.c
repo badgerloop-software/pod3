@@ -102,10 +102,10 @@ void set_pres_5_6(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 		podData->linePressures[5].freshness = FRESH;
 };
 
-/*
+
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 	podData->BMSdata[0].i8data  = (int8_t) (bms->packCurrent * 1000);
-//	podData->BMSdata[1].ui8data = (uint8_t) (bms->packVoltage * 1000);
+	podData->BMSdata[1].ui16data = (uint16_t) (bms->packVoltage * 1000);
 	podData->BMSdata[1].ui16data = (uint16_t) (bms->packVoltage);
 	podData->BMSdata[2].ui16data = bms->packDCL;
 	podData->BMSdata[3].ui16data = bms->packCCL;
@@ -173,10 +173,12 @@ void set_pv_honeywell(Pod_Data_Handle *podData, uint16_t pres, uint16_t temp) {
 	podData->pv_pres.ui16data  = time(NULL);
 
 }
-*/
+
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
-	if (pod_data->current_pressure.freshness == FRESH) {
+	int i;
+    
+    if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->current_pressure);
 		char *dataToSend = formatPacket(sensor);
