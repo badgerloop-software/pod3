@@ -6,6 +6,7 @@
 #include "stm32l4xx_hal_conf.h"
 #include "i2c.h"
 #include "iox.h"
+#include "adcx.h"
 #include "honeywell.h"
 
 command_status do_init(void) {
@@ -183,6 +184,91 @@ COMMAND_ENTRY(
 	"Interact with the I2C subsystem.",
 	do_i2c
 )
+
+command_status do_adcx(int argc, char *argv[]){
+	if (argc == 1) return USAGE;
+	int i;
+    uint8_t adcx_val[4];
+	uint8_t addr;
+	float volts;
+
+	if (!strcmp("read", argv[1])){
+		
+		addr = atoi( argv[2] );
+		if(addr != 48 && addr != 49 ){
+			return USAGE;
+		}
+
+		if( addr == 48){
+			addr = 0x48;
+		}
+		else{
+			addr = 0x49;
+		}
+
+		if(!adcx_start_read(addr,4) ){
+			printf("%s: could not read from i2c:\r\n",__func__);
+			i2c_dump();
+			return FAIL;
+		}
+		if (i2c_block(I2C_WAITING_RX, ticks)){
+			printf("%s waiting for read timed out", __func__);
+			i2c_dump();
+			return FAIL;
+		}
+		if (!adcx_read(adcx_val, 4)){
+			printf("%s call to adcx_read failed\r\n", __func__);
+			return FAIL;
+		}
+		if( addr == 0x48 ){
+			for( i = 0; i < 4; i++){
+				volts = adcx_val[i] *12.89 /1000;
+				printf("ADCx value read %f Volts from Channel #%d\r\n", volts, i);
+			}
+		}
+		if( addr == 0x49 ){
+		    for( i = 0; i < 4; i++){
+			volts = adcx_val[i] *12.89 /1000;
+			printf("ADCx value read %f Volts from Channel #%d\r\n", volts, i+4);
+		    }
+		}
+
+		return CMD_SUCCESS;
+	}
+	else if( !strcmp( "write", argv[1]) ){
+		
+		addr = atoi( argv[2] );
+		if(addr != 48 && addr != 49 ){
+			return USAGE;
+		}
+
+		if( addr == 48){
+			addr = 0x48;
+		}
+		else{
+			addr = 0x49;
+		}
+
+        uint8_t data = 4;
+
+		if(!adcx_write( addr, 1, &data ) ){
+			printf("ADCx Write Error\r\n");
+			return FAIL;
+		}
+		return CMD_SUCCESS;
+
+	}
+	return USAGE;
+}
+
+COMMAND_ENTRY(
+	"adcx",
+	"adcx <read/write> <48/49>"
+	"adcx <addr (hex)> <pin (int)>",
+	"Interace with the PCF8591 subsystem",
+	do_adcx
+)
+
 
 command_status do_iox(int argc, char *argv[]) {
 	iox_pin_t pin;

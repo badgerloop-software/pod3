@@ -15,7 +15,7 @@ Nav_Data navData = {
      },
      .retros = {0, 0, 0, 0},
      .motion = {0, 0, 0, 0, 0},
-     .linePressures = {0, 0, 0, 0, 0, 0, 0, 0}
+     .linePressures = {0, 0, 0, 0, 0, 0}
 };
 
 int nav_DAQ(Nav_Data *navDataPtr) {
@@ -25,6 +25,13 @@ int nav_DAQ(Nav_Data *navDataPtr) {
 	int temp3 = navDataPtr->solenoids.solenoid_4.state;
 	int temp4 = navDataPtr->solenoids.solenoid_6.state;
 	int temp5 = navDataPtr->solenoids.solenoid_7.state;
+	int vel,acc,pos;
+
+	getTelemetry( &pos, &vel, &acc);
+
+	navDataPtr->motion.accX = acc;
+	navDataPtr->motion.velX = vel;
+	navDataPtr->motion.posX = pos;
 
     navDataPtr->limits.limitValue1 = gpio_readPin( GPIOA, 3);
     navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6);

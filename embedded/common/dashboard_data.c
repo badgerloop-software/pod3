@@ -15,11 +15,12 @@ char packetBuffer[SEND_BUF_SIZE];
 int dash_DAQ(Pod_Data_Handle *podData) {
 //	ccp_parse_can_message(BADGER_CAN_ID, RxData, podData);	
 	harvest_honeywell(podData);
+
 	return 0;
 }
 
 void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
-	//printf("RETRO: %u\r\n", retroVal);
+	printf("RETRO: %u\r\n", retroVal);
 	podData->retro.ui8data = retroVal;
 	podData->retro.timestamp = time(NULL);
 	podData->retro.freshness = FRESH;
@@ -60,6 +61,11 @@ void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_
 	podData->acceleration.timestamp = time(NULL);
 }
 
+
+void set_stopping_dist(Pod_Data_Handle *podData) {
+	podData->stopping_dist.ui16data = podData->stopping_dist.ui16data - (100 * podData->retro.ui8data);	
+}
+
 void set_solenoid_value(Pod_Data_Handle *podData, uint8_t solenoidsVal) {
 	podData->solenoids.ui8data = solenoidsVal;
 	podData->solenoids.timestamp = time(NULL);
@@ -96,15 +102,6 @@ void set_pres_5_6(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 		podData->linePressures[5].freshness = FRESH;
 };
 
-void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
-		podData->linePressures[6].ui16data = pres1;
-		podData->linePressures[6].timestamp = time(NULL);
-		podData->linePressures[6].freshness = FRESH;
-
-		podData->linePressures[7].ui16data = pres2;
-		podData->linePressures[7].timestamp = time(NULL);
-		podData->linePressures[7].freshness = FRESH;
-};
 
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 	podData->BMSdata[0].i16data  = (int16_t) (bms->packCurrent * 1000);
@@ -178,7 +175,9 @@ void set_pv_honeywell(Pod_Data_Handle *podData, uint16_t pres, uint16_t temp) {
 
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
-	if (pod_data->current_pressure.freshness == FRESH) {
+	int i;
+    
+    if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->current_pressure);
 		char *dataToSend = formatPacket(sensor);
@@ -195,6 +194,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 	}
 
 	if (pod_data->retro.freshness == FRESH) {
+		printf("Retro send\r\n");
 		pod_data->retro.freshness = NOT_FRESH;
 		char *dataToSend = formatPacket(&(pod_data->retro));
 		uart_send(dataToSend);
@@ -244,12 +244,10 @@ void send_data(Pod_Data_Handle *pod_data) {
 		uart_send(formatPacket(&(pod_data->pv_temp)));
 	}
 
-	int i;
-	for (i = 0; i < 8; i++) {
-		if (pod_data->linePressures[i].freshness == FRESH) {
-			pod_data->linePressures[i].freshness = NOT_FRESH;
-			uart_send(formatPacket(&(pod_data->linePressures[i])));
-		}
+    //Line Pressures
+	if (pod_data->linePressures[0].freshness == FRESH) {
+		pod_data->linePressures[0].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[0])));
 	}
 	
     for (i = 0; i < 2; i++) {
@@ -266,7 +264,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 		}
 	}
 
-	for (i = 0; i < 19; i++) {
+    for (i = 0; i < 19; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->BMSdata[i])));
