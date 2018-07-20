@@ -174,7 +174,7 @@ void nav_solenoid1_set(uint8_t data[]){
  * Data Byte 2: Accel X
  * Data Byte 3: Vel X
  * Data Byte 4: Pos X
- * Data Byte 5: TODO: Staleness?
+ * Data Byte 5: 0
  * Data Byte 6: 0 
  * Data Byte 7: 0 */
 void nav_accel_vel_pos_set(uint8_t data[]){
@@ -182,7 +182,7 @@ void nav_accel_vel_pos_set(uint8_t data[]){
     data[2] = navData.motion.accX;
     data[3] = navData.motion.velX;
     data[4] = navData.motion.posX;
-    data[5] = 0; //TODO
+    data[5] = 0;
     data[6] = 0;
     data[7] = 0;
     

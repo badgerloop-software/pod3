@@ -27,7 +27,10 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 }
 
 void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_t pos) {
-	podData->position.i8data = pos;
+
+    printf( "Setting vals\r\n");
+    
+    podData->position.i8data = pos;
 	podData->position.freshness = FRESH;
 	podData->position.timestamp = time(NULL);
 

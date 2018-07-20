@@ -121,6 +121,8 @@ int dash_init() {
     current_sense_init();
     adc_start();
     initialize_state_machine(IDLE);
+
+    //TODO
     bms_init();
     rms_init();
     return 0;
