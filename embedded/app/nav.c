@@ -12,6 +12,8 @@
 #include "nav_data.h"
 #include "exti.h"
 #include "state_machine.h"
+#include "state_handlers.h"
+
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
 #define STATE_INTERVAL  100 
@@ -22,6 +24,11 @@ const int board_type = NAV;
 extern volatile unsigned int ticks;
 extern Nav_Data navData;
 state_box nav_stateVal = {3, 0};
+
+uint32_t dash_timestamp = 0;
+uint32_t pv_timestamp = 0;
+uint32_t nav_timestamp = 0;
+
 /* Nucleo 32 I/O */
 
 //Limit Switches
@@ -146,7 +153,19 @@ int main(void) {
 		currState = (ticks + 30) / 100;
 		currTelem = (ticks + 45) / 100;
 		currHrtbt = (ticks + 60) / 100;
-		
+
+        if(  dash_timestamp - ticks >= 500 ){
+            if( state_handle.curr_state <= READY ){
+                change_state( PRE_RUN_FAULT );
+            }else if( state_handle.curr_state > READY && state_handle.curr_state < POST_RUN ){
+                change_state( RUN_FAULT );
+            }else{
+                change_state( POST_RUN_FAULT );
+            }
+            //TODO Send out right away
+            state_machine_handler();
+        }
+
 		if (can_read() == HAL_OK){
 		   	if (board_can_message_parse(BADGER_CAN_ID, RxData) == HAL_ERROR) {
 				printf("BIG ERROR");

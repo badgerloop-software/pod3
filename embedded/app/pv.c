@@ -8,11 +8,15 @@
 #include "pv_data.h"
 #include "nav_data.h"
 #include "state_machine.h"
+#include "state_handlers.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
 
 const int board_type = PV;
+uint32_t nav_timestamp = 0;
+uint32_t dash_timestamp = 0;
+uint32_t pv_timestamp = 0;
 
 PV_Data pvData = {MCU_DISABLED, 0, 0};
 state_box pv_stateVal = {3, 0};
@@ -83,13 +87,27 @@ int main(void) {
 		currTelem = (ticks + 30) / 100;
 		currHrtbt = (ticks + 40) / 100;
 
+        if( dash_timestamp - ticks >= 500) {
+        
+            if( state_handle.curr_state <= READY ){
+                change_state( PRE_RUN_FAULT );
+            }else if( state_handle.curr_state > READY && state_handle.curr_state < POST_RUN ){
+                change_state( RUN_FAULT );
+            }else{
+                change_state( POST_RUN_FAULT );
+            }
+            //TODO Send out right away
+            state_machine_handler();
+
+        }
+
 		if( can_read() == HAL_OK) board_can_message_parse( BADGER_CAN_ID, RxData);
 		if( currDAQ != lastDAQ ){
 			lastDAQ = currDAQ;
 		}
 		if( currState != lastState ){
-			lastState = currState;
 			state_machine_handler();
+			lastState = currState;
 		}
 		if( currTelem != lastTelem ){
 			lastTelem = currTelem;

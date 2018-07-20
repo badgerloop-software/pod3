@@ -15,6 +15,7 @@
 #include "state_machine.h"
 #include "bms.h"
 #include "rms.h"
+#include "state_handlers.h"
 
 #define BLINK_INTERVAL	250
 #define CTRL_INTERVAL   100
@@ -22,6 +23,10 @@
 extern CAN_RxHeaderTypeDef RxHeader;
 const int board_type = DASH;
 extern state_t state_handle;
+
+uint32_t dash_timestamp = 0;
+uint32_t nav_timestamp = 0;
+uint32_t pv_timestamp = 0;
 
 Pod_Data_Handle podData = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -133,6 +138,7 @@ int main(void) {
 	PC_Buffer *rx;
 	PC_Buffer *ctrl_rx;
 
+
 	/* initialize pins and internal interfaces */
 	if (io_init() || periph_init(DASH) || dash_init())
 		fault();
@@ -151,6 +157,17 @@ int main(void) {
 		currTelem = (ticks + 30) / 100;
 		currHrtbt = (ticks + 40) / 100;
 		
+        if( (pv_timestamp - ticks >= 500) || (nav_timestamp - ticks >= 500) ){
+            if( state_handle.curr_state <= READY ){
+                change_state( PRE_RUN_FAULT );
+            }else if( state_handle.curr_state > READY && state_handle.curr_state < POST_RUN ){
+                change_state( RUN_FAULT );
+            }else{
+                change_state( POST_RUN_FAULT );
+            }
+            //TODO Send out right away
+        }
+
 		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
 		if( currDAQ != lastDAQ ){
 			
@@ -173,30 +190,6 @@ int main(void) {
 			lastHrtbt = currHrtbt;
 		}
 
-		/*
-		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
-		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
-			lastDAQ = ticks;
-			if (dash_DAQ(&podData)) printf("DAQ Failure");
-		}	
-		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
-			lastState = ticks;
-			printf( "State machine\r\n");
-			state_machine_handler();
-			//check if new state is needed
-		}
-		if (((ticks + 20) % CTRL_INTERVAL == 0) && lastTelem != ticks ) {
-			lastTelem = ticks;
-			send_data(&podData);
-			board_telemetry_send(board_type);
-			//CCP sends telem to Pi
-		}
-		if (((ticks + 25) % CTRL_INTERVAL == 0) && lastHrtbt != ticks) {
-			lastHrtbt = ticks;
-			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
-			//Nav sends heartbeat
-		}
-		*/
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
