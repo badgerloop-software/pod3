@@ -27,8 +27,8 @@ typedef enum _can_message_type {
 
 	CCP_FAULT,
 	CCP_WARNING,
-        CCP_SOLENOID_COMMAND,
-        CCP_MCU_ENABLE,	
+    CCP_SOLENOID_COMMAND,
+    CCP_MCU_ENABLE,	
 	CCP_RMS_POWER,
 	
 	PV_WARNING,
@@ -42,7 +42,6 @@ typedef enum _can_message_type {
 	NAV_PRES_1,
 	NAV_PRES_2,
 	NAV_PRES_3,
-	NAV_PRES_4,
 	NAV_SOLENOID_1,
 	NAV_ACCEL_VEL_POS,
 	CURR_STATE
