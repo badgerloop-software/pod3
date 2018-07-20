@@ -5,7 +5,7 @@
 // can be used to override and force a state change.
 
 const communication = require("./communication");
-
+const events = require("events");
 //The container of the state buttons, also used as the dispatcher of the event
 /*
 const stateMaster = document.getElementById("state_master");
@@ -65,6 +65,15 @@ function postAndUpdateIfConfirm(response, ip, port, route, payload, newState) {
     }
 }
 
+let stateChangeEmitter = new events.EventEmitter();
+module.exports.stateChangeEmitter = stateChangeEmitter;
+
+function lazyStateUpdate(newState) {
+    currState = newState;
+    updateStateVisuals();
+    stateChangeEmitter.emit("state_change", newState);
+}
+
 function confirmDialog(cback) {
     dialog.showMessageBox(
 	BrowserWindow.getFocusedWindow(),
@@ -80,6 +89,9 @@ function confirmDialog(cback) {
 
 //All the states
 let currState = "state_poweroff";
+
+module.exports.currState = currState;
+
 const nextStateIDs = {
     "state_poweroff": ["state_idle"],
     "state_idle": ["state_ready_for_pumpdown"],
@@ -170,10 +182,11 @@ function stateChangeRequest(e) {
     let targ = e.target;
     let newState = targ.id;
     payload = {"value": newState};
+    lazyStateUpdate(newState);
     cback = function(response) {
 	postAndUpdateIfConfirm(response, podIP, podPort, "state_change", payload, newState);
     };
-    confirmDialog(cback);
+    //confirmDialog(cback);
 }
 
 // add a function to the click for all buttons

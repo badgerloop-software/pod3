@@ -72,7 +72,7 @@ app.get('/all', function (req, res) {
 				setTimeout(() =>
 					   	{
 						console.log(count);
-						resolve(jsonData)
+						resolve(jsonData);
 						}, 100);
 			});
 		prom.then((data) => {
