@@ -19,11 +19,13 @@ extern uint32_t nav_timestamp;
 extern uint32_t pv_timestamp;
 extern uint32_t dash_timestamp;
 extern uint8_t board_num;
-extern unsigned int ticks;
+extern volatile unsigned int ticks;
 volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
 extern state_box pv_stateVal;
 extern state_box stateVal;
+uint32_t post_run_transition = 0;
+
 void can_heartbeat_next(){
 	
 	switch( hb_status){
@@ -294,6 +296,10 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
             if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
 			
+            nav_post_run_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_POST_RUN, data) != HAL_OK)
+				return HAL_ERROR;
+
 			nav_solenoid1_set(data);
 			if (data[2] == 3) {
 				printf("data[0]: %u\r\n", data[0]);
@@ -372,7 +378,10 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				nav_timestamp = ticks;
 				break;
-			case NAV_TAPE:
+		    case NAV_POST_RUN:
+                post_run_transition = 1;
+                break;
+            case NAV_TAPE:
 				nav_timestamp = ticks;
 				set_retro(pod_data, data[2]);
 				set_stopping_dist(pod_data);
@@ -499,6 +508,8 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 			case NAV_ACCEL_VEL_POS:
 				printf("NAV_ACCEL_VEL_POS\r\n");
 				break;
+            case NAV_POST_RUN:
+                break;
 			case CURR_STATE:
 				dash_timestamp = ticks;
                 printf("STATE: %u\r\n", data[2]);

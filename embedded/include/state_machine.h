@@ -48,8 +48,6 @@ typedef struct state{
 
 }state_t;
 
-
-
 extern const char *state_strings[];
 extern const char *fault_message;
 extern state_t state_handle;
@@ -62,7 +60,6 @@ extern const unsigned int state_intervals[];
 	state_handle.state_timestamp_table[state] = ticks
 #define GET_INTERVAL(state)	\
 	(state_handle.event_interval_table[state])
-
 
 extern state_transition_t * to_handlers[];
 extern state_handler_t * in_handlers[];

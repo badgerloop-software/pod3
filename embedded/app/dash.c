@@ -23,6 +23,7 @@
 extern CAN_RxHeaderTypeDef RxHeader;
 const int board_type = DASH;
 extern state_t state_handle;
+extern uint32_t post_run_transition;
 
 uint32_t dash_timestamp = 0;
 uint32_t nav_timestamp = 0;
@@ -157,6 +158,10 @@ int main(void) {
 		currTelem = (ticks + 30) / 100;
 		currHrtbt = (ticks + 40) / 100;
 		
+        if( post_run_transition ){
+            change_state(POST_RUN);
+        }
+        
         if( (ticks -pv_timestamp >= 500) || (ticks - nav_timestamp >= 500) ){
             if( state_handle.curr_state <= READY ){
                 change_state( PRE_RUN_FAULT );

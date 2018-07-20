@@ -45,7 +45,8 @@ typedef enum _can_message_type {
 	NAV_PRES_4,
 	NAV_SOLENOID_1,
 	NAV_ACCEL_VEL_POS,
-	CURR_STATE
+	CURR_STATE,
+    NAV_POST_RUN
 	
 } CAN_MESSAGE_TYPE;
 
