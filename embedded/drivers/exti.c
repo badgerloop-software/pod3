@@ -3,7 +3,7 @@
 #include "stm32l432xx.h"
 #include <stdio.h>
 #include "retro.h"
-
+#define RETRO_BUFFER 3000
 /* gets interupt vecotor number for pin */
 static IRQn_Type exti_get_irq_num(uint32_t pin) {
 	switch(pin) {
@@ -64,11 +64,14 @@ timeStamp * getTimeStamps(int pin) {
 /*need to get time stamps*/
 void EXTI0_IRQHandler(void) {
 	if (EXTI->PR1 & EXTI_PR1_PIF0) {
-		interLine[0].prev = interLine[0].curr;
-		interLine[0].curr = ticks;
-		interLine[0].filter[(interLine[0].count) % AVERAGE_SIZE]
-			= interLine[0].curr - interLine[0].prev;
-		interLine[0].count ++;
+        //Handles the case where tape strip is detected twice
+        if( ticks - interLine[0].curr >= RETRO_BUFFER ){
+			interLine[0].prev = interLine[0].curr;
+			interLine[0].curr = ticks;
+            interLine[0].count ++;
+			interLine[0].filter[(interLine[0].count) % AVERAGE_SIZE]
+				= interLine[0].curr - interLine[0].prev;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF0;
     }
@@ -76,12 +79,17 @@ void EXTI0_IRQHandler(void) {
 
 void EXTI1_IRQHandler(void) {
 	if (EXTI->PR1 & EXTI_PR1_PIF1) {
-		interLine[1].prev = interLine[1].curr;
-		interLine[1].curr = ticks;
-		interLine[1].filter[(interLine[1].count) % AVERAGE_SIZE]
-			= interLine[1].curr - interLine[1].prev;
-		interLine[1].count ++;
-		EXTI->PR1 |= EXTI_PR1_PIF1;
+        
+        //Handles the case where tape strip is detected twice
+        if( ticks - interLine[1].curr >= RETRO_BUFFER ){
+			interLine[1].prev = interLine[1].curr;
+			interLine[1].curr = ticks;
+            interLine[1].count ++;
+			interLine[1].filter[(interLine[1].count) % AVERAGE_SIZE]
+				= interLine[1].curr - interLine[1].prev;
+        }
+		
+        EXTI->PR1 |= EXTI_PR1_PIF1;
 	}
 }
 
@@ -91,8 +99,12 @@ void EXTI2_IRQHandler(void) {
 		interLine[2].curr = ticks;
 		interLine[2].filter[(interLine[2].count) % AVERAGE_SIZE]
 			= interLine[2].curr - interLine[2].prev;
-		interLine[2].count ++;
 
+        //Handles the case where tape strip is detected twice
+        if( interLine[2].curr - interLine[2].prev >= 100 ){
+            interLine[2].count ++;
+        }
+		
 		EXTI->PR1 |= EXTI_PR1_PIF2;
 	}
 }
@@ -103,8 +115,12 @@ void EXTI3_IRQHandler(void) {
 		interLine[3].curr = ticks;
 		interLine[3].filter[(interLine[3].count) % AVERAGE_SIZE]
 			= interLine[3].curr - interLine[3].prev;
-		interLine[3].count ++;
 
+        //Handles the case where tape strip is detected twice
+        if( interLine[3].curr - interLine[3].prev >= 100 ){
+            interLine[3].count ++;
+        }
+		
 		EXTI->PR1 |= EXTI_PR1_PIF3;
 	}
 }
@@ -115,7 +131,11 @@ void EXTI4_IRQHandler(void) {
 		interLine[4].curr = ticks;
 		interLine[4].filter[(interLine[4].count) % AVERAGE_SIZE]
 			= interLine[4].curr - interLine[4].prev;
-		interLine[4].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[4].curr - interLine[4].prev >= 100 ){
+            interLine[4].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF4;
 	}
@@ -123,11 +143,15 @@ void EXTI4_IRQHandler(void) {
 
 void EXTI9_5_IRQHandler(void) {
 	if (EXTI->PR1 & EXTI_PR1_PIF5) {
-		interLine[5].prev = interLine[5].curr;
-		interLine[5].curr = ticks;
-		interLine[5].filter[(interLine[5].count) % AVERAGE_SIZE]
-			= interLine[5].curr - interLine[5].prev;
-		interLine[5].count ++;
+        //Handles the case where tape strip is detected twice
+        if( ticks - interLine[5].curr >= RETRO_BUFFER ){
+			interLine[5].prev = interLine[5].curr;
+			interLine[5].curr = ticks;
+            interLine[5].count ++;
+			interLine[5].filter[(interLine[5].count) % AVERAGE_SIZE]
+				= interLine[5].curr - interLine[5].prev;
+        }
+
 
 		EXTI->PR1 |= EXTI_PR1_PIF5;
     }
@@ -136,7 +160,11 @@ void EXTI9_5_IRQHandler(void) {
 		interLine[6].curr = ticks;
 		interLine[6].filter[(interLine[6].count) % AVERAGE_SIZE]
 			= interLine[6].curr - interLine[6].prev;
-		interLine[6].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[6].curr - interLine[6].prev >= 100 ){
+            interLine[6].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF6;
 	}
@@ -145,7 +173,11 @@ void EXTI9_5_IRQHandler(void) {
 		interLine[7].curr = ticks;
 		interLine[7].filter[(interLine[7].count) % AVERAGE_SIZE]
 			= interLine[7].curr - interLine[7].prev;
-		interLine[7].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[7].curr - interLine[7].prev >= 100 ){
+            interLine[7].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF7;
 	}
@@ -154,7 +186,11 @@ void EXTI9_5_IRQHandler(void) {
 		interLine[8].curr = ticks;
 		interLine[8].filter[(interLine[8].count) % AVERAGE_SIZE]
 			= interLine[8].curr - interLine[8].prev;
-		interLine[8].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[8].curr - interLine[8].prev >= 100 ){
+            interLine[8].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF8;
 	}
@@ -163,7 +199,11 @@ void EXTI9_5_IRQHandler(void) {
 		interLine[9].curr = ticks;
 		interLine[9].filter[(interLine[9].count) % AVERAGE_SIZE]
 			= interLine[9].curr - interLine[9].prev;
-		interLine[9].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[9].curr - interLine[9].prev >= 100 ){
+            interLine[9].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF9;
 	}
@@ -175,7 +215,11 @@ void EXTI15_10_IRQHandler(void) {
 		interLine[10].curr = ticks;
 		interLine[10].filter[(interLine[10].count) % AVERAGE_SIZE]
 			= interLine[10].curr - interLine[10].prev;
-		interLine[10].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[10].curr - interLine[10].prev >= 100 ){
+            interLine[10].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF10;
 	}
@@ -184,7 +228,11 @@ void EXTI15_10_IRQHandler(void) {
 		interLine[11].curr = ticks;
 		interLine[11].filter[(interLine[11].count) % AVERAGE_SIZE]
 			= interLine[11].curr - interLine[11].prev;
-		interLine[11].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[11].curr - interLine[11].prev >= 100 ){
+            interLine[11].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF11;
 	}
@@ -193,7 +241,11 @@ void EXTI15_10_IRQHandler(void) {
 		interLine[12].curr = ticks;
 		interLine[12].filter[(interLine[12].count) % AVERAGE_SIZE]
 			= interLine[12].curr - interLine[12].prev;
-		interLine[12].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[12].curr - interLine[12].prev >= 100 ){
+            interLine[12].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF12;
 	}
@@ -202,7 +254,11 @@ void EXTI15_10_IRQHandler(void) {
 		interLine[13].curr = ticks;
 		interLine[13].filter[(interLine[13].count) % AVERAGE_SIZE]
 			= interLine[13].curr - interLine[13].prev;
-		interLine[13].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[13].curr - interLine[13].prev >= 100 ){
+            interLine[13].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF13;
 	}
@@ -211,7 +267,11 @@ void EXTI15_10_IRQHandler(void) {
 		interLine[14].curr = ticks;
 		interLine[14].filter[(interLine[14].count) % AVERAGE_SIZE]
 			= interLine[14].curr - interLine[14].prev;
-		interLine[14].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[14].curr - interLine[14].prev >= 100 ){
+            interLine[14].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF14;
 	}
@@ -220,7 +280,11 @@ void EXTI15_10_IRQHandler(void) {
 		interLine[15].curr = ticks;
 		interLine[15].filter[(interLine[15].count) % AVERAGE_SIZE]
 			= interLine[15].curr - interLine[15].prev;
-		interLine[15].count ++;
+
+        //Handles the case where tape strip is detected twice
+        if( interLine[15].curr - interLine[15].prev >= 100 ){
+            interLine[15].count ++;
+        }
 
 		EXTI->PR1 |= EXTI_PR1_PIF15;
 	}
