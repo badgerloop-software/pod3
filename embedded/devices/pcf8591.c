@@ -4,6 +4,9 @@
 #include "pcf8591.h"
 #include "i2c.h"
 #include <stdbool.h>
+#include "nav_data.h"
+
+extern Nav_Data navData;
 
 //Address 0x48
 double pTank; //AIN3
@@ -17,7 +20,6 @@ double sAct; //AIN0
 
 uint8_t pSense[8];
 double pVolt[8];
-double pPres[8];
 
 bool i2adc_read( uint8_t addr ){
     int j;
@@ -60,19 +62,19 @@ bool i2adc_read( uint8_t addr ){
     	    }
         }
 	
-    sAct = pVolt[7] * 33.3333;
-    sLine = pVolt[4] * 33.3333;
-    sTank = pVolt[5] * 244.444;
-    pAct = pVolt[1] * 33.3333;
-    pLine = pVolt[2] * 33.3333;
-    pTank = pVolt[3] * 244.444;
+    navData.linePressures.pres_1 = pVolt[7] * 33.3333 * 1000; //sAct
+    navData.linePressures.pres_2 = pVolt[4] * 33.3333 * 1000; //sLine
+    navData.linePressures.pres_3 = pVolt[5] * 244.444 * 1000; //sTank
+    navData.linePressures.pres_4 = pVolt[1] * 33.3333 * 1000; //pAct
+    navData.linePressures.pres_5 = pVolt[2] * 33.3333 * 1000; //pLine
+    navData.linePressures.pres_6 = pVolt[3] * 244.444 * 1000; //pTank
             
-    printf("ADCx value read %f PSI from Sec. Actuator\r\n", sAct);
-    printf("ADCx value read %f Volts from Sec. Line\r\n", sLine);
-    printf("ADCx value read %f Volts from Sec Tank\r\n", sTank);
-    printf("ADCx value read %f Volts from Prim. Actuator \r\n", pAct);
-    printf("ADCx value read %f Volts from Prim. Line \r\n", pLine);
-    printf("ADCx value read %f Volts from Prim. Tank \r\n", pTank);
+    //printf("ADCx value read %f PSI from Sec. Actuator\r\n", navData.linePressures.pres_1 );
+    //printf("ADCx value read %f PSI from Sec. Line\r\n", navData.linePressures.pres_2 );
+    //printf("ADCx value read %f PSI from Sec Tank\r\n", navData.linePressures.pres_3 );
+    //printf("ADCx value read %f PSI from Prim. Actuator \r\n", navData.linePressures.pres_4 );
+    //printf("ADCx value read %f PSI from Prim. Line \r\n", navData.linePressures.pres_5 );
+    //printf("ADCx value read %f PSI from Prim. Tank \r\n", navData.linePressures.pres_6 );
     
     return true;
 }

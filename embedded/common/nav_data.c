@@ -14,7 +14,7 @@ Nav_Data navData = {
      },
      .retros = {0, 0, 0, 0},
      .motion = {0, 0, 0, 0, 0},
-     .linePressures = {0, 0, 0, 0, 0, 0, 0, 0}
+     .linePressures = {0, 0, 0, 0, 0, 0}
 };
 
 int nav_DAQ(Nav_Data *navDataPtr) {
