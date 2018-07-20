@@ -127,7 +127,12 @@ int nav_init(void) {
     exti_config(gpioa, 6, 0, 1, 1);
     //Pin 7 EXTI Config (LIM3)
     exti_config(gpioa, 7, 0, 1, 1);
-    
+
+    //TODO Change this to work on NAV pins
+    adc_init();
+    voltage_sense_init();
+    adc_start();
+
     return 0;
 }
 
