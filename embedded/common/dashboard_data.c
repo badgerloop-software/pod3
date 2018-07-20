@@ -20,7 +20,6 @@ int dash_DAQ(Pod_Data_Handle *podData) {
 }
 
 void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
-	printf("RETRO: %u\r\n", retroVal);
 	podData->retro.ui8data = retroVal;
 	podData->retro.timestamp = time(NULL);
 	podData->retro.freshness = FRESH;
@@ -49,13 +48,12 @@ void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim
 }
 void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_t pos) {
 
-    printf( "Setting vals\r\n");
     
-    podData->position.i8data = pos;
+    podData->position.ui16data = pos;
 	podData->position.freshness = FRESH;
 	podData->position.timestamp = time(NULL);
 
-	podData->velocity.i8data = vel;
+	podData->velocity.ui16data = vel;
 	podData->velocity.freshness = FRESH;
 	podData->velocity.timestamp = time(NULL);
 
@@ -197,7 +195,6 @@ void send_data(Pod_Data_Handle *pod_data) {
 	}
 
 	if (pod_data->retro.freshness == FRESH) {
-		printf("Retro send\r\n");
 		pod_data->retro.freshness = NOT_FRESH;
 		char *dataToSend = formatPacket(&(pod_data->retro));
 		uart_send(dataToSend);
@@ -207,18 +204,18 @@ void send_data(Pod_Data_Handle *pod_data) {
 		pod_data->solenoids.freshness = NOT_FRESH;
 		Sensor_Data sol1 = {"solenoid_1", 0, (pod_data->solenoids.ui8data & 0x1), 0, 0, 0, DT_UINT8};
 		char *sol1str = formatPacket(&sol1);
+		uart_send(sol1str);
 		Sensor_Data sol2 = {"solenoid_2", 0, (pod_data->solenoids.ui8data & 0x2) >> 1, 0, 0, 0, DT_UINT8};
 		char *sol2str = formatPacket(&sol2);
+		uart_send(sol2str);
 		Sensor_Data sol4 = {"solenoid_4", 0, (pod_data->solenoids.ui8data & 0x8) >> 3, 0, 0, 0, DT_UINT8};
 		char *sol4str = formatPacket(&sol4);
+		uart_send(sol4str);
 		Sensor_Data sol5 = {"solenoid_5", 0, (pod_data->solenoids.ui8data & 0x20) >> 5, 0, 0, 0, DT_UINT8};
 		char *sol5str = formatPacket(&sol5);
+		uart_send(sol5str);
 		Sensor_Data sol6 = {"solenoid_6", 0, (pod_data->solenoids.ui8data & 0x40) >> 6, 0, 0, 0, DT_UINT8};
 		char *sol6str = formatPacket(&sol6);
-		uart_send(sol1str);
-		uart_send(sol2str);
-		uart_send(sol4str);
-		uart_send(sol5str);
 		uart_send(sol6str);
 	}
 

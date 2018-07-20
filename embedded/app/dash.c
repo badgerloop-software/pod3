@@ -26,8 +26,8 @@ extern state_t state_handle;
 Pod_Data_Handle podData = {
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
-	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
-	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
+	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .stopping_dist = {"stopping_dist", 0, 0, 3460, 0, NOT_FRESH, DT_UINT16},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},

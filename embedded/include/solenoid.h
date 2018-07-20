@@ -4,11 +4,17 @@
 #define ACTUATED 	1
 #define NOT_ACTUATED 	0
 
-#define PRIM_BRAKING_1 1
-#define PRIM_BRAKING_2 2
+#define PRIM_BRAKING_1 0
+#define PRIM_BRAKING_2 4
 #define SEC_VENTING    3
-#define SEC_BRAKING_1  4
-#define SEC_BRAKING_2  8
+#define SEC_BRAKING_1  6
+#define SEC_BRAKING_2  7
+
+#define P1 0
+#define P2 4
+#define S1 7
+#define S2 6
+#define S3 3
 
 typedef struct {
 	int  name;

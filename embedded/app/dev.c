@@ -10,6 +10,7 @@
 #include "pin_alias.h"
 #include "state_machine.h"
 
+
 #define BLINK_INTERVAL	100
 
 ////////////////FILL_GPIO( CURR_SENSE, GPIOA, 5, INPUT, LOW_SPEED, NONE, true, SENSOR)

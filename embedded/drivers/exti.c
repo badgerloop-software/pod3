@@ -3,7 +3,7 @@
 #include "stm32l432xx.h"
 #include <stdio.h>
 #include "retro.h"
-#define RETRO_BUFFER 3000
+#define RETRO_BUFFER 200
 /* gets interupt vecotor number for pin */
 static IRQn_Type exti_get_irq_num(uint32_t pin) {
 	switch(pin) {

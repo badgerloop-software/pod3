@@ -41,7 +41,7 @@ int nav_DAQ(Nav_Data *navDataPtr) {
     navDataPtr->limits.limitValue2 = gpio_readPin( GPIOA, 6);
     navDataPtr->limits.limitValue3 = gpio_readPin( GPIOA, 7);
 
-    navDataPtr->volt_adc = adc_read( );
+    navDataPtr->volt_adc = adc_read( ) * 3.466679;
 	
 	i2adc_read(0x48);
 	i2adc_read(0x49);

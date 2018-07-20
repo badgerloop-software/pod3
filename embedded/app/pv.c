@@ -46,7 +46,9 @@ FILL_GPIO(HVD_STATUS, 	GPIOA, 7, INPUT, LOW_SPEED, NONE, true, OTHER)
 //Motor GPIO circuit output
 FILL_GPIO(DIN8, 		GPIOB, 5, OUTPUT, LOW_SPEED, NONE, true, OTHER)
 
-FILL_GPIO(HVD_FDBK, 	GPIOB, 4, OUTPUT, LOW_SPEED, NONE, true, OTHER)
+FILL_GPIO(PB_RESET, 	GPIOB, 4, OUTPUT, LOW_SPEED, NONE, true, OTHER)
+
+
 
 inline void printPrompt(void) {
 	fputs("[pv-build] $ ", stdout);
@@ -56,6 +58,9 @@ inline void printPrompt(void) {
 int pv_init(void) {
 
 	/* pv specific initializations */
+	initialize_state_machine(IDLE);
+
+	bms_init();
 
 	return 0;
 }

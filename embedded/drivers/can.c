@@ -220,6 +220,9 @@ HAL_StatusTypeDef can_read(void) {
 	if (can_message_available(CAN_RX_FIFO0)) {
 		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO0, &RxHeader, RxData);
 	}
+	else if (can_message_available(CAN_RX_FIFO1)) {
+		retval = HAL_CAN_GetRxMessage(&can_handle, CAN_RX_FIFO1, &RxHeader, RxData);
+	}
 	return retval;
 }
 
@@ -261,40 +264,48 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 		case NAV:
 		    
             /* Update data, and send out */
-            nav_tape_set(data);
-	    printf("NAV TAPE SEND\r\n");
-	    if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
+        	nav_tape_set(data);
+	    	//printf("NAV TAPE SEND\r\n");
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
+			if (can_send_intermodule(NAV, DASH_REC, NAV_TAPE, data) != HAL_OK) 
 				return HAL_ERROR;
             
             nav_should_stop_set(data);
-	    if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
+	    	if (can_send_intermodule(NAV, ALL, NAV_SHOULD_STOP, data) != HAL_OK) 
 				return HAL_ERROR;
 		
             nav_adc_set(data);
-			printf("nav adc send, val: data[2] = %u\r\n", data[2]);
+			//printf("nav adc send, val: data[2] = %u\r\n", data[2]);
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_ADC, data) != HAL_OK) 
 				return HAL_ERROR;
 
             nav_pressure1_set(data);
-printf("nav adc send, val: data[2] = %u\r\n", data[2]);
+//printf("nav adc send, val: data[2] = %u\r\n", data[2]);
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
             if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK){
 				printf("error\r\n");
 				return HAL_ERROR;
 			}
 			
             nav_pressure2_set(data);
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
             if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
 				return HAL_ERROR;
 			
             nav_pressure3_set(data);
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
             if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_3, data) != HAL_OK) 
 				return HAL_ERROR;
 			
             nav_accel_vel_pos_set(data);
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
             if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
 			
 			nav_solenoid1_set(data);
+	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
 
@@ -327,7 +338,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 	uint16_t pres1, pres2, pvPres, pvTemp, adc;
 	if((can_id == BADGER_CAN_ID) && ((to_modules == board_type || to_modules == ALL))){
 		
-		printf( "Message Num: %d\r\n", message_num);
+		//printf( "Message Num: %d\r\n", message_num);
 
 		switch (message_num){
 			case CAN_TEST_MESSAGE:
@@ -362,7 +373,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				break;
 			case NAV_TAPE:
-				printf( "Retro Data: %d\r\n", data[2]);
+				//printf( "Retro Data: %d\r\n", data[2]);
 				set_retro(pod_data, data[2]);
                 set_limit( pod_data, data[3],data[4],data[5]);
 				set_stopping_dist(pod_data);
@@ -372,7 +383,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_PRES_1:
 				pres1 = data[2] | (data[3] << 8);
 				pres2 = data[4] | (data[5] << 8);
-				printf("PRES 1 received: val-> data[2] = %u", data[2]);
+				//printf("PRES 1 received: val-> data[2] = %u", data[2]);
 				set_pres_1_2(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_2:
@@ -387,14 +398,14 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_SOLENOID_1:
 				set_solenoid_value(pod_data, data[2]);
-					printf("SOLENOID DATA:\r\n");
-					printf("data[0]: %u\r\n", data[0]);
-					printf("data[1]: %u\r\n", data[1]);
-					printf("data[2]: %u\r\n", data[2]);
-					printf("data[3]: %u\r\n", data[3]);
-					printf("data[4]: %u\r\n", data[4]);
-					printf("data[5]: %u\r\n", data[5]);
-					printf("data[6]: %u\r\n", data[6]);
+					//printf("SOLENOID DATA:\r\n");
+					//printf("data[0]: %u\r\n", data[0]);
+					//printf("data[1]: %u\r\n", data[1]);
+					//printf("data[2]: %u\r\n", data[2]);
+					//printf("data[3]: %u\r\n", data[3]);
+					//printf("data[4]: %u\r\n", data[4]);
+					//printf("data[5]: %u\r\n", data[5]);
+					//printf("data[6]: %u\r\n", data[6]);
 				break;
 			case CURR_STATE:
 				break;
@@ -404,14 +415,15 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 		}
 	}
 	//TODO make this better
-    else if( bms_parser( can_id, data) == 0){
-	    if(rms_parser( can_id, data) == 0){
-	    	//printf("Unknown CAN Message Received\r\n");
-	    }
-    }
-    package_bms_data( pod_data, bms);
-    package_rms_data( pod_data, rms);
-	return HAL_OK;
+    else if( bms_parser( can_id, data) != 0){
+    	package_bms_data( pod_data, bms);
+		return HAL_OK;
+	}
+	else if( rms_parser( can_id, data) != 0){
+    	package_rms_data( pod_data, rms);
+		return HAL_OK;
+	}
+	return HAL_ERROR;
 }
 
 //extern state_t state_handle;
@@ -461,7 +473,6 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				printf("NAV_TAPE\r\n");
 				break;
 			case NAV_SHOULD_STOP:
-				printf("NAV_SHOULD_STOP\r\n");
 				break;
 			case NAV_PRES_1:
 				printf("NAV_PRES_1\r\n");
@@ -479,7 +490,7 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 				printf("NAV_ACCEL_VEL_POS\r\n");
 				break;
 			case CURR_STATE:
-				printf("STATE: %u\r\n", data[2]);
+				//printf("STATE: %u\r\n", data[2]);
 				stateVal.stateName = data[2];
 				stateVal.change_state = 1;
 				pv_stateVal.stateName = data[2];
@@ -594,7 +605,6 @@ void print_incoming_can_message(uint32_t id, uint8_t *data){
 			printf("NAV_TAPE\r\n");
 			break;
 		case NAV_SHOULD_STOP:
-			printf("NAV_SHOULD_STOP\r\n");
 			break;
 		case NAV_PRES_1:
 			printf("NAV_PRES_1\r\n");

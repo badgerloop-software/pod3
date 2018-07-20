@@ -289,6 +289,7 @@ void to_idle(STATE_NAME from, uint32_t flags) {
   // Set torque/speed to 0
 
 	if(board_type==PV) {
+    	bms_software_reset_set( true );
 
 	} // end PV_MODULE
 
@@ -317,7 +318,7 @@ void in_idle(uint32_t flags) {
 	// Pod health check
 	if(board_type==PV) {
     		/* BMS Reset gets asserted */
-    		bms_software_reset_set( true );
+    		//bms_software_reset_set( true );
 
 	} // end PV_MODULE
 
@@ -350,7 +351,7 @@ void from_idle(STATE_NAME to, uint32_t flags){
 	    
         /* BMS reset de-asserted */
         bms_software_reset_set( false );
-        bms_clearFaults();
+        //bms_clearFaults();
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
@@ -404,10 +405,10 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 
 	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
-		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(SEC_BRAKING_1, ACTUATED);
+		change_solenoid(SEC_BRAKING_2, ACTUATED);
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
@@ -469,7 +470,7 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 
 	else if(board_type==NAV) {
 		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
+		change_solenoid(PRIM_BRAKING_2, ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
 		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
 		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
