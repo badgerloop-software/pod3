@@ -359,6 +359,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 				break;
 			case NAV_TAPE:
 				set_retro(pod_data, data[2]);
+                set_limit( pod_data, data[3],data[4],data[5]);
 				break;
 			case NAV_SHOULD_STOP:
 				break;

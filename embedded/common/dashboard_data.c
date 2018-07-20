@@ -25,6 +25,20 @@ void set_retro(Pod_Data_Handle *podData, uint8_t retroVal) {
 	podData->retro.freshness = FRESH;
 }
 
+void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim3) {
+	//printf("RETRO: %u\r\n", retroVal);
+	podData->limit[0].ui8data = lim1;
+	podData->limit[0].timestamp = time(NULL);
+	podData->limit[0].freshness = FRESH;
+	
+    podData->limit[1].ui8data = lim2;
+	podData->limit[1].timestamp = time(NULL);
+	podData->limit[1].freshness = FRESH;
+	
+    podData->limit[2].ui8data = lim3;
+	podData->limit[2].timestamp = time(NULL);
+	podData->limit[2].freshness = FRESH;
+}
 void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_t pos) {
 	podData->position.i8data = pos;
 	podData->position.freshness = FRESH;
@@ -228,6 +242,13 @@ void send_data(Pod_Data_Handle *pod_data) {
 		if (pod_data->linePressures[i].freshness == FRESH) {
 			pod_data->linePressures[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->linePressures[i])));
+		}
+	}
+	
+    for (i = 0; i < 3; i++) {
+		if (pod_data->limit[i].freshness == FRESH) {
+			pod_data->limit[i].freshness = NOT_FRESH;
+			uart_send(formatPacket(&(pod_data->limit[i])));
 		}
 	}
 
