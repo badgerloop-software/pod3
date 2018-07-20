@@ -14,6 +14,8 @@
 #include "state_machine.h"
 #include "adc.h"
 #include "voltage_sense.h"
+#include "pcf8591.h"
+
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
 #define STATE_INTERVAL  100 
@@ -93,6 +95,7 @@ inline void printPrompt(void) {
 int nav_init(void) {
 
 	/* nav specific initializations */
+    i2adc_write(0x48);
 
     GPIO_TypeDef *gpioa = GPIOA;
     
@@ -128,6 +131,7 @@ int nav_init(void) {
     voltage_sense_init();
     adc_start();
 
+    i2adc_write(0x49);
 
     return 0;
 }
