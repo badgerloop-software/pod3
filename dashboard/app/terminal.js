@@ -3,6 +3,31 @@ const terminalText = document.getElementById("terminal-text");
 const submitBtn = document.getElementById("submit");
 const communication = require("./app/communication");
 
+const solenoids = [
+    document.getElementById("solenoid-1"),
+    document.getElementById("solenoid-2"),
+    document.getElementById("solenoid-3"),
+    document.getElementById("solenoid-4"),
+    document.getElementById("solenoid-5")
+];
+console.log(solenoids);
+if (!solenoids.includes(null)) {
+    solenoids.forEach((solenoid) => {
+        communication.updater.on(solenoid.id + "_activate", () => {
+            solenoid.style.background = "green";
+        });
+        communication.updater.on(solenoid.id + "_deactivate", () => {
+            solenoid.style.background = "red";
+        })
+    });
+    solenoids.forEach((solenoid) => {
+        solenoid.addEventListener("click", () =>
+            solenoid.style.background === "red" ?
+                solenoid.style.background = "green" :  solenoid.style.background = "red");
+    });
+}
+
+
 const eventNameBase = "messageReceived_";
 function printResponse(response) {
     terminalText.innerHTML +=
@@ -46,7 +71,7 @@ function submit(){
     processText(input, inputArgs);
     terminalInput.value = "";   //clear submit box
 }
-
+const solenoidStates = ["_activate", "_deactivate"];
 function processText(input, optionalArgs) {
     input = input.toLowerCase();    //Make it case insensitive
     if (input === "help") {
@@ -54,6 +79,7 @@ function processText(input, optionalArgs) {
             " &emsp; clear : Clears the entire window" + "<br>" +
             " &emsp; connect [OPTIONAL ARGS: i=[IP address] p=[Port]] : Checks for a response from the server" + "<br>" +
             " &emsp; set_pod_address [OPTIONAL ARGS: i=[IP address] p=[Port]] : Set the address to talk to the pod" + "<br>" +
+            " &emsp; test_solenoids: Randomly flips the solenoids in the diagram (NOT REAL ONES) to test functionality" + "<br>" +
             " &emsp; configure [configFileName.*] : Sends the designated config file to the server" +
             "<br> > ";
     }
@@ -63,6 +89,14 @@ function processText(input, optionalArgs) {
 	let podIP = communication.getPodIP();
 	let podPort = communication.getPodPort();
         communication.sendMessage("config", podIP, podPort, "config", optionalArgs[0]);
+    }
+
+    if (input === "test_solenoids") {
+        communication.updater.emit("solenoid-1" + solenoidStates[Math.floor(Math.random() * solenoidStates.length)]);
+        communication.updater.emit("solenoid-2" + solenoidStates[Math.floor(Math.random() * solenoidStates.length)]);
+        communication.updater.emit("solenoid-3" + solenoidStates[Math.floor(Math.random() * solenoidStates.length)]);
+        communication.updater.emit("solenoid-4" + solenoidStates[Math.floor(Math.random() * solenoidStates.length)]);
+        communication.updater.emit("solenoid-5" + solenoidStates[Math.floor(Math.random() * solenoidStates.length)]);
     }
 
     if (input === "clear") {

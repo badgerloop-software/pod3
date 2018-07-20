@@ -3,9 +3,9 @@ const request = require("request");
 const events = require("events");
 const path = require("path");
 // address of the DB server
-const serverAddr = {"ip": "localhost", "port": 8008};
+const serverAddr = {"ip": "192.168.2.111", "port": 7781};
 // address of the pod
-const podAddr = {"ip": "localhost", "port": 7777};
+const podAddr = {"ip": "192.168.2.114", "port": 7777};
 
 const receivedEmitter = new events.EventEmitter();
 /* This section is made for sending config files to the pi */
@@ -20,17 +20,12 @@ server.get("/config/:configFile", (req, res, err) => {
         }
     };
     res.sendFile(req.param('configFile'), options);
-    console.log(options.root);
-    console.log(req.param('configFile'));
 });
 /**/
 
 const sendMessage = function (key, ip, port, ...restParams) {
     if (restParams[0] === undefined) restParams = [];
-    let address = "http://" + ip + ":" + port + "/";
-    for (let i = 0; i < restParams.length; i++){
-        address = address + restParams[i] + "/";
-    }
+    let address = `http://${ip}:${port}/${restParams.join("/")}`;
     request(address, (err, res, body) => {
         receivedEmitter.emit("messageReceived_" + key, body);
     })
@@ -42,7 +37,6 @@ const postPayload = function (ip, port, route, payload) {
 		  form: payload},
 		  function(err, res, body) {
 		      /* TODO do something useful like display the response */
-		      console.log(body);
 		  }
     );
 };
@@ -73,11 +67,11 @@ const setServerIP = function(ip) {
 
 const getServerPort = function() {
     return serverAddr["port"];
-}
+};
 
 const setServerPort = function(port) {
-    serverAddr["port"];
-}
+    serverAddr["port"] = port;
+};
 
 module.exports.sendMessage = sendMessage;
 module.exports.updater = receivedEmitter;

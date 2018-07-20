@@ -5,7 +5,7 @@
 // can be used to override and force a state change.
 
 const communication = require("./communication");
-
+const events = require("events");
 //The container of the state buttons, also used as the dispatcher of the event
 /*
 const stateMaster = document.getElementById("state_master");
@@ -45,19 +45,53 @@ class State{
 }
 */
 
-function confirmDialog() {
-    const {dialog} = require("electron").remote;
-    let buttons = ["Cancel", "Confirm"];
-    var dialogRes = dialog.showMessageBox({
-        type: "none",
-        message: "Are you sure you want to set that state?",
-        buttons: buttons
-    });
-    return dialogRes === buttons.indexOf("Confirm");
+// need these two for the confirmation dialog
+const {BrowserWindow} = require('electron').remote;
+const {dialog} = require('electron').remote;
+
+// confirm dialog options
+const CONFIRM_BUTTONS = ["Confirm", "Cancel"]
+const CANCEL_IND = 1
+const CONFIRM_IND = 0
+
+function postAndUpdateIfConfirm(response, ip, port, route, payload, newState) {
+    if (response === CONFIRM_IND) {
+	communication.postPayload(ip, port, route, payload);
+        // update the state button visuals
+        // TODO should only update visuals when new state is confirmed
+        currState = newState;
+        updateStateVisuals();
+	console.log("State change confirmed");
+    }
+}
+
+let stateChangeEmitter = new events.EventEmitter();
+module.exports.stateChangeEmitter = stateChangeEmitter;
+
+function lazyStateUpdate(newState) {
+    currState = newState;
+    updateStateVisuals();
+    stateChangeEmitter.emit("state_change", newState);
+}
+
+function confirmDialog(cback) {
+    dialog.showMessageBox(
+	BrowserWindow.getFocusedWindow(),
+	{
+            type: "none",
+            message: "Are you sure you want to set that state?",
+            buttons: CONFIRM_BUTTONS,
+	    cancelId: CANCEL_IND
+        },
+	cback
+    );
 }
 
 //All the states
 let currState = "state_poweroff";
+
+module.exports.currState = currState;
+
 const nextStateIDs = {
     "state_poweroff": ["state_idle"],
     "state_idle": ["state_ready_for_pumpdown"],
@@ -141,11 +175,6 @@ function updateStateVisuals() {
 }
 
 function stateChangeRequest(e) {
-    // check for confirmation
-    isConfirmed = confirmDialog();
-    if (!isConfirmed) {
-        return;
-    }
     // send the new state to pod if confirmed
     let podIP = communication.getPodIP();
     let podPort = communication.getPodPort();
@@ -153,11 +182,11 @@ function stateChangeRequest(e) {
     let targ = e.target;
     let newState = targ.id;
     payload = {"value": newState};
-    communication.postPayload(podIP, podPort, 'state_change', payload);
-    // update the state button visuals
-    // TODO should only update visuals when new state is confirmed
-    currState = newState;
-    updateStateVisuals();
+    lazyStateUpdate(newState);
+    cback = function(response) {
+	postAndUpdateIfConfirm(response, podIP, podPort, "state_change", payload, newState);
+    };
+    //confirmDialog(cback);
 }
 
 // add a function to the click for all buttons

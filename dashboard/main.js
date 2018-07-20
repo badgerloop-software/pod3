@@ -7,7 +7,7 @@ let mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1280,
+        width: 1650,
         height: 1024,
         minWidth: 815,
         center: true,
@@ -37,7 +37,6 @@ function createWindow() {
 
 app.on('ready', () => {
     createWindow();
-
 });
 
 app.on("window-all-closed", function () {

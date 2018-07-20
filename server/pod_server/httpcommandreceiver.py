@@ -11,6 +11,7 @@ ROUTE_STATE_CHANGE = '/state_change'
 ROUTE_PRIM_BRAKE_ONOFF = '/prim_brake_onoff'
 ROUTE_PRIM_BRAKE_VENT = '/prim_brake_vent'
 ROUTE_HIGH_VOLTAGE = '/high_voltage'
+ROUTE_POD_HEARTBEAT = '/pod_heartbeat'
 ROUTE_POKE = '/poke'
 ROUTE_BLANK = '/'
 COMMAND_VALUE = 'value'
@@ -20,6 +21,7 @@ UART_CMD_START = '$|'
 UART_CMD_STOP = '\n'
 UART_STATE_CHANGE_TOK = 't'
 UART_OVERRIDE_TOK = 'o'
+UART_HEARTBEAT_TOK = 'h'
 
 VALID_STATES = ['state_poweroff', 'state_idle', 'state_ready_for_pumpdown', 'state_pumpdown', 'state_ready', 'state_postrun', 'state_service_low_speed', 'state_safe_to_approach', 'state_prop_start_hyperloop', 'state_prop_start_openair', 'state_prop_start_extsub', 'state_prop_dsa_hyperloop', 'state_prop_dsa_openair', 'state_prop_dsa_extsub', 'state_braking_hyperloop', 'state_braking_openair', 'state_braking_extsub', 'state_fault_prerun', 'state_fault_run', 'state_fault_postrun'];
 
@@ -110,6 +112,19 @@ def issue_high_voltage(enable_disable):
     write_to_uart(to_send)
     return success,message
 
+def issue_pod_heartbeat():
+    print('sending a network heartbeat to the pod')
+    success = True
+    message = None
+    # make the payload (only command type important but need payload)
+    val = 'finn'
+    payload = '{0}{1}'.format(UART_HEARTBEAT_TOK, val)
+    # and package it for uart
+    to_send = package_command(payload)
+    # and send
+    write_to_uart(to_send)
+    return success,message
+
 #####################
 # ROUTE CONTROLLERS #
 #####################
@@ -149,6 +164,12 @@ def request_high_voltage_enable_disable():
         success,message = issue_high_voltage(endis)
         return json_basic_response(success=success, message=message)
     return json_basic_response(success=False, message='no enable/disable requested')
+
+# send a heartbeat to the nucleo
+@route(ROUTE_POD_HEARTBEAT, method='POST')
+def pod_heartbeat():
+    success,message = issue_pod_heartbeat()
+    return json_basic_response(success=success, message=message)
 
 # route to just see if the server is responding
 @route(ROUTE_POKE, method=['GET', 'POST'])

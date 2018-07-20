@@ -11,49 +11,67 @@ const brake_off = document.getElementById("brake_off");
 const brake_vent_on = document.getElementById("brake_vent_on");
 const brake_vent_off = document.getElementById("brake_vent_off");
 
-const PASSWORD = "The Amp Hour Podcast";  //Super secure, just change the password here
+// need these two for the confirmation dialog
+const {BrowserWindow} = require('electron').remote;
+const {dialog} = require('electron').remote;
+
+const PASSWORD = "betsy";  //Super secure, just change the password here
+
+// confirm dialog options
+const CONFIRM_BUTTONS = ["Confirm", "Cancel"]
+const CANCEL_IND = 1
+const CONFIRM_IND = 0
+
+function postIfConfirm(response, ip, port, route, payload) {
+    if (response === CONFIRM_IND) {
+	communication.postPayload(ip, port, route, payload);
+	console.log("Command confirmed");
+    }
+}
 
 function verificationRequest(e) {
-/*    if (popup.style.display === "none") {
-        e.stopPropagation();
-        popup.style.display = "";
-    }*/
-    // make sure we really want to issue the command
-    isConfirmed = confirmCommand();
-    if (!isConfirmed) {
-        return;
-    }
-    console.log("Command confirmed");
+    // initialize a callback function for the confirmation dialog
+    // if we don't provide a callback the confirmation dialog will block
+    cback = function(response) {};
     // send a command to the pod if we clicked an override button
     let podIP = communication.getPodIP();
     let podPort = communication.getPodPort();
     if (this === brake_on || this === brake_off) {
 	let onoff = (this === brake_on) ? "on" : "off";
         let payload = {"value": onoff};
-        communication.postPayload(podIP, podPort, 'prim_brake_onoff', payload);
+        cback = function(response) {
+	    postIfConfirm(response, podIP, podPort, "prim_brake_onoff", payload);
+	};
     }
     else if (this === brake_vent_on || this === brake_vent_off) {
         let onoff = (this === brake_vent_on) ? "on" : "off";
         let payload = {"value": onoff};
-        communication.postPayload(podIP, podPort, 'prim_brake_vent', payload);
+        cback = function(response) {
+	    postIfConfirm(response, podIP, podPort, "prim_brake_vent", payload);
+	};
     }
     else if (this === hv_enable || this === hv_disable) {
         let endis = (this === hv_enable) ? "enable" : "disable";
         let payload = {"value": endis};
-        communication.postPayload(podIP, podPort, 'high_voltage', payload);
+        cback = function(response) {
+	    postIfConfirm(response, podIP, podPort, "high_voltage", payload);
+	};
     }
-    // TODO add whatever other buttons we need for overrides
+    // bring up the confirm dialog
+    confirmCommand(cback);
 }
 
-function confirmCommand() {
-    const {dialog} = require("electron").remote;
-    let buttons = ["Cancel", "Confirm"];
-    var dialogRes = dialog.showMessageBox({
-        type: "none",
-        message: "Are you sure you want to send that command?",
-        buttons: buttons
-    });
-    return dialogRes === buttons.indexOf("Confirm");
+function confirmCommand(cback) {
+    dialog.showMessageBox(
+	BrowserWindow.getFocusedWindow(),
+	{
+            type: "none",
+            message: "Are you sure you want to send that command?",
+            buttons: CONFIRM_BUTTONS,
+	    cancelId: CANCEL_IND
+        },
+	cback
+    );
 }
 
 function checkPassword(e) {
@@ -77,7 +95,7 @@ brake_off.addEventListener("click", verificationRequest);
 brake_vent_on.addEventListener("click", verificationRequest);
 
 brake_vent_off.addEventListener("click", verificationRequest);
-
+/*
 whole_window.addEventListener("click", () => {popup.style.display = "none"});
 
 password_input.addEventListener("keydown", (e)=> {
@@ -87,4 +105,4 @@ password_input.addEventListener("keydown", (e)=> {
 });
 
 confirm_window_btn.addEventListener("click", checkPassword);
-
+*/

@@ -5,6 +5,7 @@ const frameStyle = require('./app/frameStyle');
 const accover = require('./app/activationOverrides');
 const graphs = require("./dataRepresentation");
 const statusCheck = require("./app/statusCheckers");
+const health = require("./app/health");
 /*Get each element of the DOM that will be used*/
 const freeSpace = document.getElementById("free-space");
 const dataLabels = document.getElementsByClassName("micro-data-label");
@@ -19,9 +20,57 @@ if(dataLabels.length !== tableData.length || dataLabels.length !== tableRows.len
     console.log("ERROR: # of Labels != # of data entries");
 
 let thisChart;
-const UPDATE_TIME = 500;  // In milliseconds
+const UPDATE_TIME = 1000;  // In milliseconds
 let requestLoop;
-/*Let's each data row create a graph from itself when clicked*/
+let dataCache = {};
+
+// function parseData(rawData, sensorName) {
+//     if (!rawData || rawData === null) {
+//         return dataCache[sensorName];
+//     }
+//     let jsonData = JSON.parse(rawData);
+//     if (jsonData !== "undefined") {
+//         switch (jsonData[sensorName].sensor_name) {
+//             case "cell_max_voltage":
+//                 jsonData[sensorName]["sensor_data"]["value"] /= 1000;
+//             break;
+//             case "cell_min_voltage":
+//                 jsonData[sensorName]["sensor_data"]["value"] /= 1000;
+//                 break;
+//             case "solenoid_1":
+//                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+//                     comm.updater.emit("solenoid-1_deactivate") : comm.updater.emit("solenoid-1_activate");
+//                 break;
+//
+//             case "solenoid_2":
+//                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+//                     comm.updater.emit("solenoid-2_deactivate") : comm.updater.emit("solenoid-2_activate");
+//                 break;
+//
+//             case "solenoid_3":
+//                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+//                     comm.updater.emit("solenoid-3_deactivate") : comm.updater.emit("solenoid-3_activate");
+//                 break;
+//
+//             case "solenoid_4":
+//                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+//                     comm.updater.emit("solenoid-4_deactivate") : comm.updater.emit("solenoid-4_activate");
+//                 break;
+//
+//             case "solenoid_5":
+//                 jsonData[sensorName]["sensor_data"]["value"] == 0 ?
+//                     comm.updater.emit("solenoid-5_deactivate") : comm.updater.emit("solenoid-5_activate");
+//                 break;
+//
+//
+//         }
+//         return jsonData[sensorName]["sensor_data"]["value"];
+//     } else {
+//         return "not_connected"
+//     }
+// }
+
+/*Lets each data row create a graph from itself when clicked*/
 for (let i = 0; i < tableRows.length; i++) {
     tableRows[i].addEventListener("click", ()=> {
         if (requestLoop !== undefined) {
@@ -40,32 +89,35 @@ for (let i = 0; i < tableRows.length; i++) {
 }
 
 /*For each data point, the data is updated when a new point comes in remotely*/
-for (let i = 0; i < dataLabels.length; i++) {
-    comm.updater.on(MESSAGE_BASE + dataLabels[i].innerHTML, (data) => {
-        tableData[i].innerHTML = data;
-    });
-}
+// for (let i = 0; i < dataLabels.length; i++) {
+//     comm.updater.on(MESSAGE_BASE + dataLabels[i].innerHTML, (data) => {
+//         dataCache[conciseLabels[i]] = parseData(data, conciseLabels[i]);
+//         tableData[i].innerHTML = dataCache[conciseLabels[i]];
+//     });
+// }
 
 /*Trims potentially unfortunate characters off of the names so that it can make REST requests*/
 let conciseLabels = [];
 for (let i = 0; i < dataLabels.length; i++) {
     let tempLabel = dataLabels[i].innerHTML;
-    let cutOff = tempLabel.indexOf("(");
+    let cutOff = tempLabel.indexOf(" (");
     if (cutOff >= 0) {
         tempLabel = tempLabel.substr(0, cutOff);
     }
-    conciseLabels[i] = tempLabel.split(' ').join('');
+    conciseLabels[i] = tempLabel.split(' ').join('_').toLowerCase();
+    console.log(conciseLabels[i]);
+    dataCache[conciseLabels[i]] = 0;
 }
 
 
 /*Polls for new data from the server as often as UPDATE_TIME*/
-setInterval(() => {
-    for (let i = 0; i < tableData.length; i++) {
-	let serverIP = comm.getServerIP();
-	let serverPort = comm.getServerPort();
-        comm.sendMessage(dataLabels[i].innerHTML, serverIP, serverPort, "data" ,conciseLabels[i]);
-    }
-}, UPDATE_TIME);
+// setInterval(() => {
+//     for (let i = 0; i < tableData.length; i++) {
+// 	    let serverIP = comm.getServerIP();
+// 	    let serverPort = comm.getServerPort();
+//         comm.sendMessage(dataLabels[i].innerHTML, serverIP, serverPort, "sensor" ,conciseLabels[i]);
+//     }
+// }, UPDATE_TIME);
 
 /*When graph is clicked, revert to embedded terminal*/
 myCanvas.addEventListener("click", ()=> {
