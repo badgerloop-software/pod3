@@ -29,6 +29,7 @@ Pod_Data_Handle podData = {
 	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .velocity = {"velocity", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
 	 .acceleration = {"acceleration", 0, 0, 0, 0, NOT_FRESH, DT_INT8},
+	 .stopping_dist = {"stopping_dist", 0, 0, 3460, 0, NOT_FRESH, DT_UINT16},
 	 .tube_pressure = {"tube_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .retro = {"retro", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 	 .solenoids = {"solenoids", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
@@ -42,8 +43,8 @@ Pod_Data_Handle podData = {
 		 {"line_pres_6", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"line_pres_7", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
 		 {"line_pres_8", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}},
-	 .BMSdata = {{"packCurrent", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
-		 {"pack_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+	 .BMSdata = {{"pack_current", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
+		 {"pack_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16}, 
 		 {"pack_DCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"pack_CCL", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"pack_resistance", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -52,7 +53,7 @@ Pod_Data_Handle podData = {
 		 {"pack_cycles", 0, 0, 0 ,0, NOT_FRESH, DT_UINT8},
 		 {"pack_ah", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"input_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}, 
-		 {"SOC", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+		 {"soc", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
 		 {"relay_status", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		 {"high_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
  		{"low_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
@@ -142,7 +143,37 @@ int main(void) {
 	post("Dashboard");
 	printPrompt();
 	unsigned int lastDAQ = 0, lastState = 0, lastTelem = 0, lastHrtbt = 0;
+	unsigned int currDAQ = 0, currState = 0, currTelem = 0, currHrtbt = 0;
 	while (1) {
+
+		currDAQ = (ticks + 10) / 100;
+		currState = (ticks + 20) / 100;
+		currTelem = (ticks + 30) / 100;
+		currHrtbt = (ticks + 40) / 100;
+		
+		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
+		if( currDAQ != lastDAQ ){
+			
+			if (dash_DAQ(&podData)) printf("DAQ Failure");
+			lastDAQ = currDAQ;
+		}
+		if( currState != lastState ){
+			
+			state_machine_handler();
+			lastState = currState;
+		}
+		if( currTelem != lastTelem ){
+			
+			send_data(&podData);
+			board_telemetry_send(board_type);
+			lastTelem = currTelem;
+		}
+		if( currHrtbt != lastHrtbt ){
+			
+			lastHrtbt = currHrtbt;
+		}
+
+		/*
 		if (can_read() == HAL_OK) ccp_parse_can_message( RxHeader.StdId, RxData, &podData);
 		if (((ticks + 10) % CTRL_INTERVAL == 0) && lastDAQ != ticks) {
 			lastDAQ = ticks;
@@ -150,6 +181,7 @@ int main(void) {
 		}	
 		if (((ticks + 15) % CTRL_INTERVAL == 0) && lastState != ticks) {
 			lastState = ticks;
+			printf( "State machine\r\n");
 			state_machine_handler();
 			//check if new state is needed
 		}
@@ -164,6 +196,7 @@ int main(void) {
 			//board_telemetry_send(board_type); <-- maybe a diff func for heartbeat?
 			//Nav sends heartbeat
 		}
+		*/
 		check_input(rx);
 		check_incoming_controls(ctrl_rx);
 		blink_handler(BLINK_INTERVAL);
