@@ -107,8 +107,8 @@ void set_pres_7_8(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 };
 
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
-	podData->BMSdata[0].i8data  = (int8_t) (bms->packCurrent * 1000);
-	podData->BMSdata[1].ui8data = (uint8_t) (bms->packVoltage * 1000);
+	podData->BMSdata[0].i16data  = (int16_t) (bms->packCurrent * 1000);
+	podData->BMSdata[1].ui16data = (uint16_t) (bms->packVoltage * 1000);
 	podData->BMSdata[2].ui16data = bms->packDCL;
 	podData->BMSdata[3].ui16data = bms->packCCL;
 	podData->BMSdata[4].ui16data = bms->packResistance;
