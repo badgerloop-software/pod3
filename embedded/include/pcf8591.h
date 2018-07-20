@@ -15,11 +15,8 @@ typedef enum _adci2c_pin_mapping {
 	ADCI2C_INVALID = 4
 } adci2c_pin_t;
 
-bool adci2c_start_read(uint8_t addr);
-bool adci2c_read(uint8_t* val);
-adci2c_pin_t str_to_pin(const char *str);
-void adci2c_dump(void);
-extern const char *iox_pin_str[];
+bool i2adc_read(uint8_t addr);
+bool i2adc_write(uint8_t addr);
 
 #endif
 

@@ -271,12 +271,16 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 				return HAL_ERROR;
 		
             nav_adc_set(data);
+			printf("nav adc send, val: data[2] = %u\r\n", data[2]);
 			if (can_send_intermodule(NAV, DASH_REC, NAV_ADC, data) != HAL_OK) 
 				return HAL_ERROR;
 
             nav_pressure1_set(data);
-            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK) 
+printf("nav adc send, val: data[2] = %u\r\n", data[2]);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_1, data) != HAL_OK){
+				printf("error\r\n");
 				return HAL_ERROR;
+			}
 			
             nav_pressure2_set(data);
             if (can_send_intermodule(NAV, DASH_REC, NAV_PRES_2, data) != HAL_OK) 
@@ -291,16 +295,6 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
 				return HAL_ERROR;
 			
 			nav_solenoid1_set(data);
-			if (data[2] == 3) {
-				printf("data[0]: %u\r\n", data[0]);
-				printf("data[1]: %u\r\n", data[1]);
-				printf("data[2]: %u\r\n", data[2]);
-				printf("data[3]: %u\r\n", data[3]);
-				printf("data[4]: %u\r\n", data[4]);
-				printf("data[5]: %u\r\n", data[5]);
-				printf("data[6]: %u\r\n", data[6]);
-				printf("data[7]: %u\r\n", data[7]);
-			}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
 				return HAL_ERROR;
 
@@ -378,6 +372,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_PRES_1:
 				pres1 = data[2] | (data[3] << 8);
 				pres2 = data[4] | (data[5] << 8);
+				printf("PRES 1 received: val-> data[2] = %u", data[2]);
 				set_pres_1_2(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_2:

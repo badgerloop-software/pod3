@@ -4,7 +4,13 @@
 #include "console.h"
 #include "usart.h"
 #include "state_handlers.h"
-
+#include "nav_data.h"
+#include "pv_data.h"
+#include "board.h"
+#include "badgerloop.h"
+extern const int board_type;
+extern state_box stateVal;
+extern state_box pv_stateVal;
 int str_index_of(char *search, char *find) {
 	char *start;
 	start = strstr(search, find);
@@ -14,6 +20,7 @@ int str_index_of(char *search, char *find) {
 	return start - search;
 }
 
+
 void process_state_transition(char *state) {
         /* sweet lord forgive me for the following logic */
 	if (!strncmp(state, "poweroff", 8)) {
@@ -22,6 +29,7 @@ void process_state_transition(char *state) {
 	else if (!strncmp(state, "idle", 4)) {
 	        puts("idle requested");
 		change_state(IDLE);
+		
 	}
 	else if (!strncmp(state, "ready_for_pumpdown", 18)) {
 	        puts("ready_for_pumpdown requested");
@@ -102,11 +110,16 @@ void process_manual_override(char *override) {
         printf("Hit process_manual_override with override '%s'\n", override);
 	if (!strncmp(override, "hv_enable", 9)) {
 	        puts("hv_enable requested");
-	        process_input("can hv_enable");
+			if (board_type == PV) {
+				mcu_high_voltage_set(1);
+			}
+	        
 	}
 	else if (!strncmp(override, "hv_disable", 10)) {
 	        puts("hv_disable requested");
-	        process_input("can hv_disable");
+	        if (board_type == PV) {
+				mcu_high_voltage_set(0);
+			}
 	}
 	else if (!strncmp(override, "prim_brake_on", 13)) {
 	        puts("prim_brake_on requested");

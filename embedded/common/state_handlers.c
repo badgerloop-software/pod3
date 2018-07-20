@@ -9,6 +9,7 @@
 #include "can.h"
 
 extern state_box stateVal;
+extern state_box pv_stateVal;
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/
@@ -26,6 +27,14 @@ const unsigned int state_intervals[] = {
 	999999, /* SERVICE_LOW_SPEED_PROPULSION		*/
 };
 
+void propagateState(int state) {
+	stateVal.stateName = state;
+	stateVal.change_state = 1;
+	pv_stateVal.stateName = state;
+	pv_stateVal.change_state = 1;
+
+}
+
 
 void change_state(STATE_NAME state) {
 	printf("requesting state: %d\r\n", state);
@@ -34,6 +43,7 @@ void change_state(STATE_NAME state) {
 		state_strings[state]);
 	state_handle.next_state = state;
 	state_handle.change_state = true;
+	propagateState(state);
 }
 
 void assert_pre_run_fault(const char *message) {
@@ -148,6 +158,7 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+		actuate_brakes();
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
@@ -208,7 +219,7 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-
+		actuate_brakes();
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
@@ -724,12 +735,7 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
-		change_solenoid(SEC_VENTING, ACTUATED);
-
+		actuate_brakes();
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {

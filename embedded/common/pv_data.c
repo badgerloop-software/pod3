@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include "honeywell.h"
 #include "i2c.h"
+
+PV_Data pvData = {MCU_DISABLED, 0, 0};
+
 int pv_DAQ(PV_Data *pvData) {
 //	printf("%u", pvData->pvPressure);
 	//MCU_reader(pvData);

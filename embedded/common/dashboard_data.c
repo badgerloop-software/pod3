@@ -104,8 +104,8 @@ void set_pres_5_6(Pod_Data_Handle* podData, uint16_t pres1, uint16_t pres2) {
 
 
 void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
-	podData->BMSdata[0].i16data  = (int16_t) (bms->packCurrent * 1000);
-	podData->BMSdata[1].ui16data = (uint16_t) (bms->packVoltage * 1000);
+	podData->BMSdata[0].ui16data  = (uint16_t) (bms->packCurrent * 1000);
+	podData->BMSdata[1].ui16data = (uint16_t) (bms->packVoltage);
 	podData->BMSdata[2].ui16data = bms->packDCL;
 	podData->BMSdata[3].ui16data = bms->packCCL;
 	podData->BMSdata[4].ui16data = bms->packResistance;
@@ -244,12 +244,14 @@ void send_data(Pod_Data_Handle *pod_data) {
 		uart_send(formatPacket(&(pod_data->pv_temp)));
 	}
 
-    //Line Pressures
-	if (pod_data->linePressures[0].freshness == FRESH) {
-		pod_data->linePressures[0].freshness = NOT_FRESH;
-		uart_send(formatPacket(&(pod_data->linePressures[0])));
-	}
 	
+	for (i = 0; i < 6; i++){
+		if (pod_data->linePressures[i].freshness == FRESH) {
+			pod_data->linePressures[i].freshness = NOT_FRESH;
+			uart_send(formatPacket(&(pod_data->linePressures[i])));
+		}
+	}
+
     for (i = 0; i < 2; i++) {
 		if (pod_data->adc[i].freshness == FRESH) {
 			pod_data->adc[i].freshness = NOT_FRESH;

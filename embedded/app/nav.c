@@ -163,7 +163,7 @@ int main(void) {
 			lastState = currState;
 		}
 		if(currTelem != lastTelem){
-			//board_telemetry_send(board_type);
+			board_telemetry_send(board_type);
 			lastTelem = currTelem;
 		}
 		if(currHrtbt != lastHrtbt){

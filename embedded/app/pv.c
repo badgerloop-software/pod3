@@ -13,8 +13,7 @@
 #define CTRL_INTERVAL   100
 
 const int board_type = PV;
-
-PV_Data pvData = {MCU_DISABLED, 0, 0};
+extern PV_Data pvData;
 state_box pv_stateVal = {3, 0};
 /* Nucleo 32 I/O */
 

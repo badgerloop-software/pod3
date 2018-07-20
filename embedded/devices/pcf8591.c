@@ -47,7 +47,7 @@ bool i2adc_read( uint8_t addr ){
             }
             for( j = 0; j < 4; j++){
                 pVolt[j] = pSense[j] * 12.89 /1000;
-                printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j], j);
+                //printf("ADCx value read %f Volts from Channel #%d\r\n", pVolt[j], j);
             }
         }
         else{
