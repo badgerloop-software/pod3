@@ -48,7 +48,10 @@ void set_limit(Pod_Data_Handle *podData, uint8_t lim1, uint8_t lim2, uint8_t lim
 	podData->limit[2].freshness = FRESH;
 }
 void set_accel_vel_pos(Pod_Data_Handle *podData, int8_t accel, int8_t vel, int8_t pos) {
-	podData->position.i8data = pos;
+
+    printf( "Setting vals\r\n");
+    
+    podData->position.i8data = pos;
 	podData->position.freshness = FRESH;
 	podData->position.timestamp = time(NULL);
 
@@ -250,6 +253,26 @@ void send_data(Pod_Data_Handle *pod_data) {
 		pod_data->linePressures[0].freshness = NOT_FRESH;
 		uart_send(formatPacket(&(pod_data->linePressures[0])));
 	}
+	if (pod_data->linePressures[1].freshness == FRESH) {
+		pod_data->linePressures[1].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[1])));
+    }	
+	if (pod_data->linePressures[2].freshness == FRESH) {
+		pod_data->linePressures[2].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[2])));
+    }	
+	if (pod_data->linePressures[3].freshness == FRESH) {
+		pod_data->linePressures[3].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[3])));
+    }	
+	if (pod_data->linePressures[4].freshness == FRESH) {
+		pod_data->linePressures[4].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[4])));
+    }	
+	if (pod_data->linePressures[5].freshness == FRESH) {
+		pod_data->linePressures[5].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[5])));
+    }	
 	
     for (i = 0; i < 2; i++) {
 		if (pod_data->adc[i].freshness == FRESH) {
@@ -264,7 +287,11 @@ void send_data(Pod_Data_Handle *pod_data) {
 			uart_send(formatPacket(&(pod_data->limit[i])));
 		}
 	}
-
+	if (pod_data->linePressures[5].freshness == FRESH) {
+		pod_data->linePressures[5].freshness = NOT_FRESH;
+		uart_send(formatPacket(&(pod_data->linePressures[5])));
+    }	
+    
     for (i = 0; i < 19; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
@@ -331,3 +358,4 @@ char *formatPacket(Sensor_Data *sensorData) {
 	}
 	return packetBuffer;
 }
+
