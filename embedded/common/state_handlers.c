@@ -11,6 +11,7 @@
 extern state_box stateVal;
 extern state_box pv_stateVal;
 uint32_t pre_braking_timestamp = 0;
+uint32_t brake_timestamp = 0;
 extern volatile uint8_t hb_torque;
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
