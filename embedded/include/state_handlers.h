@@ -3,6 +3,8 @@
 
 #include "state_machine.h"
 
+uint32_t brake_timestamp;
+
 uint32_t propulsion_timeout_ms;
 
 void change_state(STATE_NAME state);

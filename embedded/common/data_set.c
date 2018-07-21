@@ -283,3 +283,27 @@ void pv_shutdown_set(uint8_t data[]){
     return;
 }
 
+/*
+ * Message Type: 
+ *      Updates data with whether NAV is in postrun or not
+ *
+ * TO:   CCP
+ * FROM: PV
+ *
+ * Data Byte 2: Shutdown
+ * Data Byte 3: TODO Staleness??
+ * Data Byte 4: 0
+ * Data Byte 5: 0
+ * Data Byte 6: 0
+ * Data Byte 7: 0 */
+void nav_post_run_set(uint8_t data[]){
+    int i;
+
+    data[2] = (state_handle.curr_state == POST_RUN) ? 0xFF : 0x00;
+
+    for ( i = 3; i < 8; i++ ){
+        data[i] = 0;
+    }
+    
+    return;
+}

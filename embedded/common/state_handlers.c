@@ -739,6 +739,7 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 
 	else if(board_type==NAV) {
 		actuate_brakes();
+        	brake_timestamp = ticks;
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {

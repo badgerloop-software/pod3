@@ -15,6 +15,7 @@ extern CAN_RxHeaderTypeDef RxHeader;
 extern uint8_t             TxData[8];
 extern uint8_t             RxData[8];
 extern uint32_t            TxMailbox;
+extern uint32_t post_run_transition;
 
 typedef enum{
     IDLE_MSG,           //Default message, sends all 0's

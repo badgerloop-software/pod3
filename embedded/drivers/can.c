@@ -17,9 +17,14 @@ uint8_t TxData[8];
 uint8_t RxData[8];
 uint8_t volatile hb_torque = 0;
 extern uint8_t board_num;
+extern uint32_t nav_timestamp;
+extern uint32_t pv_timestamp;
+extern uint32_t dash_timestamp;
+extern volatile unsigned int ticks;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
 extern state_box pv_stateVal;
 extern state_box stateVal;
+uint32_t post_run_transition = 0;
 
 void can_set_torque( uint8_t torq ){
 	printf("torq = %d\r\n", torq);
@@ -317,6 +322,10 @@ HAL_StatusTypeDef board_telemetry_send(BOARD_ROLE board){
             if (can_send_intermodule(NAV, DASH_REC, NAV_ACCEL_VEL_POS, data) != HAL_OK)
 				return HAL_ERROR;
 			
+            nav_post_run_set(data);
+            if (can_send_intermodule(NAV, DASH_REC, NAV_POST_RUN, data) != HAL_OK)
+				return HAL_ERROR;
+
 			nav_solenoid1_set(data);
 	    	while( HAL_CAN_GetTxMailboxesFreeLevel( &can_handle ) == 0 ){}
 			if (can_send_intermodule(NAV, DASH_REC, NAV_SOLENOID_1, data) != HAL_OK)
@@ -369,8 +378,10 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case CCP_RMS_POWER:
 				break;
 			case PV_WARNING:
+				pv_timestamp = ticks;
 				break;
 			case PV_PRESSURE:
+				pv_timestamp = ticks;
 				pvPres = (data[2] << 8) | data[3];
 				pvTemp = (data[4] << 8) | data[5];
 				set_pv_honeywell(pod_data, pvPres, pvTemp);
@@ -380,36 +391,49 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
             case NAV_ADC:
                 adc = (data[2] | (data[3] << 8)); 
 				set_volt_adc(pod_data, adc);
-                break;
+				pv_timestamp = ticks;
+                		break;
 			case NAV_FAULT:
-				break;
+				nav_timestamp = ticks;
+                		break;
 			case NAV_WARNING:
+				nav_timestamp = ticks;
 				break;
 			case NAV_TAPE:
 				//printf( "Retro Data: %d\r\n", data[2]);
+		    	case NAV_POST_RUN:
+                	post_run_transition = 1;
+                		break;
+            case NAV_TAPE:
+				nav_timestamp = ticks;
 				set_retro(pod_data, data[2]);
                 set_limit( pod_data, data[3],data[4],data[5]);
 				set_stopping_dist(pod_data);
 				break;
 			case NAV_SHOULD_STOP:
+				nav_timestamp = ticks;
 				break;
 			case NAV_PRES_1:
+				nav_timestamp = ticks;
 				pres1 = data[2] | (data[3] << 8);
 				pres2 = data[4] | (data[5] << 8);
 				//printf("PRES 1 received: val-> data[2] = %u", data[2]);
 				set_pres_1_2(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_2:
+				nav_timestamp = ticks;
 				pres1 = data[2] | (data[3] << 8);
 				pres2 = data[4] | (data[5] << 8);
 				set_pres_3_4(pod_data, pres1, pres2);
 				break;
 			case NAV_PRES_3:
+				nav_timestamp = ticks;
 				pres1 = data[2] | (data[3] << 8);
 				pres2 = data[4] | (data[5] << 8);
 				set_pres_5_6(pod_data, pres1, pres2);
 				break;
 			case NAV_SOLENOID_1:
+				nav_timestamp = ticks;
 				set_solenoid_value(pod_data, data[2]);
 					//printf("SOLENOID DATA:\r\n");
 					//printf("data[0]: %u\r\n", data[0]);
@@ -423,6 +447,7 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case CURR_STATE:
 				break;
 			case NAV_ACCEL_VEL_POS:
+				nav_timestamp = ticks;
 				set_accel_vel_pos(pod_data, data[2], data[3], data[4]);
 				break;
 		}
@@ -502,8 +527,11 @@ HAL_StatusTypeDef board_can_message_parse(uint32_t can_id, uint8_t *data){
 			case NAV_ACCEL_VEL_POS:
 				printf("NAV_ACCEL_VEL_POS\r\n");
 				break;
+            case NAV_POST_RUN:
+                break;
 			case CURR_STATE:
 				//printf("STATE: %u\r\n", data[2]);
+				dash_timestamp = ticks;
 				stateVal.stateName = data[2];
 				stateVal.change_state = 1;
 				pv_stateVal.stateName = data[2];
