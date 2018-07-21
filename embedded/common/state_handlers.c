@@ -216,7 +216,7 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 
 	else if(board_type==NAV) {
 		
-        	//TODO: Vent brakes
+        	//Vent brakes
         	vent_brakes();
 	
 	} // end NAV_MODULE
@@ -293,8 +293,9 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 
 	else if(board_type==NAV) {
 		
-        	//TODO: Actuate Venting valves
+        	//Actuate Venting valves
         	//TODO: Vent??
+            vent_brakes();
 		
 	} // end NAV_MODULE
 
@@ -322,7 +323,10 @@ void in_idle(uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-	//int pres = GET_PRES_TANK_PRI, bUpper = BRAKING_TANK_UPPER;
+	
+        init_solenoids();
+        
+    //int pres = GET_PRES_TANK_PRI, bUpper = BRAKING_TANK_UPPER;
 	//int bLower = BRAKING_TANK_LOWER;
 	//if(pres > bUpper){} //TODO Throw warning
 	//if(pres < bLower) 
@@ -333,6 +337,9 @@ void in_idle(uint32_t flags) {
 	//	assert_pre_run_fault("Secondary braking tank underpressure\r\n");
 //	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
 //	bLower = BRAKING_LINE__LOWER
+
+        
+
 
     } // end NAV_MODULE 
     else if(board_type==DASH) {
@@ -758,9 +765,9 @@ void in_braking(uint32_t flags) {
 
 	else if(board_type==NAV) {
         	
-		//TODO: Check primary brakes/ secondary brakes
+		//Check primary brakes/ secondary brakes
 		if( ticks - brake_timestamp >= 500 &&  gpio_readPin(GPIOA, 3) ){
-		    actuate_secondary();
+		    actuate_sec_brakes();
 		}		
 	
 	} // end NAV_MODULE
@@ -934,11 +941,11 @@ void to_service_low_speed_propulsion(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
-		change_solenoid(SEC_VENTING,    ACTUATED);
-		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
+		change_solenoid(P1, ACTUATED);
+		change_solenoid(P2, NOT_ACTUATED);
+		change_solenoid(S3,    ACTUATED);
+		change_solenoid(S1,  NOT_ACTUATED);
+		change_solenoid(S2,  NOT_ACTUATED);
 	
 	} // end NAV_MODULE
 

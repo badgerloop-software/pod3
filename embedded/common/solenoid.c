@@ -33,20 +33,47 @@ int change_solenoid(int name, int state) {
 	return 0;
 }
 
+void init_solenoids() {
+	iox_set(S1);
+	iox_set(S2);	
+    iox_clear( P1);
+    iox_clear( P2);
+    iox_clear( S3);
+    return;
+}
 
 void actuate_brakes() {
-	iox_set(PRIM_BRAKING_1);
-	iox_set(PRIM_BRAKING_2);	
+	iox_set(P1);
+	iox_set(P2);	
+    iox_clear( S1);
+    iox_clear( S2);
+    iox_clear( S3);
+    return;
+}
+
+void unactuate_brakes() {
+	iox_clear(P1);
+	iox_clear(P2);	
+    iox_set( S1);
+    iox_set( S2);
+    iox_set( S3);
     return;
 }
 
 void actuate_sec_brakes() {
-	iox_set(SEC_BRAKING_1);
-	iox_set(SEC_BRAKING_2);
+	iox_set(S1);
+	iox_set(S3);
+    iox_clear( P1);
+    iox_clear( P2);
+    iox_clear( S2);
     return;
 }
 
 void vent_brakes() {
-
+    iox_set( P2 );
+    iox_set( S3 );
+    iox_clear( P1);
+    iox_clear( S1 );
+    iox_clear( S2 );
     return;
 }

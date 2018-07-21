@@ -16,18 +16,18 @@ state_box pv_stateVal;
 	* 5 seconds, if it has been 5 seconds, move to the next state
 	* ONLY used by main state machine board
   */
-int check_interval(STATE_NAME state){
-	// State cannot be switched out of by timer
-	if(GET_INTERVAL(state) == 9999) return 0;
-	unsigned int state_start = GET_TIMESTAMP(state);
-
-	// 1 tick = 1 ms
-	if(ticks - state_start >= GET_INTERVAL(state)){
-		// The time limit for a state has been reached
-		return 1;
-	}
-	return 0;
-}
+//int check_interval(STATE_NAME state){
+//	// State cannot be switched out of by timer
+//	if(GET_INTERVAL(state) == 9999) return 0;
+//	unsigned int state_start = GET_TIMESTAMP(state);
+//
+//	// 1 tick = 1 ms
+//	if(ticks - state_start >= GET_INTERVAL(state)){
+//		// The time limit for a state has been reached
+//		return 1;
+//	}
+//	return 0;
+//}
 //*/
 
 void initialize_state_machine(STATE_NAME initial_state) {
@@ -46,7 +46,7 @@ void initialize_state_machine(STATE_NAME initial_state) {
 
 	/* Timestamp table for control over event frequency */
 	handle->state_timestamp_table = state_event_timestamps;
-	handle->event_interval_table = state_intervals;
+//	handle->event_interval_table = state_intervals;
 
 	/* No flags, no state change assertion */
 	handle->change_state = false;

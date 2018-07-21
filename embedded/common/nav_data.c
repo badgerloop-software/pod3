@@ -8,11 +8,11 @@
 
 Nav_Data navData = {
      .solenoids = {
-         .solenoid_1 = {PRIM_BRAKING_1, NOT_ACTUATED},
-         .solenoid_2 = {PRIM_BRAKING_2, NOT_ACTUATED},
-         .solenoid_4 = {SEC_VENTING,    NOT_ACTUATED},
-         .solenoid_6 = {SEC_BRAKING_1,  NOT_ACTUATED},
-         .solenoid_7 = {SEC_BRAKING_2,  NOT_ACTUATED}
+         .solenoid_1 = {P1, NOT_ACTUATED},
+         .solenoid_2 = {P2, NOT_ACTUATED},
+         .solenoid_4 = {S3,    NOT_ACTUATED},
+         .solenoid_6 = {S1,  NOT_ACTUATED},
+         .solenoid_7 = {S2,  NOT_ACTUATED}
      },
      .retros = {0, 0, 0, 0},
      .motion = {0, 0, 0, 0, 0},

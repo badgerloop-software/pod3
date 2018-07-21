@@ -73,7 +73,7 @@ void process_state_transition(char *state) {
 	}
 	else if (!strncmp(state, "prop_dsa_openair", 16)) {
 	        puts("prop_dsa_openair requested");
-		change_state(PROPULSION_START);
+		change_state(PROPULSION_DISTANCE);
 	}
 	else if (!strncmp(state, "prop_dsa_extsub", 15)) {
 	        puts("prop_dsa_extsub requested");
@@ -123,11 +123,11 @@ void process_manual_override(char *override) {
 	}
 	else if (!strncmp(override, "prim_brake_on", 13)) {
 	        puts("prim_brake_on requested");
-	        process_input("can braking_on");
-	}
+	        actuate_brakes();
+    }
 	else if (!strncmp(override, "prim_brake_off", 14)) {
 	        puts("prim_brake_off requested");
-	        process_input("can braking_off");
+            actuate_sec_brakes();
 	}
 	else if (!strncmp(override, "prim_brake_vent_on", 18)) {
 	        puts("prim_brake_vent_on requested");
