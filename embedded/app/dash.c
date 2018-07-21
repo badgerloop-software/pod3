@@ -24,6 +24,7 @@ const int board_type = DASH;
 extern state_t state_handle;
 
 Pod_Data_Handle podData = {
+	 .state = {"state", 3, 0, 0, 0, NOT_FRESH, DT_UINT8},
 	 .current_pressure = {"current_pressure", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 	 .lv_battery_temp =  {"lv_battery_temp", 0,0, 0, 0, NOT_FRESH, DT_INT8},
 	 .position = {"position", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -64,7 +65,8 @@ Pod_Data_Handle podData = {
  		{"cell_min_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"cell_avg_voltage", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
  		{"max_cells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
- 		{"num_cells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
+ 		{"num_cells", 0, 0, 0, 0, NOT_FRESH, DT_UINT8},
+ 		{"imd_status", 0, 0, 0, 0, NOT_FRESH, DT_UINT8}},
 	 .RMSdata = {
 		{"igbt_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
 		{"gate_driver_board_temp", 0, 0, 0, 0, NOT_FRESH, DT_UINT16},
@@ -165,6 +167,7 @@ int main(void) {
 		if( currState != lastState ){
 			
 			state_machine_handler();
+			podData.state.ui8data = state_handle.curr_state;
 			lastState = currState;
 		}
 		if( currTelem != lastTelem ){

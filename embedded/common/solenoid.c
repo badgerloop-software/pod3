@@ -4,7 +4,7 @@
 #include "uart.h"
 #include "usart.h"
 #include "nav_data.h"
-
+#include "i2c.h"
 #include <stdio.h>
  
 #define START_READ_INTERVAL 1000
@@ -33,47 +33,61 @@ int change_solenoid(int name, int state) {
 	return 0;
 }
 
-void init_solenoids() {
-	iox_set(S1);
-	iox_set(S2);	
-    iox_clear( P1);
-    iox_clear( P2);
-    iox_clear( S3);
-    return;
+bool init_solenoids() {
+    uint8_t data = 0xD1;
+    uint32_t ticks_start = ticks;
+    printf("Init Solenoids\r\n");
+    if( i2c_start_write( 0x20, 1, &data) != HAL_OK ){
+	return false;
+    }
+    if( i2c_block(I2C_WAITING_TX, ticks_start) || i2c_errors_present() ){
+	return false;
+    }
+    return true;
 }
 
-void actuate_brakes() {
-	iox_set(P1);
-	iox_set(P2);	
-    iox_clear( S1);
-    iox_clear( S2);
-    iox_clear( S3);
-    return;
+bool actuate_brakes() {
+    uint8_t data = 0xC0;
+    uint32_t ticks_start = ticks;
+    printf("Primary Solenoids\r\n");
+    if( i2c_start_write( 0x20, 1, &data) != HAL_OK ){
+	return false;
+    }
+    if( i2c_block(I2C_WAITING_TX, ticks_start) || i2c_errors_present() ){
+	return false;
+    }
+    return true;
 }
-
+/*
 void unactuate_brakes() {
-	iox_clear(P1);
-	iox_clear(P2);	
-    iox_set( S1);
-    iox_set( S2);
-    iox_set( S3);
+    uint8_t data = 0xEE;
+    i2c_start_write( 0x20, 1, &data);  
     return;
 }
+*/
 
-void actuate_sec_brakes() {
-	iox_set(S1);
-	iox_set(S3);
-    iox_clear( P1);
-    iox_clear( P2);
-    iox_clear( S2);
-    return;
+bool actuate_sec_brakes() {
+    uint8_t data = 0x88;
+    printf("Sec Solenoids\r\n");
+    uint32_t ticks_start = ticks;
+    if( i2c_start_write( 0x20, 1, &data) != HAL_OK ){
+	return false;
+    }
+    if( i2c_block(I2C_WAITING_TX, ticks_start) || i2c_errors_present() ){
+	return false;
+    }
+    return true;
 }
 
-void vent_brakes() {
-    iox_set( P2 );
-    iox_set( S3 );
-    iox_clear( P1);
-    iox_clear( S1 );
-    iox_clear( S2 );
-    return;
+bool vent_brakes() {
+    uint8_t data = 0x08;
+    uint32_t ticks_start = ticks;
+    printf("Vent Solenoids\r\n");
+    if( i2c_start_write( 0x20, 1, &data) != HAL_OK ){
+	return false;
+    }
+    if( i2c_block(I2C_WAITING_TX, ticks_start) || i2c_errors_present() ){
+	return false;
+    }
+    return true;
 }

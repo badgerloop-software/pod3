@@ -8,6 +8,7 @@
 #include "badgerloop.h"
 #include "can.h"
 #include "gpio.h"
+#include "console.h"
 
 extern state_box stateVal;
 extern state_box pv_stateVal;
@@ -144,10 +145,10 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 
 	if(board_type==NAV) {
 
-        actuate_brakes();
+	        actuate_brakes();
 		
-        //Check secondary brakes
-        brake_timestamp = ticks;
+        	//Check secondary brakes
+        	brake_timestamp = ticks;
 
 	} // end NAV_MODULE
 
@@ -292,10 +293,9 @@ void to_idle(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		
-        	//Actuate Venting valves
-        	//TODO: Vent??
-            vent_brakes();
+		process_input("i2c w 20 d1");		
+            //Actuate Venting valves
+            //TODO: Vent??
 		
 	} // end NAV_MODULE
 
@@ -317,14 +317,13 @@ void in_idle(uint32_t flags) {
 	if(board_type==PV) {
         	
 		/* BMS reset de-asserted */
-		printf( "BMS reset highi\r\n");
 		bms_software_reset_set( true );
 
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
 	
-        init_solenoids();
+        	init_solenoids();
         
     //int pres = GET_PRES_TANK_PRI, bUpper = BRAKING_TANK_UPPER;
 	//int bLower = BRAKING_TANK_LOWER;
@@ -338,7 +337,7 @@ void in_idle(uint32_t flags) {
 //	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
 //	bLower = BRAKING_LINE__LOWER
 
-        
+    		    
 
 
     } // end NAV_MODULE 
@@ -432,7 +431,6 @@ void in_ready_for_pumpdown(uint32_t flags) {
 	
 	// Pod health check
 	if(board_type==PV) {
-	    printf("MCU HV enable\r\n");
 	    mcu_high_voltage_set(true);
 
 	} // end PV_MODULE
@@ -453,7 +451,6 @@ void in_ready_for_pumpdown(uint32_t flags) {
 
 void from_ready_for_pumpdown(STATE_NAME to, uint32_t flags){
 	if(board_type == PV){
-	    printf("RMS Enable\r\n");
 	    pv_solenoid2_set(true);
 	}
 	printf("From state: READY_FOR_PUMPDOWN (To: %s Flags: 0x%lx)\r\n", state_strings[to], flags);
@@ -765,6 +762,7 @@ void in_braking(uint32_t flags) {
 
 	else if(board_type==NAV) {
         	
+		actuate_brakes();
 		//Check primary brakes/ secondary brakes
 		if( ticks - brake_timestamp >= 500 &&  gpio_readPin(GPIOA, 3) ){
 		    actuate_sec_brakes();

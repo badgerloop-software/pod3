@@ -17,6 +17,7 @@ typedef struct {
 	uint8_t Soc;
 	uint16_t relayStatus;
 
+	uint8_t imd_status;
 	uint8_t highTemp;
 	uint8_t lowTemp;
 	uint16_t cellMaxVoltage;

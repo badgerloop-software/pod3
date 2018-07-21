@@ -27,6 +27,7 @@ typedef struct {
 
 
 typedef struct {
+	Sensor_Data state;
 	Sensor_Data current_pressure;
 	Sensor_Data lv_battery_temp;
 	Sensor_Data position;
@@ -41,7 +42,7 @@ typedef struct {
 	Sensor_Data linePressures[6];
 	Sensor_Data pv_pres;
 	Sensor_Data pv_temp;
-	Sensor_Data BMSdata[19];
+	Sensor_Data BMSdata[20];
 	Sensor_Data RMSdata[22];
 } Pod_Data_Handle;
 

@@ -20,6 +20,7 @@ void bms_init() {
 	bms->Soc = 0;
 	bms->relayStatus = 0;
 
+	bms->imd_status = 1;
 	bms->highTemp = 0;
 	bms->lowTemp = 0;
 	bms->cellMaxVoltage = 0;
@@ -86,6 +87,8 @@ int bms_parser(uint32_t id, uint8_t *data) {
 			bms->relayStatus = data[0];
 			bms->inputVoltage = data[2] | (data[3] << 8);
 			bms->inputVoltage /= 10;
+
+			bms->imd_status = 0x80 | data[6];
 			//printf("Relay status %d\r\n", bms->relayStatus);
 			//printf("Input Source Supply Voltage: %f\r\n", bms->inputVoltage);
 			break;

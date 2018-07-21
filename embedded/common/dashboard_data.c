@@ -124,9 +124,10 @@ void package_bms_data(Pod_Data_Handle *podData, Bms *bms) {
 	podData->BMSdata[16].ui16data = bms->cellAvgVoltage;
 	podData->BMSdata[17].ui8data = bms->maxCells;
 	podData->BMSdata[18].ui8data = bms->numCells;
+	podData->BMSdata[19].ui8data = bms->imd_status;
 
 	int i;
-	for (i = 0; i < 19; i++) {
+	for (i = 0; i < 20; i++) {
 		podData->BMSdata[i].freshness = FRESH;
 	}
 }
@@ -177,7 +178,7 @@ void set_pv_honeywell(Pod_Data_Handle *podData, uint16_t pres, uint16_t temp) {
 void send_data(Pod_Data_Handle *pod_data) {
 	Sensor_Data *sensor;
 	int i;
-    
+	uart_send(formatPacket(&(pod_data->state)));    
     if (pod_data->current_pressure.freshness == FRESH) {
 		pod_data->current_pressure.freshness = NOT_FRESH;
 		sensor = &(pod_data->current_pressure);
@@ -269,7 +270,7 @@ void send_data(Pod_Data_Handle *pod_data) {
 		uart_send(formatPacket(&(pod_data->linePressures[5])));
     }	
     
-    for (i = 0; i < 19; i++) {
+    for (i = 0; i < 20; i++) {
 		if (pod_data->BMSdata[i].freshness == FRESH) {
 			pod_data->BMSdata[i].freshness = NOT_FRESH;
 			uart_send(formatPacket(&(pod_data->BMSdata[i])));

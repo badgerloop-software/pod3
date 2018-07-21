@@ -15,6 +15,7 @@
 #include "adc.h"
 #include "voltage_sense.h"
 #include "pcf8591.h"
+#include "solenoid.h"
 
 #define BLINK_INTERVAL	250
 #define DAQ_INTERVAL    100
@@ -100,10 +101,10 @@ int nav_init(void) {
     GPIO_TypeDef *gpioa = GPIOA;
     
 	change_solenoid(P1, ACTUATED);
-	change_solenoid(P2, NOT_ACTUATED);
-	change_solenoid(S3, ACTUATED);
-	change_solenoid(S1, NOT_ACTUATED);
-	change_solenoid(S2, NOT_ACTUATED);
+	change_solenoid(P2, ACTUATED);
+	change_solenoid(S3, NOT_ACTUATED);
+	change_solenoid(S1, ACTUATED);
+	change_solenoid(S2, ACTUATED);
 
     /* Retro 1 is on pin PA0
      * Retro 2 is on pin PA1
@@ -125,11 +126,15 @@ int nav_init(void) {
     exti_config(gpioa, 6, 0, 1, 1);
     //Pin 7 EXTI Config (LIM3)
     exti_config(gpioa, 7, 0, 1, 1);
-   
+  
+    init_solenoids();
+
     //Volt Sense is on PA4
     adc_init();
     voltage_sense_init();
     adc_start();
+
+    init_solenoids();
 
     i2adc_write(0x49);
 
