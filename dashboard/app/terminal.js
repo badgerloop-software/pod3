@@ -1,7 +1,14 @@
 const terminalInput = document.getElementsByClassName("terminal-input")[0];
+const termTerminalInput = document.getElementById("term-terminal-input"); /* the terminal input on the big terminal */
 const terminalText = document.getElementById("terminal-text");
+const termTerminalText = document.getElementById("term-terminal-text"); /* ther terminal text box for the big terminal */
 const submitBtn = document.getElementById("submit");
+const termSubmitBtn = document.getElementById("term-submit");
 const communication = require("./app/communication");
+
+const mainDashDiv = document.getElementById("main-dashboard-div");
+const termDashDiv = document.getElementById("terminal-dashboard-div");
+const termPageBtn = document.getElementById("terminal-page-button");
 
 const solenoids = [
     document.getElementById("solenoid-1"),
@@ -54,6 +61,26 @@ terminalInput.addEventListener('keydown',() => {
 //submit when the button is pressed
 submitBtn.addEventListener("click", submit);
 
+termSubmitBtn.addEventListener("click", termSubmit);
+
+///////Show/Hide Big Console vs Main Dashboard////////
+termPageBtn.addEventListener("click", swapDashboard);
+
+function swapDashboard() {
+    let onMain = (termDashDiv.style.display === "none");
+    if (onMain) {
+	// swap the visibility of the dashboard tabs
+	mainDashDiv.style.display = "none";
+	termDashDiv.style.display = "block";
+	termPageBtn.innerHTML = "Main";
+    }
+    else {
+        // swap the visibility of dashboard tabs
+	mainDashDiv.style.display = "block";
+	termDashDiv.style.display = "none";
+	termPageBtn.innerHTML = "Terminal";
+    }
+}
 
 ///////Helper Functions///////
 function submit(){
@@ -67,15 +94,45 @@ function submit(){
         return;
     }
 
+    termTerminalText.innerHTML += fullInput + "<br>" + "> ";   //Add input to big console
     terminalText.innerHTML += fullInput + "<br>" + "> ";   //Add input to console
     processText(input, inputArgs);
+    termTerminalInput.value = "";   //clear big console submit box
     terminalInput.value = "";   //clear submit box
 }
+
+/* stupid twin function to do the same terminal stuff for the big hidden box */
+function termSubmit(){
+    let fullInput = termTerminalInput.value;
+    let inputArgs = fullInput.split(" ");
+    let input = inputArgs[0];
+    inputArgs.shift();
+
+    //Checking to make sure something  was typed in so there arent invisible line breaks
+    if (input === ""){
+        return;
+    }
+
+    termTerminalText.innerHTML += fullInput + "<br>" + "> ";   //Add input to big console
+    terminalText.innerHTML += fullInput + "<br>" + "> ";   //Add input to console
+    processText(input, inputArgs);
+    termTerminalInput.value = "";   //clear big console submit box
+    terminalInput.value = "";   //clear submit box
+}
+
+
 const solenoidStates = ["_activate", "_deactivate"];
 function processText(input, optionalArgs) {
     input = input.toLowerCase();    //Make it case insensitive
     if (input === "help") {
         terminalText.innerHTML += "<br>" +
+            " &emsp; clear : Clears the entire window" + "<br>" +
+            " &emsp; connect [OPTIONAL ARGS: i=[IP address] p=[Port]] : Checks for a response from the server" + "<br>" +
+            " &emsp; set_pod_address [OPTIONAL ARGS: i=[IP address] p=[Port]] : Set the address to talk to the pod" + "<br>" +
+            " &emsp; test_solenoids: Randomly flips the solenoids in the diagram (NOT REAL ONES) to test functionality" + "<br>" +
+            " &emsp; configure [configFileName.*] : Sends the designated config file to the server" +
+            "<br> > ";
+        termTerminalText.innerHTML += "<br>" +
             " &emsp; clear : Clears the entire window" + "<br>" +
             " &emsp; connect [OPTIONAL ARGS: i=[IP address] p=[Port]] : Checks for a response from the server" + "<br>" +
             " &emsp; set_pod_address [OPTIONAL ARGS: i=[IP address] p=[Port]] : Set the address to talk to the pod" + "<br>" +
@@ -102,6 +159,7 @@ function processText(input, optionalArgs) {
     if (input === "clear") {
         //Clears the entire window in case the commands become too numerous
         terminalText.innerHTML = "> ";
+	termTerminalText.innerHTML = "> ";
     }
 
     if (input === "connect") {
