@@ -10,6 +10,8 @@
 
 extern state_box stateVal;
 extern state_box pv_stateVal;
+uint32_t pre_braking_timestamp = 0;
+extern volatile uint8_t hb_torque;
 //TODO: Some states cannot be transitioned out of by timer
 const unsigned int state_intervals[] = {
 	999999,	/* PRE_RUN_FAULT			*/
@@ -19,7 +21,7 @@ const unsigned int state_intervals[] = {
 	999999,	/* READY_FOR_PUMPDOWN 			*/
 	10000,	/* PUMPDOWN 				*/
 	999999,	/* READY				*/
-	10000,	/* PROPULSION_START 			*/
+	4000,	/* PROPULSION_START 			*/
 	10000,	/* PROPULSION_DISTANCE 			*/
 	10000,	/* BRAKING				*/
 	10000,	/* POST_RUN 				*/
@@ -99,6 +101,9 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
     else if(board_type==DASH) {
         can_heartbeat_fault();
         can_heartbeat_handler( &can_handle );
+        
+        //TODO:
+         //   send_fault();
     }
     else if(board_type==DEV) {
 
@@ -158,13 +163,16 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-		actuate_brakes();
+		//TODO: check secondary brakes
+        actuate_brakes();
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
         can_heartbeat_fault();
         can_heartbeat_handler( &can_handle );
 
+        //TODO:
+        //    send_fault();
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
@@ -183,6 +191,8 @@ void in_run_fault(uint32_t flags) {
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
+        
+        //TODO Check primary/secondary brakes
         can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
@@ -219,13 +229,17 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		actuate_brakes();
+		
+        //TODO: Vent brakes
+        //actuate_brakes();
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
         	can_heartbeat_fault();
         	can_heartbeat_handler(&can_handle);
 
+        //TODO:
+         //   send_fault();
 	} // end CPP_MODULE
 
 	else if(board_type==DEV) {
@@ -289,12 +303,13 @@ void to_idle(STATE_NAME from, uint32_t flags) {
   // Set torque/speed to 0
 
 	if(board_type==PV) {
-    	bms_software_reset_set( true );
 
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
+		
+        //TODO: Actuate Venting valves
+        change_solenoid(PRIM_BRAKING_1, ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING, ACTUATED);
 		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
@@ -335,11 +350,11 @@ void in_idle(uint32_t flags) {
 //	pres = GET_PRES_LINE_PRI; bUpper = BRAKING_LINE__UPPER;
 //	bLower = BRAKING_LINE__LOWER
 
-    	} // end NAV_MODULE 
-    	else if(board_type==DASH) {
+    } // end NAV_MODULE 
+    else if(board_type==DASH) {
         	can_heartbeat_handler( &can_handle );
 		
-    	} // end CPP_MODULE
+    } // end CPP_MODULE
 
 	else if(board_type==DEV) {
 
@@ -350,8 +365,8 @@ void from_idle(STATE_NAME to, uint32_t flags){
 	if(board_type==PV) {
 	    
         /* BMS reset de-asserted */
-        bms_software_reset_set( false );
-        //bms_clearFaults();
+        bms_clearFaults();
+        bms_software_reset_set( true );
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
@@ -398,17 +413,14 @@ void to_ready_for_pumpdown(STATE_NAME from, uint32_t flags) {
 	if(board_type==PV) {
 
 	        /* Enabling high voltage, enabling RMS */
+            bms_software_reset_set( false );
         	mcu_high_voltage_set(true);
         	pv_solenoid2_set(true);
 
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, ACTUATED);
-		change_solenoid(SEC_VENTING, ACTUATED);
-		change_solenoid(SEC_BRAKING_1, ACTUATED);
-		change_solenoid(SEC_BRAKING_2, ACTUATED);
+		
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
@@ -469,12 +481,8 @@ void to_pumpdown(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, ACTUATED);
-		change_solenoid(SEC_VENTING, ACTUATED);
-		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
-	} // end NAV_MODULE
+	
+    } // end NAV_MODULE
 
 	else if(board_type==DASH) {
         	can_heartbeat_handler( &can_handle );
@@ -525,18 +533,13 @@ void to_ready(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	/*       Propulsion          */
 	/*****************************/
-	// Set torque/speed to 0
+
 
 	if(board_type==PV) {
 
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, ACTUATED);
-		change_solenoid(SEC_VENTING,    ACTUATED);
-		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
 			
 	} // end NAV_MODULE
 
@@ -592,19 +595,17 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 	/*****************************/
 	/*       Propulsion          */
 	/*****************************/
-	// Set torque to max torque.
+
+    //TODO: Set first torque value, probably 10 nm
+    hb_torque = 8;
 
 	if(board_type==PV) {
 
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, ACTUATED);
-		change_solenoid(SEC_VENTING, ACTUATED);
-		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
-		
+	    //TODO shouldStop()	heartbeat goes out
+
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
@@ -621,24 +622,26 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
 
 void in_propulsion_start(uint32_t flags) {
 	//printf("In state: PROPULSION_START (Flags: 0x%lx)\r\n", flags);
-	UNUSED( flags );
+    //Start incrementing torque
+	
+    UNUSED( flags );
 	// Pod health check
 	if(board_type==PV) {
 
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-
+        //TODO shouldStop() heartbeat goes out
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
-        
+            //TODO: check timer to brake
         	can_heartbeat_handler( &can_handle );
 	    
-        /* If we pass propulsion timeout enter braking 
-	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
-		    change_state(BRAKING);
-	    } */
+        /* If we pass propulsion timeout enter braking */
+	    if (ticks - propulsion_start_ts >= 4000 ){
+		    change_state( PROPULSION_DISTANCE );
+	    }
 	} // end CPP_MODULE
 
 	else if(board_type==DEV) {
@@ -670,16 +673,15 @@ void to_propulsion_distance(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, ACTUATED);
-		change_solenoid(SEC_VENTING, ACTUATED);
-		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
-       		can_heartbeat_handler( &can_handle );
+        
+        pre_braking_timestamp = ticks;
+        
+        can_heartbeat_next();
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
@@ -702,7 +704,11 @@ void in_propulsion_distance(uint32_t flags) {
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
-	        can_heartbeat_handler( &can_handle );
+
+        if( ticks - pre_braking_timestamp >= 2000 ){
+            change_state( BRAKING );
+        }
+	    can_heartbeat_handler( &can_handle );
 	
         /* If we pass propulsion timeout enter braking 
 	    if (ticks >= propulsion_start_ts + propulsion_timeout_ms){
@@ -740,7 +746,6 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
-        	can_heartbeat_next();
         	can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
@@ -760,7 +765,7 @@ void in_braking(uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-
+        //TODO check primary brakes/ secondary brakes
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
@@ -795,12 +800,13 @@ void to_post_run(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
+	
+        //TODO Vent brakes
+        change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
 		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_BRAKING_1, NOT_ACTUATED);
 		change_solenoid(SEC_BRAKING_2, NOT_ACTUATED);
 		change_solenoid(SEC_VENTING, NOT_ACTUATED);
-
 
 	} // end NAV_MODULE
 
@@ -820,7 +826,13 @@ void in_post_run(uint32_t flags) {
 	//printf("In state: POST_RUN (Flags: 0x%lx)\r\n", flags);
 	UNUSED( flags );
 	// Pod health check
-	if(board_type==PV) {
+    //TODO:
+    //  Insulation status == good
+    //  high voltage == disconnected
+    //  motor controller turned off
+    //  pressures tanks < 30 psi
+    
+    if(board_type==PV) {
 
 	} // end PV_MODULE
 
@@ -862,15 +874,12 @@ void to_safe_to_approach(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	else if(board_type==NAV) {
-		change_solenoid(PRIM_BRAKING_1, NOT_ACTUATED);
-		change_solenoid(PRIM_BRAKING_2, NOT_ACTUATED);
-		change_solenoid(SEC_VENTING,    NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_1,  NOT_ACTUATED);
-		change_solenoid(SEC_BRAKING_2,  NOT_ACTUATED);
-	} // end NAV_MODULE
+	
+    } // end NAV_MODULE
 
 	else if(board_type==DASH) {
-        	can_heartbeat_handler( &can_handle );
+        can_heartbeat_next();
+        can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
 
