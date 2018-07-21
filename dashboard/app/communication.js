@@ -3,9 +3,9 @@ const request = require("request");
 const events = require("events");
 const path = require("path");
 // address of the DB server
-const serverAddr = {"ip": "192.168.1.110", "port": 7781};
+const serverAddr = {"ip": "192.168.1.101", "port": 7781};
 // address of the pod
-const podAddr = {"ip": "192.168.2.114", "port": 7777};
+const podAddr = {"ip": "192.168.1.145", "port": 7778};
 
 const receivedEmitter = new events.EventEmitter();
 /* This section is made for sending config files to the pi */

@@ -175,7 +175,7 @@ function stateChangeRequest(e) {
     let targ = e.target;
     let newState = targ.id;
     payload = {"value": newState};
-    lazyStateUpdate(newState);
+    //lazyStateUpdate(newState);
     cback = function(response) {
 	postAndUpdateIfConfirm(response, podIP, podPort, "state_change", payload, newState);
     };

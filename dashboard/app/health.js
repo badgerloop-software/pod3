@@ -127,7 +127,7 @@ function setSensorYellow(sensorName){
 /* make a sensor cell red (e.g. for a bad value) */
 function setSensorRed(sensorName) {
     let el = dataTable[sensorName];
-    comm.sendMessage(HEALTH_KEY, comm.getPodIP(), comm.getPodPort(), "state_change", "state_fault_prerun");
+    //comm.sendMessage(HEALTH_KEY, comm.getPodIP(), comm.getPodPort(), "state_change", "state_fault_prerun");
     el.classList.remove('table-success');
     el.classList.add('table-danger');
 }
@@ -303,6 +303,11 @@ function doHealthCheck(data) {
 /* no-op the default assert fail function */
 function noop() {}
 
+function checkDeltas() {
+
+}
+
+
 let prevCurr = -1;
 let prevVolt = -1;
 let currDelta = 0;
@@ -313,6 +318,7 @@ function updateVisualData(sensorData) {
         if (!fetchedSensors.includes(sensorName)) return;
         let val;
         switch (sensorName) {
+
             case 'stopping_dist':
                 val = 3950 - (sensorData[RETRO].VALUE* 100);
                 sensorData[sensorName].VALUE = val;
@@ -492,7 +498,7 @@ function ready_for_pumpdown_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, RETRO, 0, 0, fRetroRed, fRetroGreen));
     ret = ret.concat(sens_assert_within(sensorData, ACCELERATION, -0.1, 0.1, fAccelerationRed, fAccelerationGreen));
     ret = ret.concat(sens_assert_within(sensorData, POSITION, -1, 1, fPositionRed, fPositionGreen));
-    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, -.1, fVelocityRed, fVelocityGreen));
+    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, .1, fVelocityRed, fVelocityGreen));
     ret = ret.concat(sens_assert_within(sensorData, COMMAND_TORQUE, 0, 0, fCommandTorqueRed, fCommandTorqueGreen));
     ret = ret.concat(sens_assert_within(sensorData, ACTUAL_TORQUE, 0, 0, fActualTorqueRed, fActualTorqueGreen));
     ret = ret.concat(sens_assert_within(sensorData, MOTOR_SPEED, 0, 0, fMotorSpeedRed, fMotorSpeedGreen));
