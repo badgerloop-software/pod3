@@ -755,6 +755,9 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 void in_braking(uint32_t flags) {
 	//printf("In state: BRAKING (Flags: 0x%lx)\r\n", flags);
 	UNUSED( flags );
+
+	static uint8_t secondary = 0;
+
 	// Pod health check
 	if(board_type==PV) {
 
@@ -762,11 +765,19 @@ void in_braking(uint32_t flags) {
 
 	else if(board_type==NAV) {
         	
-		actuate_brakes();
 		//Check primary brakes/ secondary brakes
 		if( ticks - brake_timestamp >= 500 &&  gpio_readPin(GPIOA, 3) ){
-		    actuate_sec_brakes();
+			secondary = 1;
+		    	actuate_sec_brakes();
 		}		
+		if( secondary ){
+		    actuate_sec_brakes();
+			
+		}
+		else{
+			actuate_brakes();
+
+		}
 	
 	} // end NAV_MODULE
 
