@@ -93,6 +93,7 @@ let currState = "state_poweroff";
 module.exports.currState = currState;
 
 const nextStateIDs = {
+    "state_prop_start_openair": ["state_prop_dsa_openair"],
     "state_poweroff": ["state_idle"],
     "state_idle": ["state_ready_for_pumpdown"],
     "state_ready_for_pumpdown": ["state_pumpdown"],
@@ -108,7 +109,7 @@ const nextStateIDs = {
     "state_fault_postrun": ["state_service_low_speed", "state_idle"]
 };
 const faultStateIDs = ["state_fault_prerun", "state_fault_run", "state_fault_postrun"];
-const nonFaultStateIDs = ["state_poweroff", "state_idle", "state_ready_for_pumpdown", "state_pumpdown", "state_ready", "state_postrun", "state_service_low_speed", "state_safe_to_approach",  "state_prop_dsa_openair", "state_braking_openair"];
+const nonFaultStateIDs = ["state_poweroff", "state_idle", "state_ready_for_pumpdown", "state_pumpdown", "state_ready", "state_postrun", "state_service_low_speed", "state_safe_to_approach",  "state_prop_start_openair","state_prop_dsa_openair", "state_braking_openair"];
 const stateIDs = nonFaultStateIDs.concat(faultStateIDs);
 
 function markInactive(toMark) {
