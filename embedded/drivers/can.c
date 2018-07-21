@@ -15,11 +15,23 @@ CAN_RxHeaderTypeDef RxHeader;
 CAN_TxHeaderTypeDef TxHeader;
 uint8_t TxData[8];
 uint8_t RxData[8];
+uint8_t volatile hb_torque = 0;
 extern uint8_t board_num;
-volatile uint8_t hb_torque = 0;
 volatile heartbeat_msg_t hb_status = IDLE_MSG;
 extern state_box pv_stateVal;
 extern state_box stateVal;
+
+void can_set_torque( uint8_t torq ){
+	printf("torq = %d\r\n", torq);
+	hb_torque = torq;
+	return;
+}
+
+uint8_t can_get_torque(){
+	
+	return hb_torque;
+}
+
 void can_heartbeat_next(){
 	
 	switch( hb_status){
@@ -130,7 +142,7 @@ int can_heartbeat_forward( CAN_HandleTypeDef *hcan ){
 	uint8_t TxData[8];
 	
 	//Torque is stored in the first byte	
-	TxData[0] = 0xFF & (hb_torque*10);
+	TxData[0] = (hb_torque*10);
 	TxData[1] = 0x00;
 	TxData[2] = 0x00;
 	TxData[3] = 0x00;
@@ -179,6 +191,7 @@ int can_heartbeat_handler( CAN_HandleTypeDef *hcan ){
         hb_status = FAULTS_CLEARED;
     }
 	else if( hb_status == FORWARD){
+		printf( " HB Torque = %d\r\n", hb_torque );
         	can_heartbeat_forward( hcan);
 	}
 	else if( hb_status == DISCHARGE ){

@@ -73,7 +73,7 @@ void process_state_transition(char *state) {
 	}
 	else if (!strncmp(state, "prop_dsa_openair", 16)) {
 	        puts("prop_dsa_openair requested");
-		change_state(PROPULSION_DISTANCE);
+		change_state(PROPULSION_START);
 	}
 	else if (!strncmp(state, "prop_dsa_extsub", 15)) {
 	        puts("prop_dsa_extsub requested");

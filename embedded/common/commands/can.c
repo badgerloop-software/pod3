@@ -6,7 +6,6 @@
 #include "board.h"
 #include "can.h"
 
-extern volatile uint8_t hb_torque;
 extern volatile heartbeat_msg_t hb_status;
 
 command_status try_send(uint32_t can_id, uint32_t mailbox, size_t length, uint8_t *TxData) {
@@ -114,13 +113,13 @@ command_status do_can(int argc, char *argv[]) {
 		can_send(can_id, 0, length, data);
 	}
 
-    if(!strcmp("hb_torque", argv[1])){
-        hb_torque = atoi(argv[2]);
-        
-		/* TESTING */
-        printf( "Torque= %d nm\r\n", hb_torque);
-   	return CMD_SUCCESS; 
-    } 
+//    if(!strcmp("hb_torque", argv[1])){
+//        hb_torque = atoi(argv[2]);
+//        
+//		/* TESTING */
+//        printf( "Torque= %d nm\r\n", hb_torque);
+//   	return CMD_SUCCESS; 
+//    } 
 
     if(!strcmp("hb_next", argv[1])){
         switch( hb_status){

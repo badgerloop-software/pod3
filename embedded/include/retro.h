@@ -20,6 +20,7 @@
 timeStamp *mainRetro;
 int tape_vel;
 void initRetro(void); 
+int shouldStop(void);
 int getStripCount(int* badRetro );
 void incVel(int);
 // Sets the position in cm and velocity in cm/s

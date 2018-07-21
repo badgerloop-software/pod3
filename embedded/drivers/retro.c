@@ -56,6 +56,10 @@ void incVel(int retro) {
 	}
 }
 
+int shouldStop(void){
+	return 0;
+}
+
 // Determines the correct retro count. Votes on the counts seen on all retros.
 // Which ever count has >=2 votes is determined to be correct.
 int getStripCount(int *badRetro) {

@@ -35,6 +35,8 @@ int can_heartbeat_discharge( CAN_HandleTypeDef *hcan );
 int can_heartbeat_handler( CAN_HandleTypeDef *hcan );
 void can_heartbeat_next(void);
 void can_heartbeat_fault(void);
+void can_set_torque( uint8_t torq );
+uint8_t can_get_torque(void);
 
 HAL_StatusTypeDef can_read(void);
 HAL_StatusTypeDef can_send(uint32_t id, uint32_t TxMailbox, size_t length, uint8_t *TxData);
