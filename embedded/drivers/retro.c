@@ -56,8 +56,8 @@ void incVel(int retro) {
 	}
 }
 
-int shouldStop(void){
-	return 0;
+int shouldStop( void ){
+   return 0;
 }
 
 // Determines the correct retro count. Votes on the counts seen on all retros.
