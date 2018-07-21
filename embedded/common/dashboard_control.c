@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "dashboard_control.h"
 #include "console.h"
 #include "usart.h"
@@ -162,9 +163,11 @@ void process_control(char *buf) {
 	}
 }
 
+time_t last_heartbeat = 0;
 char buffer[USART_BUF];
 void check_incoming_controls(PC_Buffer *rx) {
-
+        time_t curr_time;
+	double time_diff;
 	/* only something to do if a message is waiting */
 	if (pc_buffer_messageAvailable(rx)) {
 
@@ -173,5 +176,13 @@ void check_incoming_controls(PC_Buffer *rx) {
 		/* process the command string if it's not empty */
 		if (buffer[0] != '\0') process_control(buffer);
 
+	}
+	/* check how recently we got a heartbeat from the dashboard */
+        curr_time = time(NULL);
+	time_diff = difftime(curr_time, last_heartbeat);
+	/* if our last heartbeat from the dashboard was > 1 second ago */
+	/* and if we have actually received a heartbeat initially */
+	if (time_diff > 1.0 && last_heartbeat != 0) {
+            /* issue a fault */
 	}
 }
