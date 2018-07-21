@@ -32,7 +32,6 @@ state_box nav_stateVal = {3, 0};
 uint32_t dash_timestamp = 0;
 uint32_t pv_timestamp = 0;
 uint32_t nav_timestamp = 0;
-uint32_t brake_timestamp = 0;
 
 /* Nucleo 32 I/O */
 
@@ -106,12 +105,6 @@ int nav_init(void) {
     i2adc_write(0x48);
 
     GPIO_TypeDef *gpioa = GPIOA;
-    
-	change_solenoid(P1, ACTUATED);
-	change_solenoid(P2, ACTUATED);
-	change_solenoid(S3, NOT_ACTUATED);
-	change_solenoid(S1, ACTUATED);
-	change_solenoid(S2, ACTUATED);
 
     /* Retro 1 is on pin PA0
      * Retro 2 is on pin PA1
@@ -133,10 +126,7 @@ int nav_init(void) {
     exti_config(gpioa, 6, 0, 1, 1);
     //Pin 7 EXTI Config (LIM3)
     exti_config(gpioa, 7, 0, 1, 1);
-<<<<<<< HEAD
   
-    init_solenoids();
-
     //Volt Sense is on PA4
 
     //TODO Change this to work on NAV pins
@@ -173,15 +163,6 @@ int main(void) {
 		currState = (ticks + 30) / 100;
 		currTelem = (ticks + 45) / 100;
 		currHrtbt = (ticks + 60) / 100;
-
-        //LIM1: if not low .5 s after braking trigger secondary brakes
-        if( brake_timestamp != 0){
-            if( (ticks - brake_timestamp > 500) && gpio_readPin(GPIOA, 3) ){
-                
-                //Trigger Secondary Brakes
-
-            }
-        }
 
         //if 20 seconds without detecting a retro, change to post_run
         if ( (ticks - interLine[0].curr >= 20000) && (ticks - interLine[1].curr >= 20000) 

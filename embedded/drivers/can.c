@@ -399,15 +399,13 @@ HAL_StatusTypeDef ccp_parse_can_message(uint32_t can_id, uint8_t *data, Pod_Data
 			case NAV_WARNING:
 				nav_timestamp = ticks;
 				break;
-			case NAV_TAPE:
-				//printf( "Retro Data: %d\r\n", data[2]);
 		    	case NAV_POST_RUN:
                 	post_run_transition = 1;
                 		break;
-            case NAV_TAPE:
+            		case NAV_TAPE:
 				nav_timestamp = ticks;
 				set_retro(pod_data, data[2]);
-                set_limit( pod_data, data[3],data[4],data[5]);
+                		set_limit( pod_data, data[3],data[4],data[5]);
 				set_stopping_dist(pod_data);
 				break;
 			case NAV_SHOULD_STOP:

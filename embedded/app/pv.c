@@ -6,7 +6,6 @@
 #include "pin_alias.h"
 #include "can.h"
 #include "pv_data.h"
-#include "nav_data.h"
 #include "state_machine.h"
 #include "state_handlers.h"
 
@@ -14,12 +13,10 @@
 #define CTRL_INTERVAL   100
 
 const int board_type = PV;
-extern PV_Data pvData;
 uint32_t nav_timestamp = 0;
 uint32_t dash_timestamp = 0;
 uint32_t pv_timestamp = 0;
 
-PV_Data pvData = {MCU_DISABLED, 0, 0};
 state_box pv_stateVal = {3, 0};
 /* Nucleo 32 I/O */
 

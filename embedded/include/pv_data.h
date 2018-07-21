@@ -12,6 +12,8 @@ typedef struct {
 	uint16_t temp;
 } PV_Data;
 
+extern PV_Data pvData;
+
 extern state_box pv_stateVal;
 int MCU_reader(PV_Data *);
 int pv_DAQ(PV_Data *);
