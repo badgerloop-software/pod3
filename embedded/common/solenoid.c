@@ -37,9 +37,16 @@ int change_solenoid(int name, int state) {
 void actuate_brakes() {
 	iox_set(PRIM_BRAKING_1);
 	iox_set(PRIM_BRAKING_2);	
+    return;
 }
 
 void actuate_sec_brakes() {
 	iox_set(SEC_BRAKING_1);
 	iox_set(SEC_BRAKING_2);
+    return;
+}
+
+void vent_brakes() {
+
+    return;
 }

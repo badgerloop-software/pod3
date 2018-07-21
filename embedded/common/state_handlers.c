@@ -14,29 +14,11 @@ extern state_box pv_stateVal;
 uint32_t pre_braking_timestamp = 0;
 uint32_t brake_timestamp = 0;
 
-//TODO: Some states cannot be transitioned out of by timer
-const unsigned int state_intervals[] = {
-	999999,	/* PRE_RUN_FAULT			*/
-	999999,	/* RUN_FAULT 				*/
-	999999,	/* POST_RUN_FAULT 			*/
-	999999,	/* IDLE  				*/
-	999999,	/* READY_FOR_PUMPDOWN 			*/
-	10000,	/* PUMPDOWN 				*/
-	999999,	/* READY				*/
-	4000,	/* PROPULSION_START 			*/
-	10000,	/* PROPULSION_DISTANCE 			*/
-	10000,	/* BRAKING				*/
-	10000,	/* POST_RUN 				*/
-	1000,	/* SAFE_TO_APPROACH			*/
-	999999, /* SERVICE_LOW_SPEED_PROPULSION		*/
-};
-
 void propagateState(int state) {
 	stateVal.stateName = state;
 	stateVal.change_state = 1;
 	pv_stateVal.stateName = state;
 	pv_stateVal.change_state = 1;
-
 }
 
 void change_state(STATE_NAME state) {
@@ -102,9 +84,6 @@ void to_pre_run_fault(STATE_NAME from, uint32_t flags) {
     else if(board_type==DASH) {
         can_heartbeat_fault();
         can_heartbeat_handler( &can_handle );
-        
-        //TODO:
-         //   send_fault();
     }
     else if(board_type==DEV) {
 
@@ -164,16 +143,18 @@ void to_run_fault(STATE_NAME from, uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
-		//TODO: check secondary brakes
+
         actuate_brakes();
+		
+        //Check secondary brakes
+        brake_timestamp = ticks;
+
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
         can_heartbeat_fault();
         can_heartbeat_handler( &can_handle );
 
-        //TODO:
-        //    send_fault();
 	} // end CPP_MODULE
 
 	if(board_type==DEV) {
@@ -188,12 +169,16 @@ void in_run_fault(uint32_t flags) {
 	} // end PV_MODULE
 
 	if(board_type==NAV) {
+        
+        //Check primary/secondary brakes
+        if(ticks - brake_timestamp >= 500 && gpio_readPin(GPIOA, 3 ) ){
+            actuate_sec_brakes();
+        }
 
 	} // end NAV_MODULE
 
 	if(board_type==DASH) {
         
-        //TODO Check primary/secondary brakes
         can_heartbeat_handler( &can_handle );
 
 	} // end CPP_MODULE
@@ -232,7 +217,7 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
 	else if(board_type==NAV) {
 		
         	//TODO: Vent brakes
-        	//vent_brakes();
+        	vent_brakes();
 	
 	} // end NAV_MODULE
 
@@ -240,8 +225,6 @@ void to_post_run_fault(STATE_NAME from, uint32_t flags) {
         	can_heartbeat_fault();
         	can_heartbeat_handler(&can_handle);
 
-        //TODO:
-         //   send_fault();
 	} // end CPP_MODULE
 
 	else if(board_type==DEV) {
@@ -619,7 +602,6 @@ void to_propulsion_start(STATE_NAME from, uint32_t flags) {
    		//uint8_t	torq = can_get_torque() + 2;
 		uint8_t torq = 8;
     		can_set_torque( torq );    
-    		printf( "HB Torque = 8 Nm\r\n");
         	
 		can_heartbeat_next();
         	can_heartbeat_handler( &can_handle );
@@ -756,7 +738,7 @@ void to_braking(STATE_NAME from, uint32_t flags) {
 	} // end NAV_MODULE
 
 	else if(board_type==DASH) {
-        	can_heartbeat_handler( &can_handle );
+        can_heartbeat_handler( &can_handle );
 		brake_timestamp = ticks;
 	} // end CPP_MODULE
 
@@ -778,7 +760,7 @@ void in_braking(uint32_t flags) {
         	
 		//TODO: Check primary brakes/ secondary brakes
 		if( ticks - brake_timestamp >= 500 &&  gpio_readPin(GPIOA, 3) ){
-		//	actuate_secondary();
+		    actuate_secondary();
 		}		
 	
 	} // end NAV_MODULE

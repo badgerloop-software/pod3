@@ -29,6 +29,8 @@ typedef struct {
 	Solenoid_t solenoid_7;
 } Solenoid_States;
 void actuate_brakes();
+void actuate_sec_brakes();
+void vent_brakes();
 void harvest_solenoids(Solenoid_States*);
 int change_solenoid(int, int);
 #endif
