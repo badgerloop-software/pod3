@@ -4,7 +4,7 @@
 const comm = require("./communication");
 const dashState = require("./stateManager").stateChangeEmitter;
 /* some consts for handling messaging and incoming data */
-const UPDATE_TIME = 500;
+const UPDATE_TIME = 200;
 const HB_TIME = 250;
 const MESSAGE_BASE = "messageReceived_";
 const HEALTH_KEY = "health";
@@ -24,15 +24,12 @@ const READY = "state_ready";
 const POSTRUN = "state_postrun";
 const SERVICE_LOW_SPEED = "state_service_low_speed";
 const SAFE_TO_APPROACH = "state_safe_to_approach";
-const PROP_START_HLOOP = "state_prop_start_hyperloop";
-const PROP_START_OPENAIR = "state_prop_start_openair";
-const PROP_START_EXTSUB = "state_prop_start_extsub";
-const PROP_DSA_HLOOP = "state_prop_dsa_hyperloop";
+// const PROP_DSA_HLOOP = "state_prop_dsa_hyperloop";
 const PROP_DSA_OPENAIR = "state_prop_dsa_openair";
-const PROP_DSA_EXTSUB = "state_prop_dsa_extsub";
-const BRAKE_HLOOP = "state_braking_hyperloop";
+// const PROP_DSA_EXTSUB = "state_prop_dsa_extsub";
+// const BRAKE_HLOOP = "state_braking_hyperloop";
 const BRAKE_OPENAIR = "state_braking_openair";
-const BRAKE_EXTSUB = "state_braking_extsub";
+// const BRAKE_EXTSUB = "state_braking_extsub";
 const FAULT_PRERUN = "state_fault_prerun";
 const FAULT_RUN = "state_fault_run";
 const FAULT_POSTRUN = "state_fault_postrun";
@@ -91,7 +88,7 @@ const SENSORS = [
     LINE_3,
     LINE_4,
     LINE_5,
-    LINE_6,
+    LINE_6
 ];
 let dataTable = {};
 SENSORS.map((sensor) => {
@@ -200,18 +197,17 @@ function podHeartbeat() {
 
 /* pull the relevant telemetry information from the json object */
 function pullData(rawdata, name) {
-    // /* TODO just a dummy for now */
-    // if (typeof rawdata === "undefined") {
-    //     return;
-    // }
-    // let data = JSON.parse(rawdata);
-    // if (typeof data[name] === "undefined") {
-    //     return undefined;
-    // }
-    //console.log(data[name].sensor_data);
+    /* TODO just a dummy for now */
+    if (typeof rawdata === "undefined") {
+        return;
+    }
+    let data = JSON.parse(rawdata);
+    if (typeof data[name] === "undefined") {
+        return undefined;
+    }
     return {
-	VALUE: Math.floor(Math.random() * 40 + 5)/*data[name].sensor_data.value,*/,
-	TSTAMP: 10/*data[name].sensor_data.timestamp*/
+        VALUE: data[name].sensor_data.value,
+        TSTAMP: 10 /*data[name].sensor_data.timestamp*/
     }
 }
 
@@ -220,8 +216,7 @@ function isStale(datapoint) {
     /* grab the current time and compare */
     /* TODO make sure all devices are on the same clock */
     let currTime = Date.now();
-    return false;
-    //return (currTime - datapoint[TSTAMP]) > STALE_THRESH;
+    return (currTime - datapoint.TSTAMP) > STALE_THRESH;
 }
 
 /* pop up a warning about health */
@@ -241,25 +236,26 @@ function doHealthCheck(data) {
     let warningMessages = [];
     /* start by getting the state */
     let state = nextState; //pullData(data, STATE);
-    console.log(nextState);
     /* first problem is if the state is stale */
-    if (isStale(state)) {
-        warningMessages.push("State is stale");
-    }
+    // if (isStale(state)) {
+    //     warningMessages.push("State is stale");
+    // }
     /* and gather the sensor datapoints  while also checking staleness */
     let sensorData = {};
 
     for (let i = 0; i < SENSORS.length; i++) {
         let sName = SENSORS[i];
         let sData = pullData(data, SENSORS[i]);
-            if (sData !== undefined) sensorData[sName] = sData;
-        /* stale check */
-        if (isStale(sData)) {
-            warningMessages.push(sName + " is stale");
-        }
+            if (sData !== undefined) {
+                sensorData[sName] = sData;
+                /* stale check */
+                if (isStale(sData)) {
+                    warningMessages.push(sName + " is stale");
+                    setSensorYellow(sName);
+                }
+            }
     }
-    console.log("STATE:");
-    console.log(state);
+    console.log(sensorData)
     updateVisualData(sensorData);
     /* TODO should we terminate if there is stale data */
     /* then check the appropriate telemetry depending on what state we are in */
@@ -286,14 +282,8 @@ function doHealthCheck(data) {
     }
     else if (state === SERVICE_LOW_SPEED) { retMessages = service_low_speed_ck(sensorData); }
     else if (state === SAFE_TO_APPROACH) { retMessages = safe_to_approach_ck(sensorData); }
-    else if (state === PROP_DSA_HLOOP) { retMessages = prop_dsa_hloop_ck(sensorData); }
     else if (state === PROP_DSA_OPENAIR) { retMessages = prop_dsa_openair_ck(sensorData); }
-    else if (state === PROP_DSA_EXTSUB) { retMessages = prop_dsa_extsub_ck(sensorData); }
-    else if (state === BRAKE_HLOOP) {
-        retMessages = brake_hloop_ck(sensorData);
-    }
     else if (state === BRAKE_OPENAIR) { retMessages = brake_openair_ck(sensorData); }
-    else if (state === BRAKE_EXTSUB) { retMessages = brake_extsub_ck(sensorData); }
     else if (state === FAULT_PRERUN) { retMessages = fault_prerun_ck(sensorData); }
     else if (state === FAULT_RUN) { retMessages = fault_run_ck(sensorData); }
     else if (state === FAULT_POSTRUN) { retMessages = fault_postrun_ck(sensorData); }
@@ -313,6 +303,9 @@ function doHealthCheck(data) {
 /* no-op the default assert fail function */
 function noop() {}
 
+let prevCurr = -1;
+let prevVolt = -1;
+let currDelta = 0;
 function updateVisualData(sensorData) {
 
     let fetchedSensors = Object.keys(sensorData);
@@ -320,15 +313,40 @@ function updateVisualData(sensorData) {
         if (!fetchedSensors.includes(sensorName)) return;
         let val;
         switch (sensorName) {
-            // case 'cell_max_voltage':
-            //     val = sensorData[sensorName].VALUE / 1000;
-            //     break;
-            // case 'cell_min_voltage':
-            //     val = sensorData[sensorName].VALUE / 1000;
-            //     break;
+            case 'stopping_dist':
+                val = 3950 - (sensorData[RETRO].VALUE* 100);
+                sensorData[sensorName].VALUE = val;
+                break;
+            case 'position':
+                val = sensorData[RETRO].VALUE * 100;
+                sensorData[sensorName].VALUE = val;
+                break;
+            case 'pack_voltage':
+                currDelta = Math.abs(sensorData[sensorName].VALUE - prevVolt);
+                if (currDelta < 600) {
+                    val = sensorData[sensorName].VALUE;
+                    prevVolt = val;
+                } else val = prevVolt;
+                break;
+            case 'cell_max_voltage':
+                val = sensorData[sensorName].VALUE / 1000;
+                sensorData[sensorName].VALUE = sensorData[sensorName].VALUE / 1000;
+                break;
+            case 'cell_min_voltage':
+                val = sensorData[sensorName].VALUE / 1000;
+                sensorData[sensorName].VALUE = sensorData[sensorName].VALUE / 1000;
+                break;
+            case "pack_current":
+                currDelta = Math.abs(sensorData[sensorName].VALUE - prevCurr);
+                if (currDelta < 300) {
+                    val = sensorData[sensorName].VALUE;
+                    prevCurr = val;
+                } else val = prevCurr;
+                break;
             default:
                 val = sensorData[sensorName].VALUE;
         }
+        console.log(dataTable[sensorName])
         dataTable[sensorName].innerHTML = val;
     });
 }
@@ -425,11 +443,11 @@ function idle_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
 
     /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 0, 1500, fLine1Red, fLine1Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 50, 70, fLine2Red, fLine2Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 50, 70, fLine5Red, fLine5Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
 
     ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 18, 45, fCellLowRed, fCellLowGreen));
@@ -438,7 +456,7 @@ function idle_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, RETRO, 0, 0, fRetroRed, fRetroGreen));
     ret = ret.concat(sens_assert_within(sensorData, ACCELERATION, -0.1, 0.1, fAccelerationRed, fAccelerationGreen));
     ret = ret.concat(sens_assert_within(sensorData, POSITION, -1, 1, fPositionRed, fPositionGreen));
-    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, -.1, fVelocityRed, fVelocityGreen));
+    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, .1, fVelocityRed, fVelocityGreen));
     ret = ret.concat(sens_assert_within(sensorData, COMMAND_TORQUE, 0, 0, fCommandTorqueRed, fCommandTorqueGreen));
     ret = ret.concat(sens_assert_within(sensorData, ACTUAL_TORQUE, 0, 0, fActualTorqueRed, fActualTorqueGreen));
     ret = ret.concat(sens_assert_within(sensorData, MOTOR_SPEED, 0, 0, fMotorSpeedRed, fMotorSpeedGreen));
@@ -461,8 +479,8 @@ function ready_for_pumpdown_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
 
     /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 500, 1500, fLine1Red, fLine1Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 50, 70, fLine2Red, fLine2Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
@@ -500,8 +518,8 @@ function pumpdown_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
 
     /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 500, 1500, fLine1Red, fLine1Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 50, 80, fLine2Red, fLine2Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
@@ -538,10 +556,10 @@ function ready_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
 
     /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 500, 1500, fLine1Red, fLine1Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 500, 1500, fLine4Red, fLine4Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
 
@@ -576,10 +594,10 @@ function postrun_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
 
     /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 500, 1500, fLine1Red, fLine1Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 500, 1500, fLine4Red, fLine4Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
 
@@ -715,7 +733,7 @@ function prop_dsa_hloop_ck(sensorData) {
 /* do the telemetry bounds checking for prop-dsa-openair state */
 function prop_dsa_openair_ck(sensorData) {
     var ret = [];
-    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
+    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 216.0, 302.4, fPackVoltRed, fPackVoltGreen));
     ret = ret.concat(sens_assert_within(sensorData, PACK_CURRENT, -1.0, 290, fPackCurrRed, fPackCurrGreen));    //done
     ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 20.0, 90.0, fPackSOCRed, fPackSOCGreen));
     ret = ret.concat(sens_assert_within(sensorData, CELL_MAX_VOLTAGE, 3.7, 4.2, fCellMaxVRed, fCellMaxVGreen));
@@ -748,77 +766,6 @@ function prop_dsa_openair_ck(sensorData) {
     return ret;
 }
 
-/* do the telemetry bounds checking for prop-dsa-extsub state */
-function prop_dsa_extsub_ck(sensorData) {
-    var ret = [];
-    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PACK_CURRENT, -1.0, 290, fPackCurrRed, fPackCurrGreen));    //done
-    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 20.0, 90.0, fPackSOCRed, fPackSOCGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_MAX_VOLTAGE, 3.7, 4.2, fCellMaxVRed, fCellMaxVGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_MIN_VOLTAGE, 3.7, 4.2, fCellMinVRed, fCellMinVGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
-
-    /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
-
-    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 18, 45, fCellLowRed, fCellLowGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 18, 45, fCellHighRed, fCellHighGreen));
-    ret = ret.concat(sens_assert_within(sensorData, STOPPING_DIST, 0, 500, fStoppingDistRed, fStoppingDist));
-    ret = ret.concat(sens_assert_within(sensorData, RETRO, 0, 34, fRetroRed, fRetroGreen));
-    ret = ret.concat(sens_assert_within(sensorData, ACCELERATION, -0.1, 0.1, fAccelerationRed, fAccelerationGreen));
-    ret = ret.concat(sens_assert_within(sensorData, POSITION, 0, 3950, fPositionRed, fPositionGreen));
-    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, 40, fVelocityRed, fVelocityGreen));
-    ret = ret.concat(sens_assert_within(sensorData, COMMAND_TORQUE, 0, 0, fCommandTorqueRed, fCommandTorqueGreen));
-    ret = ret.concat(sens_assert_within(sensorData, ACTUAL_TORQUE, 0, 0, fActualTorqueRed, fActualTorqueGreen));
-    ret = ret.concat(sens_assert_within(sensorData, MOTOR_SPEED, 0, 6500, fMotorSpeedRed, fMotorSpeedGreen));
-    ret = ret.concat(sens_assert_within(sensorData, MOTOR_TEMP, 18, 45, fMotorTempRed, fMotorTempGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PRESSURE_PV, 13, 15, fPressureVesselRed, fPressureVesselGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CURRENT_PRESSURE, 0, 2, fCurrentPressureRed, fCurrentPressureGreen));
-
-    /* TODO return an array of error messages */
-    return ret;
-}
-
-/* do the telemetry bounds checking for brake-hloop state */
-function brake_hloop_ck(sensorData) {
-    var ret = [];
-    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PACK_CURRENT, -1.0, 1.0, fPackCurrRed, fPackCurrGreen));    //done
-    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 50.0, 90.0, fPackSOCRed, fPackSOCGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_MAX_VOLTAGE, 3.7, 4.2, fCellMaxVRed, fCellMaxVGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_MIN_VOLTAGE, 3.7, 4.2, fCellMinVRed, fCellMinVGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
-
-    /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
-
-    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 18, 45, fCellLowRed, fCellLowGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 18, 45, fCellHighRed, fCellHighGreen));
-    ret = ret.concat(sens_assert_within(sensorData, STOPPING_DIST, 0, 3960, fStoppingDistRed, fStoppingDist));
-    ret = ret.concat(sens_assert_within(sensorData, RETRO, 0, 0, fRetroRed, fRetroGreen));
-    ret = ret.concat(sens_assert_within(sensorData, ACCELERATION, -0.1, 0.1, fAccelerationRed, fAccelerationGreen));
-    ret = ret.concat(sens_assert_within(sensorData, POSITION, -1, 1, fPositionRed, fPositionGreen));
-    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, -.1, fVelocityRed, fVelocityGreen));
-    ret = ret.concat(sens_assert_within(sensorData, COMMAND_TORQUE, 0, 0, fCommandTorqueRed, fCommandTorqueGreen));
-    ret = ret.concat(sens_assert_within(sensorData, ACTUAL_TORQUE, 0, 0, fActualTorqueRed, fActualTorqueGreen));
-    ret = ret.concat(sens_assert_within(sensorData, MOTOR_SPEED, 0, 0, fMotorSpeedRed, fMotorSpeedGreen));
-    ret = ret.concat(sens_assert_within(sensorData, MOTOR_TEMP, 18, 45, fMotorTempRed, fMotorTempGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PRESSURE_PV, 13, 15, fPressureVesselRed, fPressureVesselGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CURRENT_PRESSURE, 13, 15, fCurrentPressureRed, fCurrentPressureGreen));
-
-    /* TODO return an array of error messages */
-    return ret;
-}
 
 /* do the telemetry bounds checking for brake-openair state */
 function brake_openair_ck(sensorData) {
@@ -831,11 +778,11 @@ function brake_openair_ck(sensorData) {
     ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
 
     /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 300, 1500, fLine1Red, fLine1Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_3, 20, 140, fLine3Red, fLine3Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 300, 1500, fLine4Red, fLine4Green));
+    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 20, 140, fLine5Red, fLine5Green));
     ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
 
     ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 18, 45, fCellLowRed, fCellLowGreen));
@@ -856,41 +803,6 @@ function brake_openair_ck(sensorData) {
     return ret;
 }
 
-/* do the telemetry bounds checking for brake-extsub state */
-function brake_extsub_ck(sensorData) {
-    var ret = [];
-    ret = ret.concat(sens_assert_within(sensorData, PACK_VOLTAGE, 266.0, 302.4, fPackVoltRed, fPackVoltGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PACK_CURRENT, -1.0, 1.0, fPackCurrRed, fPackCurrGreen));    //done
-    ret = ret.concat(sens_assert_within(sensorData, PACK_SOC, 50.0, 90.0, fPackSOCRed, fPackSOCGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_MAX_VOLTAGE, 3.7, 4.2, fCellMaxVRed, fCellMaxVGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_MIN_VOLTAGE, 3.7, 4.2, fCellMinVRed, fCellMinVGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PACK_AH, 0, 8, fPackAhRed, fPackAhGreen));
-
-    /* end Tristan battery checks */
-    ret = ret.concat(sens_assert_within(sensorData, LINE_1, 1750, 2100, fLine1Red, fLine1Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_2, 110, 166, fLine2Red, fLine2Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_3, 13.9, 14.1, fLine3Red, fLine3Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_4, 1750, 2100, fLine4Red, fLine4Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_5, 13.9, 14.1, fLine5Red, fLine5Green));
-    ret = ret.concat(sens_assert_within(sensorData, LINE_6, 1750, 2100, fLine6Red, fLine6Green));
-
-    ret = ret.concat(sens_assert_within(sensorData, CELL_LOW, 18, 45, fCellLowRed, fCellLowGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CELL_HIGH, 18, 45, fCellHighRed, fCellHighGreen));
-    ret = ret.concat(sens_assert_within(sensorData, STOPPING_DIST, 0, 3960, fStoppingDistRed, fStoppingDist));
-    ret = ret.concat(sens_assert_within(sensorData, RETRO, 0, 0, fRetroRed, fRetroGreen));
-    ret = ret.concat(sens_assert_within(sensorData, ACCELERATION, -0.1, 0.1, fAccelerationRed, fAccelerationGreen));
-    ret = ret.concat(sens_assert_within(sensorData, POSITION, -1, 1, fPositionRed, fPositionGreen));
-    ret = ret.concat(sens_assert_within(sensorData, VELOCITY, -.1, -.1, fVelocityRed, fVelocityGreen));
-    ret = ret.concat(sens_assert_within(sensorData, COMMAND_TORQUE, 0, 0, fCommandTorqueRed, fCommandTorqueGreen));
-    ret = ret.concat(sens_assert_within(sensorData, ACTUAL_TORQUE, 0, 0, fActualTorqueRed, fActualTorqueGreen));
-    ret = ret.concat(sens_assert_within(sensorData, MOTOR_SPEED, 0, 0, fMotorSpeedRed, fMotorSpeedGreen));
-    ret = ret.concat(sens_assert_within(sensorData, MOTOR_TEMP, 18, 45, fMotorTempRed, fMotorTempGreen));
-    ret = ret.concat(sens_assert_within(sensorData, PRESSURE_PV, 13, 15, fPressureVesselRed, fPressureVesselGreen));
-    ret = ret.concat(sens_assert_within(sensorData, CURRENT_PRESSURE, 13, 15, fCurrentPressureRed, fCurrentPressureGreen));
-
-    /* TODO return an array of error messages */
-    return ret;
-}
 
 /* do the telemetry bounds checking for fault-prerun state */
 function fault_prerun_ck(sensorData) {
@@ -1002,12 +914,12 @@ function requestAllTelemetry() {
 }
 
 /* attach our health check to the return data */
-//comm.updater.on(MESSAGE_BASE + HEALTH_KEY, doHealthCheck);
+comm.updater.on(MESSAGE_BASE + HEALTH_KEY, doHealthCheck);
 
-setInterval(doHealthCheck, 200);
+//setInterval(doHealthCheck, 200);
 
 /* set an interval to get telemetry */
-//setInterval(requestAllTelemetry, UPDATE_TIME);
+setInterval(requestAllTelemetry, UPDATE_TIME);
 
 /* set an interval to send a heartbeat to the pod */
 setInterval(podHeartbeat, HB_TIME);

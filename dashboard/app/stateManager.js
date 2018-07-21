@@ -97,25 +97,18 @@ const nextStateIDs = {
     "state_idle": ["state_ready_for_pumpdown"],
     "state_ready_for_pumpdown": ["state_pumpdown"],
     "state_pumpdown": ["state_ready"],
-    "state_ready": ["state_prop_start_hyperloop", "state_prop_start_openair", "state_prop_start_extsub"],
+    "state_ready": ["state_prop_start_openair"],
     "state_postrun": ["state_safe_to_approach"],
     "state_service_low_speed": ["state_idle"],
     "state_safe_to_approach": ["state_idle"],
-    "state_prop_start_hyperloop": ["state_prop_dsa_hyperloop"],
-    "state_prop_start_openair": ["state_prop_dsa_openair"],
-    "state_prop_start_extsub": ["state_prop_dsa_extsub"],
-    "state_prop_dsa_hyperloop": ["state_braking_hyperloop"],
     "state_prop_dsa_openair": ["state_braking_openair"],
-    "state_prop_dsa_extsub": ["state_braking_extsub"],
-    "state_braking_hyperloop": ["state_postrun"],
     "state_braking_openair": ["state_postrun"],
-    "state_braking_extsub": ["state_postrun"],
     "state_fault_prerun": ["state_poweroff", "state_idle"],
     "state_fault_run": ["state_service_low_speed", "state_idle"],
     "state_fault_postrun": ["state_service_low_speed", "state_idle"]
 };
 const faultStateIDs = ["state_fault_prerun", "state_fault_run", "state_fault_postrun"];
-const nonFaultStateIDs = ["state_poweroff", "state_idle", "state_ready_for_pumpdown", "state_pumpdown", "state_ready", "state_postrun", "state_service_low_speed", "state_safe_to_approach", "state_prop_start_hyperloop", "state_prop_start_openair", "state_prop_start_extsub", "state_prop_dsa_hyperloop", "state_prop_dsa_openair", "state_prop_dsa_extsub", "state_braking_hyperloop", "state_braking_openair", "state_braking_extsub"];
+const nonFaultStateIDs = ["state_poweroff", "state_idle", "state_ready_for_pumpdown", "state_pumpdown", "state_ready", "state_postrun", "state_service_low_speed", "state_safe_to_approach",  "state_prop_dsa_openair", "state_braking_openair"];
 const stateIDs = nonFaultStateIDs.concat(faultStateIDs);
 
 function markInactive(toMark) {
@@ -186,7 +179,7 @@ function stateChangeRequest(e) {
     cback = function(response) {
 	postAndUpdateIfConfirm(response, podIP, podPort, "state_change", payload, newState);
     };
-    //confirmDialog(cback);
+    confirmDialog(cback);
 }
 
 // add a function to the click for all buttons

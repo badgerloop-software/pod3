@@ -3,7 +3,7 @@ const request = require("request");
 const events = require("events");
 const path = require("path");
 // address of the DB server
-const serverAddr = {"ip": "192.168.2.111", "port": 7781};
+const serverAddr = {"ip": "192.168.1.110", "port": 7781};
 // address of the pod
 const podAddr = {"ip": "192.168.2.114", "port": 7777};
 
