@@ -11,8 +11,12 @@ command_status do_uart(int argc, char *argv[]) {
 	printf("Doing uart with %d arg\n\r", argc);
 	
 	if (!strcmp("send", argv[1])) {
+		if(argc != 3){
+			printf("Not enough args\r\n");
+			return FAIL;
+		}
 		printf("SENDING!\n\r");
-		uart_send();
+		uart_send(argv[2]);
 		fprintf(stdout, "This is where you can find another message\n\r");
 	}
 	if (!strcmp("receive", argv[1])) {
@@ -33,7 +37,6 @@ command_status uart_send (char *message) {
 	return CMD_SUCCESS;
 }
 
-
 command_status uart_receive () {
 	PC_Buffer *rx;
 	rx = get_rx(USART1);
@@ -47,11 +50,6 @@ command_status uart_receive () {
 	//	printf("%s\n\r", rx->array);
 	return CMD_SUCCESS;
 }
-
-
-
-
-
 
 COMMAND_ENTRY(
 		"uart",
